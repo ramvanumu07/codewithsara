@@ -4,13 +4,17 @@
  */
 
 import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
+
+// CJS bundle (Netlify/Lambda): use ambient require. ESM (local): createRequire(import.meta.url)
+let req
+try { req = require } catch (_) { req = createRequire(import.meta.url) }
+
 import { logInfo as _logInfo, logError as _logError, logWarn as _logWarn } from './logger.js'
 
 // Graceful import with fallback for missing dependencies (sync for CJS bundling)
 let Redis = null
 try {
-  const redisModule = require('ioredis')
+  const redisModule = req('ioredis')
   Redis = redisModule.default || redisModule
 } catch (error) {
   console.warn('Redis module not installed. Using in-memory cache fallback.')

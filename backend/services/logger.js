@@ -6,13 +6,16 @@
 import path from 'path'
 import fs from 'fs'
 import { createRequire } from 'module'
-const require = createRequire(import.meta.url)
+
+// CJS bundle (Netlify/Lambda): use ambient require. ESM (local): createRequire(import.meta.url)
+let req
+try { req = require } catch (_) { req = createRequire(import.meta.url) }
 
 // Graceful import with fallback for missing dependencies (sync for CJS bundling)
 let winston = null
 let winstonFormats = null
 try {
-  const winstonModule = require('winston')
+  const winstonModule = req('winston')
   // require('winston') has .transports.File; .default has different shape, so use module
   winston = winstonModule.transports ? winstonModule : (winstonModule.default || winstonModule)
   winstonFormats = (winston && winston.format) || {}
