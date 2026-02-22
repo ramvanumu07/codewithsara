@@ -3,13 +3,14 @@
  * Centralized error tracking and monitoring with graceful fallbacks
  */
 
-// Graceful import with fallback for missing dependencies
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
+
+// Graceful import with fallback for missing dependencies (sync for CJS bundling)
 let Sentry = null
 let sentryAvailable = false
-
 try {
-  const sentryModule = await import('@sentry/node')
-  Sentry = sentryModule
+  Sentry = require('@sentry/node')
   sentryAvailable = true
 } catch (error) {
   console.warn('Sentry module not installed. Error tracking will use fallback logging.')

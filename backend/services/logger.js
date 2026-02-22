@@ -5,15 +5,17 @@
 
 import path from 'path'
 import fs from 'fs'
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
 
-// Graceful import with fallback for missing dependencies
+// Graceful import with fallback for missing dependencies (sync for CJS bundling)
 let winston = null
 let winstonFormats = null
-
 try {
-  const winstonModule = await import('winston')
-  winston = winstonModule.default
-  winstonFormats = winstonModule.format
+  const winstonModule = require('winston')
+  // require('winston') has .transports.File; .default has different shape, so use module
+  winston = winstonModule.transports ? winstonModule : (winstonModule.default || winstonModule)
+  winstonFormats = (winston && winston.format) || {}
 } catch (error) {
   console.warn('Winston module not installed. Using console logging fallback.')
 }
