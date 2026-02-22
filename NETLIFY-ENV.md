@@ -4,6 +4,12 @@ In Netlify: **Site → Site configuration → Environment variables → Add a va
 
 Use the same values you have in `backend/.env`. Add every variable below.
 
+**Checklist for login to work on Netlify:**  
+1. All **Required** variables set (JWT_SECRET, SUPABASE_*, GROQ_API_KEY).  
+2. **VITE_API_BASE_URL** left **empty** so the app uses same-origin `/api`.  
+3. **FRONTEND_URL** = your site URL (e.g. `https://codewithsara.netlify.app`) – or rely on Netlify’s built-in `URL` for CORS.  
+4. Redeploy after changing env vars.
+
 ---
 
 ## Required (must have)

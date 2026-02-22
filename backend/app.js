@@ -47,6 +47,10 @@ app.use(cors({
     if (process.env.FRONTEND_URL) {
       allowedOrigins.push(...process.env.FRONTEND_URL.split(',').map(s => s.trim()).filter(Boolean))
     }
+    // Netlify injects URL (site URL) in function context – allow same-origin for /api
+    if (process.env.URL) {
+      allowedOrigins.push(process.env.URL.replace(/\/$/, ''))
+    }
     if (allowedOrigins.includes(origin)) {
       return callback(null, true)
     }

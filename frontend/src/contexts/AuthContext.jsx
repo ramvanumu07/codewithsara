@@ -92,15 +92,12 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: toErrorString(err) || 'Login failed' }
       }
     } catch (error) {
-      // #region agent log
-      const resp = error.response
-      const body = resp?.data != null ? (typeof resp.data === 'object' && !Array.isArray(resp.data) ? { ...resp.data } : resp.data) : null
-      fetch('http://127.0.0.1:7242/ingest/dbfe404f-6ce7-49dd-99ab-481ff031ac11', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'AuthContext.jsx:login-catch', message: 'Login failed response', data: { status: resp?.status, responseBody: body }, timestamp: Date.now(), hypothesisId: 'H1' }) }).catch(() => {})
-      // #endregion
       let errorMessage = 'Login failed. Please try again.'
       if (error.response?.data) {
         const d = error.response.data
         errorMessage = toErrorString(d.message ?? d.error ?? d) || errorMessage
+      } else if (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error')) {
+        errorMessage = 'Cannot reach server. Make sure the backend is running on port 5000 (run: npm run dev from project root).'
       }
       return { success: false, error: errorMessage }
     }

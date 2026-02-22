@@ -5,11 +5,10 @@
 
 import axios from 'axios'
 
-// Sara API configuration: when not on localhost (e.g. Vercel URL), always use same-origin /api
+// Local dev: use relative /api so Vite proxy forwards to backend (no CORS). Production: use VITE_API_BASE_URL or same-origin /api
 const isLocalhost = typeof window !== 'undefined' && /^localhost$|^127\.0\.0\.1$/i.test(window.location.hostname)
 const raw = import.meta.env.VITE_API_BASE_URL
-const API_BASE_URL = (raw !== undefined && raw !== '') ? raw : (isLocalhost ? 'http://localhost:5000' : '')
-const baseURL = API_BASE_URL ? `${API_BASE_URL}/api` : '/api'
+const baseURL = (isLocalhost ? '' : (raw !== undefined && raw !== '') ? `${raw}/api` : '') || '/api'
 
 const api = axios.create({
   baseURL,
