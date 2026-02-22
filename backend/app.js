@@ -23,9 +23,16 @@ import learningRoutes from './routes/learning.js'
 import debugSchemaRoutes from './routes/debug-schema.js'
 import debugChatRoutes from './routes/debug-chat.js'
 
-import { performanceMonitor } from './middleware/performance.js'
-import { performanceMiddleware, getPerformanceStats } from './services/performanceMonitor.js'
-import { errorHandler } from './middleware/errorHandler.js'
+import { performanceMonitor as performanceMonitorExport } from './middleware/performance.js'
+import { performanceMiddleware as performanceMiddlewareExport, getPerformanceStats } from './services/performanceMonitor.js'
+import { errorHandler as errorHandlerExport } from './middleware/errorHandler.js'
+
+// CJS bundle (Netlify) can wrap exports; ensure we pass a function (or Router) to app.use()
+function asMiddleware(m) {
+  if (typeof m === 'function') return m
+  if (m && typeof m.default === 'function') return m.default
+  return (req, res, next) => next()
+}
 
 initializeErrorTracking()
 initializeCache()
@@ -62,8 +69,8 @@ app.use(cors({
   optionsSuccessStatus: 200
 }))
 
-app.use(requestIdMiddleware)
-app.use(performanceMiddleware)
+app.use(asMiddleware(requestIdMiddleware))
+app.use(asMiddleware(performanceMiddlewareExport))
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -78,14 +85,14 @@ app.use(helmet({
 app.use(compression({ level: 6, threshold: 1024 }))
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
-app.use(performanceMonitor)
+app.use(asMiddleware(performanceMonitorExport))
 
-app.use('/api/auth', authRoutes)
-app.use('/api/chat', chatRoutes)
-app.use('/api/learn', learningRoutes)
-app.use('/api/debug', debugSchemaRoutes)
-app.use('/api/debug', debugChatRoutes)
-app.use(errorHandler)
+app.use('/api/auth', asMiddleware(authRoutes))
+app.use('/api/chat', asMiddleware(chatRoutes))
+app.use('/api/learn', asMiddleware(learningRoutes))
+app.use('/api/debug', asMiddleware(debugSchemaRoutes))
+app.use('/api/debug', asMiddleware(debugChatRoutes))
+app.use(asMiddleware(errorHandlerExport))
 
 app.get('/health', (req, res) => {
   res.json({
