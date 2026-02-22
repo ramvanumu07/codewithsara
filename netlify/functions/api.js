@@ -4,6 +4,9 @@
  */
 
 import serverless from 'serverless-http'
-import app from '../../backend/app.js'
+import appModule from '../../backend/app.js'
 
-export const handler = serverless({ app })
+// CJS bundle may wrap default export; serverless-http needs the real Express app
+const app = typeof appModule === 'function' ? appModule : (appModule?.default ?? appModule)
+
+export const handler = serverless(app)
