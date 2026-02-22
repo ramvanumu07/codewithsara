@@ -18,8 +18,8 @@ try {
   console.warn('Winston module not installed. Using console logging fallback.')
 }
 
-// On Vercel (serverless) the filesystem is read-only; skip file logging
-const isServerless = !!process.env.VERCEL
+// Skip file logging in serverless/read-only environments
+const isServerless = !!(process.env.NETLIFY_DEV || process.env.AWS_LAMBDA_FUNCTION_NAME)
 let logsDir
 if (!isServerless) {
   logsDir = path.join(process.cwd(), 'logs')
@@ -160,75 +160,6 @@ export const logWarn = (message, meta = {}) => {
 
 export const logDebug = (message, meta = {}) => {
   logger.debug(message, meta)
-}
-
-// Request logging middleware
-export const requestLogger = (req, res, next) => {
-  const start = Date.now()
-  
-  // Log request start
-  logInfo('Request started', {
-    requestId: req.requestId,
-    method: req.method,
-    url: req.originalUrl,
-    userAgent: req.get('User-Agent'),
-    ip: req.ip,
-    userId: req.user?.userId
-  })
-  
-  // Log response when finished
-  res.on('finish', () => {
-    const duration = Date.now() - start
-    const level = res.statusCode >= 400 ? 'warn' : 'info'
-    
-    logger.log(level, 'Request completed', {
-      requestId: req.requestId,
-      method: req.method,
-      url: req.originalUrl,
-      statusCode: res.statusCode,
-      duration: `${duration}ms`,
-      userId: req.user?.userId
-    })
-  })
-  
-  next()
-}
-
-// Database query logger
-export const logDatabaseQuery = (query, duration, error = null) => {
-  if (error) {
-    logError('Database query failed', error, {
-      query: query.substring(0, 200), // Truncate long queries
-      duration: `${duration}ms`
-    })
-  } else if (duration > 1000) { // Log slow queries
-    logWarn('Slow database query', {
-      query: query.substring(0, 200),
-      duration: `${duration}ms`
-    })
-  } else {
-    logDebug('Database query executed', {
-      query: query.substring(0, 100),
-      duration: `${duration}ms`
-    })
-  }
-}
-
-// Authentication events logger
-export const logAuthEvent = (event, userId, details = {}) => {
-  logInfo(`Auth event: ${event}`, {
-    userId,
-    event,
-    ...details
-  })
-}
-
-// Security events logger
-export const logSecurityEvent = (event, details = {}) => {
-  logWarn(`Security event: ${event}`, {
-    event,
-    ...details
-  })
 }
 
 export default logger

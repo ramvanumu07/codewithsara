@@ -113,21 +113,8 @@ export class PerformanceTimer {
   }
 }
 
-// Helper functions for common operations
 export const trackRequest = (method, path) => {
   return new PerformanceTimer(`${method} ${path}`, 'requests')
-}
-
-export const trackDatabase = (operation, table = 'unknown') => {
-  return new PerformanceTimer(operation, 'database').addMetadata('table', table)
-}
-
-export const trackCache = (operation, key = 'unknown') => {
-  return new PerformanceTimer(operation, 'cache').addMetadata('key', key)
-}
-
-export const trackAPI = (service, endpoint) => {
-  return new PerformanceTimer(`${service}:${endpoint}`, 'api')
 }
 
 // Get performance statistics
@@ -159,10 +146,9 @@ export const getPerformanceStats = () => {
 
 // Clear old metrics (run periodically)
 export const cleanupMetrics = () => {
-  const oneHourAgo = Date.now() - (60 * 60 * 1000)
-  
+  const _oneHourAgo = Date.now() - (60 * 60 * 1000)
   for (const categoryMetrics of Object.values(metrics)) {
-    for (const [key, data] of categoryMetrics) {
+    for (const [_key, data] of categoryMetrics) {
       // Keep only recent measurements
       data.recentTimes = data.recentTimes.slice(-50)
     }
@@ -224,9 +210,6 @@ setInterval(checkPerformanceAlerts, 5 * 60 * 1000) // Every 5 minutes
 export default {
   PerformanceTimer,
   trackRequest,
-  trackDatabase,
-  trackCache,
-  trackAPI,
   getPerformanceStats,
   performanceMiddleware,
   checkPerformanceAlerts

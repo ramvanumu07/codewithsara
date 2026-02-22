@@ -31,7 +31,7 @@ beforeEach(async () => {
 })
 
 async function cleanTestDatabase() {
-  if (!testClient) return
+  if (!testClient) {return}
   
   try {
     // Delete test data in correct order (foreign keys)

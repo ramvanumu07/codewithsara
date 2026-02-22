@@ -1,12 +1,34 @@
+# Dependencies
 node_modules
+
+# Build / output
 dist
+build
+out
+
+# IDE
+.idea
+.vscode/settings.json
+
+# Environment (never commit secrets)
 .env
 .env.*
 !.env.example
+
+# Logs (runtime-generated)
 *.log
+logs/
+backend/logs/
+
+# OS / misc
 .DS_Store
+Thumbs.db
+
+# Legacy / temp
 outcomes-list.html
 outcomes-list.txt
 test_output.js
 frontend/env
+
+# Deploy / infra (removed)
 .vercel

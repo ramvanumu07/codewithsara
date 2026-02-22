@@ -6,40 +6,31 @@
 import express from 'express'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import crypto from 'crypto'
 import {
   createUser,
   getUserById,
   getUserByUsername,
-  getUserByEmail,
-  updateUserProfile,
   updateLastLogin,
-  createPasswordResetToken,
-  getPasswordResetToken,
-  markPasswordResetTokenUsed,
   updateUserPassword,
-  createUserSession,
-  getUserSession,
-  updateSessionLastAccessed,
-  deleteUserSession,
+  getTokenVersion,
+  bumpTokenVersion,
   upsertProgress,
-  getAllProgress
+  getAllProgress,
+  initializeDatabase
 } from '../services/database.js'
 import { getAllTopics } from '../utils/curriculum.js'
 import { courses } from '../../data/curriculum.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
+import { asyncHandler } from '../middleware/errorHandler.js'
 
 const router = express.Router()
-
-// Ensure async route errors are passed to Express error middleware (fixes unhandled rejections on Vercel)
-const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
 
 // ============ MIDDLEWARE ============
 
 export function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1] // Bearer TOKEN
+  const token = authHeader && authHeader.split(' ')[1]
 
   if (!token) {
     return res.status(401).json(createErrorResponse('Access token required'))
@@ -51,21 +42,15 @@ export function authenticateToken(req, res, next) {
     }
 
     try {
-      // Verify session is still valid
-      const session = await getUserSession(token)
-      if (!session) {
-        return res.status(403).json(createErrorResponse('Session expired'))
+      const currentVersion = await getTokenVersion(decoded.userId)
+      if ((decoded.token_version ?? 0) < currentVersion) {
+        return res.status(403).json(createErrorResponse('Session expired. Please log in again.'))
       }
-
-      // Update session last accessed
-      await updateSessionLastAccessed(session.id)
 
       req.user = {
         userId: decoded.userId,
         username: decoded.username,
-        email: decoded.email,
-        name: decoded.name,
-        sessionId: session.id
+        name: decoded.name
       }
       next()
     } catch (error) {
@@ -76,67 +61,13 @@ export function authenticateToken(req, res, next) {
 
 // ============ VALIDATION FUNCTIONS ============
 
-function validateEmail(email) {
-  if (!email) return { isValid: false, errors: ['Email is required'] }
-
-  const errors = []
-  const trimmedEmail = email.trim().toLowerCase()
-
-  // Basic format validation
-  const basicEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!basicEmailRegex.test(trimmedEmail)) {
-    errors.push('Please enter a valid email address')
-    return { isValid: false, errors }
-  }
-
-  // Advanced format validation
-  const advancedEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-  if (!advancedEmailRegex.test(trimmedEmail)) {
-    errors.push('Email format is not valid')
-    return { isValid: false, errors }
-  }
-
-  const [localPart, domain] = trimmedEmail.split('@')
-
-  // Local part validation
-  if (localPart.length > 64) {
-    errors.push('Email address is too long')
-    return { isValid: false, errors }
-  }
-
-  if (localPart.startsWith('.') || localPart.endsWith('.') || localPart.includes('..')) {
-    errors.push('Email format is not valid')
-    return { isValid: false, errors }
-  }
-
-  // Domain validation
-  if (domain.length > 255) {
-    errors.push('Email domain is too long')
-    return { isValid: false, errors }
-  }
-
-  // Disposable email providers
-  const disposableProviders = [
-    '10minutemail.com', 'guerrillamail.com', 'mailinator.com', 'tempmail.org',
-    'throwaway.email', 'temp-mail.org', 'getnada.com', 'maildrop.cc',
-    'sharklasers.com', 'guerrillamailblock.com', 'pokemail.net', 'spam4.me'
-  ]
-
-  if (disposableProviders.includes(domain)) {
-    errors.push('Disposable email addresses are not allowed')
-    return { isValid: false, errors }
-  }
-
-  return { isValid: true, errors: [] }
-}
-
 function validateUsername(username) {
   const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/
   return usernameRegex.test(username)
 }
 
 function validatePassword(password) {
-  if (!password) return { isValid: false, errors: ['Password is required'] }
+  if (!password) {return { isValid: false, errors: ['Password is required'] }}
 
   const errors = []
 
@@ -162,7 +93,7 @@ function validatePassword(password) {
     errors.push('Password must contain at least one number')
   }
 
-  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?]/.test(password)) {
+  if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>?]/.test(password)) {
     errors.push('Password must contain at least one special character')
   }
 
@@ -190,121 +121,33 @@ function validateName(name) {
 
 // ============ UTILITY FUNCTIONS ============
 
+const JWT_EXPIRY = '30d' // Long-lived so users stay logged in
+
 async function generateTokens(user) {
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.trim() === '') {
     throw new Error('Server configuration error: JWT_SECRET is not set. Add it in Vercel (or .env) for auth to work.')
   }
+  const tokenVersion = user.token_version ?? 0
   const payload = {
     userId: user.id,
     username: user.username,
-    email: user.email,
-    name: user.name
+    name: user.name,
+    token_version: tokenVersion
   }
 
-  // Generate short-lived access token (1 hour)
-  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: '1h'
-  })
-
-  // Generate long-lived refresh token (6 months - industry standard)
-  const refreshToken = jwt.sign(
-    { userId: user.id, type: 'refresh' }, 
-    process.env.JWT_SECRET,
-    { expiresIn: '6M' } // 6 months - secure but user-friendly
-  )
-
-  // Create session in database with both tokens
-  const accessExpiresAt = new Date()
-  accessExpiresAt.setHours(accessExpiresAt.getHours() + 1)
-  
-  // Set refresh token to expire in 6 months (industry standard)
-  const refreshExpiresAt = new Date()
-  refreshExpiresAt.setMonth(refreshExpiresAt.getMonth() + 6)
-
-  await createUserSession(
-    user.id,
-    accessToken,
-    accessExpiresAt.toISOString(),
-    null, // IP address - could be added from req.ip
-    null, // User agent - could be added from req.get('User-Agent')
-    refreshToken,
-    refreshExpiresAt.toISOString()
-  )
+  const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: JWT_EXPIRY })
 
   return {
     accessToken,
-    refreshToken,
-    expiresIn: 3600 // 1 hour in seconds
+    expiresIn: 30 * 24 * 60 * 60 // 30 days in seconds
   }
 }
 
-// Keep old function for backward compatibility
 async function generateToken(user) {
   const tokens = await generateTokens(user)
   return tokens.accessToken
 }
 
-
-// ============ SESSION MANAGEMENT FUNCTIONS ============
-
-// Invalidate all sessions for a user (for security events)
-async function invalidateAllUserSessions(userId) {
-  const client = initializeDatabase()
-  const { error } = await client
-    .from('user_sessions')
-    .delete()
-    .eq('user_id', userId)
-
-  if (error) throw new Error(`Failed to invalidate user sessions: ${error.message}`)
-}
-
-// Invalidate specific session
-async function invalidateSession(sessionId) {
-  const client = initializeDatabase()
-  const { error } = await client
-    .from('user_sessions')
-    .delete()
-    .eq('id', sessionId)
-
-  if (error) throw new Error(`Failed to invalidate session: ${error.message}`)
-}
-
-// ============ REFRESH TOKEN FUNCTIONS ============
-
-async function getUserByRefreshToken(refreshToken) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('user_sessions')
-    .select('*, users(*)')
-    .eq('refresh_token', refreshToken)
-    .gt('refresh_expires_at', new Date().toISOString())
-    .single()
-
-  if (error && error.code !== 'PGRST116') {
-    throw new Error(`Failed to get user by refresh token: ${error.message}`)
-  }
-  
-  return data
-}
-
-async function updateSessionTokens(sessionId, newAccessToken, newAccessExpiresAt, newRefreshToken, newRefreshExpiresAt) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('user_sessions')
-    .update({
-      token: newAccessToken,
-      expires_at: newAccessExpiresAt,
-      refresh_token: newRefreshToken,
-      refresh_expires_at: newRefreshExpiresAt,
-      last_accessed: new Date().toISOString()
-    })
-    .eq('id', sessionId)
-    .select()
-    .single()
-
-  if (error) throw new Error(`Failed to update session tokens: ${error.message}`)
-  return data
-}
 
 // ============ AUTHENTICATION ROUTES ============
 
@@ -327,94 +170,6 @@ function checkUsernameRateLimit(identifier) {
   usernameCheckLimiter.set(identifier, validRequests)
   return true
 }
-
-// Check email existence
-router.post('/check-email', async (req, res) => {
-  const identifier = req.ip || 'anonymous'
-
-  if (!checkUsernameRateLimit(identifier)) {
-    return res.status(429).json({
-      success: false,
-      message: 'Too many email checks. Please wait a moment.',
-      retryAfter: 60
-    })
-  }
-
-  try {
-    const { email } = req.body
-
-    if (!email) {
-      return res.json({
-        success: true,
-        data: {
-          exists: false,
-          message: 'Email is required'
-        }
-      })
-    }
-
-    // Check if email exists
-    const existingUser = await getUserByEmail(email)
-
-    return res.json({
-      success: true,
-      data: {
-        exists: !!existingUser,
-        message: existingUser ? 'Email is already registered' : 'Email is available'
-      }
-    })
-
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to check email availability'
-    })
-  }
-})
-
-// Check email availability (GET)
-router.get('/check-email/:email', async (req, res) => {
-  const identifier = req.ip || 'anonymous'
-
-  if (!checkUsernameRateLimit(identifier)) {
-    return res.status(429).json({
-      success: false,
-      message: 'Too many email checks. Please wait a moment.',
-      retryAfter: 60
-    })
-  }
-
-  try {
-    const { email } = req.params
-
-    if (!email) {
-      return res.json({
-        success: true,
-        data: {
-          available: false,
-          message: 'Email is required'
-        }
-      })
-    }
-
-    // Check if email exists
-    const existingUser = await getUserByEmail(email)
-
-    return res.json({
-      success: true,
-      data: {
-        available: !existingUser,
-        message: existingUser ? 'Email is already registered' : 'Email is available'
-      }
-    })
-
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to check email availability'
-    })
-  }
-})
 
 // Check username availability
 router.get('/check-username/:username', async (req, res) => {
@@ -501,20 +256,14 @@ function generateUsernameSuggestions(username) {
 
 router.post('/signup', rateLimitMiddleware, async (req, res) => {
   try {
-    const { username, email, name, password, confirmPassword, securityQuestion, securityAnswer } = req.body
+    const { username, name, password, confirmPassword, securityQuestion, securityAnswer } = req.body
 
-    // Validation
-    if (!username || !email || !name || !password || !confirmPassword || !securityQuestion || !securityAnswer) {
+    if (!username || !name || !password || !confirmPassword || !securityQuestion || !securityAnswer) {
       return res.status(400).json(createErrorResponse('All fields are required'))
     }
 
     if (!validateUsername(username)) {
       return res.status(400).json(createErrorResponse('Username must be 3-20 characters and contain only letters, numbers, and underscores'))
-    }
-
-    const emailValidation = validateEmail(email)
-    if (!emailValidation.isValid) {
-      return res.status(400).json(createErrorResponse(emailValidation.errors[0]))
     }
 
     if (!validateName(name)) {
@@ -530,27 +279,16 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
       return res.status(400).json(createErrorResponse('Passwords do not match'))
     }
 
-    // Check if user already exists
-    const [existingUsername, existingEmail] = await Promise.all([
-      getUserByUsername(username),
-      getUserByEmail(email)
-    ])
-
+    const existingUsername = await getUserByUsername(username)
     if (existingUsername) {
       return res.status(409).json(createErrorResponse('Username already exists'))
     }
 
-    if (existingEmail) {
-      return res.status(409).json(createErrorResponse('Email already registered'))
-    }
-
-    // Hash password and security answer
     const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '12')
     const hashedPassword = await bcrypt.hash(password, saltRounds)
     const hashedSecurityAnswer = await bcrypt.hash(securityAnswer.toLowerCase().trim(), saltRounds)
 
-    // Create user
-    const user = await createUser(username, email, name.trim(), hashedPassword, securityQuestion, hashedSecurityAnswer)
+    const user = await createUser(username, name.trim(), hashedPassword, securityQuestion, hashedSecurityAnswer)
 
     // Create first-topic progress row so new user has progress as soon as they exist (dashboard/continue work immediately)
     try {
@@ -566,7 +304,8 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
           updated_at: new Date().toISOString()
         })
       }
-    } catch (progressErr) {
+    } catch (_progressErr) {
+      // ignore progress init
     }
 
     // Generate token and create session
@@ -581,7 +320,6 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
       user: {
         id: user.id,
         username: user.username,
-        email: user.email,
         name: user.name
       },
       token
@@ -596,25 +334,17 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
 
 router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
   try {
-    const { usernameOrEmail: rawInput, password } = req.body
-    const usernameOrEmail = typeof rawInput === 'string' ? rawInput.trim() : (rawInput != null ? String(rawInput) : '')
+    const { username: rawInput, password } = req.body
+    const username = typeof rawInput === 'string' ? rawInput.trim() : (rawInput != null ? String(rawInput) : '')
 
-    if (!usernameOrEmail || !password) {
-      return res.status(400).json(createErrorResponse('Username/email and password are required'))
+    if (!username || !password) {
+      return res.status(400).json(createErrorResponse('Username and password are required'))
     }
 
-    // Find user by username or email
-    let user = null
-    const isEmail = validateEmail(usernameOrEmail).isValid
-
-    if (isEmail) {
-      user = await getUserByEmail(usernameOrEmail)
-    } else {
-      user = await getUserByUsername(usernameOrEmail)
-    }
+    const user = await getUserByUsername(username)
 
     if (!user) {
-      return res.status(401).json(createErrorResponse('Username or email not found. Please check your credentials or create an account.'))
+      return res.status(401).json(createErrorResponse('Username not found. Please check your credentials or create an account.'))
     }
 
     // Check password
@@ -648,13 +378,13 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
           })
         }
       }
-    } catch (progressErr) {
+    } catch (_progressErr) {
+      // ignore progress init
     }
 
     const responseUserData = {
       id: user.id,
       username: user.username,
-      email: user.email,
       name: user.name,
       lastLogin: user.last_login
     }
@@ -663,13 +393,11 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
       message: 'Login successful',
       user: responseUserData,
       accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
       expiresIn: tokens.expiresIn,
-      // Keep old token field for backward compatibility
       token: tokens.accessToken
     }))
   } catch (error) {
-    const safeMsg = (error && typeof error.message === 'string') ? error.message : (error && error.message != null ? String(error.message) : null) || 'Login failed'
+    const safeMsg = (error && typeof error.message === 'string') ? error.message : (error && error.message !== null && error.message !== undefined ? String(error.message) : null) || 'Login failed'
     try {
       if (!res.headersSent) {
         handleErrorResponse(res, error, 'login')
@@ -684,61 +412,9 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
 
 router.post('/logout', authenticateToken, async (req, res) => {
   try {
-    const token = req.headers['authorization']?.split(' ')[1]
-
-    if (token) {
-      await deleteUserSession(token)
-    }
-
-
-    res.json(createSuccessResponse({
-      message: 'Logout successful'
-    }))
+    res.json(createSuccessResponse({ message: 'Logout successful' }))
   } catch (error) {
     handleErrorResponse(res, error, 'logout')
-  }
-})
-
-// ============ PASSWORD RESET ============
-
-router.post('/reset-password', rateLimitMiddleware, async (req, res) => {
-  try {
-    const { token, password, confirmPassword } = req.body
-
-    if (!token || !password || !confirmPassword) {
-      return res.status(400).json(createErrorResponse('Token, password, and confirm password are required'))
-    }
-
-    if (!validatePassword(password)) {
-      return res.status(400).json(createErrorResponse('Password must be at least 6 characters long'))
-    }
-
-    if (password !== confirmPassword) {
-      return res.status(400).json(createErrorResponse('Passwords do not match'))
-    }
-
-    // Validate token
-    const resetToken = await getPasswordResetToken(token)
-    if (!resetToken) {
-      return res.status(400).json(createErrorResponse('Invalid or expired reset token'))
-    }
-
-    // Hash new password
-    const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '12')
-    const hashedPassword = await bcrypt.hash(password, saltRounds)
-
-    // Update password
-    await updateUserPassword(resetToken.user_id, hashedPassword)
-
-    // Mark token as used
-    await markPasswordResetTokenUsed(resetToken.id)
-
-
-    res.json(createSuccessResponse({
-      message: 'Password reset successful. You can now log in with your new password.'
-    }))
-  } catch (error) {
-    handleErrorResponse(res, error, 'reset password')
   }
 })
 
@@ -747,12 +423,10 @@ router.post('/reset-password', rateLimitMiddleware, async (req, res) => {
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
     const user = req.user
-
     res.json(createSuccessResponse({
       user: {
         id: user.userId,
         username: user.username,
-        email: user.email,
         name: user.name
       }
     }))
@@ -761,135 +435,29 @@ router.get('/profile', authenticateToken, async (req, res) => {
   }
 })
 
-router.put('/profile', authenticateToken, rateLimitMiddleware, async (req, res) => {
-  try {
-    const { name, email, username, currentPassword, newPassword, confirmNewPassword } = req.body
-    const userId = req.user.userId
-
-    // Get current user data
-    const currentUser = await getUserById(req.user.userId)
-    if (!currentUser) {
-      return res.status(404).json(createErrorResponse('User not found'))
-    }
-
-    // Verify current password only if password is being changed
-    if (newPassword) {
-      if (!currentPassword) {
-        return res.status(400).json(createErrorResponse('Current password is required to change password'))
-      }
-
-      const isValidPassword = await bcrypt.compare(currentPassword, currentUser.password)
-      if (!isValidPassword) {
-        return res.status(401).json(createErrorResponse('Current password is incorrect'))
-      }
-    }
-
-    const updates = {}
-
-    // Validate and update name
-    if (name !== undefined) {
-      if (!validateName(name)) {
-        return res.status(400).json(createErrorResponse('Name must be at least 2 characters long'))
-      }
-      updates.name = name.trim()
-    }
-
-    // Validate and update email
-    if (email !== undefined && email !== currentUser.email) {
-      if (!validateEmail(email)) {
-        return res.status(400).json(createErrorResponse('Please enter a valid email address'))
-      }
-
-      const existingEmail = await getUserByEmail(email)
-      if (existingEmail) {
-        return res.status(409).json(createErrorResponse('Email already in use'))
-      }
-
-      updates.email = email
-    }
-
-    // Validate and update username
-    if (username !== undefined && username !== currentUser.username) {
-      if (!validateUsername(username)) {
-        return res.status(400).json(createErrorResponse('Username must be 3-20 characters and contain only letters, numbers, and underscores'))
-      }
-
-      const existingUsername = await getUserByUsername(username)
-      if (existingUsername && existingUsername.id !== currentUser.id) {
-        return res.status(409).json(createErrorResponse('Username already taken'))
-      }
-
-      updates.username = username
-    }
-
-    // Update password if provided
-    if (newPassword) {
-      if (!validatePassword(newPassword)) {
-        return res.status(400).json(createErrorResponse('New password must be at least 6 characters long'))
-      }
-
-      if (newPassword !== confirmNewPassword) {
-        return res.status(400).json(createErrorResponse('New passwords do not match'))
-      }
-
-      const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '12')
-      updates.password = await bcrypt.hash(newPassword, saltRounds)
-      
-      // Invalidate all sessions when password changes (security measure)
-      await invalidateAllUserSessions(userId)
-    }
-
-    // Update user profile
-    const updatedUser = await updateUserProfile(userId, updates)
-
-
-    res.json(createSuccessResponse({
-      message: 'Profile updated successfully',
-      user: {
-        id: updatedUser.id,
-        username: updatedUser.username,
-        email: updatedUser.email,
-        name: updatedUser.name
-      }
-    }))
-  } catch (error) {
-    if (error.message.includes('already')) {
-      return res.status(409).json(createErrorResponse(error.message))
-    }
-    handleErrorResponse(res, error, 'update profile')
-  }
-})
-
 // ============ SESSION VALIDATION ============
 
 router.get('/validate', authenticateToken, async (req, res) => {
   try {
-    // Get fresh user data from database instead of JWT
     const currentUser = await getUserById(req.user.userId)
-
     if (!currentUser) {
       return res.status(404).json(createErrorResponse('User not found'))
     }
-
-    const responseData = {
+    res.json(createSuccessResponse({
       valid: true,
       user: {
         id: currentUser.id,
         username: currentUser.username,
-        email: currentUser.email,
         name: currentUser.name
       }
-    }
-
-    res.json(createSuccessResponse(responseData))
+    }))
   } catch (error) {
     handleErrorResponse(res, error, 'validate token')
   }
 })
 
 // ============ LEGACY COMPATIBILITY ============
-
-// Support old student_id based login
+// Legacy: student_id login. Remove when no old clients use it.
 router.post('/login-legacy', rateLimitMiddleware, async (req, res) => {
   try {
     const { studentId, password } = req.body
@@ -931,37 +499,20 @@ router.post('/login-legacy', rateLimitMiddleware, async (req, res) => {
   }
 })
 
-// Get Security Question endpoint
+// Get Security Question endpoint (for forgot password - username only)
 router.post('/get-security-question', async (req, res) => {
   try {
-    const { usernameOrEmail } = req.body
+    const { username } = req.body
+    const input = (username != null && typeof username === 'string') ? username.trim() : ''
 
-    if (!usernameOrEmail) {
-      return res.status(400).json(createErrorResponse('Username or email is required'))
+    if (!input) {
+      return res.status(400).json(createErrorResponse('Username is required'))
     }
 
-    const input = usernameOrEmail.trim()
-
-    // Validate email format if it contains @
-    if (input.includes('@')) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(input)) {
-        return res.status(400).json(createErrorResponse('Please enter a valid email address'))
-      }
-    }
-
-    // Check if user exists
-    let user = null
-    const isEmail = input.includes('@')
-
-    if (isEmail) {
-      user = await getUserByEmail(input)
-    } else {
-      user = await getUserByUsername(input)
-    }
+    const user = await getUserByUsername(input)
 
     if (!user) {
-      return res.status(404).json(createErrorResponse('Account with this username/email does not exist'))
+      return res.status(404).json(createErrorResponse('Account with this username does not exist'))
     }
 
     if (!user.security_question) {
@@ -982,23 +533,14 @@ router.post('/get-security-question', async (req, res) => {
 // Verify Security Answer Only endpoint (for step validation)
 router.post('/verify-security-answer-only', async (req, res) => {
   try {
-    const { usernameOrEmail, securityAnswer } = req.body
+    const { username, securityAnswer } = req.body
+    const input = (username != null && typeof username === 'string') ? username.trim() : ''
 
-    if (!usernameOrEmail || !securityAnswer) {
-      return res.status(400).json(createErrorResponse('Username/email and security answer are required'))
+    if (!input || !securityAnswer) {
+      return res.status(400).json(createErrorResponse('Username and security answer are required'))
     }
 
-    const input = usernameOrEmail.trim()
-
-    // Check if user exists
-    let user = null
-    const isEmail = input.includes('@')
-
-    if (isEmail) {
-      user = await getUserByEmail(input)
-    } else {
-      user = await getUserByUsername(input)
-    }
+    const user = await getUserByUsername(input)
 
     if (!user) {
       return res.status(404).json(createErrorResponse('Account not found'))
@@ -1029,9 +571,10 @@ router.post('/verify-security-answer-only', async (req, res) => {
 // Verify Security Answer and Reset Password endpoint
 router.post('/verify-security-answer', async (req, res) => {
   try {
-    const { usernameOrEmail, securityAnswer, newPassword, confirmPassword } = req.body
+    const { username, securityAnswer, newPassword, confirmPassword } = req.body
+    const input = (username != null && typeof username === 'string') ? username.trim() : ''
 
-    if (!usernameOrEmail || !securityAnswer || !newPassword || !confirmPassword) {
+    if (!input || !securityAnswer || !newPassword || !confirmPassword) {
       return res.status(400).json(createErrorResponse('All fields are required'))
     }
 
@@ -1039,17 +582,7 @@ router.post('/verify-security-answer', async (req, res) => {
       return res.status(400).json(createErrorResponse('Passwords do not match'))
     }
 
-    const input = usernameOrEmail.trim()
-
-    // Check if user exists
-    let user = null
-    const isEmail = input.includes('@')
-
-    if (isEmail) {
-      user = await getUserByEmail(input)
-    } else {
-      user = await getUserByUsername(input)
-    }
+    const user = await getUserByUsername(input)
 
     if (!user) {
       return res.status(404).json(createErrorResponse('Account not found'))
@@ -1085,149 +618,6 @@ router.post('/verify-security-answer', async (req, res) => {
 
   } catch (error) {
     res.status(500).json(createErrorResponse('Failed to verify security answer'))
-  }
-})
-
-// ============ GET USER PASSWORD STATUS ============
-router.get('/profile/password', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId
-
-    // Get current user data
-    const currentUser = await getUserById(req.user.userId)
-    if (!currentUser) {
-      return res.status(404).json(createErrorResponse('User not found'))
-    }
-
-    // Return password status (we can't return actual password as it's hashed)
-    // This endpoint confirms the user has a password set
-    res.json(createSuccessResponse({
-      hasPassword: !!currentUser.password,
-      message: 'Password is set and secure'
-    }))
-  } catch (error) {
-    handleErrorResponse(res, error, 'get password status')
-  }
-})
-
-// ============ REFRESH TOKEN ENDPOINT ============
-
-router.post('/refresh', async (req, res) => {
-  try {
-    const { refreshToken } = req.body
-
-    if (!refreshToken) {
-      return res.status(400).json(createErrorResponse('Refresh token is required'))
-    }
-
-    // Validate refresh token and get user session
-    const session = await getUserByRefreshToken(refreshToken)
-    if (!session) {
-      return res.status(403).json(createErrorResponse('Invalid or expired refresh token'))
-    }
-
-    const user = session.users
-    if (!user) {
-      return res.status(403).json(createErrorResponse('User not found'))
-    }
-
-    // Generate new tokens
-    const tokens = await generateTokens(user)
-    
-    // Update the session with new tokens
-    const newAccessExpiresAt = new Date(Date.now() + 60 * 60 * 1000) // 1 hour from now
-    const newRefreshExpiresAt = new Date()
-    newRefreshExpiresAt.setMonth(newRefreshExpiresAt.getMonth() + 6) // 6 months
-    
-    await updateSessionTokens(
-      session.id,
-      tokens.accessToken,
-      newAccessExpiresAt.toISOString(),
-      tokens.refreshToken,
-      newRefreshExpiresAt.toISOString()
-    )
-
-
-    res.json(createSuccessResponse({
-      message: 'Tokens refreshed successfully',
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-      expiresIn: tokens.expiresIn
-    }))
-
-  } catch (error) {
-    handleErrorResponse(res, error, 'refresh token')
-  }
-})
-
-// ============ SESSION MANAGEMENT ENDPOINTS ============
-
-// Get all active sessions for current user
-router.get('/sessions', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId
-    const client = initializeDatabase()
-    
-    const { data: sessions, error } = await client
-      .from('user_sessions')
-      .select('id, created_at, last_accessed, ip_address, user_agent')
-      .eq('user_id', userId)
-      .gt('refresh_expires_at', new Date().toISOString())
-      .order('last_accessed', { ascending: false })
-
-    if (error) throw new Error(`Failed to get user sessions: ${error.message}`)
-
-    res.json(createSuccessResponse({
-      sessions: sessions || []
-    }))
-  } catch (error) {
-    handleErrorResponse(res, error, 'get user sessions')
-  }
-})
-
-// Revoke specific session
-router.delete('/sessions/:sessionId', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId
-    const { sessionId } = req.params
-    
-    const client = initializeDatabase()
-    const { error } = await client
-      .from('user_sessions')
-      .delete()
-      .eq('id', sessionId)
-      .eq('user_id', userId) // Ensure user can only revoke their own sessions
-
-    if (error) throw new Error(`Failed to revoke session: ${error.message}`)
-
-    res.json(createSuccessResponse({
-      message: 'Session revoked successfully'
-    }))
-  } catch (error) {
-    handleErrorResponse(res, error, 'revoke session')
-  }
-})
-
-// Revoke all other sessions (keep current one)
-router.post('/sessions/revoke-others', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId
-    const currentToken = req.headers.authorization?.split(' ')[1]
-    
-    const client = initializeDatabase()
-    const { error } = await client
-      .from('user_sessions')
-      .delete()
-      .eq('user_id', userId)
-      .neq('token', currentToken) // Keep current session
-
-    if (error) throw new Error(`Failed to revoke other sessions: ${error.message}`)
-
-    res.json(createSuccessResponse({
-      message: 'All other sessions revoked successfully'
-    }))
-  } catch (error) {
-    handleErrorResponse(res, error, 'revoke other sessions')
   }
 })
 

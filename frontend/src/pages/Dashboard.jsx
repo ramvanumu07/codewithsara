@@ -245,10 +245,6 @@ const Dashboard = () => {
     navigate(`/learn/${topicId}`)
   }
 
-  const handleEditProfile = () => {
-    navigate('/profile')
-  }
-
   const handleLogout = async () => {
     setLoggingOut(true)
     await logout()
@@ -549,12 +545,6 @@ const Dashboard = () => {
                   <span className="user-name">{user?.name || 'User'}</span>
                 </div>
                 <div className="user-actions">
-                  <button onClick={handleEditProfile} className="action-btn" title="Edit Profile">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                      <path d="m18.5 2.5 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                  </button>
                   <button onClick={handleLogout} className="action-btn" title="Logout">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />

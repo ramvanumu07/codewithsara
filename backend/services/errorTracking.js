@@ -155,7 +155,7 @@ export const captureMessage = (message, level = 'info', context = {}) => {
 }
 
 export const addBreadcrumb = (message, category = 'custom', level = 'info', data = {}) => {
-  if (!isInitialized) return
+  if (!isInitialized) {return}
 
   if (!sentryAvailable) {
     console.log(`🍞 BREADCRUMB [${category}]: ${message}`, data)
@@ -175,7 +175,7 @@ export const addBreadcrumb = (message, category = 'custom', level = 'info', data
 }
 
 export const setUserContext = (user) => {
-  if (!isInitialized) return
+  if (!isInitialized) {return}
 
   if (!sentryAvailable) {
     console.log('👤 USER CONTEXT SET:', { id: user.id, username: user.username })
@@ -194,7 +194,7 @@ export const setUserContext = (user) => {
 }
 
 export const clearUserContext = () => {
-  if (!isInitialized) return
+  if (!isInitialized) {return}
 
   if (!sentryAvailable) {
     console.log('👤 USER CONTEXT CLEARED')

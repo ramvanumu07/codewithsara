@@ -15,7 +15,7 @@ const ForgotPassword = () => {
   const { isAuthenticated } = useAuth()
   const [step, setStep] = useState(1) // 1: username, 2: security question, 3: new password, 4: success
   const [formData, setFormData] = useState({
-    usernameOrEmail: '',
+    username: '',
     securityAnswer: '',
     newPassword: '',
     confirmPassword: ''
@@ -48,21 +48,12 @@ const ForgotPassword = () => {
     }
   }
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
-
   const validateStep1 = () => {
     const newErrors = {}
-    const input = formData.usernameOrEmail.trim()
-
+    const input = formData.username.trim()
     if (!input) {
-      newErrors.usernameOrEmail = 'Username or email is required'
-    } else if (input.includes('@') && !validateEmail(input)) {
-      newErrors.usernameOrEmail = 'Please enter a valid email address'
+      newErrors.username = 'Username is required'
     }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -89,7 +80,7 @@ const ForgotPassword = () => {
 
     try {
       const response = await api.post('/auth/get-security-question', {
-        usernameOrEmail: formData.usernameOrEmail.trim()
+        username: formData.username.trim()
       })
 
       if (response.data.success) {
@@ -106,7 +97,7 @@ const ForgotPassword = () => {
 
         switch (status) {
           case 404:
-            errorMessage = 'Account with this username/email does not exist'
+            errorMessage = 'Account with this username does not exist'
             break
           case 400:
             errorMessage = 'Please check your input and try again'
@@ -138,7 +129,7 @@ const ForgotPassword = () => {
     try {
       // Verify security answer first before proceeding to password reset
       const response = await api.post('/auth/verify-security-answer-only', {
-        usernameOrEmail: formData.usernameOrEmail.trim(),
+        username: formData.username.trim(),
         securityAnswer: formData.securityAnswer.trim()
       })
 
@@ -215,7 +206,7 @@ const ForgotPassword = () => {
     try {
       // Since security answer was already verified in Step 2, we just need to reset the password
       const response = await api.post('/auth/verify-security-answer', {
-        usernameOrEmail: formData.usernameOrEmail.trim(),
+        username: formData.username.trim(),
         securityAnswer: formData.securityAnswer.trim(),
         newPassword: formData.newPassword,
         confirmPassword: formData.confirmPassword
@@ -264,7 +255,7 @@ const ForgotPassword = () => {
     <div className="auth-card">
       <div className="auth-card-header">
         <h1>Reset Your Password</h1>
-        <p>Enter your username or email address to continue</p>
+        <p>Enter your username to continue</p>
       </div>
 
       <form onSubmit={handleStep1Submit} className="auth-form" noValidate>
@@ -275,28 +266,28 @@ const ForgotPassword = () => {
         )}
 
         <div className="form-group">
-          <label htmlFor="usernameOrEmail" className="form-label">
-            Username or Email Address
+          <label htmlFor="username" className="form-label">
+            Username
           </label>
           <input
             type="text"
-            id="usernameOrEmail"
-            name="usernameOrEmail"
-            value={formData.usernameOrEmail}
+            id="username"
+            name="username"
+            value={formData.username}
             onChange={handleChange}
-            className={`form-input ${errors.usernameOrEmail ? 'error' : ''}`}
-            placeholder="Enter your username or email address"
+            className={`form-input ${errors.username ? 'error' : ''}`}
+            placeholder="Enter your username"
             disabled={isLoading}
             required
             autoComplete="username"
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            aria-label="Enter your username or email address"
+            aria-label="Enter your username"
           />
-          {errors.usernameOrEmail && (
+          {errors.username && (
             <div className="username-status">
-              <span className="status-taken">{errors.usernameOrEmail}</span>
+              <span className="status-taken">{errors.username}</span>
             </div>
           )}
         </div>

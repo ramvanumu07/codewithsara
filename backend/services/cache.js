@@ -52,7 +52,7 @@ export const initializeCache = () => {
       keyPrefix: 'sara:',
       reconnectOnError: (err) => {
         const targetError = 'READONLY'
-        const msg = err && typeof err.message === 'string' ? err.message : (err && err.message != null ? String(err.message) : '')
+        const msg = err && typeof err.message === 'string' ? err.message : (err && err.message !== null && err.message !== undefined ? String(err.message) : '')
         return msg.includes(targetError)
       }
     })
@@ -210,52 +210,6 @@ export const expire = async (key, ttlSeconds) => {
   }
 }
 
-// High-level cache functions
-export const cacheUserProgress = async (userId, progress, ttl = 300) => {
-  return await set(`user:progress:${userId}`, progress, ttl)
-}
-
-export const getUserProgressFromCache = async (userId) => {
-  return await get(`user:progress:${userId}`)
-}
-
-export const cacheTopicData = async (topicId, data, ttl = 3600) => {
-  return await set(`topic:${topicId}`, data, ttl)
-}
-
-export const getTopicDataFromCache = async (topicId) => {
-  return await get(`topic:${topicId}`)
-}
-
-export const cacheSessionData = async (sessionId, data, ttl = 1800) => {
-  return await set(`session:${sessionId}`, data, ttl)
-}
-
-export const getSessionDataFromCache = async (sessionId) => {
-  return await get(`session:${sessionId}`)
-}
-
-// Rate limiting with cache
-export const checkRateLimit = async (key, limit, windowSeconds) => {
-  try {
-    const current = await increment(`ratelimit:${key}`)
-    
-    if (current === 1) {
-      await expire(`ratelimit:${key}`, windowSeconds)
-    }
-    
-    return {
-      allowed: current <= limit,
-      count: current,
-      limit,
-      remaining: Math.max(0, limit - current)
-    }
-  } catch (error) {
-    logError('Rate limit check error', error, { key })
-    return { allowed: true, count: 0, limit, remaining: limit }
-  }
-}
-
 export const clearCache = async (pattern = '*') => {
   try {
     if (isConnected && redisClient) {
@@ -293,7 +247,7 @@ export const getCacheStats = async () => {
       return {
         type: 'redis',
         connected: isConnected,
-        info: info
+        info
       }
     } else {
       return {
@@ -317,11 +271,6 @@ export default {
   exists,
   increment,
   expire,
-  cacheUserProgress,
-  getUserProgressFromCache,
-  cacheTopicData,
-  getTopicDataFromCache,
-  checkRateLimit,
   clearCache,
   getCacheStats
 }

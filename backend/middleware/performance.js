@@ -1,6 +1,6 @@
 /**
- * Performance Monitoring Middleware - Industry Level
- * Professional performance tracking and optimization
+ * Performance middleware and in-memory cache helpers.
+ * performanceMonitor: sets X-Response-Time. progressCache: used by database layer.
  */
 
 // ============ PERFORMANCE MONITORING ============
@@ -24,8 +24,9 @@ export const performanceMonitor = (req, res, next) => {
 }
 
 // ============ DATABASE PERFORMANCE UTILITIES ============
+// Stub for optional per-operation metrics; no-op by default.
 
-export const withPerformanceLogging = async (operation, operationName) => {
+export const withPerformanceLogging = async (operation) => {
   return await operation()
 }
 
@@ -37,7 +38,7 @@ export const createCache = (ttlMs = 60000) => {
   return {
     get: (key) => {
       const item = cache.get(key)
-      if (!item) return null
+      if (!item) {return null}
       
       if (Date.now() > item.expires) {
         cache.delete(key)

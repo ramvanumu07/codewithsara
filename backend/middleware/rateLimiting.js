@@ -1,11 +1,10 @@
 /**
- * Industry-Level Rate Limiting Middleware
- * Centralized rate limiting logic to eliminate duplication
+ * Rate Limiting Middleware
+ * Per-identifier limits (IP or user). Use Redis in production for multi-instance.
  */
 
-// Rate limiting configuration
-const RATE_LIMIT = 20 // requests per minute
-const RATE_WINDOW = 60 * 1000 // 1 minute in milliseconds
+const RATE_LIMIT = Math.max(1, parseInt(process.env.RATE_LIMIT_PER_MINUTE, 10) || 20)
+const RATE_WINDOW = 60 * 1000 // 1 minute
 
 // In-memory store for rate limiting (use Redis in production)
 const rateLimiter = new Map()
@@ -48,66 +47,13 @@ export function rateLimitMiddleware(req, res, next) {
   const identifier = req.user?.userId || req.ip || 'anonymous'
   
   if (!checkRateLimit(identifier)) {
+    const retryAfterSec = Math.ceil(RATE_WINDOW / 1000)
+    res.setHeader('Retry-After', String(retryAfterSec))
     return res.status(429).json({
       success: false,
       message: 'Too many requests. Please wait a moment before trying again.',
-      retryAfter: Math.ceil(RATE_WINDOW / 1000) // seconds
+      retryAfter: retryAfterSec
     })
   }
   next()
-}
-
-/**
- * Get rate limit status for a user
- * @param {string} userId - User identifier
- * @returns {Object} - Rate limit status information
- */
-export function getRateLimitStatus(userId) {
-  const now = Date.now()
-  const userRequests = rateLimiter.get(userId) || []
-  const validRequests = userRequests.filter(timestamp => now - timestamp < RATE_WINDOW)
-  
-  return {
-    requestCount: validRequests.length,
-    limit: RATE_LIMIT,
-    windowMs: RATE_WINDOW,
-    remaining: Math.max(0, RATE_LIMIT - validRequests.length),
-    resetTime: validRequests.length > 0 ? validRequests[0] + RATE_WINDOW : now
-  }
-}
-
-/**
- * Clear rate limit for a user (admin function)
- * @param {string} userId - User identifier
- */
-export function clearRateLimit(userId) {
-  rateLimiter.delete(userId)
-}
-
-/**
- * Get all rate limit statistics (admin function)
- * @returns {Object} - Overall rate limiting statistics
- */
-export function getRateLimitStats() {
-  const now = Date.now()
-  let totalUsers = 0
-  let activeUsers = 0
-  let totalRequests = 0
-  
-  for (const [userId, requests] of rateLimiter.entries()) {
-    totalUsers++
-    const validRequests = requests.filter(timestamp => now - timestamp < RATE_WINDOW)
-    if (validRequests.length > 0) {
-      activeUsers++
-      totalRequests += validRequests.length
-    }
-  }
-  
-  return {
-    totalUsers,
-    activeUsers,
-    totalRequests,
-    rateLimit: RATE_LIMIT,
-    windowMs: RATE_WINDOW
-  }
 }

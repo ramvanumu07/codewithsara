@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 
 /**
  * Database Maintenance Script
@@ -9,7 +8,7 @@
 
 import dotenv from 'dotenv'
 import { createClient } from '@supabase/supabase-js'
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -43,7 +42,7 @@ async function healthCheck() {
   
   try {
     // Test basic connectivity
-    const { data: connectionTest, error: connectionError } = await client
+    const { data: _connectionTest, error: connectionError } = await client
       .from('users')
       .select('count(*)')
       .limit(1)
@@ -54,11 +53,11 @@ async function healthCheck() {
     
     console.log('Database connection: OK')
     
-    // Check table structures
-    const tables = ['users', 'progress', 'chat_sessions', 'admins', 'password_reset_tokens', 'user_sessions', 'learning_analytics']
+    // Check table structures (user_sessions, password_reset_tokens, learning_analytics removed from app)
+    const tables = ['users', 'progress', 'chat_sessions', 'admins', 'user_course_unlocks']
     
     for (const table of tables) {
-      const { data, error } = await client
+      const { data: _data, error } = await client
         .from(table)
         .select('count(*)')
         .limit(1)
@@ -74,7 +73,7 @@ async function healthCheck() {
     console.log('\nChecking for critical issues...')
     
     // Check progress table structure
-    const { data: progressCheck, error: progressError } = await client
+    const { data: _progressCheck, error: progressError } = await client
       .rpc('check_progress_table_structure')
       .catch(() => null) // Function might not exist
     
@@ -108,30 +107,32 @@ async function runComprehensiveFix() {
   console.log('🔧 Running comprehensive database fix...\n')
   console.log('This will modify your database structure.')
   console.log('   Make sure you have a backup before proceeding!\n')
-  
-  // In a real implementation, you'd want to confirm before proceeding
+
+  const sqlPath = join(__dirname, '../database/comprehensive-database-fix.sql')
+  if (!existsSync(sqlPath)) {
+    console.log('⚠️  SQL file not found: database/comprehensive-database-fix.sql')
+    console.log('   The database folder may have been removed.')
+    console.log('   To run the fix, add the SQL file back or run your schema/fix SQL manually in the Supabase SQL Editor.\n')
+    return
+  }
+
   const client = getSupabaseClient()
-  
+
   try {
-    // Read the comprehensive fix SQL
-    const sqlPath = join(__dirname, '../database/comprehensive-database-fix.sql')
     const sql = readFileSync(sqlPath, 'utf8')
-    
+
     console.log('📝 Executing comprehensive database fix...')
-    
-    // Execute the SQL (note: this is a simplified version)
-    // In production, you'd want to split this into smaller transactions
+
     const { error } = await client.rpc('exec_sql', { sql_query: sql })
-    
+
     if (error) {
       throw new Error(`Fix failed: ${error.message}`)
     }
-    
+
     console.log('Comprehensive fix completed successfully!')
     console.log('\nRunning post-fix health check...')
-    
+
     await healthCheck()
-    
   } catch (error) {
     console.error('Comprehensive fix failed:', error.message)
     console.error('\n💡 You may need to run the SQL manually in Supabase SQL Editor')
@@ -146,34 +147,7 @@ async function cleanup() {
   const client = getSupabaseClient()
   
   try {
-    // Clean up expired sessions
-    const { data: sessionCleanup } = await client
-      .from('user_sessions')
-      .delete()
-      .lt('expires_at', new Date().toISOString())
-    
-    console.log(`Cleaned up expired user sessions`)
-    
-    // Clean up expired password reset tokens
-    const { data: tokenCleanup } = await client
-      .from('password_reset_tokens')
-      .delete()
-      .lt('expires_at', new Date().toISOString())
-    
-    console.log(`Cleaned up expired password reset tokens`)
-    
-    // Clean up old analytics data (older than 1 year)
-    const oneYearAgo = new Date()
-    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
-    
-    const { data: analyticsCleanup } = await client
-      .from('learning_analytics')
-      .delete()
-      .lt('session_date', oneYearAgo.toISOString().split('T')[0])
-    
-    console.log(`Cleaned up old analytics data`)
-    
-    console.log('\nCleanup complete!')
+    console.log('Cleanup complete (no session/token/analytics tables to clean).')
     
   } catch (error) {
     console.error('Cleanup failed:', error.message)
@@ -193,13 +167,7 @@ async function showStats() {
       .from('users')
       .select('count(*)')
     
-    const { data: activeUsers } = await client
-      .from('users')
-      .select('count(*)')
-      .eq('has_access', true)
-    
     console.log(`👥 Total Users: ${users?.[0]?.count || 0}`)
-    console.log(`Active Users: ${activeUsers?.[0]?.count || 0}`)
     
     // Progress statistics
     const { data: progress } = await client

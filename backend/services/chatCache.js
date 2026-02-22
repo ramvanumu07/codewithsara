@@ -1,126 +1,73 @@
 /**
- * Chat History Caching Service
- * Implements intelligent caching for chat history to improve performance
+ * Chat history caching – uses cache.js (Redis or in-memory). Key: chat_history:userId:topicId.
  */
 
-import { initializeCache } from './cache.js'
+import { get, set, del } from './cache.js'
 
-// Initialize cache service
-const cache = initializeCache()
+const CACHE_KEY_PREFIX = 'chat_history:'
+const CHAT_HISTORY_TTL_SECONDS = 5 * 60 // 5 minutes
+const MAX_CACHE_SIZE = 1000
 
-// Cache configuration
-const CACHE_CONFIG = {
-  CHAT_HISTORY_TTL: 5 * 60 * 1000, // 5 minutes
-  MAX_CACHE_SIZE: 1000, // Maximum number of cached entries
-  CACHE_KEY_PREFIX: 'chat_history:'
-}
-
-/**
- * Generate cache key for chat history
- */
 function getCacheKey(userId, topicId) {
-  return `${CACHE_CONFIG.CACHE_KEY_PREFIX}${userId}:${topicId}`
+  return `${CACHE_KEY_PREFIX}${userId}:${topicId}`
 }
 
-/**
- * Get chat history from cache
- */
 export async function getCachedChatHistory(userId, topicId) {
   try {
     const cacheKey = getCacheKey(userId, topicId)
-    const cachedData = await cache.get(cacheKey)
-    
-    if (cachedData) {
-      // Parse cached data
-      const data = JSON.parse(cachedData)
-      
-      // Check if cache is still valid
-      const now = Date.now()
-      if (now - data.timestamp < CACHE_CONFIG.CHAT_HISTORY_TTL) {
-        return data.messages
-      }
-      
-      // Cache expired, remove it
-      await cache.del(cacheKey)
+    const data = await get(cacheKey)
+    if (!data || typeof data !== 'object' || !data.messages) return null
+    const now = Date.now()
+    if (now - (data.timestamp || 0) >= CHAT_HISTORY_TTL_SECONDS * 1000) {
+      await del(cacheKey)
+      return null
     }
-    
-    return null
+    return data.messages
   } catch (error) {
     console.warn('Cache read error:', error.message)
     return null
   }
 }
 
-/**
- * Cache chat history
- */
 export async function setCachedChatHistory(userId, topicId, messages) {
   try {
     const cacheKey = getCacheKey(userId, topicId)
-    const cacheData = {
+    await set(cacheKey, {
       messages,
       timestamp: Date.now(),
-      messageCount: messages.length
-    }
-    
-    // Set cache with TTL
-    await cache.setex(cacheKey, Math.floor(CACHE_CONFIG.CHAT_HISTORY_TTL / 1000), JSON.stringify(cacheData))
-    
+      messageCount: (messages && messages.length) || 0
+    }, CHAT_HISTORY_TTL_SECONDS)
   } catch (error) {
     console.warn('Cache write error:', error.message)
   }
 }
 
-/**
- * Invalidate chat history cache for a specific user/topic
- */
 export async function invalidateChatHistoryCache(userId, topicId) {
   try {
-    const cacheKey = getCacheKey(userId, topicId)
-    await cache.del(cacheKey)
+    await del(getCacheKey(userId, topicId))
   } catch (error) {
     console.warn('Cache invalidation error:', error.message)
   }
 }
 
-/**
- * Clear all chat history cache for a user
- */
 export async function clearUserChatCache(userId) {
+  // cache.js does not export keys(pattern); per-user clear would require it. No-op for now.
   try {
-    const pattern = `${CACHE_CONFIG.CACHE_KEY_PREFIX}${userId}:*`
-    const keys = await cache.keys(pattern)
-    
-    if (keys.length > 0) {
-      await cache.del(...keys)
-    }
-  } catch (error) {
-    console.warn('User cache clear error:', error.message)
-  }
+    console.warn('clearUserChatCache: not implemented without cache.keys()')
+  } catch (_) {}
 }
 
-/**
- * Get cache statistics
- */
 export async function getCacheStats() {
   try {
-    const pattern = `${CACHE_CONFIG.CACHE_KEY_PREFIX}*`
-    const keys = await cache.keys(pattern)
-    
     return {
-      totalEntries: keys.length,
-      maxSize: CACHE_CONFIG.MAX_CACHE_SIZE,
-      ttlMinutes: CACHE_CONFIG.CHAT_HISTORY_TTL / (60 * 1000),
-      cacheHitRate: 'Not implemented' // Could be added with metrics
+      totalEntries: 0,
+      maxSize: MAX_CACHE_SIZE,
+      ttlMinutes: CHAT_HISTORY_TTL_SECONDS / 60,
+      cacheHitRate: 'Not implemented'
     }
   } catch (error) {
     console.warn('Cache stats error:', error.message)
-    return {
-      totalEntries: 0,
-      maxSize: CACHE_CONFIG.MAX_CACHE_SIZE,
-      ttlMinutes: CACHE_CONFIG.CHAT_HISTORY_TTL / (60 * 1000),
-      error: error.message
-    }
+    return { totalEntries: 0, maxSize: MAX_CACHE_SIZE, ttlMinutes: CHAT_HISTORY_TTL_SECONDS / 60, error: error.message }
   }
 }
 
@@ -128,6 +75,5 @@ export default {
   getCachedChatHistory,
   setCachedChatHistory,
   invalidateChatHistoryCache,
-  clearUserChatCache,
   getCacheStats
 }

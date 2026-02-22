@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 
 /**
  * Test Phase Flow Logic
@@ -218,8 +217,8 @@ async function testDatabaseIntegration() {
     if (testData && testData.length > 0) {
       const progress = testData[0]
       console.log('Progress table structure:')
-      console.log(`   - Has phase field: ${progress.hasOwnProperty('phase') ? 'yes' : 'no'}`)
-      console.log(`   - Has status field: ${progress.hasOwnProperty('status') ? 'yes' : 'no'}`)
+      console.log(`   - Has phase field: ${Object.prototype.hasOwnProperty.call(progress, 'phase') ? 'yes' : 'no'}`)
+      console.log(`   - Has status field: ${Object.prototype.hasOwnProperty.call(progress, 'status') ? 'yes' : 'no'}`)
       console.log(`   - Sample record:`, {
         topic_id: progress.topic_id,
         phase: progress.phase,

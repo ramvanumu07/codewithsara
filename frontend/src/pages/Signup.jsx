@@ -9,7 +9,6 @@ import { useAuth } from '../contexts/AuthContext'
 import api, { handleApiError } from '../config/api'
 import { validatePassword } from '../utils/passwordValidation'
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter'
-import { validateEmail } from '../utils/emailValidation'
 import { getAllSecurityQuestions } from '../utils/securityQuestions'
 import './Auth.css'
 
@@ -23,10 +22,8 @@ const Signup = () => {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
   let usernameCheckTimeout = null
-  let emailCheckTimeout = null
   const [formData, setFormData] = useState({
     username: '',
-    email: '',
     name: '',
     password: '',
     confirmPassword: '',
@@ -39,7 +36,6 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [passwordValidation, setPasswordValidation] = useState(null)
   const [usernameAvailable, setUsernameAvailable] = useState(null)
-  const [emailExists, setEmailExists] = useState(null)
   const [submitAttempts, setSubmitAttempts] = useState(0)
   const [lastSubmitTime, setLastSubmitTime] = useState(0)
 
@@ -125,26 +121,6 @@ const Signup = () => {
       }
     }
 
-    // Email existence check
-    if (name === 'email') {
-      clearTimeout(emailCheckTimeout)
-      setEmailExists(null)
-      
-      if (value && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-        emailCheckTimeout = setTimeout(async () => {
-          try {
-            const response = await api.post('/auth/check-email', {
-              email: value
-            })
-            if (response.data.success) {
-              setEmailExists(response.data.data.exists)
-            }
-          } catch (error) {
-            setEmailExists(null)
-          }
-        }, 500)
-      }
-    }
   }
 
 
@@ -175,18 +151,6 @@ const Signup = () => {
       newErrors.username = 'Username is already taken'
     } else if (usernameAvailable === null && formData.username.length >= 3 && /^[a-zA-Z0-9_]{3,20}$/.test(formData.username)) {
       newErrors.username = 'Checking availability...'
-    }
-
-    // Email validation using advanced validator
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required'
-    } else {
-      const emailValidationResult = validateEmail(formData.email)
-      if (!emailValidationResult.isValid) {
-        newErrors.email = emailValidationResult.errors[0] || 'Please enter a valid email address'
-      } else if (emailExists === true) {
-        newErrors.email = 'Email is already registered'
-      }
     }
 
     // Name validation
@@ -254,7 +218,6 @@ const Signup = () => {
     try {
       const response = await api.post('/auth/signup', {
         username: formData.username.trim(),
-        email: formData.email.trim(),
         name: formData.name.trim(),
         password: formData.password,
         confirmPassword: formData.confirmPassword,
@@ -282,8 +245,6 @@ const Signup = () => {
         // Handle specific field errors
         if (errorMessage.includes('Username already exists')) {
           setErrors({ username: 'Username already exists' })
-        } else if (errorMessage.includes('Email already registered')) {
-          setErrors({ email: 'Email already registered' })
         } else if (errorMessage.includes('Password')) {
           setErrors({ password: errorMessage })
         } else {
@@ -381,35 +342,6 @@ const Signup = () => {
                   )}
                 </div>
               )}
-              
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="email" className="form-label">
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={`form-input ${errors.email ? 'error' : ''}`}
-                placeholder="your.email@example.com"
-                disabled={isLoading}
-                autoComplete="email"
-                autoCapitalize="none"
-                autoCorrect="off"
-                spellCheck="false"
-                inputMode="email"
-                required
-              />
-              {errors.email && (
-                <div className="username-status">
-                  <span className="status-taken">{errors.email}</span>
-                </div>
-              )}
-              
               
             </div>
 

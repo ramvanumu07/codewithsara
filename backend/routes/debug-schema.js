@@ -25,7 +25,7 @@ router.get('/schema', async (req, res) => {
     }
 
     // Test each table directly to see which ones exist
-    const tablesToCheck = ['users', 'progress', 'chat_sessions', 'admins', 'password_reset_tokens', 'user_sessions', 'learning_analytics']
+    const tablesToCheck = ['users', 'progress', 'chat_sessions', 'admins', 'user_course_unlocks']
     const schemaInfo = {}
     const existingTables = []
     

@@ -30,7 +30,7 @@ const Login = () => {
   const navigate = useNavigate()
   const { login, isAuthenticated } = useAuth()
   const [formData, setFormData] = useState({
-    usernameOrEmail: '',
+    username: '',
     password: ''
   })
   const [errors, setErrors] = useState({})
@@ -69,32 +69,21 @@ const Login = () => {
       }))
     }
     
-    // Clear the other field's error when user types in username/email field
-    // This handles cases where we showed field-specific errors
-    if (name === 'usernameOrEmail' && errors.password) {
-      setErrors(prev => ({
-        ...prev,
-        password: ''
-      }))
-    } else if (name === 'password' && errors.usernameOrEmail) {
-      setErrors(prev => ({
-        ...prev,
-        usernameOrEmail: ''
-      }))
+    if (name === 'username' && errors.password) {
+      setErrors(prev => ({ ...prev, password: '' }))
+    } else if (name === 'password' && errors.username) {
+      setErrors(prev => ({ ...prev, username: '' }))
     }
   }
 
   const validateForm = () => {
     const newErrors = {}
-
-    if (!formData.usernameOrEmail.trim()) {
-      newErrors.usernameOrEmail = 'Username or email is required'
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required'
     }
-
     if (!formData.password) {
       newErrors.password = 'Password is required'
     }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -122,7 +111,7 @@ const Login = () => {
     setLastAttemptTime(now)
 
     try {
-      const result = await login(formData.usernameOrEmail.trim(), formData.password)
+      const result = await login(formData.username.trim(), formData.password)
 
       if (result.success) {
         // Reset login attempts on success
@@ -137,11 +126,11 @@ const Login = () => {
         }, 500)
       } else {
         const errorMessage = toErrorString(result.error) || 'Login failed'
-        if (errorMessage.includes('Username or email not found') || 
+        if (errorMessage.includes('Username not found') || 
             errorMessage.includes('not found') || 
             errorMessage.includes('Please check your credentials or create an account')) {
           setErrors({ 
-            usernameOrEmail: 'Username or email not found. Please check your input or create an account.',
+            username: 'Username not found. Please check your input or create an account.',
             general: ''
           })
         } else if (errorMessage.includes('Incorrect password') || 
@@ -151,7 +140,7 @@ const Login = () => {
             general: ''
           })
         } else if (errorMessage.includes('Invalid credentials')) {
-          setErrors({ general: 'Invalid username/email or password. Please check your credentials.' })
+          setErrors({ general: 'Invalid username or password. Please check your credentials.' })
         } else {
           setErrors({ general: typeof errorMessage === 'string' ? errorMessage : toErrorString(errorMessage) || 'Login failed' })
         }
@@ -162,7 +151,7 @@ const Login = () => {
       let errorMessage = 'Something went wrong. Please try again.'
       
       if (error.response?.status === 401) {
-        errorMessage = 'Invalid username/email or password. Please check your credentials.'
+        errorMessage = 'Invalid username or password. Please check your credentials.'
       } else if (error.response?.status === 429) {
         errorMessage = 'Too many login attempts. Please wait a moment before trying again.'
       } else if (error.response?.status >= 500) {
@@ -218,17 +207,17 @@ const Login = () => {
             )}
 
             <div className="form-group">
-              <label htmlFor="usernameOrEmail" className="form-label">
-                Username or Email
+              <label htmlFor="username" className="form-label">
+                Username
               </label>
               <input
                 type="text"
-                id="usernameOrEmail"
-                name="usernameOrEmail"
-                value={formData.usernameOrEmail}
+                id="username"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
-                className={`form-input ${errors.usernameOrEmail ? 'error' : ''}`}
-                placeholder="Username or email address"
+                className={`form-input ${errors.username ? 'error' : ''}`}
+                placeholder="Username"
                 disabled={isLoading}
                 autoComplete="username"
                 autoCapitalize="none"

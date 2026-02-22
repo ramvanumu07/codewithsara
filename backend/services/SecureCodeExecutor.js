@@ -191,7 +191,7 @@ class SecureCodeExecutor {
    * (e.g. "const length = 8;" or "let width = 5") so test inputs can override without redeclaration.
    */
   stripInputVariableDeclarations(code, inputKeys) {
-    if (!inputKeys || inputKeys.length === 0) return code;
+    if (!inputKeys || inputKeys.length === 0) {return code;}
     const escaped = inputKeys.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
     const names = escaped.join('|');
     const re = new RegExp(
@@ -208,25 +208,25 @@ class SecureCodeExecutor {
     const context = {
       // Safe globals
       console: { log: () => {} },
-      Math: Math,
-      JSON: JSON,
-      Array: Array,
-      Object: Object,
-      String: String,
-      Number: Number,
-      Boolean: Boolean,
-      Date: Date,
-      RegExp: RegExp,
-      Error: Error,
-      TypeError: TypeError,
-      ReferenceError: ReferenceError,
-      SyntaxError: SyntaxError,
+      Math,
+      JSON,
+      Array,
+      Object,
+      String,
+      Number,
+      Boolean,
+      Date,
+      RegExp,
+      Error,
+      TypeError,
+      ReferenceError,
+      SyntaxError,
       
       // Utility functions
-      parseInt: parseInt,
-      parseFloat: parseFloat,
-      isNaN: isNaN,
-      isFinite: isFinite,
+      parseInt,
+      parseFloat,
+      isNaN,
+      isFinite,
       
       // Safe methods
       setTimeout: undefined, // Blocked
@@ -345,11 +345,10 @@ class SecureCodeExecutor {
     }
     
     testCases.forEach((testCase, index) => {
-      if (!testCase.hasOwnProperty('input')) {
+      if (!Object.prototype.hasOwnProperty.call(testCase, 'input')) {
         throw new Error(`Test case ${index} missing 'input' property`);
       }
-      
-      if (!testCase.hasOwnProperty('expectedOutput')) {
+      if (!Object.prototype.hasOwnProperty.call(testCase, 'expectedOutput')) {
         throw new Error(`Test case ${index} missing 'expectedOutput' property`);
       }
     });

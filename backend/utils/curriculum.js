@@ -61,7 +61,7 @@ export function getAllTopics(courses) {
 export function getTopicsTaughtSoFar(courses, topicId) {
   for (const course of courses) {
     const idx = course.topics.findIndex(t => t.id === topicId)
-    if (idx === -1) continue
+    if (idx === -1) {continue}
     return course.topics.slice(0, idx + 1).map(t => t.title)
   }
   return []

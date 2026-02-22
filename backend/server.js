@@ -6,6 +6,9 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
+import { validateEnv } from './config/env.js'
+validateEnv()
+
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -17,20 +20,18 @@ import { initializeErrorTracking } from './services/errorTracking.js'
 import { initializeCache } from './services/cache.js'
 import { logInfo, logError } from './services/logger.js'
 import requestIdMiddleware from './middleware/requestId.js'
-import { performanceMiddleware } from './services/performanceMonitor.js'
 
 // Import routes
 import authRoutes from './routes/auth.js'
 import chatRoutes from './routes/chat.js'
 import learningRoutes from './routes/learning.js'
-import progressRoutes from './routes/progress.js'
 import debugSchemaRoutes from './routes/debug-schema.js'
 import debugChatRoutes from './routes/debug-chat.js'
 
 // Import middleware
 import { performanceMonitor } from './middleware/performance.js'
+import { performanceMiddleware, getPerformanceStats } from './services/performanceMonitor.js'
 import { errorHandler } from './middleware/errorHandler.js'
-import { getPerformanceStats } from './services/performanceMonitor.js'
 
 // Import utilities
 import { getSafePort } from './utils/portManager.js'
@@ -44,9 +45,9 @@ const PREFERRED_PORT = parseInt(process.env.PORT) || 5000
 
 // ============ CORS CONFIGURATION ============
 app.use(cors({
-  origin: function (origin, callback) {
+  origin (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true)
+    if (!origin) {return callback(null, true)}
 
     const allowedOrigins = [
       'http://localhost:5173',
@@ -57,19 +58,11 @@ app.use(cors({
       'http://localhost:5178',
       'http://localhost:3000'
     ]
-    // Vercel: allow deployment and preview URLs (same-origin when frontend + API on same project)
-    if (process.env.VERCEL_URL) {
-      allowedOrigins.push(`https://${process.env.VERCEL_URL}`)
-    }
     if (process.env.FRONTEND_URL) {
       allowedOrigins.push(...process.env.FRONTEND_URL.split(',').map(s => s.trim()).filter(Boolean))
     }
 
     if (allowedOrigins.includes(origin)) {
-      return callback(null, true)
-    }
-    // Allow any *.vercel.app origin for preview deployments
-    if (origin && /^https:\/\/[^.]+\.vercel\.app$/.test(origin)) {
       return callback(null, true)
     }
 
@@ -123,7 +116,6 @@ app.use(performanceMonitor)
 app.use('/api/auth', authRoutes)
 app.use('/api/chat', chatRoutes)
 app.use('/api/learn', learningRoutes)
-app.use('/api/progress', progressRoutes)
 app.use('/api/debug', debugSchemaRoutes)
 app.use('/api/debug', debugChatRoutes)
 
@@ -152,7 +144,7 @@ app.get('/metrics', (req, res) => {
 })
 
 // ============ ERROR HANDLING ============
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   const isDevelopment = process.env.NODE_ENV === 'development'
 
   res.status(err.status || 500).json({
@@ -211,7 +203,7 @@ const startServer = async () => {
     })
 
     // ============ GRACEFUL SHUTDOWN ============
-    const gracefulShutdown = (signal) => {
+    const gracefulShutdown = (_signal) => {
       server.close(() => {
         process.exit(0)
       })
@@ -230,9 +222,6 @@ const startServer = async () => {
   }
 }
 
-// Start the server only when not running on Vercel (serverless)
-if (!process.env.VERCEL) {
-  startServer()
-}
+startServer()
 
 export default app

@@ -9,7 +9,7 @@ import Groq from 'groq-sdk'
 let groq = null
 
 function initializeAI() {
-  if (groq) return groq
+  if (groq) {return groq}
 
   const apiKey = process.env.GROQ_API_KEY
 
@@ -17,12 +17,8 @@ function initializeAI() {
     throw new Error('AI configuration missing. Check GROQ_API_KEY environment variable.')
   }
 
-  try {
-    groq = new Groq({ apiKey })
-    return groq
-  } catch (error) {
-    throw error
-  }
+  groq = new Groq({ apiKey })
+  return groq
 }
 
 // ============ AI OPERATIONS ============
@@ -64,6 +60,3 @@ export async function callAI(messages, maxTokens = 1000, temperature = 0.5, mode
     }
   }
 }
-
-// Export for health checks
-export const getAIClient = () => initializeAI()

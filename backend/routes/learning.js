@@ -12,9 +12,7 @@ import {
   getProgress,
   upsertProgress,
   getAllProgress,
-  getLastAccessedTopic,
   getCompletedTopics,
-  getUserProgressSummary,
   getUnlockedCourseIds,
   isCourseUnlockedForUser,
   unlockCourseForUser,
@@ -22,14 +20,13 @@ import {
   createUnlockSlot,
   redeemUnlockCode
 } from '../services/database.js'
-import progressManager from '../services/progressManager.js'
-import { saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, getChatHistory } from '../services/chatService.js'
+import { saveInitialMessage, getChatHistoryString } from '../services/chatService.js'
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getAllTopics } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
-import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/sessionPrompt.js'
+import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/prompts.js'
 
 const router = express.Router()
 
@@ -152,12 +149,12 @@ async function getCompletedTopicsForUser(userId) {
 // Require course to be unlocked for user (used for topic access)
 async function requireCourseUnlocked(req, res, next) {
   const topicId = req.params.topicId || req.body?.topicId
-  if (!topicId) return next()
+  if (!topicId) {return next()}
   const topic = findTopicById(courses, topicId)
-  if (!topic) return next()
+  if (!topic) {return next()}
   const courseId = topic.courseId
   const userId = req.user?.userId
-  if (!userId) return next()
+  if (!userId) {return next()}
   const unlocked = await isCourseUnlockedForUser(userId, courseId)
   if (!unlocked) {
     return res.status(403).json(createErrorResponse('This course is locked. Unlock it to continue.', 'COURSE_LOCKED', { courseId }))
@@ -236,7 +233,7 @@ router.get('/state/:topicId', authenticateToken, requireCourseUnlocked, async (r
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     // Get progress and chat history in parallel
     const [progress, chatHistory] = await Promise.all([
@@ -296,10 +293,10 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
-    // Handle empty assignments
-    const taskList = assignments && assignments.length > 0
+    // Handle empty assignments (reserved for future use)
+    const _taskList = assignments && assignments.length > 0
       ? assignments
       : ['Practice the concept with a simple example']
 
@@ -325,14 +322,13 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
       { role: 'user', content: `Start teaching the first concept.` }
     ]
 
-    // Log finalized system prompt for testing (file + console); skip file on Vercel (read-only fs)
-    if (!process.env.VERCEL) {
-      const promptLogPath = path.join(process.cwd(), 'logs', 'last-system-prompt.txt')
-      try {
-        fs.mkdirSync(path.dirname(promptLogPath), { recursive: true })
-        fs.writeFileSync(promptLogPath, `[SESSION/START] topicId=${topicId}\n---\n` + sessionPrompt, 'utf8')
-      } catch (e) {
-      }
+    // Log finalized system prompt for testing (file + console)
+    const promptLogPath = path.join(process.cwd(), 'logs', 'last-system-prompt.txt')
+    try {
+      fs.mkdirSync(path.dirname(promptLogPath), { recursive: true })
+      fs.writeFileSync(promptLogPath, `[SESSION/START] topicId=${topicId}\n---\n${  sessionPrompt}`, 'utf8')
+    } catch (e) {
+      // ignore
     }
 
     // Generate initial message (idempotent - won't duplicate if conversation exists)
@@ -352,7 +348,7 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
       phase: 'session',
       conceptRevealed: false,
       outcomes: outcomes || [],
-      progress: progress,
+      progress,
       topic: {
         id: topicId,
         title: topic.title,
@@ -375,7 +371,7 @@ router.post('/playtime/start', authenticateToken, rateLimitMiddleware, validateB
 
 
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     await upsertProgress(userId, topicId, {
       phase: 'playtime',
@@ -412,13 +408,13 @@ router.post('/playtime/complete', authenticateToken, rateLimitMiddleware, valida
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
 
     // Complete playtime phase - direct database update for compatibility
     try {
 
-      const result = await upsertProgress(userId, topicId, {
+      await upsertProgress(userId, topicId, {
         phase: 'assignment',
         status: 'in_progress',
         updated_at: new Date().toISOString()
@@ -453,7 +449,7 @@ router.post('/assignment/start', authenticateToken, rateLimitMiddleware, validat
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     // Get topic tasks
     const tasks = topic.tasks || []
@@ -512,7 +508,7 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     const tasks = topic.tasks || []
     if (assignmentIndex >= tasks.length) {
@@ -595,8 +591,8 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
       message: isTopicComplete ? 'All assignments completed! Topic mastered!' : 'Assignment completed successfully',
       assignmentCompleted: true,
       topicCompleted: isTopicComplete,
-      completedAssignments: completedAssignments,
-      totalAssignments: totalAssignments,
+      completedAssignments,
+      totalAssignments,
       nextAssignment: isTopicComplete ? null : assignmentIndex + 1,
       phase: 'assignment',
       execution: executionResult,
@@ -640,7 +636,7 @@ router.post('/execute', authenticateToken, async (req, res) => {
 
     // Get topic and assignment details
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     let testCases = []
     if (assignmentIndex !== undefined && topic.tasks && topic.tasks[assignmentIndex]) {
@@ -664,8 +660,8 @@ router.post('/execute', authenticateToken, async (req, res) => {
       assignment: assignmentIndex !== undefined ? {
         index: assignmentIndex,
         total: topic.tasks?.length || 0,
-        solutionType: solutionType,
-        functionName: functionName
+        solutionType,
+        functionName
       } : null
     }))
 
@@ -677,7 +673,7 @@ router.post('/execute', authenticateToken, async (req, res) => {
 // New secure execution endpoint with enhanced validation
 router.post('/execute-secure', authenticateToken, async (req, res) => {
   try {
-    const { code, testCases, functionName, solutionType, topicId, assignmentIndex } = req.body;
+    const { code, testCases, functionName, solutionType } = req.body;
 
     // Validate required parameters
     if (!code) {
@@ -698,7 +694,7 @@ router.post('/execute-secure', authenticateToken, async (req, res) => {
     // Additional validation for function tasks
     if (solutionType === 'function' && result.success) {
       const hasValidResults = result.testResults.every(test =>
-        test.hasOwnProperty('result') || test.hasOwnProperty('error')
+        Object.prototype.hasOwnProperty.call(test, 'result') || Object.prototype.hasOwnProperty.call(test, 'error')
       );
 
       if (!hasValidResults) {
@@ -711,8 +707,8 @@ router.post('/execute-secure', authenticateToken, async (req, res) => {
       validation: {
         secure: true,
         executionTime: result.executionTime,
-        solutionType: solutionType,
-        functionName: functionName
+        solutionType,
+        functionName
       }
     }));
 
@@ -771,8 +767,8 @@ router.get('/progress', authenticateToken, async (req, res) => {
 
     res.json(createSuccessResponse({
       progress: allProgress,
-      summary: summary,
-      lastAccessed: lastAccessed,
+      summary,
+      lastAccessed,
       topics: allTopicsFromCurriculum.map(topic => ({
         id: topic.id,
         title: topic.title,
@@ -784,6 +780,30 @@ router.get('/progress', authenticateToken, async (req, res) => {
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'get progress')
+  }
+})
+
+// Summary only (frontend progress.getSummary())
+router.get('/progress/summary', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const allProgress = await getAllProgress(userId)
+    const allTopicsFromCurriculum = getAllTopics(courses)
+    const totalTopics = allTopicsFromCurriculum.length
+    const completedTopics = allProgress.filter(p => p.status === 'completed').length
+    const inProgressTopics = allProgress.filter(p => p.status === 'in_progress').length
+    const summary = {
+      total_topics: totalTopics,
+      completed_topics: completedTopics,
+      in_progress_topics: inProgressTopics,
+      completion_percentage: totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0
+    }
+    const lastAccessed = allProgress.length > 0
+      ? { topicId: allProgress[0].topic_id, phase: allProgress[0].phase || 'session' }
+      : null
+    res.json(createSuccessResponse({ summary, lastAccessed }))
+  } catch (error) {
+    handleErrorResponse(res, error, 'get progress summary')
   }
 })
 
@@ -800,9 +820,9 @@ router.get('/debug/progress', authenticateToken, async (req, res) => {
     res.json({
       success: true,
       debug: {
-        userId: userId,
-        error: error,
-        data: data,
+        userId,
+        error,
+        data,
         dataLength: data?.length || 0
       }
     })
@@ -835,9 +855,10 @@ router.delete('/debug/reset-progress', authenticateToken, async (req, res) => {
           .eq('user_id', userId)
 
         if (error) {
-        } else {
+          // log if needed
         }
-      } catch (err) {
+      } catch (_err) {
+        // ignore per-table errors
       }
     }
 
@@ -849,7 +870,7 @@ router.delete('/debug/reset-progress', authenticateToken, async (req, res) => {
     res.json({
       success: true,
       message: 'All progress data and cache have been reset using centralized progress manager.',
-      userId: userId,
+      userId,
       details: result
     })
   } catch (error) {
@@ -933,7 +954,7 @@ router.get('/debug/all-data-sources', authenticateToken, async (req, res) => {
     res.json({
       success: true,
       debug: {
-        userId: userId,
+        userId,
         dataSources: {
           progress: {
             count: progressData?.length || 0,
@@ -995,7 +1016,7 @@ router.get('/continue', authenticateToken, async (req, res) => {
       }))
     }
 
-    const topic = findTopicById(courses, lastAccessed.topic_id)
+    findTopicById(courses, lastAccessed.topic_id) // validate topic exists
 
     res.json(createSuccessResponse({
       lastAccessed: {
@@ -1015,7 +1036,7 @@ router.get('/continue', authenticateToken, async (req, res) => {
 router.get('/courses', authenticateToken, async (req, res) => {
   try {
     res.json(createSuccessResponse({
-      courses: courses
+      courses
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'Failed to get courses')
@@ -1056,7 +1077,7 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
     const userId = req.user.userId
 
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     let progress = await getProgress(userId, topicId)
     const totalTasks = (topic.tasks || []).length
@@ -1111,7 +1132,7 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
         assignments_completed: progress?.assignments_completed ?? 0,
         topic_completed: progress?.status === 'completed' || (totalTasks > 0 && (progress?.assignments_completed ?? 0) >= totalTasks)
       },
-      nextTopic: nextTopic
+      nextTopic
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'get topic details')
@@ -1139,13 +1160,6 @@ router.get('/debug/topics', (req, res) => {
   } catch (error) {
     handleErrorResponse(res, error, 'Failed to get topics')
   }
-})
-
-// ============ LEGACY COMPATIBILITY ============
-
-// Redirect old subtopic routes to new topic routes
-router.get('/state/:topicId/:subtopicId', (req, res) => {
-  res.redirect(`/api/learn/state/${req.params.topicId}`)
 })
 
 export default router

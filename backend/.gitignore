@@ -1,0 +1,18 @@
+# Dependencies
+node_modules
+
+# Environment (never commit)
+.env
+.env.*
+!.env.example
+
+# Logs (runtime-generated)
+*.log
+logs/
+
+# Test / coverage
+coverage
+.nyc_output
+
+# Optional: uncomment if you add back Jest
+# jest-results/

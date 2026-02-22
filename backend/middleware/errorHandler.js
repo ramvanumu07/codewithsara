@@ -1,9 +1,10 @@
 /**
  * Error Handling Middleware - Sara Learning Platform
- * Industry-level error handling with proper logging and user feedback
+ * Centralized error handling, known error types, and structured logging.
  */
 
 import { createErrorResponse } from '../utils/responses.js'
+import { logError as logErrorToService } from '../services/logger.js'
 
 // ============ ERROR TYPES ============
 
@@ -75,16 +76,14 @@ export class ExternalServiceError extends Error {
 
 // ============ ERROR HANDLER MIDDLEWARE ============
 
-export function errorHandler(error, req, res, next) {
-  // Log error details
-  console.error(`[${new Date().toISOString()}] ERROR:`, {
-    name: error.name,
-    message: error.message,
-    stack: error.stack,
-    url: req.url,
+export function errorHandler(error, req, res, _next) {
+  logErrorToService('Request error', error, {
+    requestId: req.requestId,
     method: req.method,
+    url: req.originalUrl || req.url,
     userId: req.user?.userId,
-    ip: req.ip
+    ip: req.ip,
+    statusCode: error.statusCode || error.status
   })
 
   // Handle known error types
@@ -153,33 +152,13 @@ export function asyncHandler(fn) {
 // ============ ERROR LOGGING ============
 
 export function logError(error, context = {}) {
-  console.error(`[${new Date().toISOString()}] ERROR:`, {
-    name: error.name,
-    message: error.message,
-    stack: error.stack,
-    ...context
-  })
-}
-
-// ============ ERROR UTILITIES ============
-
-export function createError(message, statusCode = 500, type = 'Error') {
-  const error = new Error(message)
-  error.statusCode = statusCode
-  error.name = type
-  return error
-}
-
-export function isOperationalError(error) {
-  return error.statusCode && error.statusCode < 500
+  logErrorToService(error?.message ?? 'Error', error, context)
 }
 
 export default {
   errorHandler,
   asyncHandler,
   logError,
-  createError,
-  isOperationalError,
   ValidationError,
   AuthenticationError,
   AuthorizationError,

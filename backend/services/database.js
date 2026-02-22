@@ -12,11 +12,11 @@ let supabase = null
 // Development mode fallback data
 const DEV_USERS = new Map()
 const DEV_PROGRESS = new Map()
-const DEV_CHAT_SESSIONS = new Map()
+const _DEV_CHAT_SESSIONS = new Map()
 
 // Initialize database connection
 function initializeDatabase() {
-  if (supabase) return supabase
+  if (supabase) {return supabase}
 
   const supabaseUrl = process.env.SUPABASE_URL
   const supabaseKey = process.env.SUPABASE_SERVICE_KEY
@@ -29,50 +29,31 @@ function initializeDatabase() {
     return 'DEV_MODE' // Special marker for development mode
   }
 
-  try {
-    supabase = createClient(supabaseUrl, supabaseKey, {
-      db: {
-        schema: 'public'
-      },
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      },
-      global: {
-        headers: {
-          'x-application-name': 'sara-api'
-        }
-      }
-    })
-    return supabase
-  } catch (error) {
-    throw error
-  }
+  supabase = createClient(supabaseUrl, supabaseKey, {
+    db: { schema: 'public' },
+    auth: { autoRefreshToken: false, persistSession: false },
+    global: { headers: { 'x-application-name': 'sara-api' } }
+  })
+  return supabase
 }
 
 // ============ USER OPERATIONS ============
 
 /** Escape a string for use in ILIKE so it matches literally (no wildcards). */
 function escapeIlike(str) {
-  if (typeof str !== 'string') return ''
+  if (typeof str !== 'string') {return ''}
   return str.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_')
 }
 
-export async function createUser(username, email, name, hashedPassword, securityQuestion = null, securityAnswer = null) {
+export async function createUser(username, name, hashedPassword, securityQuestion = null, securityAnswer = null) {
   const client = initializeDatabase()
 
   // Development mode fallback
   if (client === 'DEV_MODE') {
-    // Check for existing users (case-insensitive)
     const lower = username.toLowerCase()
     for (const key of DEV_USERS.keys()) {
       if (key.toLowerCase() === lower) {
         throw new Error('Username already exists')
-      }
-    }
-    for (const user of DEV_USERS.values()) {
-      if (user.email === email) {
-        throw new Error('Email already exists')
       }
     }
 
@@ -80,36 +61,28 @@ export async function createUser(username, email, name, hashedPassword, security
     const user = {
       id: userId,
       username,
-      email,
       name,
       password: hashedPassword,
       security_question: securityQuestion,
       security_answer: securityAnswer,
-      has_access: false,
-      email_verified: false, // Match schema default
+      token_version: 0,
       created_at: new Date().toISOString()
     }
     DEV_USERS.set(username, user)
     return user
   }
 
-  // Case-insensitive duplicate check (DB unique is on username; this prevents Ram/ram)
   const existingByUsername = await getUserByUsername(username)
   if (existingByUsername) {
     throw new Error('Username already exists')
   }
 
-  // Prepare user data - only include security fields if provided
   const userData = {
     username,
-    email,
     name,
     password: hashedPassword,
-    has_access: false, // Default false; set true after payment/subscription
-    email_verified: false // Explicit default
+    token_version: 0
   }
-
-  // Only add security fields if they're provided (avoid storing empty strings)
   if (securityQuestion && securityQuestion.trim()) {
     userData.security_question = securityQuestion.trim()
   }
@@ -124,13 +97,8 @@ export async function createUser(username, email, name, hashedPassword, security
     .single()
 
   if (error) {
-    if (error.code === '23505') { // Unique constraint violation
-      if (error.message.includes('username')) {
-        throw new Error('Username already exists')
-      }
-      if (error.message.includes('email')) {
-        throw new Error('Email already exists')
-      }
+    if (error.code === '23505' && error.message.includes('username')) {
+      throw new Error('Username already exists')
     }
     throw new Error(`Failed to create user: ${error.message}`)
   }
@@ -173,7 +141,7 @@ export async function getUserByUsername(username) {
   if (client === 'DEV_MODE') {
     const lower = (username || '').toLowerCase()
     for (const [key, user] of DEV_USERS.entries()) {
-      if (key.toLowerCase() === lower) return user
+      if (key.toLowerCase() === lower) {return user}
     }
     return null
   }
@@ -197,34 +165,48 @@ export async function getUserByUsername(username) {
   return data
 }
 
-export async function getUserByEmail(email) {
+export async function getTokenVersion(userId) {
   const client = initializeDatabase()
-
-  // Development mode fallback
   if (client === 'DEV_MODE') {
     for (const user of DEV_USERS.values()) {
-      if (user.email === email) {
-        return user
+      if (user.id === userId) {
+        return user.token_version ?? 0
       }
     }
-    return null
+    return 0
   }
-
   const { data, error } = await client
     .from('users')
-    .select('*')
-    .eq('email', email)
+    .select('token_version')
+    .eq('id', userId)
     .single()
-
-  if (error && error.code !== 'PGRST116') {
-    throw new Error(`Failed to get user by email: ${error.message}`)
+  if (error || !data) {
+    return 0
   }
-  return data
+  return data.token_version ?? 0
 }
 
-export async function getUserByStudentId(studentId) {
-  // Legacy compatibility - map to username
-  return await getUserByUsername(studentId)
+export async function bumpTokenVersion(userId) {
+  const client = initializeDatabase()
+  if (client === 'DEV_MODE') {
+    for (const user of DEV_USERS.values()) {
+      if (user.id === userId) {
+        user.token_version = (user.token_version ?? 0) + 1
+        return user.token_version
+      }
+    }
+    return 1
+  }
+  const current = await getTokenVersion(userId)
+  const next = current + 1
+  const { error } = await client
+    .from('users')
+    .update({ token_version: next, updated_at: new Date().toISOString() })
+    .eq('id', userId)
+  if (error) {
+    throw new Error(`Failed to bump token version: ${error.message}`)
+  }
+  return next
 }
 
 export async function updateUserProfile(userId, updates) {
@@ -240,33 +222,11 @@ export async function updateUserProfile(userId, updates) {
     .single()
 
   if (error) {
-    if (error.code === '23505') { // Unique constraint violation
-      if (error.message.includes('username')) {
-        throw new Error('Username already exists')
-      }
-      if (error.message.includes('email')) {
-        throw new Error('Email already exists')
-      }
+    if (error.code === '23505' && error.message.includes('username')) {
+      throw new Error('Username already exists')
     }
     throw new Error(`Failed to update user profile: ${error.message}`)
   }
-  return data
-}
-
-export async function updateUserAccess(userId, hasAccess, expiresAt = null) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('users')
-    .update({
-      has_access: hasAccess,
-      access_expires_at: expiresAt,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', userId)
-    .select()
-    .single()
-
-  if (error) throw new Error(`Failed to update user access: ${error.message}`)
   return data
 }
 
@@ -280,18 +240,7 @@ export async function updateLastLogin(userId) {
     })
     .eq('id', userId)
 
-  if (error) throw new Error(`Failed to update last login: ${error.message}`)
-}
-
-export async function getAllUsers() {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('users')
-    .select('id, username, email, name, has_access, access_expires_at, last_login, created_at')
-    .order('created_at', { ascending: false })
-
-  if (error) throw new Error(`Failed to get users: ${error.message}`)
-  return data || []
+  if (error) {throw new Error(`Failed to update last login: ${error.message}`)}
 }
 
 export async function isAdmin(userId) {
@@ -397,7 +346,7 @@ export async function upsertProgress(userId, topicId, updates) {
       .select()
       .single()
 
-    if (error) throw new Error(`Failed to update progress: ${error.message}`)
+    if (error) {throw new Error(`Failed to update progress: ${error.message}`)}
 
     // Invalidate and update cache
     const cacheKey = `progress:${userId}:${topicId}`
@@ -434,24 +383,6 @@ export async function getAllProgress(userId) {
   return data || []
 }
 
-export async function getLastAccessedTopic(userId) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('progress')
-    .select('topic_id, phase, updated_at')
-    .eq('user_id', userId)
-    .in('status', ['in_progress', 'completed'])
-    .order('updated_at', { ascending: false })
-    .limit(1)
-    .single()
-
-  if (error && error.code !== 'PGRST116') {
-    throw new Error(`Failed to get last accessed topic: ${error.message}`)
-  }
-
-  return data
-}
-
 export async function getCompletedTopics(userId) {
   const client = initializeDatabase()
   const { data, error } = await client
@@ -460,69 +391,18 @@ export async function getCompletedTopics(userId) {
     .eq('user_id', userId)
     .eq('status', 'completed')
 
-  if (error) throw new Error(`Failed to get completed topics: ${error.message}`)
+  if (error) {throw new Error(`Failed to get completed topics: ${error.message}`)}
   return data ? data.map(row => row.topic_id) : []
 }
 
-export async function getUserProgressSummary(userId) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .rpc('get_user_progress_summary', { p_user_id: userId })
-
-  if (error) throw new Error(`Failed to get progress summary: ${error.message}`)
-  return data?.[0] || { total_topics: 0, completed_topics: 0, in_progress_topics: 0, completion_percentage: 0 }
-}
-
-// ============ PASSWORD RESET OPERATIONS ============
-
-export async function createPasswordResetToken(userId, token, expiresAt) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('password_reset_tokens')
-    .insert({
-      user_id: userId,
-      token,
-      expires_at: expiresAt
-    })
-    .select()
-    .single()
-
-  if (error) throw new Error(`Failed to create password reset token: ${error.message}`)
-  return data
-}
-
-export async function getPasswordResetToken(token) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('password_reset_tokens')
-    .select('*, users(id, username, email)')
-    .eq('token', token)
-    .is('used_at', null)
-    .gt('expires_at', new Date().toISOString())
-    .single()
-
-  if (error && error.code !== 'PGRST116') {
-    throw new Error(`Failed to get password reset token: ${error.message}`)
-  }
-  return data
-}
-
-export async function markPasswordResetTokenUsed(tokenId) {
-  const client = initializeDatabase()
-  const { error } = await client
-    .from('password_reset_tokens')
-    .update({ used_at: new Date().toISOString() })
-    .eq('id', tokenId)
-
-  if (error) throw new Error(`Failed to mark token as used: ${error.message}`)
-}
+// ============ PASSWORD UPDATE ============
 
 export async function updateUserPassword(userId, hashedPassword) {
   const client = initializeDatabase()
 
   // Development mode fallback
   if (client === 'DEV_MODE') {
-    for (const [username, user] of DEV_USERS.entries()) {
+    for (const [_username, user] of DEV_USERS.entries()) {
       if (user.id === userId) {
         user.password = hashedPassword
         user.updated_at = new Date().toISOString()
@@ -542,117 +422,8 @@ export async function updateUserPassword(userId, hashedPassword) {
     .select()
     .single()
 
-  if (error) throw new Error(`Failed to update password: ${error.message}`)
+  if (error) {throw new Error(`Failed to update password: ${error.message}`)}
   return data
-}
-
-// ============ SESSION MANAGEMENT ============
-
-export async function createUserSession(userId, token, expiresAt, ipAddress, userAgent, refreshToken, refreshExpiresAt) {
-  const client = initializeDatabase()
-  
-  // Build the insert object
-  const sessionData = {
-    user_id: userId,
-    token,
-    expires_at: expiresAt,
-    ip_address: ipAddress,
-    user_agent: userAgent
-  }
-  
-  // Add refresh token fields if provided
-  if (refreshToken && refreshExpiresAt) {
-    sessionData.refresh_token = refreshToken
-    sessionData.refresh_expires_at = refreshExpiresAt
-  }
-  
-  const { data, error } = await client
-    .from('user_sessions')
-    .insert(sessionData)
-    .select()
-    .single()
-
-  if (error) throw new Error(`Failed to create user session: ${error.message}`)
-  return data
-}
-
-export async function getUserSession(token) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('user_sessions')
-    .select('*, users(id, username, email, name)')
-    .eq('token', token)
-    .gt('expires_at', new Date().toISOString())
-    .single()
-
-  if (error && error.code !== 'PGRST116') {
-    throw new Error(`Failed to get user session: ${error.message}`)
-  }
-  return data
-}
-
-export async function updateSessionLastAccessed(sessionId) {
-  const client = initializeDatabase()
-  const { error } = await client
-    .from('user_sessions')
-    .update({ last_accessed: new Date().toISOString() })
-    .eq('id', sessionId)
-
-  if (error) throw new Error(`Failed to update session: ${error.message}`)
-}
-
-export async function deleteUserSession(token) {
-  const client = initializeDatabase()
-  const { error } = await client
-    .from('user_sessions')
-    .delete()
-    .eq('token', token)
-
-  if (error) throw new Error(`Failed to delete session: ${error.message}`)
-}
-
-// ============ ANALYTICS OPERATIONS ============
-
-export async function updateLearningAnalytics(userId, topicId, analytics) {
-  const client = initializeDatabase()
-  const today = new Date().toISOString().split('T')[0] // YYYY-MM-DD format
-
-  const { data, error } = await client
-    .from('learning_analytics')
-    .upsert({
-      user_id: userId,
-      topic_id: topicId,
-      session_date: today,
-      ...analytics,
-      updated_at: new Date().toISOString()
-    }, { onConflict: 'user_id,topic_id,session_date' })
-    .select()
-    .single()
-
-  if (error) throw new Error(`Failed to update learning analytics: ${error.message}`)
-  return data
-}
-
-export async function getLearningAnalytics(userId, topicId = null, days = 30) {
-  const client = initializeDatabase()
-  const startDate = new Date()
-  startDate.setDate(startDate.getDate() - days)
-
-  let query = client
-    .from('learning_analytics')
-    .select('*')
-    .eq('user_id', userId)
-    .gte('session_date', startDate.toISOString().split('T')[0])
-    .order('session_date', { ascending: false })
-
-  if (topicId) {
-    query = query.eq('topic_id', topicId)
-  }
-
-  const { data, error } = await query
-
-  if (error) throw new Error(`Failed to get learning analytics: ${error.message}`)
-  return data || []
 }
 
 // ============ COURSE UNLOCKS (per-course access after payment) ============
@@ -672,7 +443,7 @@ export async function getUnlockedCourseIds(userId) {
   const client = initializeDatabase()
   const user = await getUserById(userId)
   const username = user?.username || null
-  if (!username) return []
+  if (!username) {return []}
 
   if (client === 'DEV_MODE') {
     const fromMap = Array.from(DEV_COURSE_UNLOCKS.keys()).filter(k => k.startsWith(`${username}:`))
@@ -683,7 +454,7 @@ export async function getUnlockedCourseIds(userId) {
     .from('user_course_unlocks')
     .select('course_id')
     .eq('username', username)
-  if (error) throw new Error(`Failed to get unlocked courses: ${error.message}`)
+  if (error) {throw new Error(`Failed to get unlocked courses: ${error.message}`)}
   return (data || []).map(row => row.course_id)
 }
 
@@ -696,7 +467,7 @@ export async function unlockCourseForUser(userId, courseId) {
   const client = initializeDatabase()
   const user = await getUserById(userId)
   const username = user?.username
-  if (!username) throw new Error('User not found')
+  if (!username) {throw new Error('User not found')}
   if (client === 'DEV_MODE') {
     DEV_COURSE_UNLOCKS.set(`${username}:${courseId}`, { username, courseId, unlocked_at: new Date().toISOString() })
     return { username, course_id: courseId, unlocked_at: new Date().toISOString() }
@@ -709,7 +480,7 @@ export async function unlockCourseForUser(userId, courseId) {
     )
     .select()
     .single()
-  if (error) throw new Error(`Failed to unlock course: ${error.message}`)
+  if (error) {throw new Error(`Failed to unlock course: ${error.message}`)}
   return data
 }
 
@@ -726,7 +497,7 @@ export async function createUnlockSlot(courseId) {
     .insert({ username: null, course_id: courseId })
     .select('id, course_id')
     .single()
-  if (error) throw new Error(`Failed to create unlock slot: ${error.message}`)
+  if (error) {throw new Error(`Failed to create unlock slot: ${error.message}`)}
   return { id: data.id, course_id: data.course_id }
 }
 
@@ -736,17 +507,17 @@ export async function createUnlockSlot(courseId) {
  */
 export async function redeemUnlockCode(userId, codeId) {
   const id = (codeId || '').toString().trim()
-  if (!id) throw new Error('Code is required')
+  if (!id) {throw new Error('Code is required')}
 
   const user = await getUserById(userId)
   const username = user?.username
-  if (!username) throw new Error('User not found')
+  if (!username) {throw new Error('User not found')}
 
   const client = initializeDatabase()
   if (client === 'DEV_MODE') {
     const slot = DEV_UNLOCK_SLOTS.get(id)
-    if (!slot) throw new Error('Invalid or already used code')
-    if (slot.username != null) throw new Error('Code already used')
+    if (!slot) {throw new Error('Invalid or already used code')}
+    if (slot.username !== null && slot.username !== undefined) {throw new Error('Code already used')}
     slot.username = username
     DEV_COURSE_UNLOCKS.set(`${username}:${slot.course_id}`, { username, courseId: slot.course_id, unlocked_at: new Date().toISOString() })
     return { success: true, courseId: slot.course_id }
@@ -758,15 +529,15 @@ export async function redeemUnlockCode(userId, codeId) {
     .eq('id', id)
     .single()
 
-  if (fetchError || !row) throw new Error('Invalid or already used code')
-  if (row.username != null) throw new Error('Code already used')
+  if (fetchError || !row) {throw new Error('Invalid or already used code')}
+  if (row.username !== null && row.username !== undefined) {throw new Error('Code already used')}
 
   const { error: updateError } = await client
     .from('user_course_unlocks')
     .update({ username, unlocked_at: new Date().toISOString() })
     .eq('id', id)
 
-  if (updateError) throw new Error('Failed to redeem code')
+  if (updateError) {throw new Error('Failed to redeem code')}
   return { success: true, courseId: row.course_id }
 }
 

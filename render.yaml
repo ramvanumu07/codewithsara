@@ -1,9 +1,8 @@
-# Render Blueprint – SARA
-# Use after initial setup: set all env vars in the Render dashboard for each service.
+# Render Blueprint – Sara backend only
+# Frontend is deployed on Netlify. Set all secret env vars in the Render dashboard.
 # Docs: https://render.com/docs/blueprint-spec
 
 services:
-  # Backend API
   - type: web
     name: sara-backend
     runtime: node
@@ -15,8 +14,9 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      # Required – set in dashboard
       - key: FRONTEND_URL
-        sync: false   # Set in dashboard to your frontend URL after deploy
+        sync: false   # Your Netlify URL, e.g. https://your-app.netlify.app
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_SERVICE_KEY
@@ -25,25 +25,10 @@ services:
         sync: false
       - key: JWT_SECRET
         sync: false
+      # Optional
+      - key: LOG_LEVEL
+        value: info
       - key: SENTRY_DSN
         sync: false
       - key: REDIS_URL
-        sync: false
-      - key: LOG_LEVEL
-        value: info
-
-  # Frontend (static) – region does not apply to static sites
-  - type: web
-    name: sara-frontend
-    runtime: static
-
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
-
-    envVars:
-      - key: VITE_API_BASE_URL
-        sync: false   # Set in dashboard to your backend URL (e.g. https://sara-backend.onrender.com)
-      - key: VITE_SUPABASE_URL
-        sync: false
-      - key: VITE_SUPABASE_ANON_KEY
         sync: false

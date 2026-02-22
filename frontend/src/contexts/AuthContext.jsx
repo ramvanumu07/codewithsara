@@ -75,20 +75,17 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const login = async (usernameOrEmail, password) => {
+  const login = async (username, password) => {
     try {
-      const response = await auth.login(usernameOrEmail, password)
+      const response = await auth.login(username, password)
 
       if (response.data.success) {
-        const { user: userData, accessToken, refreshToken, token } = response.data.data
+        const { user: userData, accessToken, token } = response.data.data
         const tokenToStore = accessToken || token
         setToken(tokenToStore)
         setUser(userData)
         setUserState(userData)
         setIsAuthenticated(true)
-        if (refreshToken) {
-          localStorage.setItem('sara_refresh_token', refreshToken)
-        }
         return { success: true, user: userData }
       } else {
         const err = response.data.message ?? response.data.error ?? 'Login failed'
@@ -109,106 +106,38 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const signup = async (username, email, name, password, confirmPassword) => {
+  const signup = async (username, name, password, confirmPassword, securityQuestion, securityAnswer) => {
     try {
-      const response = await auth.signup(username, email, name, password, confirmPassword)
-      
+      const response = await auth.signup(username, name, password, confirmPassword, securityQuestion, securityAnswer)
+
       if (response.data.success) {
         const { user: userData, token } = response.data.data
-        
-        // Store token and user data
         setToken(token)
         setUser(userData)
         setUserState(userData)
         setIsAuthenticated(true)
-        
         return { success: true, user: userData }
       } else {
         return { success: false, error: response.data.message || response.data.error || 'Signup failed' }
       }
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || error.response?.data?.error || 'Signup failed. Please try again.' 
+      return {
+        success: false,
+        error: error.response?.data?.message || error.response?.data?.error || 'Signup failed. Please try again.'
       }
     }
   }
 
   const logout = async () => {
     try {
-      // Call logout endpoint to invalidate session
       await auth.logout()
     } catch (error) {
-      // Logout API failed; still clear local state
+      // still clear local state
     } finally {
-      // Clear local storage and state
       removeToken()
       removeUser()
-      localStorage.removeItem('sara_refresh_token') // Clear refresh token
       setUserState(null)
       setIsAuthenticated(false)
-    }
-  }
-
-  const updateProfile = async (updates) => {
-    try {
-      const response = await auth.updateProfile(updates)
-      if (response.status >= 200 && response.status < 300 && response.data) {
-        if (response.data.success && response.data.data && response.data.data.user) {
-          const updatedUser = response.data.data.user
-          setUser(updatedUser)
-          setUserState(updatedUser)
-          return { success: true, user: updatedUser }
-        } else if (response.data.success && response.data.user) {
-          const updatedUser = response.data.user
-          setUser(updatedUser)
-          setUserState(updatedUser)
-          return { success: true, user: updatedUser }
-        }
-      }
-      return { 
-        success: false, 
-        error: response.data?.error || response.data?.message || 'Profile update failed' 
-      }
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || error.response?.data?.error || 'Profile update failed. Please try again.' 
-      }
-    }
-  }
-
-  const forgotPassword = async (usernameOrEmail) => {
-    try {
-      const response = await auth.forgotPassword(usernameOrEmail)
-      
-      if (response.data.success) {
-        return { success: true, message: response.data.data.message }
-      } else {
-        return { success: false, error: response.data.message || response.data.error || 'Password reset failed' }
-      }
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || error.response?.data?.error || 'Password reset failed. Please try again.' 
-      }
-    }
-  }
-
-  const resetPassword = async (token, password, confirmPassword) => {
-    try {
-      const response = await auth.resetPassword(token, password, confirmPassword)
-      
-      if (response.data.success) {
-        return { success: true, message: response.data.data.message }
-      } else {
-        return { success: false, error: response.data.message || response.data.error || 'Password reset failed' }
-      }
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || error.response?.data?.error || 'Password reset failed. Please try again.' 
-      }
     }
   }
 
@@ -228,25 +157,16 @@ export const AuthProvider = ({ children }) => {
   }
 
   const value = {
-    // State
     user,
     loading,
     isAuthenticated,
-    
-    // Actions
     login,
     signup,
     logout,
-    updateProfile,
-    forgotPassword,
-    resetPassword,
     refreshUser,
-    
-    // Utilities
     isLoggedIn: () => isAuthenticated && !!user,
     getUserId: () => user?.id,
     getUsername: () => user?.username,
-    getUserEmail: () => user?.email,
     getUserName: () => user?.name
   }
 

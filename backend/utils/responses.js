@@ -57,58 +57,6 @@ export function createErrorResponse(message, code = null, details = null) {
 }
 
 /**
- * Create a validation error response
- * @param {Array} errors - Array of validation errors
- * @param {string} message - Optional custom message
- * @returns {Object} - Standardized validation error response
- */
-export function createValidationErrorResponse(errors, message = 'Validation failed') {
-  return createErrorResponse(message, 'VALIDATION_ERROR', {
-    errors: Array.isArray(errors) ? errors : [errors]
-  })
-}
-
-/**
- * Create a rate limit error response
- * @param {number} retryAfter - Seconds to wait before retrying
- * @returns {Object} - Standardized rate limit error response
- */
-export function createRateLimitErrorResponse(retryAfter = 60) {
-  return createErrorResponse(
-    'Too many requests. Please wait a moment before trying again.',
-    'RATE_LIMIT_EXCEEDED',
-    { retryAfter }
-  )
-}
-
-/**
- * Create an authentication error response
- * @param {string} message - Optional custom message
- * @returns {Object} - Standardized authentication error response
- */
-export function createAuthErrorResponse(message = 'Authentication required') {
-  return createErrorResponse(message, 'AUTH_ERROR')
-}
-
-/**
- * Create an authorization error response
- * @param {string} message - Optional custom message
- * @returns {Object} - Standardized authorization error response
- */
-export function createAuthorizationErrorResponse(message = 'Insufficient permissions') {
-  return createErrorResponse(message, 'AUTHORIZATION_ERROR')
-}
-
-/**
- * Create a not found error response
- * @param {string} resource - Resource that was not found
- * @returns {Object} - Standardized not found error response
- */
-export function createNotFoundErrorResponse(resource = 'Resource') {
-  return createErrorResponse(`${resource} not found`, 'NOT_FOUND')
-}
-
-/**
  * Create a server error response
  * @param {string} message - Optional custom message
  * @param {any} details - Optional error details (only in development)
@@ -145,10 +93,10 @@ export function sendErrorResponse(res, message, statusCode = 500, code = null, d
  * @param {number} defaultStatusCode - Default status code if not determined
  */
 function safeErrorMessage(error) {
-  if (!error) return ''
+  if (!error) {return ''}
   const msg = error.message
-  if (typeof msg === 'string') return msg
-  if (msg != null) return String(msg)
+  if (typeof msg === 'string') {return msg}
+  if (msg !== null && msg !== undefined) {return String(msg)}
   return ''
 }
 

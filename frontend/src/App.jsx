@@ -15,7 +15,6 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import ForgotPassword from './pages/ForgotPassword'
 import Dashboard from './pages/Dashboard'
-import Profile from './pages/Profile'
 import Learn from './pages/Learn'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
@@ -106,7 +105,6 @@ const AppRoutes = () => {
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="/learn/:topicId" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
       
       {/* Legacy Route Redirects */}

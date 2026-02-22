@@ -1,20 +1,17 @@
 {
-  "name": "devsprout",
-  "version": "1.0.0",
-  "description": "AI-powered JavaScript tutoring platform",
-  "type": "module",
+  "name": "sara",
+  "version": "2.0.0",
+  "description": "Sara – AI-powered JavaScript learning platform",
+  "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
-    "build": "cd frontend && node node_modules/vite/bin/vite.js build",
-    "preview": "cd frontend && npm run build && npm run preview"
+    "build": "cd frontend && npm run build",
+    "preview": "cd frontend && npm run preview"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
-  },
-  "dependencies": {
-    "groq-sdk": "^0.37.0"
   }
 }

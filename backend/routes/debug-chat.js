@@ -8,11 +8,17 @@ import { getChatHistory } from '../services/chatService.js'
 
 const router = express.Router()
 
-// Debug chat history storage format
+// Debug chat history storage format (DEV: pass ?userId=... or uses first session).
 router.get('/chat-history/:topicId', async (req, res) => {
   try {
     const { topicId } = req.params
-    const userId = 'beeedf0e-c329-4255-b161-edc5d3d375cd' // Your user ID
+    const userId = req.query.userId || req.headers['x-debug-user-id'] || null
+    if (!userId) {
+      return res.status(400).json({
+        error: 'Missing userId',
+        message: 'Provide ?userId=... or X-Debug-User-Id header for this debug endpoint.'
+      })
+    }
 
     const client = getSupabaseClient()
     
@@ -106,32 +112,20 @@ router.get('/chat-history/:topicId', async (req, res) => {
   }
 })
 
-// Test the chat API endpoint that frontend uses
+// Proxy to test GET /api/chat/history/:topicId; forward your Authorization header.
 router.get('/test-frontend-api/:topicId', async (req, res) => {
   try {
     const { topicId } = req.params
-    
-    // Simulate the exact API call that frontend makes
-    const response = await fetch(`http://localhost:5000/api/chat/history/${topicId}`, {
-      headers: {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiZWVlZGYwZS1jMzI5LTQyNTUtYjE2MS1lZGM1ZDNkMzc1Y2QiLCJ1c2VybmFtZSI6IlJhbVZhbnVtdSIsImVtYWlsIjoic2FyYTRjb2RlQGdtYWlsLmNvbSIsIm5hbWUiOiJSYW0gVmFudW11IiwiaWF0IjoxNzcwMjEwMTE2LCJleHAiOjE3NzAyOTY1MTZ9.eygpZBx4K1zrkxwTMtyW9Jooi4Jf8VeGQEDF6dd1INU'
-      }
-    })
-    
+    const authHeader = req.headers.authorization
+    if (!authHeader) {
+      return res.status(401).json({ error: 'Provide Authorization header to test chat history API' })
+    }
+    const base = process.env.API_BASE_URL || 'http://localhost:5000'
+    const response = await fetch(`${base}/api/chat/history/${topicId}`, { headers: { Authorization: authHeader } })
     const data = await response.json()
-    
-    res.json({
-      status: 'frontend_api_test',
-      api_response: data,
-      timestamp: new Date().toISOString()
-    })
-    
+    res.json({ status: 'frontend_api_test', api_response: data, timestamp: new Date().toISOString() })
   } catch (error) {
-    res.status(500).json({
-      error: 'Frontend API test failed',
-      message: error.message,
-      timestamp: new Date().toISOString()
-    })
+    res.status(500).json({ error: 'Frontend API test failed', message: error.message, timestamp: new Date().toISOString() })
   }
 })
 

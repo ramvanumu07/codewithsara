@@ -1,33 +1,17 @@
 /**
  * Chat Service - Sara Learning Platform
- * Industry-level chat storage with structured JSON format
+ * Chat storage (chat_sessions), parsing, and phase updates. Uses database.js for Supabase.
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { getSupabaseClient } from './database.js'
 import { getCachedChatHistory, setCachedChatHistory, invalidateChatHistoryCache } from './chatCache.js'
-
-// ============ DATABASE CLIENT ============
-function getSupabaseClient() {
-  const supabaseUrl = process.env.SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_KEY
-
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error('Database configuration missing. Check SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables.')
-  }
-
-  return createClient(supabaseUrl, supabaseKey, {
-    db: { schema: 'public' },
-    auth: { autoRefreshToken: false, persistSession: false },
-    global: { headers: { 'x-application-name': 'sara-chat-v2' } }
-  })
-}
 
 // ============ STRUCTURED CHAT OPERATIONS ============
 
 /**
  * Helper function to parse text format to messages array
  */
-function parseTextToMessages(textHistory) {
+function _parseTextToMessages(textHistory) {
   // Handle null, undefined, or non-string values
   if (!textHistory || typeof textHistory !== 'string' || textHistory.trim() === '') {
     return []
@@ -97,7 +81,7 @@ function parseTextToMessagesOptimized(textHistory) {
   const messages = []
   const text = textHistory.trim()
 
-  if (!text) return messages
+  if (!text) {return messages}
 
   // Use regex for faster parsing - split on message boundaries
   const messageBlocks = text.split(/(?=(?:USER|AGENT): )/).filter(block => block.trim())
@@ -125,7 +109,7 @@ function parseTextToMessagesOptimized(textHistory) {
 
 /** Serialize messages array to USER:/AGENT: text (for prompt truncation only) */
 function serializeMessagesToHistory(messages) {
-  if (!messages || messages.length === 0) return ''
+  if (!messages || messages.length === 0) {return ''}
   return messages.map(m => {
     const prefix = m.role === 'user' ? 'USER' : 'AGENT'
     return `${prefix}: ${(m.content || '').trim()}`
@@ -140,9 +124,9 @@ function serializeMessagesToHistory(messages) {
  * @returns {string} Truncated history string
  */
 export function truncateHistoryForPrompt(historyString, maxMessages = 50) {
-  if (!historyString || typeof historyString !== 'string' || !historyString.trim()) return historyString || ''
+  if (!historyString || typeof historyString !== 'string' || !historyString.trim()) {return historyString || ''}
   const messages = parseTextToMessagesOptimized(historyString)
-  if (messages.length <= maxMessages) return historyString
+  if (messages.length <= maxMessages) {return historyString}
   const trimmed = messages.slice(-maxMessages)
   return serializeMessagesToHistory(trimmed)
 }
@@ -152,8 +136,7 @@ export function truncateHistoryForPrompt(historyString, maxMessages = 50) {
  * OPTIMIZED with caching and performance monitoring
  */
 export async function getChatHistory(userId, topicId) {
-  const startTime = Date.now()
-
+  const _startTime = Date.now()
   try {
     // Try cache first
     const cachedMessages = await getCachedChatHistory(userId, topicId)
@@ -216,9 +199,7 @@ export async function getChatHistory(userId, topicId) {
  */
 export async function saveChatTurn(userId, topicId, userMessage, aiResponse, phase = 'session') {
   const client = getSupabaseClient()
-
-  try {
-    // Get current conversation history as text
+  // Get current conversation history as text
     const { data: currentData, error: fetchError } = await client
       .from('chat_sessions')
       .select('messages, message_count')
@@ -227,11 +208,10 @@ export async function saveChatTurn(userId, topicId, userMessage, aiResponse, pha
       .single()
 
     let currentHistory = ''
-    let currentMessageCount = 0
-
+    let _currentMessageCount = 0
     if (!fetchError && currentData?.messages) {
       currentHistory = currentData.messages
-      currentMessageCount = currentData.message_count || 0
+      _currentMessageCount = currentData.message_count || 0
     }
 
     // Add new conversation turn in text format
@@ -254,7 +234,7 @@ export async function saveChatTurn(userId, topicId, userMessage, aiResponse, pha
         topic_id: topicId,
         messages: finalHistory,
         message_count: finalMessageCount,
-        phase: phase,
+        phase,
         last_message_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }, {
@@ -269,11 +249,7 @@ export async function saveChatTurn(userId, topicId, userMessage, aiResponse, pha
     await invalidateChatHistoryCache(userId, topicId)
 
     // Return messages in array format for frontend compatibility
-    return parseTextToMessagesOptimized(finalHistory)
-
-  } catch (error) {
-    throw error
-  }
+  return parseTextToMessagesOptimized(finalHistory)
 }
 
 /**
@@ -281,10 +257,8 @@ export async function saveChatTurn(userId, topicId, userMessage, aiResponse, pha
  */
 export async function saveInitialMessage(userId, topicId, message, phase = 'session') {
   const client = getSupabaseClient()
-
-  try {
-    // Check if conversation already exists
-    const { data: existing, error: checkError } = await client
+  // Check if conversation already exists
+    const { data: existing, error: _checkError } = await client
       .from('chat_sessions')
       .select('messages, message_count')
       .eq('user_id', userId)
@@ -309,7 +283,7 @@ export async function saveInitialMessage(userId, topicId, message, phase = 'sess
         topic_id: topicId,
         messages: initialHistory,
         message_count: 1,
-        phase: phase,
+        phase,
         last_message_at: new Date().toISOString(),
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -327,10 +301,6 @@ export async function saveInitialMessage(userId, topicId, message, phase = 'sess
       conversationHistory: initialHistory,
       messages: parseTextToMessagesOptimized(initialHistory)
     }
-
-  } catch (error) {
-    throw error
-  }
 }
 
 /**
@@ -338,9 +308,7 @@ export async function saveInitialMessage(userId, topicId, message, phase = 'sess
  */
 export async function clearChatHistory(userId, topicId) {
   const client = getSupabaseClient()
-
-  try {
-    const { error } = await client
+  const { error } = await client
       .from('chat_sessions')
       .delete()
       .eq('user_id', userId)
@@ -350,16 +318,26 @@ export async function clearChatHistory(userId, topicId) {
       throw new Error(`Failed to clear chat history: ${error.message}`)
     }
 
-    // Invalidate cache after clearing
-    await invalidateChatHistoryCache(userId, topicId)
+  await invalidateChatHistoryCache(userId, topicId)
+}
 
-  } catch (error) {
-    throw error
+/**
+ * Update chat session phase (e.g. session → assignment).
+ */
+export async function updateChatPhase(userId, topicId, phase) {
+  const client = getSupabaseClient()
+  const { error } = await client
+    .from('chat_sessions')
+    .update({ phase, updated_at: new Date().toISOString() })
+    .eq('user_id', userId)
+    .eq('topic_id', topicId)
+  if (error) {
+    throw new Error(`Failed to update chat phase: ${error.message}`)
   }
 }
 
 /**
- * Get chat messages in old string format (for backward compatibility)
+ * Get chat messages in string format (USER:/AGENT: for prompts and storage).
  */
 export async function getChatHistoryString(userId, topicId) {
   try {
@@ -388,5 +366,7 @@ export default {
   saveChatTurn,
   saveInitialMessage,
   clearChatHistory,
-  getChatHistoryString
+  getChatHistoryString,
+  updateChatPhase,
+  truncateHistoryForPrompt
 }

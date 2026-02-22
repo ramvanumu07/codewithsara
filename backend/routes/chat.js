@@ -8,17 +8,14 @@ import fs from 'fs'
 import path from 'path'
 import { authenticateToken } from './auth.js'
 import { callAI } from '../services/ai.js'
-import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, truncateHistoryForPrompt } from '../services/chatService.js'
-import { updateChatPhase } from '../services/chatHistory.js'
-import { getSupabaseClient } from '../services/database.js'
+import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, truncateHistoryForPrompt, updateChatPhase } from '../services/chatService.js'
+import { getSupabaseClient, getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getTopicsTaughtSoFar } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
-import { getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
-import progressManager from '../services/progressManager.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
-import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/sessionPrompt.js'
+import { buildSessionPrompt as buildSessionPromptFromShared, buildAssignmentPrompt as buildAssignmentPromptFromPrompts, buildFeedbackPrompt } from '../prompts/prompts.js'
 
 const router = express.Router()
 
@@ -60,46 +57,18 @@ function buildEmbeddedSessionPrompt(topicId, conversationHistory, completedTopic
   })
 }
 
-function buildAssignmentPrompt(topicId, conversationHistory, assignment) {
-  const topic = findTopicById(courses, topicId)
-
-  return `You are Sara, a helpful JavaScript tutor providing assignment guidance for "${topic.title}".
-
-Current Assignment: ${assignment.description}
-
-Conversation History:
-${conversationHistory || 'Starting assignment help...'}
-
-Your role in ASSIGNMENTS:
-- Help students understand the requirements
-- Provide hints without giving away the solution
-- Debug their code when they're stuck
-- Explain concepts they're confused about
-- Encourage them to think through problems
-- Celebrate their progress
-
-Guidelines:
-- Don't give the complete solution immediately
-- Ask guiding questions to help them think
-- Point out specific issues in their code
-- Suggest debugging techniques
-- Be patient and encouraging
-
-Respond to their message and help them with the assignment!`
-}
-
 // ============ CHAT ENDPOINTS ============
 
 router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res) => {
   try {
-    if (!validateChatRequest(req, res)) return
+    if (!validateChatRequest(req, res)) {return}
 
     const { message, topicId } = req.body
     const userId = req.user.userId
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     // Ensure progress row exists for this topic (e.g. user opened via Next without submitting)
     let progress = await getProgress(userId, topicId)
@@ -125,7 +94,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
 
     // Include current user message in history so the AI can validate their answer
     const conversationHistoryForPrompt = message.trim()
-      ? (conversationHistory ? conversationHistory + '\n' : '') + 'USER: ' + message.trim()
+      ? `${conversationHistory ? `${conversationHistory  }\n` : ''  }USER: ${  message.trim()}`
       : conversationHistory
 
     // Truncate only for the prompt (keep full history in DB and UI)
@@ -143,23 +112,22 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       messages.push({ role: 'user', content: message.trim() })
     }
 
-    // Log finalized system prompt for testing (file + console); skip file on Vercel (read-only fs)
-    if (!process.env.VERCEL) {
-      const promptLogPath = path.join(process.cwd(), 'logs', 'last-system-prompt.txt')
-      try {
-        fs.mkdirSync(path.dirname(promptLogPath), { recursive: true })
-        fs.writeFileSync(promptLogPath, `[SESSION CHAT] topicId=${topicId} messageLength=${message.trim().length}\n---\n` + embeddedPrompt, 'utf8')
-      } catch (e) {
-      }
+    // Log finalized system prompt for testing (file + console)
+    const promptLogPath = path.join(process.cwd(), 'logs', 'last-system-prompt.txt')
+    try {
+      fs.mkdirSync(path.dirname(promptLogPath), { recursive: true })
+      fs.writeFileSync(promptLogPath, `[SESSION CHAT] topicId=${topicId} messageLength=${message.trim().length}\n---\n${  embeddedPrompt}`, 'utf8')
+    } catch (e) {
+      // ignore
     }
     // Get AI response with optimized parameters for education
     const aiResponse = await callAI(messages, 1500, 0.5, 'llama-3.3-70b-versatile')
 
     // Completion detection: prompt asks AI to write "Congratulations! You've Mastered [topic]!" when done (no signal)
     const completionPhrases = ['Congratulations', 'You\'ve Mastered', "You've Mastered", 'ready for the playground']
-    let isSessionComplete = completionPhrases.some(phrase => aiResponse.includes(phrase))
+    const isSessionComplete = completionPhrases.some(phrase => aiResponse.includes(phrase))
 
-    let cleanedResponse = aiResponse
+    const cleanedResponse = aiResponse
 
     // Save the conversation turn (user message + cleaned AI response) atomically
     let saveSuccess
@@ -196,7 +164,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
 
     const responseData = {
       response: cleanedResponse,
-      messageCount: messageCount,
+      messageCount,
       conversationHistory: updatedConversation,
       phase: 'session', // Always return 'session' for this endpoint
       sessionComplete: isSessionComplete,
@@ -228,13 +196,10 @@ router.post('/assignment/hint', authenticateToken, rateLimitMiddleware, async (r
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
-    // Get conversation history for assignment context
     const conversationHistory = await getChatHistoryString(userId, topicId)
-
-    // Build assignment prompt
-    const embeddedPrompt = buildAssignmentPrompt(topicId, conversationHistory, assignment)
+    const embeddedPrompt = buildAssignmentPromptFromPrompts(topic.title, conversationHistory, assignment)
 
     const userMessage = userCode
       ? `I'm working on this assignment: "${assignment.description}". Here's my code: ${userCode}. Can you give me a hint?`
@@ -269,7 +234,6 @@ router.post('/assignment/hint', authenticateToken, rateLimitMiddleware, async (r
 router.post('/feedback', authenticateToken, rateLimitMiddleware, async (req, res) => {
   try {
     const { topicId, userCode, assignment } = req.body
-    const userId = req.user.userId
 
     if (!topicId || !userCode || !assignment) {
       return res.status(400).json(createErrorResponse('topicId, userCode, and assignment are required'))
@@ -278,39 +242,14 @@ router.post('/feedback', authenticateToken, rateLimitMiddleware, async (req, res
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     const topicsTaughtSoFar = getTopicsTaughtSoFar(courses, topicId)
     const conceptsScope = topicsTaughtSoFar.length > 0
       ? topicsTaughtSoFar.join(' → ')
       : topic.title
 
-    // Build feedback prompt: experienced developer writes best solution using only concepts taught so far
-    const feedbackPrompt = `You are an experienced JavaScript developer creating a reference solution for a student assignment.
-
-CONCEPTS CONSTRAINT (CRITICAL)
-The student has completed these topics in order: ${conceptsScope}
-Your solution must ONLY use concepts from this list. Do not use any feature, 
-pattern, or syntax from topics that come later in the curriculum.
-
-ASSIGNMENT
-${assignment.description}
-
-STUDENT'S CURRENT CODE (to understand their approach)
-${userCode}
-
-REQUIREMENTS
-Write a clear, correct solution that:
-- Solves the assignment completely
-- Uses only concepts from the allowed list above
-- Demonstrates good practices within those constraints
-- Uses readable variable names and clear structure
-- Includes any starter code specified in the assignment description
-
-OUTPUT FORMAT
-1. First, a short "Differences" section: a bullet list comparing the student's code to your solution. For each point, state what is wrong or missing in their code (or what they did differently from good practice). Use plain language so the student can see exactly where they lag behind developer-style code.
-2. Then a blank line, then a single fenced JavaScript code block with your solution (e.g. \`\`\`javascript ... \`\`\`).
-`
+    const feedbackPrompt = buildFeedbackPrompt(conceptsScope, assignment.description, userCode)
 
     const messages = [
       { role: 'system', content: feedbackPrompt },
@@ -374,14 +313,14 @@ router.get('/history/:topicId', authenticateToken, async (req, res) => {
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     const messages = await getChatHistory(userId, topicId)
     const duration = Date.now() - startTime
 
     // Add performance metrics to response
     res.json(createSuccessResponse({
-      messages: messages,
+      messages,
       messageCount: messages.length,
       topic: {
         id: topicId,
@@ -420,7 +359,7 @@ router.delete('/history/:topicId', authenticateToken, async (req, res) => {
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) return
+    if (!topic) {return}
 
     await clearChatHistory(userId, topicId)
 
@@ -438,15 +377,7 @@ router.delete('/history/:topicId', authenticateToken, async (req, res) => {
   }
 })
 
-// ============ LEGACY COMPATIBILITY ============
-
-// Legacy routes removed - using single-topic architecture
-
-router.delete('/history/:topicId/:subtopicId', (req, res) => {
-  res.redirect(307, `/api/chat/history/${req.params.topicId}`)
-})
-
-// Manual completion endpoint for testing
+// Manual completion endpoint (testing / dev)
 router.post('/complete/:topicId', authenticateToken, async (req, res) => {
   try {
     const { topicId } = req.params
