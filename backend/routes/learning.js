@@ -81,16 +81,18 @@ function validateBody(schema) {
 
 // ============ UTILITY FUNCTIONS ============
 
-import SecureCodeExecutorModule from '../services/SecureCodeExecutor.js'
-// ESM: default is the class. CJS bundle: default export can be wrapped (e.g. .default or .default.default)
-function resolveConstructor(m) {
-  if (typeof m === 'function') return m
-  const d = m?.default
-  if (typeof d === 'function') return d
-  if (d && typeof d.default === 'function') return d.default
-  return m
+// Lazy-load executor so app startup (and auth/login) never depends on it; avoids CJS bundle export issues
+let codeExecutorPromise = null
+async function getCodeExecutor() {
+  if (!codeExecutorPromise) {
+    codeExecutorPromise = (async () => {
+      const m = await import('../services/SecureCodeExecutor.js')
+      const Clazz = m.default ?? m
+      return new (typeof Clazz === 'function' ? Clazz : Clazz.default)()
+    })()
+  }
+  return codeExecutorPromise
 }
-const codeExecutor = new (resolveConstructor(SecureCodeExecutorModule))()
 
 // Industry-level secure code execution function
 async function executeCodeSecurely(code, testCases = [], functionName = null, solutionType = 'script') {
@@ -104,7 +106,7 @@ async function executeCodeSecurely(code, testCases = [], functionName = null, so
       throw new Error('Test cases must be an array');
     }
 
-    // Execute code with new secure executor
+    const codeExecutor = await getCodeExecutor()
     const result = await codeExecutor.execute(code, testCases, functionName, solutionType);
 
     return {
