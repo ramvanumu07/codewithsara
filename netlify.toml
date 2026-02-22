@@ -6,6 +6,10 @@
   publish = "frontend/dist"
   functions = "netlify/functions"
 
+# Use Node 20 (matches .nvmrc) so install and build are consistent
+[build.environment]
+  NODE_VERSION = "20"
+
 # API: send /api/* to the Node function (backend runs here)
 [[redirects]]
   from   = "/api/*"
