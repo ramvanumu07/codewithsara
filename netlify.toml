@@ -6,7 +6,7 @@
   publish = "frontend/dist"
   functions = "netlify/functions"
 
-# Use Node 20 (matches .nvmrc) so install and build are consistent
+# Node 20; devDependencies for frontend (vite) are installed via install:all script
 [build.environment]
   NODE_VERSION = "20"
 
