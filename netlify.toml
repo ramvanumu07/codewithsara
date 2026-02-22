@@ -6,9 +6,10 @@
   publish = "frontend/dist"
   functions = "netlify/functions"
 
-# Node 20; devDependencies for frontend (vite) are installed via install:all script
+# Node 20; NODE_ENV=development so devDependencies (e.g. vite) are installed during build
 [build.environment]
   NODE_VERSION = "20"
+  NODE_ENV     = "development"
 
 # API: send /api/* to the Node function (backend runs here)
 [[redirects]]
