@@ -258,24 +258,6 @@ export const courses = [
             ]
           },
           {
-            "description": '// Do not rename num, use it as input for your program.\n// num will be a two-digit number.\n// While testing we will change its value.\nconst num = 47;\n\n// Extract and store the tens digit and units digit separately\n// Print tens digit first, then units digit\n// Hint: Use Math.floor(num / 10) for tens, num % 10 for units\n// For example, if num = 47, your output should be:\n// 4\n// 7',
-            "solution_type": "script",
-            "testCases": [
-              {
-                "input": { "num": 47 },
-                "expectedOutput": '4\n7'
-              },
-              {
-                "input": { "num": 93 },
-                "expectedOutput": '9\n3'
-              },
-              {
-                "input": { "num": 10 },
-                "expectedOutput": '1\n0'
-              }
-            ]
-          },
-          {
             "description": '// Do not rename x, y, z, use them as input for your program.\n// While testing we will change their values.\nconst x = 6;\nconst y = 4;\nconst z = 2;\n\n// Calculate: (x + y) * z\n// Store the result and then calculate: result - x\n// Print both values\n// For example, if x = 6, y = 4, z = 2, your output should be:\n// 20\n// 14',
             "solution_type": "script",
             "testCases": [
@@ -308,32 +290,6 @@ export const courses = [
           'Compound Logic: Multi-step Calculations'
         ],
         "tasks": [
-          {
-            "description": '// Do not rename dividend and divisor, use them as input for your program.\n// While testing we will change their values.\nconst dividend = 47;\nconst divisor = 6;\n\n// Calculate the quotient (without decimals) and remainder\n// Use Math.floor for quotient and % for remainder\n// Print quotient first, then remainder\n// For example, if dividend = 47 and divisor = 6, your output should be:\n// 7\n// 5',
-            "solution_type": "script",
-            "testCases": [
-              {
-                "input": { "dividend": 47, "divisor": 6 },
-                "expectedOutput": '7\n5'
-              },
-              {
-                "input": { "dividend": 100, "divisor": 7 },
-                "expectedOutput": '14\n2'
-              },
-              {
-                "input": { "dividend": 15, "divisor": 5 },
-                "expectedOutput": '3\n0'
-              },
-              {
-                "input": { "dividend": 7, "divisor": 10 },
-                "expectedOutput": '0\n7'
-              },
-              {
-                "input": { "dividend": 1000, "divisor": 3 },
-                "expectedOutput": '333\n1'
-              }
-            ]
-          },
           {
             "description": '// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = 12;\nconst b = 25;\nconst c = 18;\n\n// Calculate and print:\n// 1. Sum of all three numbers\n// 2. Product of all three numbers\n// 3. Average of all three numbers\n// For example, if a = 12, b = 25, c = 18, your output should be:\n// 55\n// 5400\n// 18.333333333333332',
             "solution_type": "script",
@@ -8029,25 +7985,6 @@ export const courses = [
               {
                 "input": { "str": "testing", "length": 4 },
                 "expectedOutput": "test"
-              }
-            ]
-          },
-          {
-            "description": "/*\n  Implement the below function that uses slice() and indexOf() to extract the second word.\n  Use slice() to extract the middle word without hardcoding indices.\n  Hint: Use indexOf() to find the space, then slice from that position + 1.\n  Examples:\n    extractSecondWord(\"Hello World\") => \"World\"\n    extractSecondWord(\"Good Morning\") => \"Morning\"\n    extractSecondWord(\"JavaScript Rocks\") => \"Rocks\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction extractSecondWord(str) {\n  // Implementation here\n}",
-            "solution_type": "function",
-            "function_name": "extractSecondWord",
-            "testCases": [
-              {
-                "input": { "str": "Hello World" },
-                "expectedOutput": "World"
-              },
-              {
-                "input": { "str": "Good Morning" },
-                "expectedOutput": "Morning"
-              },
-              {
-                "input": { "str": "JavaScript Rocks" },
-                "expectedOutput": "Rocks"
               }
             ]
           },
