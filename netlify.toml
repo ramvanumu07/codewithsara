@@ -1,20 +1,20 @@
-# Netlify configuration – frontend (React/Vite)
-# Backend API: deploy separately (e.g. Render, Railway) and set VITE_API_BASE_URL in Netlify env.
+# Sara – frontend + API on Netlify (one deploy, one place for env vars)
 
 [build]
-  base    = "frontend"
-  command = "npm run build"
-  publish = "dist"
+  base    = ""
+  command = "npm run install:all && npm run build"
+  publish = "frontend/dist"
+  functions = "netlify/functions"
 
-# SPA: serve index.html for all routes
+# API: send /api/* to the Node function (backend runs here)
+[[redirects]]
+  from   = "/api/*"
+  to     = "/.netlify/functions/api"
+  status = 200
+  force  = true
+
+# SPA: serve index.html for all other routes
 [[redirects]]
   from = "/*"
   to   = "/index.html"
   status = 200
-
-# Optional: proxy API in development (Netlify Dev)
-# [[redirects]]
-#   from = "/api/*"
-#   to   = "http://localhost:5000/api/:splat"
-#   status = 200
-#   force = true
