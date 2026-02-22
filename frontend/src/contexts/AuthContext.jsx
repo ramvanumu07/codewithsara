@@ -92,12 +92,17 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: toErrorString(err) || 'Login failed' }
       }
     } catch (error) {
+      const isLocalhost = typeof window !== 'undefined' && /^localhost$|^127\.0\.0\.1$/i.test(window.location.hostname)
       let errorMessage = 'Login failed. Please try again.'
       if (error.response?.data) {
         const d = error.response.data
         errorMessage = toErrorString(d.message ?? d.error ?? d) || errorMessage
+      } else if (error.response?.status >= 500) {
+        errorMessage = 'Server error. Please try again in a moment.'
       } else if (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error')) {
-        errorMessage = 'Cannot reach server. Make sure the backend is running on port 5000 (run: npm run dev from project root).'
+        errorMessage = isLocalhost
+          ? 'Cannot reach server. Make sure the backend is running on port 5000 (run: npm run dev from project root).'
+          : 'Unable to connect. Please check your connection and try again.'
       }
       return { success: false, error: errorMessage }
     }
