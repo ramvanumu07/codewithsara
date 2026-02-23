@@ -198,6 +198,7 @@ export async function getChatHistory(userId, topicId) {
  * Save a single chat turn with text format
  */
 export async function saveChatTurn(userId, topicId, userMessage, aiResponse, phase = 'session') {
+  await invalidateChatHistoryCache(userId, topicId)
   const client = getSupabaseClient()
   // Get current conversation history as text
     const { data: currentData, error: fetchError } = await client

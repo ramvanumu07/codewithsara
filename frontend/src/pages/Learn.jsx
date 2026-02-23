@@ -491,6 +491,22 @@ const Learn = () => {
     }
   }, [topicId, phase, startFromFirst])
 
+  // When user returns to the tab, refetch chat history so we show DB truth (not stale in-memory state from another tab)
+  useEffect(() => {
+    const handleVisibility = async () => {
+      if (document.visibilityState !== 'visible' || phase !== 'session' || !topicId) return
+      try {
+        const historyResponse = await chat.getHistory(topicId)
+        if (topicIdRef.current !== topicId) return
+        if (historyResponse?.data?.data?.messages?.length > 0) {
+          setMessages(historyResponse.data.data.messages)
+        }
+      } catch (_) { /* ignore */ }
+    }
+    document.addEventListener('visibilitychange', handleVisibility)
+    return () => document.removeEventListener('visibilitychange', handleVisibility)
+  }, [topicId, phase])
+
   // Handle sending messages in session phase (no new messages once session is completed)
   const handleSendMessage = async (e) => {
     e.preventDefault()

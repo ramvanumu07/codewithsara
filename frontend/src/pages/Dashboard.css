@@ -518,6 +518,20 @@
   min-width: 0;
 }
 
+/* When used as button (all-topics list) */
+button.session-completed-title {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+button.session-completed-title:hover {
+  color: #047857;
+}
+
 .session-completed-actions {
   display: flex;
   align-items: center;
