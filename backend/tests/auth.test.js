@@ -7,7 +7,8 @@ import request from 'supertest'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import app from '../server.js'
-import { createTestUser, testClient } from './setup.js'
+import { createUser } from '../services/database.js'
+import { createTestUser } from './setup.js'
 
 describe('Authentication System', () => {
   describe('POST /api/auth/signup', () => {
@@ -70,23 +71,16 @@ describe('Authentication System', () => {
     let testUser
     
     beforeEach(async () => {
-      // Create test user in database
       testUser = await createTestUser()
       const hashedPassword = await bcrypt.hash(testUser.password, 12)
-      
-      const { data } = await testClient
-        .from('users')
-        .insert({
-          username: testUser.username,
-          email: testUser.email,
-          name: testUser.name,
-          password: hashedPassword,
-          has_access: true
-        })
-        .select()
-        .single()
-      
-      testUser.id = data.id
+      const user = await createUser({
+        username: testUser.username,
+        email: testUser.email,
+        name: testUser.name,
+        password: hashedPassword,
+        has_access: true
+      })
+      testUser.id = user.id
     })
     
     test('should login with valid credentials', async () => {
@@ -133,24 +127,17 @@ describe('Authentication System', () => {
     let testUser, refreshToken
     
     beforeEach(async () => {
-      // Create user and login to get refresh token
       testUser = await createTestUser()
       const hashedPassword = await bcrypt.hash(testUser.password, 12)
-      
-      const { data: userData } = await testClient
-        .from('users')
-        .insert({
-          username: testUser.username,
-          email: testUser.email,
-          name: testUser.name,
-          password: hashedPassword,
-          has_access: true
-        })
-        .select()
-        .single()
-      
+      const userData = await createUser({
+        username: testUser.username,
+        email: testUser.email,
+        name: testUser.name,
+        password: hashedPassword,
+        has_access: true
+      })
       testUser.id = userData.id
-      
+
       const loginResponse = await request(app)
         .post('/api/auth/login')
         .send({

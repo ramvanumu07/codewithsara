@@ -8,25 +8,9 @@
  */
 
 import dotenv from 'dotenv'
-import { createClient } from '@supabase/supabase-js'
+import { query, isDatabaseConfigured } from '../services/db.js'
 
 dotenv.config()
-
-// Database client
-function getSupabaseClient() {
-  const supabaseUrl = process.env.SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_KEY
-
-  if (!supabaseUrl || !supabaseKey) {
-    console.error('Missing database configuration')
-    process.exit(1)
-  }
-
-  return createClient(supabaseUrl, supabaseKey, {
-    db: { schema: 'public' },
-    auth: { autoRefreshToken: false, persistSession: false }
-  })
-}
 
 // Test scenarios
 const testScenarios = [
@@ -196,30 +180,19 @@ async function runTests() {
 // Test database integration
 async function testDatabaseIntegration() {
   console.log('\nTesting Database Integration...')
-  
+  if (!isDatabaseConfigured()) {
+    console.log('Database not configured (set DATABASE_URL) - skipping integration test')
+    return
+  }
   try {
-    const client = getSupabaseClient()
-    
-    // Test basic connection
-    const { data: testData, error: testError } = await client
-      .from('progress')
-      .select('*')
-      .limit(1)
-    
-    if (testError) {
-      console.log('Database connection failed:', testError.message)
-      return
-    }
-    
+    const { rows: testData } = await query('SELECT * FROM progress LIMIT 1')
     console.log('Database connection: OK')
-    
-    // Test progress table structure
     if (testData && testData.length > 0) {
       const progress = testData[0]
       console.log('Progress table structure:')
       console.log(`   - Has phase field: ${Object.prototype.hasOwnProperty.call(progress, 'phase') ? 'yes' : 'no'}`)
       console.log(`   - Has status field: ${Object.prototype.hasOwnProperty.call(progress, 'status') ? 'yes' : 'no'}`)
-      console.log(`   - Sample record:`, {
+      console.log('   - Sample record:', {
         topic_id: progress.topic_id,
         phase: progress.phase,
         status: progress.status
@@ -227,7 +200,6 @@ async function testDatabaseIntegration() {
     } else {
       console.log('No progress records found in database')
     }
-    
   } catch (error) {
     console.error('Database integration test failed:', error.message)
   }

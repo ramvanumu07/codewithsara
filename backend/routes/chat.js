@@ -9,7 +9,7 @@ import path from 'path'
 import { authenticateToken } from './auth.js'
 import { callAI } from '../services/ai.js'
 import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, truncateHistoryForPrompt, updateChatPhase } from '../services/chatService.js'
-import { getSupabaseClient, getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
+import { getChatSessionRow, getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getTopicsTaughtSoFar } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
@@ -281,18 +281,7 @@ router.get('/debug/history/:topicId', authenticateToken, async (req, res) => {
     const { topicId } = req.params
     const userId = req.user.userId
 
-    // Get raw data from database
-    const { data, error } = await getSupabaseClient()
-      .from('chat_sessions')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('topic_id', topicId)
-      .single()
-
-    if (error && error.code !== 'PGRST116') {
-      throw error
-    }
-
+    const data = await getChatSessionRow(userId, topicId)
     res.json(createSuccessResponse({
       raw_data: data,
       messages_type: typeof data?.messages,

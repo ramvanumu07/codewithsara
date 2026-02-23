@@ -1,43 +1,34 @@
 /**
  * Test Setup Configuration
- * Sets up test environment and utilities
+ * Sets up test environment and utilities.
+ * Uses Neon (database.js); DEV_MODE uses in-memory maps.
  */
 
 import dotenv from 'dotenv'
-import { initializeDatabase } from '../services/database.js'
+import { initializeDatabase, clearTestDatabase } from '../services/database.js'
 
 // Load test environment variables
 dotenv.config({ path: '.env.test' })
 
-// Test database setup
+// Test database setup (DEV_MODE string or pool)
 let testClient
 
 beforeAll(async () => {
-  // Initialize test database connection
   testClient = initializeDatabase()
-  
-  // Clean test database
   await cleanTestDatabase()
 })
 
 afterAll(async () => {
-  // Clean up after tests
   await cleanTestDatabase()
 })
 
 beforeEach(async () => {
-  // Reset database state before each test
   await cleanTestDatabase()
 })
 
 async function cleanTestDatabase() {
-  if (!testClient) {return}
-  
   try {
-    // Delete test data in correct order (foreign keys)
-    await testClient.from('user_sessions').delete().neq('id', '00000000-0000-0000-0000-000000000000')
-    await testClient.from('user_progress').delete().neq('id', '00000000-0000-0000-0000-000000000000')
-    await testClient.from('users').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+    await clearTestDatabase()
   } catch (error) {
     console.warn('Database cleanup warning:', error.message)
   }

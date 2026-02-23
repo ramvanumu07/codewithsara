@@ -3,7 +3,12 @@
  */
 
 import dotenv from 'dotenv'
-dotenv.config()
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+// Always load .env from backend folder so DATABASE_URL is found regardless of cwd
+dotenv.config({ path: path.join(__dirname, '.env') })
 
 import { validateEnv } from './config/env.js'
 validateEnv()
@@ -22,6 +27,7 @@ import chatRoutes from './routes/chat.js'
 import learningRoutes from './routes/learning.js'
 import debugSchemaRoutes from './routes/debug-schema.js'
 import debugChatRoutes from './routes/debug-chat.js'
+import { query, isDatabaseConfigured } from './services/db.js'
 
 import { performanceMonitor as performanceMonitorExport } from './middleware/performance.js'
 import { performanceMiddleware as performanceMiddlewareExport, getPerformanceStats } from './services/performanceMonitor.js'
@@ -111,6 +117,33 @@ app.get('/metrics', (req, res) => {
     data: getPerformanceStats(),
     timestamp: new Date().toISOString()
   })
+})
+
+app.get('/api/health/db', async (req, res) => {
+  if (!isDatabaseConfigured()) {
+    return res.status(200).json({
+      ok: false,
+      message: 'DATABASE_URL not set or placeholder. Using in-memory store.',
+      database: null
+    })
+  }
+  try {
+    await query('SELECT 1 FROM users LIMIT 1')
+    res.status(200).json({ ok: true, message: 'Neon connected.', database: 'neon' })
+  } catch (err) {
+    const code = err.code || ''
+    const msg = (err.message || '').toLowerCase()
+    const schemaRequired = code === '42P01' || msg.includes('does not exist') || msg.includes('relation')
+    res.status(503).json({
+      ok: false,
+      message: schemaRequired
+        ? 'Schema not applied. Run backend/database/schema.sql in Neon SQL Editor.'
+        : (err.message || 'Database error'),
+      database: 'neon',
+      error: err.message,
+      code: err.code
+    })
+  }
 })
 
 app.use((err, req, res, _next) => {

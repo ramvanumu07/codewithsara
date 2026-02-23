@@ -1,62 +1,40 @@
 /**
  * Database Service - Sara Learning Platform
- * Industry-level database operations with single-topic architecture
+ * Uses Neon (Postgres) via pg. Set DATABASE_URL in .env.
+ * DEV_MODE when DATABASE_URL is missing or placeholder.
  */
 
-import { createClient } from '@supabase/supabase-js'
+import { query, getPool } from './db.js'
 import { withPerformanceLogging, progressCache } from '../middleware/performance.js'
 
-// ============ SUPABASE CLIENT ============
-let supabase = null
+// ============ INIT ============
+function isDevMode() {
+  const url = process.env.DATABASE_URL
+  return !url || url.includes('your_') || url.includes('placeholder')
+}
 
 // Development mode fallback data
 const DEV_USERS = new Map()
 const DEV_PROGRESS = new Map()
-const _DEV_CHAT_SESSIONS = new Map()
+const DEV_CHAT_SESSIONS = new Map() // key: `${userId}:${topicId}`
 
-// Initialize database connection
 function initializeDatabase() {
-  if (supabase) {return supabase}
-
-  const supabaseUrl = process.env.SUPABASE_URL
-  const supabaseKey = process.env.SUPABASE_SERVICE_KEY
-
-  // Check if we have placeholder values (development mode)
-  const isPlaceholderConfig = !supabaseUrl || !supabaseKey ||
-    supabaseUrl.includes('your_') || supabaseKey.includes('your_')
-
-  if (isPlaceholderConfig) {
-    return 'DEV_MODE' // Special marker for development mode
-  }
-
-  supabase = createClient(supabaseUrl, supabaseKey, {
-    db: { schema: 'public' },
-    auth: { autoRefreshToken: false, persistSession: false },
-    global: { headers: { 'x-application-name': 'sara-api' } }
-  })
-  return supabase
+  return isDevMode() ? 'DEV_MODE' : getPool()
 }
 
 // ============ USER OPERATIONS ============
 
-/** Escape a string for use in ILIKE so it matches literally (no wildcards). */
 function escapeIlike(str) {
-  if (typeof str !== 'string') {return ''}
+  if (typeof str !== 'string') return ''
   return str.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_')
 }
 
 export async function createUser(username, name, hashedPassword, securityQuestion = null, securityAnswer = null) {
-  const client = initializeDatabase()
-
-  // Development mode fallback
-  if (client === 'DEV_MODE') {
+  if (initializeDatabase() === 'DEV_MODE') {
     const lower = username.toLowerCase()
     for (const key of DEV_USERS.keys()) {
-      if (key.toLowerCase() === lower) {
-        throw new Error('Username already exists')
-      }
+      if (key.toLowerCase() === lower) throw new Error('Username already exists')
     }
-
     const userId = Date.now().toString()
     const user = {
       id: userId,
@@ -72,123 +50,56 @@ export async function createUser(username, name, hashedPassword, securityQuestio
     return user
   }
 
-  const existingByUsername = await getUserByUsername(username)
-  if (existingByUsername) {
-    throw new Error('Username already exists')
-  }
+  const existing = await getUserByUsername(username)
+  if (existing) throw new Error('Username already exists')
 
-  const userData = {
-    username,
-    name,
-    password: hashedPassword,
-    token_version: 0
-  }
-  if (securityQuestion && securityQuestion.trim()) {
-    userData.security_question = securityQuestion.trim()
-  }
-  if (securityAnswer && securityAnswer.trim()) {
-    userData.security_answer = securityAnswer.trim()
-  }
-
-  const { data, error } = await client
-    .from('users')
-    .insert(userData)
-    .select()
-    .single()
-
-  if (error) {
-    if (error.code === '23505' && error.message.includes('username')) {
-      throw new Error('Username already exists')
-    }
-    throw new Error(`Failed to create user: ${error.message}`)
-  }
-  return data
+  const { rows } = await query(
+    `INSERT INTO users (username, name, password, token_version, security_question, security_answer, created_at, updated_at)
+     VALUES ($1, $2, $3, 0, $4, $5, NOW(), NOW())
+     RETURNING *`,
+    [username, name, hashedPassword, securityQuestion?.trim() || null, securityAnswer?.trim() || null]
+  )
+  if (!rows[0]) throw new Error('Failed to create user')
+  return rows[0]
 }
 
 export async function getUserById(userId) {
-  const client = initializeDatabase()
-
-  // Development mode fallback
-  if (client === 'DEV_MODE') {
+  if (initializeDatabase() === 'DEV_MODE') {
     for (const user of DEV_USERS.values()) {
-      if (user.id === userId) {
-        return user
-      }
+      if (user.id === userId) return user
     }
     return null
   }
-
-  const { data, error } = await client
-    .from('users')
-    .select('*')
-    .eq('id', userId)
-    .single()
-
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return null
-    } else {
-      throw new Error(`Failed to get user by ID: ${error.message}`)
-    }
-  }
-
-  return data
+  const { rows } = await query('SELECT * FROM users WHERE id = $1', [userId])
+  return rows[0] || null
 }
 
 export async function getUserByUsername(username) {
-  const client = initializeDatabase()
-
-  if (client === 'DEV_MODE') {
+  if (initializeDatabase() === 'DEV_MODE') {
     const lower = (username || '').toLowerCase()
-    for (const [key, user] of DEV_USERS.entries()) {
-      if (key.toLowerCase() === lower) {return user}
+    for (const [, user] of DEV_USERS.entries()) {
+      if (user.username?.toLowerCase() === lower) return user
     }
     return null
   }
-
-  // Case-insensitive lookup: ILIKE with escaped value for exact match
   const pattern = escapeIlike(username || '')
-  const { data, error } = await client
-    .from('users')
-    .select('*')
-    .ilike('username', pattern)
-    .maybeSingle()
-
-  if (error) {
-    if (error.code === 'PGRST116') {
-      return null
-    } else {
-      throw new Error(`Failed to get user by username: ${error.message}`)
-    }
-  }
-
-  return data
+  const { rows } = await query('SELECT * FROM users WHERE username ILIKE $1', [pattern])
+  return rows[0] || null
 }
 
 export async function getTokenVersion(userId) {
-  const client = initializeDatabase()
-  if (client === 'DEV_MODE') {
+  if (initializeDatabase() === 'DEV_MODE') {
     for (const user of DEV_USERS.values()) {
-      if (user.id === userId) {
-        return user.token_version ?? 0
-      }
+      if (user.id === userId) return user.token_version ?? 0
     }
     return 0
   }
-  const { data, error } = await client
-    .from('users')
-    .select('token_version')
-    .eq('id', userId)
-    .single()
-  if (error || !data) {
-    return 0
-  }
-  return data.token_version ?? 0
+  const { rows } = await query('SELECT token_version FROM users WHERE id = $1', [userId])
+  return rows[0]?.token_version ?? 0
 }
 
 export async function bumpTokenVersion(userId) {
-  const client = initializeDatabase()
-  if (client === 'DEV_MODE') {
+  if (initializeDatabase() === 'DEV_MODE') {
     for (const user of DEV_USERS.values()) {
       if (user.id === userId) {
         user.token_version = (user.token_version ?? 0) + 1
@@ -197,212 +108,157 @@ export async function bumpTokenVersion(userId) {
     }
     return 1
   }
-  const current = await getTokenVersion(userId)
-  const next = current + 1
-  const { error } = await client
-    .from('users')
-    .update({ token_version: next, updated_at: new Date().toISOString() })
-    .eq('id', userId)
-  if (error) {
-    throw new Error(`Failed to bump token version: ${error.message}`)
-  }
+  const next = (await getTokenVersion(userId)) + 1
+  await query('UPDATE users SET token_version = $1, updated_at = NOW() WHERE id = $2', [next, userId])
   return next
 }
 
 export async function updateUserProfile(userId, updates) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('users')
-    .update({
-      ...updates,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', userId)
-    .select()
-    .single()
-
-  if (error) {
-    if (error.code === '23505' && error.message.includes('username')) {
-      throw new Error('Username already exists')
-    }
-    throw new Error(`Failed to update user profile: ${error.message}`)
+  if (initializeDatabase() === 'DEV_MODE') {
+    const user = await getUserById(userId)
+    if (!user) throw new Error('User not found')
+    Object.assign(user, updates, { updated_at: new Date().toISOString() })
+    return user
   }
-  return data
+  const allowed = ['username', 'name', 'security_question', 'security_answer']
+  const setClauses = []
+  const values = []
+  let i = 1
+  for (const key of allowed) {
+    if (Object.prototype.hasOwnProperty.call(updates, key) && updates[key] !== undefined) {
+      setClauses.push(`${key} = $${i}`)
+      values.push(updates[key])
+      i++
+    }
+  }
+  if (setClauses.length === 0) return (await getUserById(userId)) || null
+  setClauses.push('updated_at = NOW()')
+  values.push(userId)
+  const { rows } = await query(
+    `UPDATE users SET ${setClauses.join(', ')} WHERE id = $${i} RETURNING *`,
+    values
+  )
+  if (!rows[0]) throw new Error('Failed to update user profile')
+  if (rows[0].code === '23505') throw new Error('Username already exists')
+  return rows[0]
 }
 
 export async function updateLastLogin(userId) {
-  const client = initializeDatabase()
-  const { error } = await client
-    .from('users')
-    .update({
-      last_login: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', userId)
-
-  if (error) {throw new Error(`Failed to update last login: ${error.message}`)}
+  if (initializeDatabase() === 'DEV_MODE') return
+  await query('UPDATE users SET last_login = NOW(), updated_at = NOW() WHERE id = $1', [userId])
 }
 
 export async function isAdmin(userId) {
-  const client = initializeDatabase()
-  if (client === 'DEV_MODE') {
-    return true
-  }
-  const { data } = await client
-    .from('admins')
-    .select('id')
-    .eq('user_id', userId)
-    .single()
-
-  return !!data
+  if (initializeDatabase() === 'DEV_MODE') return true
+  const { rows } = await query('SELECT id FROM admins WHERE user_id = $1', [userId])
+  return !!rows[0]
 }
 
 // ============ PROGRESS OPERATIONS ============
 
 export async function getProgress(userId, topicId) {
   const cacheKey = `progress:${userId}:${topicId}`
-
-  // Check cache first
   const cached = progressCache.get(cacheKey)
-  if (cached) {
-    return cached
-  }
+  if (cached) return cached
 
   return await withPerformanceLogging(async () => {
-    const client = initializeDatabase()
-
-    // Development mode fallback
-    if (client === 'DEV_MODE') {
-      const progressKey = `${userId}:${topicId}`
-      const progress = DEV_PROGRESS.get(progressKey)
-      if (progress) {
-        progressCache.set(cacheKey, progress)
-      }
+    if (initializeDatabase() === 'DEV_MODE') {
+      const progress = DEV_PROGRESS.get(`${userId}:${topicId}`)
+      if (progress) progressCache.set(cacheKey, progress)
       return progress || null
     }
-
-    const { data, error } = await client
-      .from('progress')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('topic_id', topicId)
-      .single()
-
-    if (error && error.code !== 'PGRST116') {
-      throw new Error(`Failed to get progress: ${error.message}`)
-    }
-
-    // Cache the result
-    if (data) {
-      progressCache.set(cacheKey, data)
-    }
-
+    const { rows } = await query(
+      'SELECT * FROM progress WHERE user_id = $1 AND topic_id = $2',
+      [userId, topicId]
+    )
+    const data = rows[0] || null
+    if (data) progressCache.set(cacheKey, data)
     return data
   }, `getProgress(${topicId})`)
 }
 
 export async function upsertProgress(userId, topicId, updates) {
   return await withPerformanceLogging(async () => {
-    const client = initializeDatabase()
-
-    // Development mode fallback
-    if (client === 'DEV_MODE') {
-      const progressKey = `${userId}:${topicId}`
-      const existingProgress = DEV_PROGRESS.get(progressKey) || {}
+    if (initializeDatabase() === 'DEV_MODE') {
+      const key = `${userId}:${topicId}`
+      const existing = DEV_PROGRESS.get(key) || {}
       const newProgress = {
         user_id: userId,
         topic_id: topicId,
-        ...existingProgress,
+        ...existing,
         ...updates,
         updated_at: new Date().toISOString()
       }
-      DEV_PROGRESS.set(progressKey, newProgress)
-
-      // Update cache
-      const cacheKey = `progress:${userId}:${topicId}`
-      progressCache.set(cacheKey, newProgress)
-
+      DEV_PROGRESS.set(key, newProgress)
+      progressCache.set(`progress:${userId}:${topicId}`, newProgress)
       return newProgress
     }
-
-    // Only send columns that exist on progress table (after migration 001: no last_accessed, etc.)
-    const allowed = ['phase', 'status', 'current_task', 'total_tasks', 'assignments_completed', 'updated_at', 'topic_id']
-    const safeUpdates = {}
-    for (const key of allowed) {
-      if (Object.prototype.hasOwnProperty.call(updates, key) && updates[key] !== undefined) {
-        safeUpdates[key] = updates[key]
-      }
+    const allowed = ['phase', 'status', 'current_task', 'total_tasks', 'assignments_completed', 'topic_id']
+    const safe = {}
+    for (const k of allowed) {
+      if (Object.prototype.hasOwnProperty.call(updates, k) && updates[k] !== undefined) safe[k] = updates[k]
     }
-    const payload = {
-      user_id: userId,
-      topic_id: topicId,
-      ...safeUpdates,
-      updated_at: new Date().toISOString()
+    const existing = await query('SELECT * FROM progress WHERE user_id = $1 AND topic_id = $2', [userId, topicId])
+    const merged = {
+      phase: safe.phase ?? existing.rows[0]?.phase ?? null,
+      status: safe.status ?? existing.rows[0]?.status ?? null,
+      current_task: safe.current_task ?? existing.rows[0]?.current_task ?? null,
+      total_tasks: safe.total_tasks ?? existing.rows[0]?.total_tasks ?? null,
+      assignments_completed: safe.assignments_completed ?? existing.rows[0]?.assignments_completed ?? 0
     }
-
-    const { data, error } = await client
-      .from('progress')
-      .upsert(payload, { onConflict: 'user_id,topic_id' })
-      .select()
-      .single()
-
-    if (error) {throw new Error(`Failed to update progress: ${error.message}`)}
-
-    // Invalidate and update cache
-    const cacheKey = `progress:${userId}:${topicId}`
-    progressCache.set(cacheKey, data)
-
+    const { rows } = await query(
+      `INSERT INTO progress (user_id, topic_id, phase, status, current_task, total_tasks, assignments_completed, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+       ON CONFLICT (user_id, topic_id) DO UPDATE SET
+         phase = EXCLUDED.phase,
+         status = EXCLUDED.status,
+         current_task = EXCLUDED.current_task,
+         total_tasks = EXCLUDED.total_tasks,
+         assignments_completed = EXCLUDED.assignments_completed,
+         updated_at = NOW()
+       RETURNING *`,
+      [userId, topicId, merged.phase, merged.status, merged.current_task, merged.total_tasks, merged.assignments_completed]
+    )
+    const data = rows[0]
+    if (data) progressCache.set(`progress:${userId}:${topicId}`, data)
     return data
   }, `upsertProgress(${topicId})`)
 }
 
 export async function getAllProgress(userId) {
-  const client = initializeDatabase()
-
-  // Development mode: read from in-memory map (so /continue and /progress work without Supabase)
-  if (client === 'DEV_MODE') {
+  if (initializeDatabase() === 'DEV_MODE') {
     const list = []
     for (const [, p] of DEV_PROGRESS.entries()) {
-      if (p && String(p.user_id) === String(userId)) {
-        list.push(p)
-      }
+      if (p && String(p.user_id) === String(userId)) list.push(p)
     }
     list.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0))
     return list
   }
-
-  const { data, error } = await client
-    .from('progress')
-    .select('*')
-    .eq('user_id', userId)
-    .order('updated_at', { ascending: false })
-
-  if (error) {
-    throw new Error(`Failed to get all progress: ${error.message}`)
-  }
-  return data || []
+  const { rows } = await query(
+    'SELECT * FROM progress WHERE user_id = $1 ORDER BY updated_at DESC',
+    [userId]
+  )
+  return rows || []
 }
 
 export async function getCompletedTopics(userId) {
-  const client = initializeDatabase()
-  const { data, error } = await client
-    .from('progress')
-    .select('topic_id')
-    .eq('user_id', userId)
-    .eq('status', 'completed')
-
-  if (error) {throw new Error(`Failed to get completed topics: ${error.message}`)}
-  return data ? data.map(row => row.topic_id) : []
+  if (initializeDatabase() === 'DEV_MODE') {
+    const list = []
+    for (const [, p] of DEV_PROGRESS.entries()) {
+      if (p && String(p.user_id) === String(userId) && p.status === 'completed') list.push(p.topic_id)
+    }
+    return list
+  }
+  const { rows } = await query(
+    'SELECT topic_id FROM progress WHERE user_id = $1 AND status = $2',
+    [userId, 'completed']
+  )
+  return (rows || []).map((r) => r.topic_id)
 }
 
-// ============ PASSWORD UPDATE ============
-
 export async function updateUserPassword(userId, hashedPassword) {
-  const client = initializeDatabase()
-
-  // Development mode fallback
-  if (client === 'DEV_MODE') {
-    for (const [_username, user] of DEV_USERS.entries()) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    for (const [, user] of DEV_USERS.entries()) {
       if (user.id === userId) {
         user.password = hashedPassword
         user.updated_at = new Date().toISOString()
@@ -411,25 +267,18 @@ export async function updateUserPassword(userId, hashedPassword) {
     }
     throw new Error('User not found in development mode')
   }
-
-  const { data, error } = await client
-    .from('users')
-    .update({
-      password: hashedPassword,
-      updated_at: new Date().toISOString()
-    })
-    .eq('id', userId)
-    .select()
-    .single()
-
-  if (error) {throw new Error(`Failed to update password: ${error.message}`)}
-  return data
+  const { rows } = await query(
+    'UPDATE users SET password = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
+    [hashedPassword, userId]
+  )
+  if (!rows[0]) throw new Error('Failed to update password')
+  return rows[0]
 }
 
-// ============ COURSE UNLOCKS (per-course access after payment) ============
+// ============ COURSE UNLOCKS ============
 
-const DEV_COURSE_UNLOCKS = new Map() // key: `${username}:${courseId}`
-const DEV_UNLOCK_SLOTS = new Map()   // key: id (UUID), value: { id, course_id, username }
+const DEV_COURSE_UNLOCKS = new Map()
+const DEV_UNLOCK_SLOTS = new Map()
 
 function randomUUID() {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -440,22 +289,16 @@ function randomUUID() {
 }
 
 export async function getUnlockedCourseIds(userId) {
-  const client = initializeDatabase()
   const user = await getUserById(userId)
   const username = user?.username || null
-  if (!username) {return []}
-
-  if (client === 'DEV_MODE') {
-    const fromMap = Array.from(DEV_COURSE_UNLOCKS.keys()).filter(k => k.startsWith(`${username}:`))
-    const fromSlots = Array.from(DEV_UNLOCK_SLOTS.values()).filter(s => s.username === username).map(s => s.course_id)
-    return [...new Set([...fromMap.map(k => k.split(':')[1]), ...fromSlots])]
+  if (!username) return []
+  if (initializeDatabase() === 'DEV_MODE') {
+    const fromMap = Array.from(DEV_COURSE_UNLOCKS.keys()).filter((k) => k.startsWith(`${username}:`))
+    const fromSlots = Array.from(DEV_UNLOCK_SLOTS.values()).filter((s) => s.username === username).map((s) => s.course_id)
+    return [...new Set([...fromMap.map((k) => k.split(':')[1]), ...fromSlots])]
   }
-  const { data, error } = await client
-    .from('user_course_unlocks')
-    .select('course_id')
-    .eq('username', username)
-  if (error) {throw new Error(`Failed to get unlocked courses: ${error.message}`)}
-  return (data || []).map(row => row.course_id)
+  const { rows } = await query('SELECT course_id FROM user_course_unlocks WHERE username = $1', [username])
+  return (rows || []).map((r) => r.course_id)
 }
 
 export async function isCourseUnlockedForUser(userId, courseId) {
@@ -464,83 +307,221 @@ export async function isCourseUnlockedForUser(userId, courseId) {
 }
 
 export async function unlockCourseForUser(userId, courseId) {
-  const client = initializeDatabase()
   const user = await getUserById(userId)
   const username = user?.username
-  if (!username) {throw new Error('User not found')}
-  if (client === 'DEV_MODE') {
-    DEV_COURSE_UNLOCKS.set(`${username}:${courseId}`, { username, courseId, unlocked_at: new Date().toISOString() })
+  if (!username) throw new Error('User not found')
+  if (initializeDatabase() === 'DEV_MODE') {
+    DEV_COURSE_UNLOCKS.set(`${username}:${courseId}`, { username, course_id: courseId, unlocked_at: new Date().toISOString() })
     return { username, course_id: courseId, unlocked_at: new Date().toISOString() }
   }
-  const { data, error } = await client
-    .from('user_course_unlocks')
-    .upsert(
-      { username, course_id: courseId, unlocked_at: new Date().toISOString() },
-      { onConflict: ['username', 'course_id'] }
-    )
-    .select()
-    .single()
-  if (error) {throw new Error(`Failed to unlock course: ${error.message}`)}
-  return data
+  const { rows } = await query(
+    `INSERT INTO user_course_unlocks (username, course_id, unlocked_at)
+     VALUES ($1, $2, NOW())
+     ON CONFLICT (username, course_id) DO UPDATE SET unlocked_at = NOW()
+     RETURNING *`,
+    [username, courseId]
+  )
+  if (!rows[0]) throw new Error('Failed to unlock course')
+  return rows[0]
 }
 
-/** Create an unused unlock slot (admin only). Returns { id, course_id }. */
 export async function createUnlockSlot(courseId) {
-  const client = initializeDatabase()
-  if (client === 'DEV_MODE') {
+  if (initializeDatabase() === 'DEV_MODE') {
     const id = randomUUID()
     DEV_UNLOCK_SLOTS.set(id, { id, course_id: courseId, username: null })
     return { id, course_id: courseId }
   }
-  const { data, error } = await client
-    .from('user_course_unlocks')
-    .insert({ username: null, course_id: courseId })
-    .select('id, course_id')
-    .single()
-  if (error) {throw new Error(`Failed to create unlock slot: ${error.message}`)}
-  return { id: data.id, course_id: data.course_id }
+  const { rows } = await query(
+    'INSERT INTO user_course_unlocks (username, course_id, unlocked_at) VALUES (NULL, $1, NOW()) RETURNING id, course_id',
+    [courseId]
+  )
+  if (!rows[0]) throw new Error('Failed to create unlock slot')
+  return { id: rows[0].id, course_id: rows[0].course_id }
 }
 
-/**
- * Redeem an unlock code. Returns { success, courseId } or throws for invalid/used.
- * Code is the row id. Updates the row with username so it becomes a normal unlock.
- */
 export async function redeemUnlockCode(userId, codeId) {
   const id = (codeId || '').toString().trim()
-  if (!id) {throw new Error('Code is required')}
-
+  if (!id) throw new Error('Code is required')
   const user = await getUserById(userId)
   const username = user?.username
-  if (!username) {throw new Error('User not found')}
-
-  const client = initializeDatabase()
-  if (client === 'DEV_MODE') {
+  if (!username) throw new Error('User not found')
+  if (initializeDatabase() === 'DEV_MODE') {
     const slot = DEV_UNLOCK_SLOTS.get(id)
-    if (!slot) {throw new Error('Invalid or already used code')}
-    if (slot.username !== null && slot.username !== undefined) {throw new Error('Code already used')}
+    if (!slot) throw new Error('Invalid or already used code')
+    if (slot.username != null) throw new Error('Code already used')
     slot.username = username
-    DEV_COURSE_UNLOCKS.set(`${username}:${slot.course_id}`, { username, courseId: slot.course_id, unlocked_at: new Date().toISOString() })
+    DEV_COURSE_UNLOCKS.set(`${username}:${slot.course_id}`, {})
     return { success: true, courseId: slot.course_id }
   }
-
-  const { data: row, error: fetchError } = await client
-    .from('user_course_unlocks')
-    .select('id, username, course_id')
-    .eq('id', id)
-    .single()
-
-  if (fetchError || !row) {throw new Error('Invalid or already used code')}
-  if (row.username !== null && row.username !== undefined) {throw new Error('Code already used')}
-
-  const { error: updateError } = await client
-    .from('user_course_unlocks')
-    .update({ username, unlocked_at: new Date().toISOString() })
-    .eq('id', id)
-
-  if (updateError) {throw new Error('Failed to redeem code')}
+  const { rows: [row] } = await query(
+    'SELECT id, username, course_id FROM user_course_unlocks WHERE id = $1',
+    [id]
+  )
+  if (!row) throw new Error('Invalid or already used code')
+  if (row.username != null) throw new Error('Code already used')
+  await query(
+    'UPDATE user_course_unlocks SET username = $1, unlocked_at = NOW() WHERE id = $2',
+    [username, id]
+  )
   return { success: true, courseId: row.course_id }
 }
 
-// Export the client for direct access if needed
-export const getSupabaseClient = () => initializeDatabase()
+// ============ CHAT SESSIONS (for chatService.js) ============
+
+export async function getChatSessionRow(userId, topicId) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    const row = DEV_CHAT_SESSIONS.get(`${userId}:${topicId}`)
+    return row ? { messages: row.messages, message_count: row.message_count } : null
+  }
+  const { rows } = await query(
+    'SELECT messages, message_count FROM chat_sessions WHERE user_id = $1 AND topic_id = $2',
+    [userId, topicId]
+  )
+  return rows[0] || null
+}
+
+/** Full row for debug endpoints. */
+export async function getChatSessionRaw(userId, topicId) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    return DEV_CHAT_SESSIONS.get(`${userId}:${topicId}`) || null
+  }
+  const { rows } = await query(
+    'SELECT * FROM chat_sessions WHERE user_id = $1 AND topic_id = $2',
+    [userId, topicId]
+  )
+  return rows[0] || null
+}
+
+export async function upsertChatSessionRow(userId, topicId, payload) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    const key = `${userId}:${topicId}`
+    const existing = DEV_CHAT_SESSIONS.get(key) || {}
+    DEV_CHAT_SESSIONS.set(key, { ...existing, ...payload, user_id: userId, topic_id: topicId })
+    return
+  }
+  await query(
+    `INSERT INTO chat_sessions (user_id, topic_id, messages, message_count, phase, last_message_at, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7)
+     ON CONFLICT (user_id, topic_id) DO UPDATE SET
+       messages = EXCLUDED.messages,
+       message_count = EXCLUDED.message_count,
+       phase = EXCLUDED.phase,
+       last_message_at = EXCLUDED.last_message_at,
+       updated_at = EXCLUDED.updated_at`,
+    [
+      userId,
+      topicId,
+      payload.messages,
+      payload.message_count,
+      payload.phase ?? 'session',
+      payload.last_message_at ?? new Date().toISOString(),
+      payload.updated_at ?? new Date().toISOString()
+    ]
+  )
+}
+
+export async function insertChatSessionRow(userId, topicId, payload) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    const key = `${userId}:${topicId}`
+    DEV_CHAT_SESSIONS.set(key, { user_id: userId, topic_id: topicId, ...payload })
+    return
+  }
+  await query(
+    `INSERT INTO chat_sessions (user_id, topic_id, messages, message_count, phase, last_message_at, created_at, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+    [
+      userId,
+      topicId,
+      payload.messages,
+      payload.message_count ?? 1,
+      payload.phase ?? 'session',
+      payload.last_message_at ?? new Date().toISOString(),
+      payload.created_at ?? new Date().toISOString(),
+      payload.updated_at ?? new Date().toISOString()
+    ]
+  )
+}
+
+export async function updateChatSessionPhase(userId, topicId, phase) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    const key = `${userId}:${topicId}`
+    const row = DEV_CHAT_SESSIONS.get(key)
+    if (row) row.phase = phase
+    return
+  }
+  await query(
+    'UPDATE chat_sessions SET phase = $1, updated_at = NOW() WHERE user_id = $2 AND topic_id = $3',
+    [phase, userId, topicId]
+  )
+}
+
+export async function deleteChatSessionRow(userId, topicId) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    DEV_CHAT_SESSIONS.delete(`${userId}:${topicId}`)
+    return
+  }
+  await query('DELETE FROM chat_sessions WHERE user_id = $1 AND topic_id = $2', [userId, topicId])
+}
+
+export async function deleteProgressByUserId(userId) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    for (const key of DEV_PROGRESS.keys()) {
+      if (key.startsWith(`${userId}:`)) DEV_PROGRESS.delete(key)
+    }
+    progressCache.clear()
+    return
+  }
+  await query('DELETE FROM progress WHERE user_id = $1', [userId])
+  progressCache.clear()
+}
+
+export async function deleteChatSessionsByUserId(userId) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    for (const key of DEV_CHAT_SESSIONS.keys()) {
+      if (key.startsWith(`${userId}:`)) DEV_CHAT_SESSIONS.delete(key)
+    }
+    return
+  }
+  await query('DELETE FROM chat_sessions WHERE user_id = $1', [userId])
+}
+
+export async function getProgressRowsByUserId(userId) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    return Array.from(DEV_PROGRESS.values()).filter((p) => String(p.user_id) === String(userId))
+  }
+  const { rows } = await query('SELECT * FROM progress WHERE user_id = $1', [userId])
+  return rows || []
+}
+
+export async function getChatSessionRowsByUserId(userId) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    const list = []
+    for (const [key, row] of DEV_CHAT_SESSIONS.entries()) {
+      if (key.startsWith(`${userId}:`)) list.push(row)
+    }
+    return list
+  }
+  const { rows } = await query('SELECT * FROM chat_sessions WHERE user_id = $1', [userId])
+  return rows || []
+}
+
+// Backward compatibility: no Supabase client
+export function getSupabaseClient() {
+  if (initializeDatabase() === 'DEV_MODE') return 'DEV_MODE'
+  return { _neon: true, query }
+}
+
+/** Clear all data (for tests). DEV_MODE: clears in-memory maps. Otherwise: DELETEs in FK order. */
+export async function clearTestDatabase() {
+  if (initializeDatabase() === 'DEV_MODE') {
+    DEV_CHAT_SESSIONS.clear()
+    DEV_PROGRESS.clear()
+    DEV_USERS.clear()
+    return
+  }
+  await query('DELETE FROM chat_sessions')
+  await query('DELETE FROM progress')
+  await query('DELETE FROM users')
+}
+
 export { initializeDatabase }

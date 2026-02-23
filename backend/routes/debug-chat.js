@@ -3,7 +3,7 @@
  */
 
 import express from 'express'
-import { getSupabaseClient } from '../services/database.js'
+import { getSupabaseClient, getChatSessionRaw } from '../services/database.js'
 import { getChatHistory } from '../services/chatService.js'
 
 const router = express.Router()
@@ -20,33 +20,21 @@ router.get('/chat-history/:topicId', async (req, res) => {
       })
     }
 
-    const client = getSupabaseClient()
-    
-    if (client === 'DEV_MODE') {
+    if (getSupabaseClient() === 'DEV_MODE') {
       return res.json({
         mode: 'development',
         message: 'Running in development mode - using in-memory database'
       })
     }
 
-    // Get raw data from database
-    const { data: rawData, error: rawError } = await client
-      .from('chat_sessions')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('topic_id', topicId)
-      .single()
-
-    if (rawError) {
-      if (rawError.code === 'PGRST116') {
-        return res.json({
-          status: 'no_history',
-          message: 'No chat history found for this topic',
-          userId,
-          topicId
-        })
-      }
-      throw new Error(`Database error: ${rawError.message}`)
+    const rawData = await getChatSessionRaw(userId, topicId)
+    if (!rawData) {
+      return res.json({
+        status: 'no_history',
+        message: 'No chat history found for this topic',
+        userId,
+        topicId
+      })
     }
 
     // Get parsed data using chat service

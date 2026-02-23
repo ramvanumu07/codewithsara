@@ -100,13 +100,20 @@ function safeErrorMessage(error) {
   return ''
 }
 
+const SCHEMA_REQUIRED_MSG = 'Database schema not applied. In Neon Console open your project → SQL Editor → New query. Paste the full contents of backend/database/schema.sql and click Run. Then try again.'
+
 export function handleErrorResponse(res, error, operation = 'operation', defaultStatusCode = 500) {
   let statusCode = defaultStatusCode
   let message = `Failed to process ${operation}`
   let code = 'SERVER_ERROR'
   const errMsg = safeErrorMessage(error)
+  const isSchemaMissing = error && (error.code === '42P01' || /does not exist|relation\s+["']?\w+["']?\s+does not exist/i.test(errMsg))
 
-  if (error && error.name === 'ValidationError') {
+  if (isSchemaMissing) {
+    statusCode = 503
+    message = SCHEMA_REQUIRED_MSG
+    code = 'SCHEMA_REQUIRED'
+  } else if (error && error.name === 'ValidationError') {
     statusCode = 400
     message = 'Validation failed'
     code = 'VALIDATION_ERROR'

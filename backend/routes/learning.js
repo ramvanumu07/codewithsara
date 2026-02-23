@@ -849,31 +849,10 @@ router.delete('/debug/reset-progress', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId
 
-    // Reset progress - direct database calls for compatibility
-    const { getSupabaseClient } = await import('../services/database.js')
-    const { progressCache } = await import('../middleware/performance.js')
-    const supabase = getSupabaseClient()
+    const { deleteProgressByUserId, deleteChatSessionsByUserId } = await import('../services/database.js')
 
-    // Delete from all possible tables
-    const tables = ['progress', 'chat_sessions']
-
-    for (const table of tables) {
-      try {
-        const { error } = await supabase
-          .from(table)
-          .delete()
-          .eq('user_id', userId)
-
-        if (error) {
-          // log if needed
-        }
-      } catch (_err) {
-        // ignore per-table errors
-      }
-    }
-
-    // Clear cache
-    progressCache.clear()
+    await deleteProgressByUserId(userId)
+    await deleteChatSessionsByUserId(userId)
 
     const result = { success: true, message: 'All progress reset successfully' }
 
@@ -942,20 +921,12 @@ router.get('/debug/all-data-sources', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId
 
-    const { getSupabaseClient } = await import('../services/database.js')
-    const supabase = getSupabaseClient()
+    const { getProgressRowsByUserId, getChatSessionRowsByUserId } = await import('../services/database.js')
 
-    // Check progress table
-    const { data: progressData, error: progressError } = await supabase
-      .from('progress')
-      .select('*')
-      .eq('user_id', userId)
-
-    // Check chat_sessions table
-    const { data: chatSessionsData, error: chatSessionsError } = await supabase
-      .from('chat_sessions')
-      .select('*')
-      .eq('user_id', userId)
+    const progressData = await getProgressRowsByUserId(userId)
+    const chatSessionsData = await getChatSessionRowsByUserId(userId)
+    const progressError = null
+    const chatSessionsError = null
 
     // Check cache
     const { progressCache } = await import('../middleware/performance.js')

@@ -147,10 +147,12 @@ const Login = () => {
         setLoginAttempts(prev => prev + 1)
       }
     } catch (error) {
-      // Handle network and other errors with specific messages
+      // Use backend message when present (including 500), then fallbacks
       let errorMessage = 'Something went wrong. Please try again.'
-      
-      if (error.response?.status === 401) {
+      const backendMsg = error.response?.data?.message ?? error.response?.data?.error
+      if (typeof backendMsg === 'string' && backendMsg.trim()) {
+        errorMessage = backendMsg.trim()
+      } else if (error.response?.status === 401) {
         errorMessage = 'Invalid username or password. Please check your credentials.'
       } else if (error.response?.status === 429) {
         errorMessage = 'Too many login attempts. Please wait a moment before trying again.'

@@ -1,8 +1,7 @@
--- Sara Learning Platform - Full schema for new Supabase project
--- Run this in Supabase SQL Editor (Dashboard → SQL Editor → New query)
+-- Sara Learning Platform - Postgres schema (Neon or any Postgres)
+-- Run this in Neon SQL Editor (or psql) to create tables.
 --
--- New project, no existing data: if Supabase warns "destructive operation", it's safe to confirm and run.
--- (The DROP TRIGGER / CREATE OR REPLACE only affect objects that don't exist yet on a fresh project.)
+-- New project: safe to run as-is. DROP TRIGGER / CREATE OR REPLACE only affect objects that don't exist yet on a fresh project.
 
 -- ============ USERS ============
 CREATE TABLE IF NOT EXISTS public.users (
@@ -101,7 +100,7 @@ CREATE TRIGGER chat_sessions_updated_at
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
 -- ============ ENABLE RLS (optional; app uses service_role which bypasses RLS) ============
--- Uncomment if you want to use Supabase Auth / anon key later:
+-- Uncomment to enable row-level security (RLS) if needed:
 -- ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.progress ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.chat_sessions ENABLE ROW LEVEL SECURITY;

@@ -6,30 +6,24 @@
 import request from 'supertest'
 import bcrypt from 'bcrypt'
 import app from '../server.js'
-import { createTestUser, testClient } from './setup.js'
+import { createUser } from '../services/database.js'
+import { createTestUser } from './setup.js'
 
 describe('Learning API', () => {
   let testUser, authToken
   
   beforeEach(async () => {
-    // Create and authenticate test user
     testUser = await createTestUser()
     const hashedPassword = await bcrypt.hash(testUser.password, 12)
-    
-    const { data: userData } = await testClient
-      .from('users')
-      .insert({
-        username: testUser.username,
-        email: testUser.email,
-        name: testUser.name,
-        password: hashedPassword,
-        has_access: true
-      })
-      .select()
-      .single()
-    
+    const userData = await createUser({
+      username: testUser.username,
+      email: testUser.email,
+      name: testUser.name,
+      password: hashedPassword,
+      has_access: true
+    })
     testUser.id = userData.id
-    
+
     // Get auth token
     const loginResponse = await request(app)
       .post('/api/auth/login')

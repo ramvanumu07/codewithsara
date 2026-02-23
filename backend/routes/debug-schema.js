@@ -1,59 +1,38 @@
 /**
- * Debug Schema Route - Check Current Database Structure
+ * Debug Schema Route - Check Current Database Structure (Neon/Postgres)
  */
 
 import express from 'express'
 import { getSupabaseClient } from '../services/database.js'
+import { query } from '../services/db.js'
 
 const router = express.Router()
+const TABLES = ['users', 'progress', 'chat_sessions', 'admins', 'user_course_unlocks']
 
 // Get current database schema information
 router.get('/schema', async (req, res) => {
   try {
-    const client = getSupabaseClient()
-    
-    if (client === 'DEV_MODE') {
+    if (getSupabaseClient() === 'DEV_MODE') {
       return res.json({
         mode: 'development',
         message: 'Running in development mode - using in-memory database',
-        tables: {
-          users: 'In-memory Map',
-          progress: 'In-memory Map', 
-          chat_sessions: 'In-memory Map'
-        }
+        tables: { users: 'In-memory Map', progress: 'In-memory Map', chat_sessions: 'In-memory Map' }
       })
     }
 
-    // Test each table directly to see which ones exist
-    const tablesToCheck = ['users', 'progress', 'chat_sessions', 'admins', 'user_course_unlocks']
     const schemaInfo = {}
     const existingTables = []
-    
-    for (const tableName of tablesToCheck) {
+    for (const tableName of TABLES) {
       try {
-        const { data, error } = await client
-          .from(tableName)
-          .select('*')
-          .limit(1)
-        
-        if (!error) {
-          existingTables.push(tableName)
-          schemaInfo[tableName] = {
-            status: 'exists',
-            has_data: data && data.length > 0,
-            sample_record: data?.[0] || null
-          }
-        } else {
-          schemaInfo[tableName] = {
-            status: 'error',
-            error: error.message
-          }
+        const { rows } = await query(`SELECT * FROM ${tableName} LIMIT 1`)
+        existingTables.push(tableName)
+        schemaInfo[tableName] = {
+          status: 'exists',
+          has_data: rows && rows.length > 0,
+          sample_record: rows?.[0] || null
         }
       } catch (err) {
-        schemaInfo[tableName] = {
-          status: 'does_not_exist',
-          error: err.message
-        }
+        schemaInfo[tableName] = { status: 'error', error: err.message }
       }
     }
 
@@ -63,7 +42,6 @@ router.get('/schema', async (req, res) => {
       schema: schemaInfo,
       timestamp: new Date().toISOString()
     })
-
   } catch (error) {
     res.status(500).json({
       error: 'Failed to get schema information',
@@ -73,36 +51,23 @@ router.get('/schema', async (req, res) => {
   }
 })
 
-// Test database connectivity and basic operations
+// Test database connectivity
 router.get('/test-db', async (req, res) => {
   try {
-    const client = getSupabaseClient()
-    
-    if (client === 'DEV_MODE') {
+    if (getSupabaseClient() === 'DEV_MODE') {
       return res.json({
         mode: 'development',
         status: 'connected',
         message: 'Development mode - in-memory database working'
       })
     }
-
-    // Test basic query
-    const { data, error } = await client
-      .from('users')
-      .select('id')
-      .limit(1)
-
-    if (error) {
-      throw new Error(`Database test failed: ${error.message}`)
-    }
-
+    const { rows } = await query('SELECT id FROM users LIMIT 1')
     res.json({
       mode: 'production',
       status: 'connected',
-      has_users: data && data.length > 0,
+      has_users: rows && rows.length > 0,
       message: 'Database connection successful'
     })
-
   } catch (error) {
     res.status(500).json({
       status: 'error',

@@ -97,9 +97,11 @@ export const AuthProvider = ({ children }) => {
       if (error.response?.data) {
         const d = error.response.data
         errorMessage = toErrorString(d.message ?? d.error ?? d) || errorMessage
-      } else if (error.response?.status >= 500) {
+      }
+      if (errorMessage === 'Login failed. Please try again.' && error.response?.status >= 500) {
         errorMessage = 'Server error. Please try again in a moment.'
-      } else if (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error')) {
+      }
+      if (errorMessage === 'Login failed. Please try again.' && (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error'))) {
         errorMessage = isLocalhost
           ? 'Cannot reach server. Make sure the backend is running on port 5000 (run: npm run dev from project root).'
           : 'Unable to connect. Please check your connection and try again.'

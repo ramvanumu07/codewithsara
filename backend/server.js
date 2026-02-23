@@ -6,12 +6,33 @@
 import { createServer } from 'http'
 import { getSafePort } from './utils/portManager.js'
 import { logInfo, logError } from './services/logger.js'
+import { query, isDatabaseConfigured } from './services/db.js'
 import app from './app.js'
 
 const PREFERRED_PORT = parseInt(process.env.PORT) || 5000
 
+async function testDatabaseConnection() {
+  if (!isDatabaseConfigured()) {
+    logInfo('Database: not configured (no DATABASE_URL or placeholder). Using in-memory store.')
+    return
+  }
+  try {
+    await query('SELECT 1 FROM users LIMIT 1')
+    logInfo('Database: Neon connected (users table OK).')
+  } catch (err) {
+    logError('Database: connection or schema failed.', {
+      error: err.message,
+      code: err.code,
+      fix: err.code === '42P01' || (err.message || '').includes('does not exist')
+        ? 'Run backend/database/schema.sql in Neon SQL Editor.'
+        : 'Check DATABASE_URL in backend/.env (connection string from Neon Console → Connection details).'
+    })
+  }
+}
+
 const startServer = async () => {
   try {
+    await testDatabaseConnection()
     const PORT = await getSafePort(PREFERRED_PORT, true)
     const server = createServer(app)
 
@@ -23,7 +44,7 @@ const startServer = async () => {
         services: {
           errorTracking: !!process.env.SENTRY_DSN,
           redis: !!process.env.REDIS_URL,
-          database: !!process.env.SUPABASE_URL,
+          database: isDatabaseConfigured(),
           logging: 'winston',
           caching: process.env.REDIS_URL ? 'redis' : 'memory'
         }

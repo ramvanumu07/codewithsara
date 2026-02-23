@@ -1,9 +1,15 @@
 /**
  * Chat Service - Sara Learning Platform
- * Chat storage (chat_sessions), parsing, and phase updates. Uses database.js for Supabase.
+ * Chat storage (chat_sessions), parsing, and phase updates. Uses database.js (Neon/Postgres).
  */
 
-import { getSupabaseClient } from './database.js'
+import {
+  getChatSessionRow,
+  upsertChatSessionRow,
+  insertChatSessionRow,
+  updateChatSessionPhase,
+  deleteChatSessionRow
+} from './database.js'
 import { getCachedChatHistory, setCachedChatHistory, invalidateChatHistoryCache } from './chatCache.js'
 
 // ============ STRUCTURED CHAT OPERATIONS ============
@@ -145,21 +151,7 @@ export async function getChatHistory(userId, topicId) {
     }
 
     // Cache miss - fetch from database
-    const client = getSupabaseClient()
-    const { data, error } = await client
-      .from('chat_sessions')
-      .select('messages, message_count')
-      .eq('user_id', userId)
-      .eq('topic_id', topicId)
-      .single()
-
-    if (error) {
-      if (error.code === 'PGRST116') { // No rows found
-        return []
-      }
-      throw new Error(`Database error: ${error.message}`)
-    }
-
+    const data = await getChatSessionRow(userId, topicId)
     const rawMessages = data?.messages
     if (!rawMessages) {
       return []
@@ -199,100 +191,50 @@ export async function getChatHistory(userId, topicId) {
  */
 export async function saveChatTurn(userId, topicId, userMessage, aiResponse, phase = 'session') {
   await invalidateChatHistoryCache(userId, topicId)
-  const client = getSupabaseClient()
-  // Get current conversation history as text
-    const { data: currentData, error: fetchError } = await client
-      .from('chat_sessions')
-      .select('messages, message_count')
-      .eq('user_id', userId)
-      .eq('topic_id', topicId)
-      .single()
 
-    let currentHistory = ''
-    let _currentMessageCount = 0
-    if (!fetchError && currentData?.messages) {
-      currentHistory = currentData.messages
-      _currentMessageCount = currentData.message_count || 0
-    }
+  const currentData = await getChatSessionRow(userId, topicId)
+  let currentHistory = (currentData?.messages ?? '').trim()
 
-    // Add new conversation turn in text format
-    const newTurn = `USER: ${userMessage.trim()}\nAGENT: ${aiResponse.trim()}`
+  const newTurn = `USER: ${userMessage.trim()}\nAGENT: ${aiResponse.trim()}`
+  const updatedHistory = currentHistory ? `${currentHistory}\n${newTurn}` : newTurn
+  const allMessages = parseTextToMessagesOptimized(updatedHistory)
+  const finalMessageCount = allMessages.length
 
-    // Append to existing history (keep full conversation for session phase)
-    const updatedHistory = currentHistory
-      ? `${currentHistory}\n${newTurn}`
-      : newTurn
+  await upsertChatSessionRow(userId, topicId, {
+    messages: updatedHistory,
+    message_count: finalMessageCount,
+    phase,
+    last_message_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  })
 
-    const finalHistory = updatedHistory
-    const allMessages = parseTextToMessagesOptimized(finalHistory)
-    const finalMessageCount = allMessages.length
-
-    // Upsert chat session
-    const { error } = await client
-      .from('chat_sessions')
-      .upsert({
-        user_id: userId,
-        topic_id: topicId,
-        messages: finalHistory,
-        message_count: finalMessageCount,
-        phase,
-        last_message_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'user_id,topic_id'
-      })
-
-    if (error) {
-      throw new Error(`Failed to save chat turn: ${error.message}`)
-    }
-
-    // Invalidate cache after saving new messages
-    await invalidateChatHistoryCache(userId, topicId)
-
-    // Return messages in array format for frontend compatibility
-  return parseTextToMessagesOptimized(finalHistory)
+  await invalidateChatHistoryCache(userId, topicId)
+  return parseTextToMessagesOptimized(updatedHistory)
 }
 
 /**
  * Save initial message (welcome message) in text format
  */
 export async function saveInitialMessage(userId, topicId, message, phase = 'session') {
-  const client = getSupabaseClient()
-  // Check if conversation already exists
-    const { data: existing, error: _checkError } = await client
-      .from('chat_sessions')
-      .select('messages, message_count')
-      .eq('user_id', userId)
-      .eq('topic_id', topicId)
-      .single()
-
-    if (existing && existing.messages && existing.messages.trim() !== '') {
-      return {
-        wasCreated: false,
-        conversationHistory: existing.messages,
-        messages: parseTextToMessagesOptimized(existing.messages)
-      }
+  const existing = await getChatSessionRow(userId, topicId)
+  if (existing?.messages?.trim()) {
+    return {
+      wasCreated: false,
+      conversationHistory: existing.messages,
+      messages: parseTextToMessagesOptimized(existing.messages)
     }
+  }
 
-    // No existing conversation, create initial message
-    const initialHistory = `AGENT: ${message.trim()}`
-
-    const { error } = await client
-      .from('chat_sessions')
-      .insert({
-        user_id: userId,
-        topic_id: topicId,
-        messages: initialHistory,
-        message_count: 1,
-        phase,
-        last_message_at: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      })
-
-    if (error) {
-      throw new Error(`Failed to save initial message: ${error.message}`)
-    }
+  const initialHistory = `AGENT: ${message.trim()}`
+  const now = new Date().toISOString()
+  await insertChatSessionRow(userId, topicId, {
+    messages: initialHistory,
+    message_count: 1,
+    phase,
+    last_message_at: now,
+    created_at: now,
+    updated_at: now
+  })
 
     // Invalidate cache after creating initial message
     await invalidateChatHistoryCache(userId, topicId)
@@ -308,17 +250,7 @@ export async function saveInitialMessage(userId, topicId, message, phase = 'sess
  * Clear chat history for a topic
  */
 export async function clearChatHistory(userId, topicId) {
-  const client = getSupabaseClient()
-  const { error } = await client
-      .from('chat_sessions')
-      .delete()
-      .eq('user_id', userId)
-      .eq('topic_id', topicId)
-
-    if (error) {
-      throw new Error(`Failed to clear chat history: ${error.message}`)
-    }
-
+  await deleteChatSessionRow(userId, topicId)
   await invalidateChatHistoryCache(userId, topicId)
 }
 
@@ -326,15 +258,7 @@ export async function clearChatHistory(userId, topicId) {
  * Update chat session phase (e.g. session → assignment).
  */
 export async function updateChatPhase(userId, topicId, phase) {
-  const client = getSupabaseClient()
-  const { error } = await client
-    .from('chat_sessions')
-    .update({ phase, updated_at: new Date().toISOString() })
-    .eq('user_id', userId)
-    .eq('topic_id', topicId)
-  if (error) {
-    throw new Error(`Failed to update chat phase: ${error.message}`)
-  }
+  await updateChatSessionPhase(userId, topicId, phase)
 }
 
 /**

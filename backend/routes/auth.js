@@ -225,7 +225,14 @@ router.get('/check-username/:username', async (req, res) => {
     })
 
   } catch (error) {
-    return res.status(500).json(createErrorResponse('Failed to check username availability'))
+    const code = error?.code || ''
+    const msg = (error?.message || '').toLowerCase()
+    if (code === '42P01' || msg.includes('does not exist') || msg.includes('relation')) {
+      return res.status(503).json(createErrorResponse(
+        'Database schema not applied. In Neon Console open your project → SQL Editor → New query. Paste the full contents of backend/database/schema.sql and click Run. Then try again.'
+      ))
+    }
+    handleErrorResponse(res, error, 'check username')
   }
 })
 
