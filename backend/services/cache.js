@@ -38,8 +38,13 @@ export const initializeCache = () => {
     return initializeMemoryCache()
   }
 
-  const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379'
-  
+  // Skip Redis when REDIS_URL is not set (avoids ECONNREFUSED spam + log writes that trigger node --watch restarts)
+  const redisUrl = process.env.REDIS_URL
+  if (!redisUrl || !redisUrl.trim()) {
+    logInfo('Redis not configured (REDIS_URL empty). Using in-memory cache.')
+    return initializeMemoryCache()
+  }
+
   try {
     redisClient = new Redis(redisUrl, {
       retryDelayOnFailover: 100,

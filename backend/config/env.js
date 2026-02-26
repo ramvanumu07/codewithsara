@@ -3,7 +3,7 @@
  * Optional defaults are applied when not set.
  */
 
-const REQUIRED_VARS = ['JWT_SECRET', 'DATABASE_URL', 'GROQ_API_KEY']
+const REQUIRED_VARS = ['JWT_SECRET', 'DATABASE_URL']
 
 const OPTIONAL_DEFAULTS = {
   PORT: '5000',
@@ -33,6 +33,10 @@ export function validateEnv() {
   }
   for (const [name, value] of Object.entries(OPTIONAL_DEFAULTS)) {
     if (!process.env[name]) process.env[name] = value
+  }
+  if (!process.env.GROQ_API_KEY?.trim()) {
+    console.warn('\nGROQ_API_KEY is not set. Session chat and AI features will fail.')
+    console.warn('Get a key at console.groq.com → API keys. Add GROQ_API_KEY=... to backend/.env\n')
   }
   return true
 }

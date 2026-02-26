@@ -149,8 +149,9 @@ const Login = () => {
     } catch (error) {
       // Use backend message when present (including 500), then fallbacks
       let errorMessage = 'Something went wrong. Please try again.'
-      const backendMsg = error.response?.data?.message ?? error.response?.data?.error
-      if (typeof backendMsg === 'string' && backendMsg.trim()) {
+      const d = error.response?.data
+      const backendMsg = toErrorString(d?.message ?? d?.error ?? d?.data?.message ?? d?.data?.error)
+      if (backendMsg && backendMsg.trim()) {
         errorMessage = backendMsg.trim()
       } else if (error.response?.status === 401) {
         errorMessage = 'Invalid username or password. Please check your credentials.'

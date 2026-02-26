@@ -15,10 +15,7 @@ import {
   getCompletedTopics,
   getUnlockedCourseIds,
   isCourseUnlockedForUser,
-  unlockCourseForUser,
-  isAdmin,
-  createUnlockSlot,
-  redeemUnlockCode
+  unlockCourseForUser
 } from '../services/database.js'
 import { saveInitialMessage, getChatHistoryString } from '../services/chatService.js'
 import { courses } from '../../data/curriculum.js'
@@ -199,41 +196,6 @@ router.post('/unlock-course', authenticateToken, async (req, res) => {
   }
 })
 
-// Generate one unlock code (admin only). Creates a row in user_course_unlocks with user_id null; id is the code.
-const DEFAULT_UNLOCK_COURSE_ID = 'javascript'
-router.post('/generate-unlock-code', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId
-    const admin = await isAdmin(userId)
-    if (!admin) {
-      return res.status(403).json(createErrorResponse('Admin only'))
-    }
-    const slot = await createUnlockSlot(DEFAULT_UNLOCK_COURSE_ID)
-    res.json(createSuccessResponse({ code: slot.id, courseId: slot.course_id }))
-  } catch (error) {
-    handleErrorResponse(res, error, 'generate unlock code')
-  }
-})
-
-// Redeem unlock code (id of a user_course_unlocks row). Updates row with current user_id so user gets access.
-router.post('/redeem-unlock-code', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user.userId
-    const { code } = req.body || {}
-    if (!code || typeof code !== 'string') {
-      return res.status(400).json(createErrorResponse('Code is required'))
-    }
-    const result = await redeemUnlockCode(userId, code.trim())
-    res.json(createSuccessResponse({ message: 'Course unlocked', courseId: result.courseId }))
-  } catch (error) {
-    const message = error.message || 'Failed to redeem code'
-    if (message.includes('Invalid') || message.includes('already used')) {
-      return res.status(400).json(createErrorResponse(message))
-    }
-    handleErrorResponse(res, error, 'redeem unlock code')
-  }
-})
-
 // ============ LEARNING STATE MANAGEMENT ============
 
 router.get('/state/:topicId', authenticateToken, requireCourseUnlocked, async (req, res) => {
@@ -342,7 +304,7 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
     }
 
     // Generate initial message (idempotent - won't duplicate if conversation exists)
-    const aiResponse = await callAI(messages, 800, 0.4, 'llama-3.3-70b-versatile')
+    const aiResponse = await callAI(messages, 800, 0.4)
 
     const result = await saveInitialMessage(userId, topicId, aiResponse)
 

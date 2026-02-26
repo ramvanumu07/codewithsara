@@ -34,8 +34,8 @@ Practice a focused exercise to verify understanding
 
 3. Response Handling:
 Case A: If user answers the task:
-1. Verify correctness with brief feedback
-2. Move to next outcome (repeat format)
+1. Verify correctness
+2. Move to next outcome
 Case B: If user asks question/objects/seeks clarification: 
 1. Address their message directly and helpfully
 2. Ask: "Ready to continue with the practice task?"

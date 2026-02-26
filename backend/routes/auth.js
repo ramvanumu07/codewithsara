@@ -21,6 +21,7 @@ import {
 import { getAllTopics } from '../utils/curriculum.js'
 import { courses } from '../../data/curriculum.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
+import { logError } from '../services/logger.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 import { asyncHandler } from '../middleware/errorHandler.js'
 
@@ -299,7 +300,7 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
 
     // Create first-topic progress row so new user has progress as soon as they exist (dashboard/continue work immediately)
     try {
-      const firstTopic = getAllTopics(courses)[0]
+      const firstTopic = Array.isArray(courses) && courses.length > 0 ? getAllTopics(courses)[0] : null
       if (firstTopic) {
         const totalTasks = (firstTopic.tasks || []).length
         await upsertProgress(user.id, firstTopic.id, {
@@ -371,7 +372,7 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
     // Ensure at least one progress row exists (covers existing users who never had progress, or any missed creation)
     try {
       const existingProgress = await getAllProgress(user.id)
-      if (existingProgress.length === 0) {
+      if (existingProgress.length === 0 && Array.isArray(courses) && courses.length > 0) {
         const firstTopic = getAllTopics(courses)[0]
         if (firstTopic) {
           const totalTasks = (firstTopic.tasks || []).length
@@ -405,13 +406,14 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
     }))
   } catch (error) {
     const safeMsg = (error && typeof error.message === 'string') ? error.message : (error && error.message !== null && error.message !== undefined ? String(error.message) : null) || 'Login failed'
+    logError('[login] Error', error, { operation: 'login' })
     try {
       if (!res.headersSent) {
         handleErrorResponse(res, error, 'login')
       }
     } catch (handleErr) {
       if (!res.headersSent) {
-        res.status(500).json({ success: false, message: safeMsg, code: 'LOGIN_ERROR' })
+        res.status(500).json(createErrorResponse(safeMsg, 'LOGIN_ERROR'))
       }
     }
   }

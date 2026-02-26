@@ -16,7 +16,7 @@ const SESSION_COMPLETE_REASON = 'Session completed. You can view the conversatio
 // Code block: dark background + light text; horizontal scroll for long lines (inline so Vercel applies)
 const codeBlockWrapperStyle = {
   position: 'relative',
-  margin: '6px 0',
+  margin: '2px 0',
   width: '100%',
   maxWidth: '100%',
   minWidth: 0,
@@ -80,10 +80,14 @@ function looksLikeCodeStatement(str) {
   )
 }
 
-// Renders text with markdown-style **bold** parsed
+// Renders text with markdown-style **bold** and ### headings parsed
 function renderTextWithBold(text, keyPrefix) {
   if (!text || typeof text !== 'string') return null
-  const parts = text.split(/(\*\*.*?\*\*)/g)
+  // Collapse multiple newlines to single to reduce paragraph gaps
+  let processed = text.replace(/\n{2,}/g, '\n')
+  // Convert ### Heading to **Heading** so it renders bold
+  processed = processed.replace(/^#{1,6}\s+(.+)$/gm, '**$1**')
+  const parts = processed.split(/(\*\*.*?\*\*)/g)
   return parts.map((part, i) => {
     const match = part.match(/^\*\*(.*?)\*\*$/)
     if (match) return <strong key={`${keyPrefix}-${i}`}>{match[1]}</strong>
@@ -409,31 +413,50 @@ const Learn = () => {
                 setSessionComplete(true)
               }
             } else {
-              // Start new session (backend ensures progress row exists for this topic)
-              const startResponse = await learning.sessionChat(requestedTopicId, '')
-              if (startResponse.data.data.response) {
-                const message = {
-                  role: 'assistant',
-                  content: startResponse.data.data.response,
-                  timestamp: new Date().toISOString()
+              // Start new session - use non-streaming for reliability
+              const streamMessage = { role: 'assistant', content: '', timestamp: new Date().toISOString() }
+              setMessages([streamMessage])
+              try {
+                const res = await learning.sessionChat(requestedTopicId, '')
+                if (topicIdRef.current !== requestedTopicId) return
+                const data = res?.data?.data
+                if (data?.response != null) {
+                  setMessages([{ role: 'assistant', content: data.response, timestamp: new Date().toISOString() }])
+                  if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
+                    setSessionComplete(true)
+                  }
+                } else {
+                  setMessages([{ role: 'assistant', content: data?.message || 'No response from AI. Please try again.', timestamp: new Date().toISOString() }])
                 }
-                setMessages([message])
+              } catch (err) {
+                const msg = err?.response?.data?.message || err?.response?.data?.error || err?.message
+                setMessages([{ role: 'assistant', content: msg || 'Sorry, the AI could not respond. Please try again.', timestamp: new Date().toISOString() }])
               }
             }
           } catch (historyError) {
             // Start new session on error
             try {
-              const startResponse = await learning.sessionChat(requestedTopicId, '')
-              if (startResponse.data.data.response) {
-                const message = {
-                  role: 'assistant',
-                  content: startResponse.data.data.response,
-                  timestamp: new Date().toISOString()
+              const streamMessage = { role: 'assistant', content: '', timestamp: new Date().toISOString() }
+              setMessages([streamMessage])
+              try {
+                const res = await learning.sessionChat(requestedTopicId, '')
+                if (topicIdRef.current !== requestedTopicId) return
+                const data = res?.data?.data
+                if (data?.response != null) {
+                  setMessages([{ role: 'assistant', content: data.response, timestamp: new Date().toISOString() }])
+                  if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
+                    setSessionComplete(true)
+                  }
+                } else {
+                  setMessages([{ role: 'assistant', content: data?.message || 'No response from AI. Please try again.', timestamp: new Date().toISOString() }])
                 }
-                setMessages([message])
+              } catch (err) {
+                const msg = err?.response?.data?.message || err?.response?.data?.error || err?.message
+                setMessages([{ role: 'assistant', content: msg || 'Sorry, the AI could not respond. Please try again.', timestamp: new Date().toISOString() }])
               }
             } catch (startError) {
-              setError('Failed to initialize chat session')
+              const msg = startError?.response?.data?.message || startError?.response?.data?.error || startError?.message
+              setError(msg || 'Failed to initialize chat session')
             }
           }
         } else if (phase === 'assignment') {
@@ -527,23 +550,27 @@ const Learn = () => {
     setIsTyping(true)
 
     try {
-      const response = await learning.sessionChat(topicId, userMessage.content)
+      const streamMessage = { role: 'assistant', content: '', timestamp: new Date().toISOString() }
+      setMessages(prev => [...prev, streamMessage])
 
-      if (response.data.data.response) {
-        const message = {
-          role: 'assistant',
-          content: response.data.data.response,
-          timestamp: new Date().toISOString()
+      try {
+        const res = await learning.sessionChat(topicId, userMessage.content)
+        if (topicIdRef.current !== topicId) return
+        const data = res?.data?.data
+        if (data && 'response' in data) {
+          const content = (data.response ?? '').trim() || 'The AI returned an empty response. Please try again.'
+          setMessages(prev => {
+            const withoutPlaceholder = prev.slice(0, -1)
+            return [...withoutPlaceholder, { role: 'assistant', content, timestamp: new Date().toISOString() }]
+          })
+          if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
+            setSessionComplete(true)
+          }
+        } else {
+          throw new Error(data?.message || 'No response from AI')
         }
-        setMessages(prev => [...prev, message])
-
-        // Check if session is complete (using backend flag or text detection)
-        if (response.data.data.sessionComplete ||
-          response.data.data.response.includes('ready for the playground') ||
-          response.data.data.response.includes('Congratulations') ||
-          response.data.data.response.includes('SESSION_COMPLETE_SIGNAL')) {
-          setSessionComplete(true)
-        }
+      } catch (streamErr) {
+        throw streamErr
       }
     } catch (err) {
       const code = err.response?.data?.code
@@ -554,12 +581,19 @@ const Learn = () => {
         showInfo(SESSION_COMPLETE_REASON, 4000)
         return
       }
+      const actualError = err.response?.data?.message || err.response?.data?.error || err.message || 'Something went wrong. Please try again.'
       const errorMessage = {
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
+        content: actualError,
         timestamp: new Date().toISOString()
       }
-      setMessages(prev => [...prev, errorMessage])
+      setMessages(prev => {
+        const last = prev[prev.length - 1]
+        if (last?.role === 'assistant' && last?.content === '') {
+          return [...prev.slice(0, -1), errorMessage]
+        }
+        return [...prev, errorMessage]
+      })
     } finally {
       setIsTyping(false)
     }
@@ -1127,7 +1161,7 @@ const Learn = () => {
             cursor: 'pointer'
           }}
         >
-          Get full access
+          Pay
         </button>
         <button
           onClick={() => navigate('/dashboard')}
@@ -1155,6 +1189,9 @@ const Learn = () => {
         <p style={{ color: '#6b7280', marginBottom: '24px' }}>
           The topic you're looking for doesn't exist or you don't have access to it.
         </p>
+        {error && error !== 'Topic not found' && (
+          <p style={{ color: '#9ca3af', fontSize: '0.8125rem', marginBottom: '16px' }}>{error}</p>
+        )}
         <button
           onClick={() => navigate('/dashboard')}
           style={{

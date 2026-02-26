@@ -88,19 +88,17 @@ export function errorHandler(error, req, res, _next) {
 
   // Handle known error types
   if (error.statusCode) {
-    return res.status(error.statusCode).json(createErrorResponse(error.message, {
-      type: error.name,
-      field: error.field,
-      service: error.service
-    }))
+    const code = error.name || 'ERROR'
+    const details = [error.field, error.service].some(Boolean)
+      ? { field: error.field, service: error.service }
+      : null
+    return res.status(error.statusCode).json(createErrorResponse(error.message, code, details))
   }
 
   // Handle specific error cases
   if (error.name === 'ValidationError') {
-    return res.status(400).json(createErrorResponse(error.message, {
-      type: 'ValidationError',
-      field: error.field
-    }))
+    const details = error.field ? { field: error.field } : null
+    return res.status(400).json(createErrorResponse(error.message, 'ValidationError', details))
   }
 
   if (error.name === 'JsonWebTokenError') {
@@ -133,12 +131,11 @@ export function errorHandler(error, req, res, _next) {
   }
 
   // Default server error
-  res.status(500).json(createErrorResponse(
-    process.env.NODE_ENV === 'production' 
-      ? 'Internal server error' 
-      : error.message,
-    process.env.NODE_ENV === 'development' ? { stack: error.stack } : undefined
-  ))
+  const message = process.env.NODE_ENV === 'production'
+    ? 'Internal server error'
+    : (error.message || 'Internal server error')
+  const details = process.env.NODE_ENV === 'development' && error?.stack ? { stack: error.stack } : null
+  res.status(500).json(createErrorResponse(message, 'SERVER_ERROR', details))
 }
 
 // ============ ASYNC ERROR WRAPPER ============

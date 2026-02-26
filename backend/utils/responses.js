@@ -3,6 +3,8 @@
  * Centralized response formatting to eliminate duplication and ensure consistency
  */
 
+import { logError as logErrorToService } from '../services/logger.js'
+
 /**
  * Create a standardized success response
  * @param {any} data - Response data
@@ -117,7 +119,7 @@ export function handleErrorResponse(res, error, operation = 'operation', default
     statusCode = 400
     message = 'Validation failed'
     code = 'VALIDATION_ERROR'
-  } else if (error && (error.name === 'UnauthorizedError' || (errMsg && errMsg.includes('token')))) {
+  } else if (error && (error.name === 'UnauthorizedError' || error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError' || /^(invalid|expired|missing)\s+token|access\s+token\s+required/i.test(errMsg))) {
     statusCode = 401
     message = 'Authentication required'
     code = 'AUTH_ERROR'
@@ -131,6 +133,10 @@ export function handleErrorResponse(res, error, operation = 'operation', default
     code = 'NOT_FOUND'
   } else if (errMsg) {
     message = errMsg
+  }
+
+  if (statusCode >= 500) {
+    logErrorToService(`[${operation}] ${message}`, error, { statusCode })
   }
 
   sendErrorResponse(res, message, statusCode, code,

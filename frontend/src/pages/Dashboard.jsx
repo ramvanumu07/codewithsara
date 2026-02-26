@@ -23,8 +23,6 @@ const Dashboard = () => {
   const [unlockedCourseIds, setUnlockedCourseIds] = useState([])
   const [unlockModalCourse, setUnlockModalCourse] = useState(null)
   const [unlocking, setUnlocking] = useState(false)
-  const [redeemCode, setRedeemCode] = useState('')
-  const [redeemError, setRedeemError] = useState(null)
   // Always show dashboard on load/reload; editor toggle state is not persisted for this page
   const [editorToggleOn, setEditorToggleOn] = useState(false)
   const [playgroundCode, setPlaygroundCode] = useState('')
@@ -618,7 +616,7 @@ const Dashboard = () => {
                     className="course-locked-btn"
                     onClick={() => setUnlockModalCourse(selectedCourseData)}
                   >
-                    Get full access
+                    Pay
                   </button>
                 </div>
               </div>
@@ -782,34 +780,12 @@ const Dashboard = () => {
               >
                 <h3 style={{ margin: '0 0 8px', fontSize: '1.25rem' }}>Get access to {unlockModalCourse.title}</h3>
                 <p style={{ margin: '0 0 20px', color: '#6b7280', fontSize: '0.875rem' }}>
-                  After payment you'll receive a unique code. Enter it below to get full access.</p>
-                <label style={{ display: 'block', marginBottom: 6, fontSize: '0.875rem', fontWeight: 500, color: '#374151' }}>
-                  Access code
-                </label>
-                <input
-                  type="text"
-                  value={redeemCode}
-                  onChange={(e) => { setRedeemCode(e.target.value); setRedeemError(null) }}
-                  placeholder="Enter your access code"
-                  disabled={unlocking}
-                  style={{
-                    width: '100%',
-                    padding: '10px 12px',
-                    border: `1px solid ${redeemError ? '#ef4444' : '#e5e7eb'}`,
-                    borderRadius: 8,
-                    fontSize: '0.875rem',
-                    boxSizing: 'border-box',
-                    marginBottom: 8
-                  }}
-                />
-                {redeemError && (
-                  <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', color: '#ef4444' }}>{redeemError}</p>
-                )}
+                  Purchase once for full access to all topics and assignments.</p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
                   <button
                     type="button"
                     disabled={unlocking}
-                    onClick={() => { setUnlockModalCourse(null); setRedeemCode(''); setRedeemError(null) }}
+                    onClick={() => setUnlockModalCourse(null)}
                     style={{ padding: '10px 16px', background: '#f3f4f6', border: 'none', borderRadius: 8, cursor: unlocking ? 'not-allowed' : 'pointer' }}
                   >
                     Cancel
@@ -818,24 +794,20 @@ const Dashboard = () => {
                     type="button"
                     disabled={unlocking}
                     onClick={async () => {
-                      setRedeemError(null)
                       setUnlocking(true)
                       try {
-                        await learning.redeemUnlockCode(redeemCode.trim())
+                        await learning.unlockCourse(unlockModalCourse.id)
                         setUnlockedCourseIds(prev => (prev.includes(unlockModalCourse.id) ? prev : [...prev, unlockModalCourse.id]))
                         setUnlockModalCourse(null)
-                        setRedeemCode('')
                       } catch (e) {
-                        const msg = e?.response?.data?.message ?? e?.message ?? 'Failed to redeem code'
-                        setRedeemError(msg)
+                        console.error('Unlock failed:', e)
                       } finally {
                         setUnlocking(false)
                       }
                     }}
-                    disabled={unlocking || !redeemCode.trim()}
-                    style={{ padding: '10px 20px', background: (unlocking || !redeemCode.trim()) ? '#9ca3af' : '#059669', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, cursor: (unlocking || !redeemCode.trim()) ? 'not-allowed' : 'pointer' }}
+                    style={{ padding: '10px 24px', background: unlocking ? '#9ca3af' : '#059669', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, cursor: unlocking ? 'not-allowed' : 'pointer' }}
                   >
-                    {unlocking ? 'Redeeming…' : 'Redeem code'}
+                    {unlocking ? 'Processing…' : 'Pay'}
                   </button>
                 </div>
               </div>

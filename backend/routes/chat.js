@@ -7,7 +7,7 @@ import express from 'express'
 import fs from 'fs'
 import path from 'path'
 import { authenticateToken } from './auth.js'
-import { callAI } from '../services/ai.js'
+import { callAI, streamAI } from '../services/ai.js'
 import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, truncateHistoryForPrompt, updateChatPhase } from '../services/chatService.js'
 import { getChatSessionRow, getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
 import { courses } from '../../data/curriculum.js'
@@ -59,18 +59,18 @@ function buildEmbeddedSessionPrompt(topicId, conversationHistory, completedTopic
 
 // ============ CHAT ENDPOINTS ============
 
-router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res) => {
+// Streaming route MUST be before /session so Express matches /session/stream first
+// Streaming session chat - streams tokens to frontend for instant perceived speed
+router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (req, res) => {
   try {
-    if (!validateChatRequest(req, res)) {return}
+    if (!validateChatRequest(req, res)) { return }
 
     const { message, topicId } = req.body
     const userId = req.user.userId
 
-    // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
-    // Ensure progress row exists for this topic (e.g. user opened via Next without submitting)
     let progress = await getProgress(userId, topicId)
     if (!progress) {
       await upsertProgress(userId, topicId, {
@@ -81,61 +81,150 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       progress = await getProgress(userId, topicId)
     }
 
-    // Block new session messages once topic session is completed (read-only view only). Use 400 so auth interceptor does not redirect to login.
     if (progress && (progress.phase === 'assignment' || progress.topic_completed === true)) {
       return res.status(400).json(createErrorResponse('Session already completed. You can view the conversation but cannot send new messages.', 'SESSION_ALREADY_COMPLETE'))
     }
 
-    // Get conversation history and completed topics in parallel
     const [conversationHistory, completedTopics] = await Promise.all([
       getChatHistoryString(userId, topicId),
       getCompletedTopics(userId)
     ])
 
-    // Include current user message in history so the AI can validate their answer
     const conversationHistoryForPrompt = message.trim()
-      ? `${conversationHistory ? `${conversationHistory  }\n` : ''  }USER: ${  message.trim()}`
+      ? `${conversationHistory ? `${conversationHistory}\n` : ''}USER: ${message.trim()}`
       : conversationHistory
 
-    // Truncate only for the prompt (keep full history in DB and UI)
     const promptHistory = truncateHistoryForPrompt(conversationHistoryForPrompt, 14)
-
-    // Build embedded prompt with conversation history (including current turn)
     const embeddedPrompt = buildEmbeddedSessionPrompt(topicId, promptHistory, completedTopics)
 
     const messages = [
       { role: 'system', content: embeddedPrompt }
     ]
-
-    // Only add user message if it's not empty (for session initialization)
     if (message.trim()) {
       messages.push({ role: 'user', content: message.trim() })
+    } else {
+      messages.push({ role: 'user', content: 'Start teaching the first concept.' })
     }
 
-    // Log finalized system prompt for testing (file + console)
-    const promptLogPath = path.join(process.cwd(), 'logs', 'last-system-prompt.txt')
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.setHeader('X-Accel-Buffering', 'no')
+    res.flushHeaders()
+
+    let fullResponse = ''
+    const completionPhrases = ['Congratulations', "You've Mastered", 'ready for the playground']
+
     try {
-      fs.mkdirSync(path.dirname(promptLogPath), { recursive: true })
-      fs.writeFileSync(promptLogPath, `[SESSION CHAT] topicId=${topicId} messageLength=${message.trim().length}\n---\n${  embeddedPrompt}`, 'utf8')
-    } catch (e) {
-      // ignore
+      for await (const chunk of streamAI(messages, 1500, 0.5)) {
+        fullResponse += chunk
+        res.write(`data: ${JSON.stringify({ type: 'chunk', content: chunk })}\n\n`)
+        if (typeof res.flush === 'function') res.flush()
+      }
+    } catch (streamErr) {
+      res.write(`data: ${JSON.stringify({ type: 'error', message: streamErr.message || 'Stream failed' })}\n\n`)
+      res.end()
+      return
     }
-    // Get AI response with optimized parameters for education
-    const aiResponse = await callAI(messages, 1500, 0.5, 'llama-3.3-70b-versatile')
 
-    // Completion detection: prompt asks AI to write "Congratulations! You've Mastered [topic]!" when done (no signal)
-    const completionPhrases = ['Congratulations', 'You\'ve Mastered', "You've Mastered", 'ready for the playground']
-    const isSessionComplete = completionPhrases.some(phrase => aiResponse.includes(phrase))
+    const cleanedResponse = fullResponse.trim()
+    const isSessionComplete = completionPhrases.some(phrase => cleanedResponse.includes(phrase))
 
-    const cleanedResponse = aiResponse
-
-    // Save the conversation turn (user message + cleaned AI response) atomically
     let saveSuccess
     if (message.trim()) {
-      // Regular conversation turn
       saveSuccess = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse)
     } else {
-      // Initial session message
+      saveSuccess = await saveInitialMessage(userId, topicId, cleanedResponse)
+    }
+
+    if (isSessionComplete) {
+      try {
+        await upsertProgress(userId, topicId, {
+          phase: 'assignment',
+          status: 'in_progress',
+          updated_at: new Date().toISOString()
+        })
+      } catch (_) { /* ignore */ }
+    }
+
+    const updatedConversation = await getChatHistoryString(userId, topicId)
+    const messageCount = updatedConversation.split(/(?=AGENT:|USER:)/).filter(msg => msg.trim()).length
+
+    res.write(`data: ${JSON.stringify({
+      type: 'done',
+      response: cleanedResponse,
+      messageCount,
+      conversationHistory: updatedConversation,
+      sessionComplete: isSessionComplete,
+      nextPhase: isSessionComplete ? 'assignment' : null,
+      topic: { id: topicId, title: topic.title, category: topic.category }
+    })}\n\n`)
+    res.end()
+  } catch (error) {
+    if (!res.headersSent) {
+      handleErrorResponse(res, error, 'session chat stream')
+    } else {
+      res.write(`data: ${JSON.stringify({ type: 'error', message: error.message })}\n\n`)
+      res.end()
+    }
+  }
+})
+
+// Non-streaming session chat (fallback)
+router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res) => {
+  try {
+    if (!validateChatRequest(req, res)) { return }
+
+    const { message, topicId } = req.body
+    const userId = req.user.userId
+
+    const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
+    if (!topic) { return }
+
+    let progress = await getProgress(userId, topicId)
+    if (!progress) {
+      await upsertProgress(userId, topicId, {
+        phase: 'session',
+        status: 'in_progress',
+        updated_at: new Date().toISOString()
+      })
+      progress = await getProgress(userId, topicId)
+    }
+
+    if (progress && (progress.phase === 'assignment' || progress.topic_completed === true)) {
+      return res.status(400).json(createErrorResponse('Session already completed. You can view the conversation but cannot send new messages.', 'SESSION_ALREADY_COMPLETE'))
+    }
+
+    const [conversationHistory, completedTopics] = await Promise.all([
+      getChatHistoryString(userId, topicId),
+      getCompletedTopics(userId)
+    ])
+
+    const conversationHistoryForPrompt = message.trim()
+      ? `${conversationHistory ? `${conversationHistory}\n` : ''}USER: ${message.trim()}`
+      : conversationHistory
+
+    const promptHistory = truncateHistoryForPrompt(conversationHistoryForPrompt, 14)
+    const embeddedPrompt = buildEmbeddedSessionPrompt(topicId, promptHistory, completedTopics)
+
+    const messages = [
+      { role: 'system', content: embeddedPrompt }
+    ]
+    if (message.trim()) {
+      messages.push({ role: 'user', content: message.trim() })
+    } else {
+      messages.push({ role: 'user', content: 'Start teaching the first concept.' })
+    }
+
+    const aiResponse = await callAI(messages, 1500, 0.5)
+    const completionPhrases = ['Congratulations', "You've Mastered", 'ready for the playground']
+    const isSessionComplete = completionPhrases.some(phrase => aiResponse.includes(phrase))
+    const cleanedResponse = aiResponse
+
+    let saveSuccess
+    if (message.trim()) {
+      saveSuccess = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse)
+    } else {
       saveSuccess = await saveInitialMessage(userId, topicId, cleanedResponse)
     }
 
@@ -143,42 +232,28 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       return res.status(500).json(createErrorResponse('Failed to save conversation'))
     }
 
-    // Update progress - direct database call for compatibility
-    // 2-phase model: (session <-> play) then (assignment <-> review). Session complete → assignment.
-    try {
-      if (isSessionComplete) {
+    if (isSessionComplete) {
+      try {
         await upsertProgress(userId, topicId, {
-          phase: 'assignment',  // Move to assignment phase (session+play combined done)
-          status: 'in_progress', // Topic still in progress until assignments done
+          phase: 'assignment',
+          status: 'in_progress',
           updated_at: new Date().toISOString()
         })
-      }
-      // If session not complete, progress is already tracked from session start
-    } catch (progressError) {
-      // Don't fail the request if progress update fails
+      } catch (_) { /* ignore */ }
     }
 
-    // Get updated conversation history
     const updatedConversation = await getChatHistoryString(userId, topicId)
     const messageCount = updatedConversation.split(/(?=AGENT:|USER:)/).filter(msg => msg.trim()).length
 
-    const responseData = {
+    res.json(createSuccessResponse({
       response: cleanedResponse,
       messageCount,
       conversationHistory: updatedConversation,
-      phase: 'session', // Always return 'session' for this endpoint
+      phase: 'session',
       sessionComplete: isSessionComplete,
-      nextPhase: isSessionComplete ? 'assignment' : null, // Indicate what phase comes next
-      topic: {
-        id: topicId,
-        title: topic.title,
-        category: topic.category
-      },
-      // Include finalized system prompt in dev so frontend can log to console
-      ...(process.env.NODE_ENV !== 'production' && { debugSystemPrompt: embeddedPrompt })
-    }
-
-    res.json(createSuccessResponse(responseData))
+      nextPhase: isSessionComplete ? 'assignment' : null,
+      topic: { id: topicId, title: topic.title, category: topic.category }
+    }))
   } catch (error) {
     handleErrorResponse(res, error, 'session chat')
   }
@@ -211,7 +286,7 @@ router.post('/assignment/hint', authenticateToken, rateLimitMiddleware, async (r
     ]
 
     // Get AI response
-    const aiResponse = await callAI(messages, 1000, 0.4, 'llama-3.3-70b-versatile')
+    const aiResponse = await callAI(messages, 1000, 0.4)
 
     // Update chat phase to assignment
     await updateChatPhase(userId, topicId, 'assignment')
@@ -257,7 +332,7 @@ router.post('/feedback', authenticateToken, rateLimitMiddleware, async (req, res
     ]
 
     // Get AI response (differences list + reference code)
-    const aiResponse = await callAI(messages, 1500, 0.3, 'llama-3.3-70b-versatile')
+    const aiResponse = await callAI(messages, 1500, 0.3)
 
     res.json(createSuccessResponse({
       feedback: aiResponse,

@@ -235,6 +235,10 @@
   max-width: 100%;
 }
 
+.message-content--plain .message-text {
+  line-height: 1.4;
+}
+
 .message-role {
   display: block;
   font-size: 0.85rem;
@@ -246,14 +250,14 @@
 
 .message-text {
   font-size: 0.925rem;
-  line-height: 1.6;
+  line-height: 1.4;
   color: #374151;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* ReactMarkdown styling for messages - tighter vertical rhythm */
+/* ReactMarkdown styling for messages - compact vertical rhythm */
 .message-text p {
-  margin: 0 0 8px 0;
+  margin: 0 0 2px 0;
   color: #2d3748;
 }
 
@@ -276,11 +280,30 @@
   color: #e2e8f0;
   padding: 12px 16px;
   border-radius: 8px;
-  margin: 8px 0;
+  margin: 2px 0;
   overflow-x: auto;
   font-size: 0.8rem;
   line-height: 1.4;
   border: 1px solid #2d3748;
+}
+
+/* Session chat: minimal gaps between blocks */
+.message-content--plain .message-text .code-block-wrapper {
+  margin: 2px 0;
+}
+
+.message-content--plain .message-text p {
+  margin: 0 0 2px 0;
+}
+
+.message-content--plain .message-text ul,
+.message-content--plain .message-text ol {
+  margin: 1px 0 2px 0;
+  padding-left: 1.25rem;
+}
+
+.message-content--plain .message-text li {
+  margin: 0;
 }
 
 /* Session code blocks: horizontal scroll only inside block, not whole chat */

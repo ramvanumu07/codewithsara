@@ -30,11 +30,14 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
-// Response interceptor: on 401/403, clear auth and redirect to login (stateless JWT - no refresh)
+// Response interceptor: on 401 or 403 (auth), clear auth and redirect to login. Do NOT redirect on 403 COURSE_LOCKED.
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401 || error.response?.status === 403) {
+    const status = error.response?.status
+    const code = error.response?.data?.code
+    const isAuthFailure = status === 401 || (status === 403 && code !== 'COURSE_LOCKED')
+    if (isAuthFailure) {
       const currentPath = window.location.pathname
       const isAuthPage = ['/login', '/signup', '/forgot-password'].includes(currentPath)
       if (!isAuthPage) {
@@ -95,9 +98,58 @@ export const learning = {
   startSession: (topicId, assignments = []) =>
     api.post('/learn/session/start', { topicId, assignments }),
 
-  // Session chat
+  // Session chat (non-streaming fallback)
   sessionChat: (topicId, message) =>
     api.post('/chat/session', { topicId, message }),
+
+  // Session chat with streaming - calls onChunk(content) for each token, onDone(data) when complete, onError(err) on failure
+  sessionChatStream: async (topicId, message, { onChunk, onDone, onError }) => {
+    const token = localStorage.getItem('sara_token')
+    const url = `${baseURL || '/api'}/chat/session/stream`
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` })
+      },
+      body: JSON.stringify({ topicId, message })
+    })
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}))
+      const err = new Error(errData.message || errData.error || `Request failed: ${res.status}`)
+      err.response = { status: res.status, data: errData }
+      onError?.(err)
+      throw err
+    }
+    const reader = res.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    try {
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() || ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          try {
+            const data = JSON.parse(line.slice(6))
+            if (data.type === 'chunk' && data.content) onChunk?.(data.content)
+            if (data.type === 'done') onDone?.(data)
+            if (data.type === 'error') {
+              const err = new Error(data.message || 'AI stream failed')
+              err.response = { status: 500, data: { message: data.message } }
+              onError?.(err)
+              throw err
+            }
+          } catch (_) { /* ignore */ }
+        }
+      }
+    } finally {
+      reader.releaseLock()
+    }
+  },
 
   // Playtime
   startPlaytime: (topicId) =>
@@ -131,9 +183,7 @@ export const learning = {
 
   // Course unlock (payment flow)
   getUnlockedCourses: () => api.get('/learn/unlocked-courses'),
-  unlockCourse: (courseId) => api.post('/learn/unlock-course', { courseId }),
-  generateUnlockCode: () => api.post('/learn/generate-unlock-code'),
-  redeemUnlockCode: (code) => api.post('/learn/redeem-unlock-code', { code })
+  unlockCourse: (courseId) => api.post('/learn/unlock-course', { courseId })
 }
 
 // Progress API
