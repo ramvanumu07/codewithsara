@@ -1,6 +1,7 @@
 {
   "name": "sara",
   "version": "2.0.0",
+  "type": "module",
   "description": "Sara – AI-powered JavaScript learning platform",
   "private": true,
   "scripts": {
