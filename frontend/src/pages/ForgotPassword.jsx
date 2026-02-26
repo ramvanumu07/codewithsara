@@ -337,7 +337,7 @@ const ForgotPassword = () => {
 
         <div className="auth-info">
           <p><strong>Account:</strong> {userInfo?.username}</p>
-          <p><strong>Question:</strong> {securityQuestion?.question}</p>
+          <p><strong>Question:</strong> {securityQuestion?.question || userInfo?.securityQuestion || 'Security question'}</p>
         </div>
 
         <form onSubmit={handleStep2Submit} className="auth-form" noValidate>

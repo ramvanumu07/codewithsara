@@ -16,10 +16,10 @@ AI-powered JavaScript learning platform — React + Vite frontend, Node/Express 
    ```
 
 2. **Environment**  
-   - Backend: create `backend/.env` with:
-     - **Required:** `JWT_SECRET`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `GROQ_API_KEY`
-     - **Optional:** `PORT` (default 5000), `FRONTEND_URL` (default http://localhost:5173)
-   - Frontend: if the app calls the API by URL, set the API base URL (e.g. env or config pointing to `http://localhost:5000`).
+   - Backend: copy `backend/.env.example` to `backend/.env` and fill in:
+     - **Required:** `DATABASE_URL` (Neon Postgres), `JWT_SECRET`, `GROQ_API_KEY`
+     - **Optional:** `PORT` (5000), `FRONTEND_URL`, `BCRYPT_ROUNDS`
+   - Frontend: uses Vite proxy to backend in dev; for production set `VITE_API_BASE_URL` if needed.
 
 3. **Start both**  
    ```bash
@@ -42,7 +42,12 @@ AI-powered JavaScript learning platform — React + Vite frontend, Node/Express 
 ## Deploy
 
 - **Frontend** — Netlify: connect repo, build command `npm run build`, publish directory `frontend/dist`. Root `netlify.toml` is already configured.
-- **Backend** — Render: use `render.yaml` (backend-only). Set env vars in the Render dashboard (see `render.yaml` for required/optional keys). Alternatively deploy `backend/` to any Node host with `npm start`.
+- **Backend** — Netlify Functions (see `netlify.toml`) or Render/any Node host. **Important:** Set env vars in your hosting dashboard:
+  - `DATABASE_URL` — Neon Postgres connection string
+  - `JWT_SECRET` — random secret for auth
+  - `GROQ_API_KEY` — for AI chat
+  - `FRONTEND_URL` — your frontend URL (for CORS)
+  - See `backend/.env.example` for the full list.
 
 ## Scripts (root)
 

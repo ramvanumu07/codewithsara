@@ -451,13 +451,28 @@ const Dashboard = () => {
   }
 
   if (error) {
+    const isAuthError = error.includes('401') || error.toLowerCase().includes('session') || error.toLowerCase().includes('unauthorized') || error.toLowerCase().includes('token')
     return (
       <div className="dashboard-error">
         <h2>Something went wrong</h2>
         <p>{error}</p>
-        <button onClick={loadDashboardData} className="retry-button">
-          Try Again
-        </button>
+        <div className="dashboard-error-actions">
+          <button onClick={loadDashboardData} className="retry-button">
+            Try Again
+          </button>
+          <button
+            onClick={async () => {
+              await logout()
+              navigate('/login', { replace: true })
+            }}
+            className="retry-button secondary"
+          >
+            Go to Login
+          </button>
+        </div>
+        {isAuthError && (
+          <p className="dashboard-error-hint">Your session may have expired. Use "Go to Login" to sign in again.</p>
+        )}
       </div>
     )
   }

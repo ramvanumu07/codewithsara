@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/AuthContext'
 import api, { handleApiError } from '../config/api'
 import { validatePassword } from '../utils/passwordValidation'
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter'
-import { getAllSecurityQuestions } from '../utils/securityQuestions'
+import { getAllSecurityQuestions, getSecurityQuestionById } from '../utils/securityQuestions'
 import './Auth.css'
 
 // Constants
@@ -227,20 +227,22 @@ const Signup = () => {
 
       if (response.data.success) {
         // Account created successfully
-        
-        // Store token
-        localStorage.setItem('sara_token', response.data.data.token)
+        const token = response.data.data.token || response.data.data.accessToken
+        const user = response.data.data.user
+        if (token) localStorage.setItem('sara_token', token)
+        if (user) localStorage.setItem('sara_user', JSON.stringify(user))
 
-        // Store user info
-        localStorage.setItem('sara_user', JSON.stringify(response.data.data.user))
-
-        // Navigate to dashboard
+        // Full reload so AuthContext picks up the new token
         setTimeout(() => {
-          navigate('/dashboard')
+          window.location.href = '/dashboard'
         }, SUCCESS_REDIRECT_DELAY)
       }
     } catch (error) {
-      const errorMessage = handleApiError(error, 'Failed to create account. Please try again.')
+      const status = error.response?.status
+      let errorMessage = handleApiError(error, 'Failed to create account. Please try again.')
+      if (status === 502 || status === 503) {
+        errorMessage = 'Server is temporarily unavailable. If you just deployed, make sure DATABASE_URL and JWT_SECRET are set in your hosting environment variables. Please try again in a moment.'
+      }
       if (typeof errorMessage === 'string' && errorMessage) {
         // Handle specific field errors
         if (errorMessage.includes('Username already exists')) {
@@ -461,18 +463,23 @@ const Signup = () => {
                 name="securityQuestion"
                 value={formData.securityQuestion}
                 onChange={handleChange}
-                className={`security-question-select ${errors.securityQuestion ? 'error' : (formData.securityQuestion ? 'success' : '')}`}
+                className={`form-input security-question-select ${errors.securityQuestion ? 'error' : (formData.securityQuestion ? 'success' : '')}`}
                 disabled={isLoading}
                 required
                 aria-label="Choose a security question for password recovery"
               >
-                <option value="" disabled>Select</option>
+                <option value="">Select a security question</option>
                 {getAllSecurityQuestions().map((question) => (
-                  <option key={question.id} value={question.id} title={question.question}>
+                  <option key={question.id} value={question.id}>
                     {question.question}
                   </option>
                 ))}
               </select>
+              {formData.securityQuestion && (
+                <p className="security-question-selected" aria-live="polite">
+                  Selected: {getSecurityQuestionById(formData.securityQuestion)?.question || formData.securityQuestion}
+                </p>
+              )}
               {errors.securityQuestion && (
                 <div className="username-status">
                   <span className="status-taken">{errors.securityQuestion}</span>

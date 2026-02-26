@@ -39,16 +39,33 @@ export const AuthProvider = ({ children }) => {
     initializeAuth()
   }, [])
 
+  // When API interceptor gets 401, it clears token and redirects. Update auth state immediately so UI reflects it.
+  useEffect(() => {
+    const onSessionExpired = () => {
+      removeToken()
+      removeUser()
+      setUserState(null)
+      setIsAuthenticated(false)
+    }
+    window.addEventListener('auth-session-expired', onSessionExpired)
+    return () => window.removeEventListener('auth-session-expired', onSessionExpired)
+  }, [])
+
   const initializeAuth = async () => {
+    const AUTH_TIMEOUT_MS = 10000 // 10s - avoid stuck "Loading Sara..." if backend is down
+
     try {
       const token = getToken()
       const savedUser = getUser()
 
       if (token) {
         try {
-          const response = await auth.validate()
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Auth check timed out')), AUTH_TIMEOUT_MS)
+          )
+          const response = await Promise.race([auth.validate(), timeoutPromise])
 
-          if (response.data.success && response.data.data.user) {
+          if (response?.data?.success && response.data.data?.user) {
             const freshUser = response.data.data.user
             setUser(freshUser)
             setUserState(freshUser)
@@ -57,12 +74,8 @@ export const AuthProvider = ({ children }) => {
             await logout()
           }
         } catch (validationError) {
-          if (savedUser) {
-            setUserState(savedUser)
-            setIsAuthenticated(true)
-          } else {
-            await logout()
-          }
+          // Never trust savedUser when validation fails - token may be expired or invalid
+          await logout()
         }
       } else if (savedUser) {
         await logout()
