@@ -1,0 +1,22 @@
+# Render.com – deploy backend separately to avoid Netlify function bundling issues
+# Dashboard: https://dashboard.render.com → New → Web Service
+# Connect this repo, set root directory to empty (uses backend/ below)
+
+services:
+  - type: web
+    name: sara-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        value: https://codewithsara.netlify.app
