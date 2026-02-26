@@ -17,18 +17,21 @@ function isDatabaseUrlPlaceholder(url) {
   return false
 }
 
+const isServerless = !!(process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME)
+
 export function validateEnv() {
   const missing = REQUIRED_VARS.filter((name) => !process.env[name])
   if (missing.length > 0) {
-    console.error('\nMissing required environment variables:', missing.join(', '))
-    console.error('Create a .env file in the backend folder with these variables.\n')
+    const msg = `Missing required environment variables: ${missing.join(', ')}. Set them in Netlify Dashboard → Site settings → Environment variables.`
+    console.error('\n' + msg + '\n')
+    if (isServerless) throw new Error(msg)
     process.exit(1)
   }
   const dbUrl = process.env.DATABASE_URL
   if (isDatabaseUrlPlaceholder(dbUrl)) {
-    console.error('\nDATABASE_URL is missing or still a placeholder.')
-    console.error('Get your connection string from Neon Console → your project → Connection details → copy the connection string.')
-    console.error('Set DATABASE_URL=postgresql://... in backend/.env.\n')
+    const msg = 'DATABASE_URL is missing or still a placeholder. Get your connection string from Neon Console → Connection details.'
+    console.error('\n' + msg + '\n')
+    if (isServerless) throw new Error(msg)
     process.exit(1)
   }
   for (const [name, value] of Object.entries(OPTIONAL_DEFAULTS)) {
