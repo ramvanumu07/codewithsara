@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/AuthContext'
 import api, { handleApiError } from '../config/api'
 import { validatePassword } from '../utils/passwordValidation'
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter'
-import { getAllSecurityQuestions, getSecurityQuestionById } from '../utils/securityQuestions'
+import { getAllSecurityQuestions } from '../utils/securityQuestions'
 import './Auth.css'
 
 // Constants
@@ -475,11 +475,6 @@ const Signup = () => {
                   </option>
                 ))}
               </select>
-              {formData.securityQuestion && (
-                <p className="security-question-selected" aria-live="polite">
-                  Selected: {getSecurityQuestionById(formData.securityQuestion)?.question || formData.securityQuestion}
-                </p>
-              )}
               {errors.securityQuestion && (
                 <div className="username-status">
                   <span className="status-taken">{errors.securityQuestion}</span>

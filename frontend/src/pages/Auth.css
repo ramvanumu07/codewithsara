@@ -1383,13 +1383,6 @@
    SECURITY QUESTIONS DROPDOWN STYLES
    ============================================================================ */
 
-.security-question-selected {
-  margin: 0.5rem 0 0;
-  font-size: 0.875rem;
-  color: var(--sara-text-secondary);
-  font-weight: 500;
-}
-
 .security-question-select {
   width: 100%;
   padding: 0.75rem 1rem;
