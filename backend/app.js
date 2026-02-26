@@ -6,9 +6,9 @@ import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-// Always load .env from backend folder so DATABASE_URL is found regardless of cwd
-dotenv.config({ path: path.join(__dirname, '.env') })
+// Use dir to avoid conflict with bundler-injected __dirname (Netlify/Lambda)
+const dir = path.dirname(fileURLToPath(import.meta.url))
+dotenv.config({ path: path.join(dir, '.env') })
 
 import { validateEnv } from './config/env.js'
 validateEnv()
