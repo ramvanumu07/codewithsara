@@ -9,9 +9,7 @@
 [functions]
   # Backend must be bundled – api.js imports ../../backend/app.js
   included_files = ["backend/**"]
-  # Native modules (bcrypt, pg) can't be inlined by esbuild
-  external_node_modules = ["express", "bcrypt", "pg"]
-  node_bundler = "esbuild"
+  # Default bundler (nft) handles dynamic imports better than esbuild
 
 # Node 20; NODE_ENV=development so devDependencies (vite) install during build
 [build.environment]

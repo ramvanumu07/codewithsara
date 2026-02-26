@@ -18,7 +18,7 @@ function jsonResponse(statusCode, body) {
 
 /** Lightweight health check – no app load, shows env status for debugging */
 function handleHealth(event) {
-  const path = event.path || event.rawUrl || ''
+  const path = event.path || event.rawPath || event.rawUrl || ''
   if (event.httpMethod !== 'GET' || !path.includes('/api/health')) {
     return null
   }
@@ -34,6 +34,28 @@ function handleHealth(event) {
       FRONTEND_URL: process.env.FRONTEND_URL ? 'set' : 'missing'
     }
   })
+}
+
+/** Debug: try to load app and return the actual error (helps diagnose 503) */
+async function handleLoadDebug(event) {
+  const path = event.path || event.rawPath || event.rawUrl || ''
+  if (event.httpMethod !== 'GET' || !path.includes('/api/debug/load')) {
+    return null
+  }
+  try {
+    const appModule = await import('../../backend/app.js')
+    const app = typeof appModule === 'function' ? appModule : (appModule?.default ?? appModule)
+    return jsonResponse(200, { ok: true, message: 'App loaded successfully' })
+  } catch (err) {
+    return jsonResponse(503, {
+      ok: false,
+      message: err?.message || 'Load failed',
+      name: err?.name,
+      code: err?.code,
+      stack: err?.stack,
+      cause: err?.cause?.message
+    })
+  }
 }
 
 let appInstance = null
@@ -70,6 +92,9 @@ function normalizePath(event) {
 export const handler = async (event, context) => {
   const health = handleHealth(event)
   if (health) return health
+
+  const loadDebug = await handleLoadDebug(event)
+  if (loadDebug) return loadDebug
 
   normalizePath(event)
 
