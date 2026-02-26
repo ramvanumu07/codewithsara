@@ -6,21 +6,14 @@
   publish = "frontend/dist"
   functions = "netlify/functions"
 
-[functions]
-  included_files = ["backend/**"]
-  external_node_modules = ["express", "bcrypt", "pg"]
-  node_bundler = "esbuild"
-
-# Node 20; NODE_ENV=development so devDependencies (e.g. vite) are installed during build
+# Node 20; devDependencies for frontend (vite) are installed via install:all script
 [build.environment]
   NODE_VERSION = "20"
-  NODE_ENV     = "development"
 
 # API: send /api/* to the Node function (backend runs here)
-# :splat preserves the path so /api/auth/check-username/x becomes /.netlify/functions/api/auth/check-username/x
 [[redirects]]
   from   = "/api/*"
-  to     = "/.netlify/functions/api/:splat"
+  to     = "/.netlify/functions/api"
   status = 200
   force  = true
 
