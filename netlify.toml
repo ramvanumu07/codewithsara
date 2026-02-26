@@ -15,9 +15,10 @@
   NODE_ENV     = "development"
 
 # API: send /api/* to the Node function (backend runs here)
+# :splat preserves the path so /api/auth/check-username/x becomes /.netlify/functions/api/auth/check-username/x
 [[redirects]]
   from   = "/api/*"
-  to     = "/.netlify/functions/api"
+  to     = "/.netlify/functions/api/:splat"
   status = 200
   force  = true
 

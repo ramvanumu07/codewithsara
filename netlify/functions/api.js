@@ -52,9 +52,24 @@ async function loadApp() {
   }
 }
 
+/** Normalize path for Express: /.netlify/functions/api/auth/... → /api/auth/... */
+function normalizePathForExpress(event) {
+  const path = event.path || event.rawPath || event.rawUrl || ''
+  const prefix = '/.netlify/functions/api'
+  if (path.startsWith(prefix)) {
+    const rest = path.slice(prefix.length) || '/'
+    event.path = '/api' + rest
+    if (event.rawPath) event.rawPath = '/api' + rest
+  }
+  return event
+}
+
 export const handler = async (event, context) => {
   const health = handleHealth(event)
   if (health) return health
+
+  // Ensure path is /api/... so Express routes match (app.use('/api/auth', ...))
+  normalizePathForExpress(event)
 
   try {
     const app = await loadApp()
