@@ -6,6 +6,9 @@
   publish = "frontend/dist"
   functions = "netlify/functions"
 
+[functions]
+  included_files = ["backend/**"]
+
 # Node 20; NODE_ENV=development so devDependencies (e.g. vite) are installed during build
 [build.environment]
   NODE_VERSION = "20"

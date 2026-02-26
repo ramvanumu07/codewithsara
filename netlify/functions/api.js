@@ -63,7 +63,8 @@ export const handler = async (event, context) => {
     return jsonResponse(503, {
       success: false,
       message: err?.message || 'Server failed to start',
-      hint: 'Check Netlify env vars: DATABASE_URL, JWT_SECRET, GROQ_API_KEY, FRONTEND_URL'
+      error: err?.code || err?.name,
+      hint: 'Health shows env OK – app load failed. Check Netlify function logs.'
     })
   }
 }
