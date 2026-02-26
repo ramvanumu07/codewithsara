@@ -52,9 +52,26 @@ async function loadApp() {
   }
 }
 
+/** Normalize path: /.netlify/functions/api/auth/... → /api/auth/... so Express routes match */
+function normalizePath(event) {
+  const raw = event.path || event.rawPath || event.requestPath || ''
+  const path = typeof raw === 'string' ? raw : ''
+  const prefix = '/.netlify/functions/api'
+  if (path.startsWith(prefix)) {
+    const rest = path.slice(prefix.length) || '/'
+    const normalized = '/api' + rest
+    event.path = normalized
+    event.rawPath = normalized
+    event.requestPath = normalized
+  }
+  return event
+}
+
 export const handler = async (event, context) => {
   const health = handleHealth(event)
   if (health) return health
+
+  normalizePath(event)
 
   try {
     const app = await loadApp()
@@ -64,7 +81,8 @@ export const handler = async (event, context) => {
       success: false,
       message: err?.message || 'Server failed to start',
       error: err?.code || err?.name,
-      hint: 'Health shows env OK – app load failed. Check Netlify function logs.'
+      hint: 'Check Netlify function logs. Ensure DATABASE_URL, JWT_SECRET are set.',
+      ...(process.env.NODE_ENV === 'development' && { stack: err?.stack })
     })
   }
 }

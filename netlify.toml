@@ -6,14 +6,23 @@
   publish = "frontend/dist"
   functions = "netlify/functions"
 
-# Node 20; devDependencies for frontend (vite) are installed via install:all script
+[functions]
+  # Backend must be bundled – api.js imports ../../backend/app.js
+  included_files = ["backend/**"]
+  # Native modules (bcrypt, pg) can't be inlined by esbuild
+  external_node_modules = ["express", "bcrypt", "pg"]
+  node_bundler = "esbuild"
+
+# Node 20; NODE_ENV=development so devDependencies (vite) install during build
 [build.environment]
   NODE_VERSION = "20"
+  NODE_ENV     = "development"
 
 # API: send /api/* to the Node function (backend runs here)
+# :splat preserves path so /api/auth/check-username/x reaches Express correctly
 [[redirects]]
   from   = "/api/*"
-  to     = "/.netlify/functions/api"
+  to     = "/.netlify/functions/api/:splat"
   status = 200
   force  = true
 
