@@ -54,12 +54,20 @@ async function loadApp() {
 
 /** Normalize path for Express: /.netlify/functions/api/auth/... → /api/auth/... */
 function normalizePathForExpress(event) {
-  const path = event.path || event.rawPath || event.rawUrl || ''
+  let path = event.path || event.rawPath || event.requestPath || ''
+  if (!path && event.rawUrl) {
+    try {
+      path = new URL(event.rawUrl).pathname
+    } catch (_) {}
+  }
+  path = typeof path === 'string' ? path : ''
   const prefix = '/.netlify/functions/api'
   if (path.startsWith(prefix)) {
     const rest = path.slice(prefix.length) || '/'
-    event.path = '/api' + rest
-    if (event.rawPath) event.rawPath = '/api' + rest
+    const normalized = '/api' + rest
+    event.path = normalized
+    event.rawPath = normalized
+    event.requestPath = normalized
   }
   return event
 }
@@ -73,6 +81,7 @@ export const handler = async (event, context) => {
 
   try {
     const app = await loadApp()
+    // basePath strips /.netlify/functions so path becomes api/auth/...; we already normalized to /api/...
     return serverless(app)(event, context)
   } catch (err) {
     return jsonResponse(503, {

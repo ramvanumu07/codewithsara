@@ -8,6 +8,8 @@
 
 [functions]
   included_files = ["backend/**"]
+  external_node_modules = ["express", "bcrypt", "pg"]
+  node_bundler = "esbuild"
 
 # Node 20; NODE_ENV=development so devDependencies (e.g. vite) are installed during build
 [build.environment]
