@@ -426,7 +426,12 @@ const Learn = () => {
                 if (topicIdRef.current !== requestedTopicId) return
                 const data = res?.data?.data
                 if (data?.response != null) {
-                  setMessages([{ role: 'assistant', content: data.response, timestamp: new Date().toISOString() }])
+                  const apiMessages = data.messages
+                  if (apiMessages && Array.isArray(apiMessages) && apiMessages.length > 0) {
+                    setMessages(apiMessages.map(m => ({ role: m.role, content: (m.content || '').trim(), timestamp: m.timestamp || new Date().toISOString() })))
+                  } else {
+                    setMessages([{ role: 'assistant', content: data.response, timestamp: new Date().toISOString() }])
+                  }
                   if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
                     setSessionComplete(true)
                   }
@@ -452,7 +457,12 @@ const Learn = () => {
                 if (topicIdRef.current !== requestedTopicId) return
                 const data = res?.data?.data
                 if (data?.response != null) {
-                  setMessages([{ role: 'assistant', content: data.response, timestamp: new Date().toISOString() }])
+                  const apiMessages = data.messages
+                  if (apiMessages && Array.isArray(apiMessages) && apiMessages.length > 0) {
+                    setMessages(apiMessages.map(m => ({ role: m.role, content: (m.content || '').trim(), timestamp: m.timestamp || new Date().toISOString() })))
+                  } else {
+                    setMessages([{ role: 'assistant', content: data.response, timestamp: new Date().toISOString() }])
+                  }
                   if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
                     setSessionComplete(true)
                   }
@@ -570,11 +580,21 @@ const Learn = () => {
         if (topicIdRef.current !== topicId) return
         const data = res?.data?.data
         if (data && 'response' in data) {
-          const content = (data.response ?? '').trim() || 'The AI returned an empty response. Please try again.'
-          setMessages(prev => {
-            const withoutPlaceholder = prev.slice(0, -1)
-            return [...withoutPlaceholder, { role: 'assistant', content, timestamp: new Date().toISOString() }]
-          })
+          // Use full messages from API when available (keeps UI in sync with Neon DB)
+          const apiMessages = data.messages
+          if (apiMessages && Array.isArray(apiMessages) && apiMessages.length > 0) {
+            setMessages(apiMessages.map(m => ({
+              role: m.role,
+              content: (m.content || '').trim(),
+              timestamp: m.timestamp || new Date().toISOString()
+            })))
+          } else {
+            const content = (data.response ?? '').trim() || 'The AI returned an empty response. Please try again.'
+            setMessages(prev => {
+              const withoutPlaceholder = prev.slice(0, -1)
+              return [...withoutPlaceholder, { role: 'assistant', content, timestamp: new Date().toISOString() }]
+            })
+          }
           if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
             setSessionComplete(true)
           }

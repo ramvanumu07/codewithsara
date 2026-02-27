@@ -123,12 +123,14 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
     const cleanedResponse = fullResponse.trim()
     const isSessionComplete = completionPhrases.some(phrase => cleanedResponse.includes(phrase))
 
-    let saveSuccess
+    let saveResult
     if (message.trim()) {
-      saveSuccess = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse)
+      saveResult = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse)
     } else {
-      saveSuccess = await saveInitialMessage(userId, topicId, cleanedResponse)
+      saveResult = await saveInitialMessage(userId, topicId, cleanedResponse)
     }
+
+    const savedMessages = Array.isArray(saveResult) ? saveResult : (saveResult?.messages ?? [])
 
     if (isSessionComplete) {
       try {
@@ -140,14 +142,14 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
       } catch (_) { /* ignore */ }
     }
 
-    const updatedConversation = await getChatHistoryString(userId, topicId)
-    const messageCount = updatedConversation.split(/(?=AGENT:|USER:)/).filter(msg => msg.trim()).length
-
     res.write(`data: ${JSON.stringify({
       type: 'done',
       response: cleanedResponse,
-      messageCount,
-      conversationHistory: updatedConversation,
+      messages: savedMessages,
+      messageCount: savedMessages.length,
+      conversationHistory: savedMessages.map(m =>
+        `${m.role === 'user' ? 'USER' : 'AGENT'}: ${(m.content || '').trim()}`
+      ).join('\n'),
       sessionComplete: isSessionComplete,
       nextPhase: isSessionComplete ? 'assignment' : null,
       topic: { id: topicId, title: topic.title, category: topic.category }
@@ -208,14 +210,16 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
     const isSessionComplete = completionPhrases.some(phrase => aiResponse.includes(phrase))
     const cleanedResponse = aiResponse
 
-    let saveSuccess
+    let saveResult
     if (message.trim()) {
-      saveSuccess = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse)
+      saveResult = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse)
     } else {
-      saveSuccess = await saveInitialMessage(userId, topicId, cleanedResponse)
+      saveResult = await saveInitialMessage(userId, topicId, cleanedResponse)
     }
 
-    if (!saveSuccess) {
+    // saveChatTurn returns messages array; saveInitialMessage returns { messages, ... }
+    const savedMessages = Array.isArray(saveResult) ? saveResult : (saveResult?.messages ?? [])
+    if (!savedMessages.length && message.trim()) {
       return res.status(500).json(createErrorResponse('Failed to save conversation'))
     }
 
@@ -229,13 +233,13 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       } catch (_) { /* ignore */ }
     }
 
-    const updatedConversation = await getChatHistoryString(userId, topicId)
-    const messageCount = updatedConversation.split(/(?=AGENT:|USER:)/).filter(msg => msg.trim()).length
-
     res.json(createSuccessResponse({
       response: cleanedResponse,
-      messageCount,
-      conversationHistory: updatedConversation,
+      messages: savedMessages,
+      messageCount: savedMessages.length,
+      conversationHistory: savedMessages.map(m =>
+        `${m.role === 'user' ? 'USER' : 'AGENT'}: ${(m.content || '').trim()}`
+      ).join('\n'),
       phase: 'session',
       sessionComplete: isSessionComplete,
       nextPhase: isSessionComplete ? 'assignment' : null,
