@@ -79,7 +79,7 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {}
     if (!formData.username.trim()) {
-      newErrors.username = 'Username is required'
+      newErrors.username = 'Username or email is required'
     }
     if (!formData.password) {
       newErrors.password = 'Password is required'
@@ -211,7 +211,7 @@ const Login = () => {
 
             <div className="form-group">
               <label htmlFor="username" className="form-label">
-                Username
+                Username or Email
               </label>
               <input
                 type="text"
@@ -220,7 +220,7 @@ const Login = () => {
                 value={formData.username}
                 onChange={handleChange}
                 className={`form-input ${errors.username ? 'error' : ''}`}
-                placeholder="Username"
+                placeholder="Username or email"
                 disabled={isLoading}
                 autoComplete="username"
                 autoCapitalize="none"

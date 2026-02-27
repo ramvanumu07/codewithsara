@@ -10,6 +10,8 @@ import {
   createUser,
   getUserById,
   getUserByUsername,
+  getUserByEmail,
+  getUserByUsernameOrEmail,
   updateLastLogin,
   updateUserPassword,
   getTokenVersion,
@@ -274,7 +276,7 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
   try {
     const { username, name, email, password, confirmPassword, securityQuestion, securityAnswer } = req.body
 
-    if (!username || !name || !password || !confirmPassword || !securityQuestion || !securityAnswer) {
+    if (!username || !name || !email || !password || !confirmPassword || !securityQuestion || !securityAnswer) {
       return res.status(400).json(createErrorResponse('All fields are required'))
     }
 
@@ -286,7 +288,7 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
       return res.status(400).json(createErrorResponse('Name must be at least 2 characters long'))
     }
 
-    if (email && !validateEmail(email)) {
+    if (!validateEmail(email)) {
       return res.status(400).json(createErrorResponse('Please enter a valid email address'))
     }
 
@@ -302,6 +304,10 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
     const existingUsername = await getUserByUsername(username)
     if (existingUsername) {
       return res.status(409).json(createErrorResponse('Username already exists'))
+    }
+    const existingEmail = await getUserByEmail(email.trim())
+    if (existingEmail) {
+      return res.status(409).json(createErrorResponse('An account with this email already exists'))
     }
 
     const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '12')
@@ -355,16 +361,16 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
 router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
   try {
     const { username: rawInput, password } = req.body
-    const username = typeof rawInput === 'string' ? rawInput.trim() : (rawInput != null ? String(rawInput) : '')
+    const input = typeof rawInput === 'string' ? rawInput.trim() : (rawInput != null ? String(rawInput) : '')
 
-    if (!username || !password) {
-      return res.status(400).json(createErrorResponse('Username and password are required'))
+    if (!input || !password) {
+      return res.status(400).json(createErrorResponse('Username or email and password are required'))
     }
 
-    const user = await getUserByUsername(username)
+    const user = await getUserByUsernameOrEmail(input)
 
     if (!user) {
-      return res.status(401).json(createErrorResponse('Username not found. Please check your credentials or create an account.'))
+      return res.status(401).json(createErrorResponse('Account not found. Please check your credentials or create an account.'))
     }
 
     // Check password
@@ -520,20 +526,20 @@ router.post('/login-legacy', rateLimitMiddleware, async (req, res) => {
   }
 })
 
-// Get Security Question endpoint (for forgot password - username only)
+// Get Security Question endpoint (forgot password - username or email)
 router.post('/get-security-question', async (req, res) => {
   try {
     const { username } = req.body
     const input = (username != null && typeof username === 'string') ? username.trim() : ''
 
     if (!input) {
-      return res.status(400).json(createErrorResponse('Username is required'))
+      return res.status(400).json(createErrorResponse('Username or email is required'))
     }
 
-    const user = await getUserByUsername(input)
+    const user = await getUserByUsernameOrEmail(input)
 
     if (!user) {
-      return res.status(404).json(createErrorResponse('Account with this username does not exist'))
+      return res.status(404).json(createErrorResponse('Account with this username or email does not exist'))
     }
 
     if (!user.security_question) {
@@ -558,10 +564,10 @@ router.post('/verify-security-answer-only', async (req, res) => {
     const input = (username != null && typeof username === 'string') ? username.trim() : ''
 
     if (!input || !securityAnswer) {
-      return res.status(400).json(createErrorResponse('Username and security answer are required'))
+      return res.status(400).json(createErrorResponse('Username or email and security answer are required'))
     }
 
-    const user = await getUserByUsername(input)
+    const user = await getUserByUsernameOrEmail(input)
 
     if (!user) {
       return res.status(404).json(createErrorResponse('Account not found'))
@@ -603,7 +609,7 @@ router.post('/verify-security-answer', async (req, res) => {
       return res.status(400).json(createErrorResponse('Passwords do not match'))
     }
 
-    const user = await getUserByUsername(input)
+    const user = await getUserByUsernameOrEmail(input)
 
     if (!user) {
       return res.status(404).json(createErrorResponse('Account not found'))

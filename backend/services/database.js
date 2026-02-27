@@ -88,6 +88,28 @@ export async function getUserByUsername(username) {
   return rows[0] || null
 }
 
+export async function getUserByEmail(email) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    const lower = (email || '').toLowerCase().trim()
+    for (const [, user] of DEV_USERS.entries()) {
+      if (user.email?.toLowerCase().trim() === lower) return user
+    }
+    return null
+  }
+  const pattern = escapeIlike((email || '').trim())
+  const { rows } = await query('SELECT * FROM users WHERE email ILIKE $1', [pattern])
+  return rows[0] || null
+}
+
+export async function getUserByUsernameOrEmail(input) {
+  const trimmed = (input || '').trim()
+  if (!trimmed) return null
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)
+  const user = isEmail ? await getUserByEmail(trimmed) : await getUserByUsername(trimmed)
+  if (user) return user
+  return isEmail ? await getUserByUsername(trimmed) : await getUserByEmail(trimmed)
+}
+
 export async function getTokenVersion(userId) {
   if (initializeDatabase() === 'DEV_MODE') {
     for (const user of DEV_USERS.values()) {

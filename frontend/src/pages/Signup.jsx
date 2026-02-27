@@ -161,8 +161,10 @@ const Signup = () => {
       newErrors.name = 'Name must be at least 2 characters long'
     }
 
-    // Email validation (optional but validate format if provided)
-    if (formData.email.trim()) {
+    // Email validation (required)
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else {
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       if (!emailRe.test(formData.email.trim()) || formData.email.trim().length > 254) {
         newErrors.email = 'Please enter a valid email address'
@@ -228,7 +230,7 @@ const Signup = () => {
       const response = await api.post('/auth/signup', {
         username: formData.username.trim(),
         name: formData.name.trim(),
-        email: formData.email.trim() || undefined,
+        email: formData.email.trim(),
         password: formData.password,
         confirmPassword: formData.confirmPassword,
         securityQuestion: formData.securityQuestion,
@@ -383,7 +385,7 @@ const Signup = () => {
 
             <div className="form-group">
               <label htmlFor="email" className="form-label">
-                Email <span className="optional-label">(optional)</span>
+                Email
               </label>
               <input
                 type="email"

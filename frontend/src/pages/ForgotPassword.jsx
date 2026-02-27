@@ -255,7 +255,7 @@ const ForgotPassword = () => {
     <div className="auth-card">
       <div className="auth-card-header">
         <h1>Reset Your Password</h1>
-        <p>Enter your username to continue</p>
+        <p>Enter your username or email to continue</p>
       </div>
 
       <form onSubmit={handleStep1Submit} className="auth-form" noValidate>
@@ -267,7 +267,7 @@ const ForgotPassword = () => {
 
         <div className="form-group">
           <label htmlFor="username" className="form-label">
-            Username
+            Username or Email
           </label>
           <input
             type="text"
@@ -276,14 +276,14 @@ const ForgotPassword = () => {
             value={formData.username}
             onChange={handleChange}
             className={`form-input ${errors.username ? 'error' : ''}`}
-            placeholder="Enter your username"
+            placeholder="Enter your username or email"
             disabled={isLoading}
             required
             autoComplete="username"
             autoCapitalize="none"
             autoCorrect="off"
             spellCheck="false"
-            aria-label="Enter your username"
+            aria-label="Enter your username or email"
           />
           {errors.username && (
             <div className="username-status">
