@@ -61,8 +61,8 @@ export const auth = {
   login: (username, password) =>
     api.post('/auth/login', { username, password }),
 
-  signup: (username, name, password, confirmPassword, securityQuestion, securityAnswer) =>
-    api.post('/auth/signup', { username, name, password, confirmPassword, securityQuestion, securityAnswer }),
+  signup: (username, name, email, password, confirmPassword, securityQuestion, securityAnswer) =>
+    api.post('/auth/signup', { username, name, email, password, confirmPassword, securityQuestion, securityAnswer }),
 
   getSecurityQuestion: (username) =>
     api.post('/auth/get-security-question', { username }),
@@ -183,7 +183,28 @@ export const learning = {
 
   // Course unlock (payment flow)
   getUnlockedCourses: () => api.get('/learn/unlocked-courses'),
-  unlockCourse: (courseId) => api.post('/learn/unlock-course', { courseId })
+  unlockCourse: (courseId) => api.post('/learn/unlock-course', { courseId }),
+
+  // Certificate (requires 45 completed topics)
+  downloadCertificate: async () => {
+    const certPath = '/learn/certificate/download'
+    const url = baseURL ? `${baseURL.replace(/\/$/, '')}${certPath}` : certPath
+    const token = localStorage.getItem('sara_token')
+    const res = await fetch(url.startsWith('http') ? url : `${window.location.origin}${url}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.error || err.message || 'Failed to download certificate')
+    }
+    const blob = await res.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = `Sara-Certificate-${new Date().toISOString().slice(0, 10)}.pdf`
+    a.click()
+    URL.revokeObjectURL(blobUrl)
+  }
 }
 
 // Progress API
@@ -216,17 +237,16 @@ export const getUser = () => {
 export const setUser = (user) => localStorage.setItem('sara_user', JSON.stringify(user))
 export const removeUser = () => localStorage.removeItem('sara_user')
 
-// Simplified error handling
+// Technical error patterns - never show these to users
+const TECHNICAL_ERROR_PATTERNS = /getaddrinfo|ENOTFOUND|ECONNREFUSED|ETIMEDOUT|ECONNRESET|ENETUNREACH|connection refused|network error|socket hang up/i
+
+// Simplified error handling - returns user-friendly messages only
 export const handleApiError = (error, defaultMessage = 'Something went wrong') => {
-  if (error.response?.data?.error) {
-    return error.response.data.error
+  const msg = error.response?.data?.message || error.response?.data?.error || error.message || ''
+  if (TECHNICAL_ERROR_PATTERNS.test(msg)) {
+    return 'Service temporarily unavailable. Please try again in a moment.'
   }
-  if (error.response?.data?.message) {
-    return error.response.data.message
-  }
-  if (error.message) {
-    return error.message
-  }
+  if (msg) return msg
   return defaultMessage
 }
 

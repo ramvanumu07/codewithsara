@@ -25,6 +25,7 @@ const Signup = () => {
   const [formData, setFormData] = useState({
     username: '',
     name: '',
+    email: '',
     password: '',
     confirmPassword: '',
     securityQuestion: '',
@@ -160,6 +161,14 @@ const Signup = () => {
       newErrors.name = 'Name must be at least 2 characters long'
     }
 
+    // Email validation (optional but validate format if provided)
+    if (formData.email.trim()) {
+      const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRe.test(formData.email.trim()) || formData.email.trim().length > 254) {
+        newErrors.email = 'Please enter a valid email address'
+      }
+    }
+
     // Password validation using comprehensive validator
     if (!formData.password) {
       newErrors.password = 'Password is required'
@@ -219,6 +228,7 @@ const Signup = () => {
       const response = await api.post('/auth/signup', {
         username: formData.username.trim(),
         name: formData.name.trim(),
+        email: formData.email.trim() || undefined,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
         securityQuestion: formData.securityQuestion,
@@ -367,6 +377,28 @@ const Signup = () => {
               {errors.name && (
                 <div className="username-status">
                   <span className="status-taken">{errors.name}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email" className="form-label">
+                Email <span className="optional-label">(optional)</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={`form-input ${errors.email ? 'error' : ''}`}
+                placeholder="your@email.com"
+                disabled={isLoading}
+                autoComplete="email"
+              />
+              {errors.email && (
+                <div className="username-status">
+                  <span className="status-taken">{errors.email}</span>
                 </div>
               )}
             </div>

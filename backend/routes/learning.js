@@ -15,8 +15,10 @@ import {
   getCompletedTopics,
   getUnlockedCourseIds,
   isCourseUnlockedForUser,
-  unlockCourseForUser
+  unlockCourseForUser,
+  getUserById
 } from '../services/database.js'
+import { generateCertificatePDF, CERTIFICATE_TOPICS } from '../services/certificate.js'
 import { saveInitialMessage, getChatHistoryString } from '../services/chatService.js'
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getAllTopics } from '../utils/curriculum.js'
@@ -725,7 +727,8 @@ router.get('/progress', authenticateToken, async (req, res) => {
       total_topics: totalTopics,
       completed_topics: completedTopics,
       in_progress_topics: inProgressTopics,
-      completion_percentage: totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0
+      completion_percentage: totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0,
+      certificate_eligible: completedTopics >= CERTIFICATE_TOPICS
     }
 
 
@@ -768,7 +771,8 @@ router.get('/progress/summary', authenticateToken, async (req, res) => {
       total_topics: totalTopics,
       completed_topics: completedTopics,
       in_progress_topics: inProgressTopics,
-      completion_percentage: totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0
+      completion_percentage: totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0,
+      certificate_eligible: completedTopics >= CERTIFICATE_TOPICS
     }
     const lastAccessed = allProgress.length > 0
       ? { topicId: allProgress[0].topic_id, phase: allProgress[0].phase || 'session' }
@@ -776,6 +780,35 @@ router.get('/progress/summary', authenticateToken, async (req, res) => {
     res.json(createSuccessResponse({ summary, lastAccessed }))
   } catch (error) {
     handleErrorResponse(res, error, 'get progress summary')
+  }
+})
+
+// Certificate download - requires 45 completed topics
+router.get('/certificate/download', authenticateToken, rateLimitMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.userId
+    const allProgress = await getAllProgress(userId)
+    const completedTopics = allProgress.filter(p => p.status === 'completed').length
+
+    if (completedTopics < CERTIFICATE_TOPICS) {
+      return res.status(403).json(createErrorResponse(
+        `Certificate requires completion of ${CERTIFICATE_TOPICS} topics. You have completed ${completedTopics}.`
+      ))
+    }
+
+    const user = await getUserById(userId)
+    const fullName = (user?.name && user.name.trim()) ? user.name.trim() : (user?.username || 'Student')
+    const completionDate = new Date().toISOString()
+
+    const pdfBuffer = await generateCertificatePDF({ fullName, completionDate })
+
+    const filename = `Sara-Certificate-${(fullName || 'Completion').replace(/[^a-zA-Z0-9-_]/g, '_')}.pdf`
+    res.setHeader('Content-Type', 'application/pdf')
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+    res.setHeader('Content-Length', pdfBuffer.length)
+    res.send(pdfBuffer)
+  } catch (error) {
+    handleErrorResponse(res, error, 'certificate download')
   }
 })
 

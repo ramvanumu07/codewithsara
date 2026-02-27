@@ -13,7 +13,7 @@ import { getChatSessionRow, getCompletedTopics, getProgress, upsertProgress } fr
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getTopicsTaughtSoFar } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
-import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
+import { handleErrorResponse, createSuccessResponse, createErrorResponse, getSafeUserMessage } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 import { buildSessionPrompt as buildSessionPromptFromShared, buildAssignmentPrompt as buildAssignmentPromptFromPrompts, buildFeedbackPrompt } from '../prompts/prompts.js'
 
@@ -164,7 +164,7 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
     if (!res.headersSent) {
       handleErrorResponse(res, error, 'session chat stream')
     } else {
-      res.write(`data: ${JSON.stringify({ type: 'error', message: error.message })}\n\n`)
+      res.write(`data: ${JSON.stringify({ type: 'error', message: getSafeUserMessage(error) })}\n\n`)
       res.end()
     }
   }

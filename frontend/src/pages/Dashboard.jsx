@@ -23,6 +23,7 @@ const Dashboard = () => {
   const [unlockedCourseIds, setUnlockedCourseIds] = useState([])
   const [unlockModalCourse, setUnlockModalCourse] = useState(null)
   const [unlocking, setUnlocking] = useState(false)
+  const [downloadingCert, setDownloadingCert] = useState(false)
   // Always show dashboard on load/reload; editor toggle state is not persisted for this page
   const [editorToggleOn, setEditorToggleOn] = useState(false)
   const [playgroundCode, setPlaygroundCode] = useState('')
@@ -660,6 +661,40 @@ const Dashboard = () => {
                   style={{ width: `${currentProgressSummary.completion_percentage || 0}%` }}
                 />
               </div>
+              {progressSummary.certificate_eligible && (
+                <div className="certificate-cta">
+                  <div className="certificate-cta-inner">
+                    <span className="certificate-icon" aria-hidden>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 15l-4 4h12l-4-4" />
+                        <path d="M12 3v12" />
+                        <path d="M8 7l4-4 4 4" />
+                      </svg>
+                    </span>
+                    <div className="certificate-text">
+                      <strong>Congratulations! You&apos;ve completed all 45 topics!</strong>
+                      <p>Download your completion certificate anytime.</p>
+                    </div>
+                    <button
+                      type="button"
+                      className="certificate-download-btn"
+                      onClick={async () => {
+                        setDownloadingCert(true)
+                        try {
+                          await learning.downloadCertificate()
+                        } catch (err) {
+                          alert(err?.message || 'Failed to download certificate')
+                        } finally {
+                          setDownloadingCert(false)
+                        }
+                      }}
+                      disabled={downloadingCert}
+                    >
+                      {downloadingCert ? 'Downloading...' : 'Download Certificate'}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Continue Learning Section */}

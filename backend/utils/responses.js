@@ -104,6 +104,30 @@ function safeErrorMessage(error) {
 
 const SCHEMA_REQUIRED_MSG = 'Database schema not applied. In Neon Console open your project → SQL Editor → New query. Paste the full contents of backend/database/schema.sql and click Run. Then try again.'
 
+const USER_FRIENDLY_MSG = 'Service temporarily unavailable. Please try again in a moment.'
+
+export function getSafeUserMessage(error) {
+  const errMsg = error?.message || error?.cause?.message || ''
+  if (isTechnicalError(error, errMsg)) return USER_FRIENDLY_MSG
+  if (errMsg && process.env.NODE_ENV === 'development') return errMsg
+  if (errMsg && !/getaddrinfo|ENOTFOUND|ECONNREFUSED|ETIMEDOUT|ECONNRESET/i.test(String(errMsg).toLowerCase())) return errMsg
+  return USER_FRIENDLY_MSG
+}
+
+function isTechnicalError(error, errMsg) {
+  if (!error) return false
+  const code = error.code || error.cause?.code || ''
+  const msg = (errMsg || error.cause?.message || '').toLowerCase()
+  return (
+    code === 'ENOTFOUND' ||
+    code === 'ECONNREFUSED' ||
+    code === 'ETIMEDOUT' ||
+    code === 'ENETUNREACH' ||
+    code === 'ECONNRESET' ||
+    /getaddrinfo|ENOTFOUND|ECONNREFUSED|ETIMEDOUT|connection refused|network error|connect econnrefused/i.test(msg)
+  )
+}
+
 export function handleErrorResponse(res, error, operation = 'operation', defaultStatusCode = 500) {
   let statusCode = defaultStatusCode
   let message = `Failed to process ${operation}`
@@ -115,6 +139,10 @@ export function handleErrorResponse(res, error, operation = 'operation', default
     statusCode = 503
     message = SCHEMA_REQUIRED_MSG
     code = 'SCHEMA_REQUIRED'
+  } else if (isTechnicalError(error, errMsg)) {
+    statusCode = 503
+    message = USER_FRIENDLY_MSG
+    code = 'SERVICE_UNAVAILABLE'
   } else if (error && error.name === 'ValidationError') {
     statusCode = 400
     message = 'Validation failed'
@@ -131,8 +159,12 @@ export function handleErrorResponse(res, error, operation = 'operation', default
     statusCode = 404
     message = 'Resource not found'
     code = 'NOT_FOUND'
-  } else if (errMsg) {
+  } else if (errMsg && statusCode < 500) {
     message = errMsg
+  } else if (errMsg && process.env.NODE_ENV === 'development') {
+    message = errMsg
+  } else if (statusCode >= 500) {
+    message = USER_FRIENDLY_MSG
   }
 
   if (statusCode >= 500) {

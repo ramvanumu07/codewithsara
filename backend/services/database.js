@@ -29,7 +29,7 @@ function escapeIlike(str) {
   return str.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_')
 }
 
-export async function createUser(username, name, hashedPassword, securityQuestion = null, securityAnswer = null) {
+export async function createUser(username, name, hashedPassword, securityQuestion = null, securityAnswer = null, email = null) {
   if (initializeDatabase() === 'DEV_MODE') {
     const lower = username.toLowerCase()
     for (const key of DEV_USERS.keys()) {
@@ -40,6 +40,7 @@ export async function createUser(username, name, hashedPassword, securityQuestio
       id: userId,
       username,
       name,
+      email: email?.trim() || null,
       password: hashedPassword,
       security_question: securityQuestion,
       security_answer: securityAnswer,
@@ -54,10 +55,10 @@ export async function createUser(username, name, hashedPassword, securityQuestio
   if (existing) throw new Error('Username already exists')
 
   const { rows } = await query(
-    `INSERT INTO users (username, name, password, token_version, security_question, security_answer, created_at, updated_at)
-     VALUES ($1, $2, $3, 0, $4, $5, NOW(), NOW())
+    `INSERT INTO users (username, name, email, password, token_version, security_question, security_answer, created_at, updated_at)
+     VALUES ($1, $2, $3, $4, 0, $5, $6, NOW(), NOW())
      RETURNING *`,
-    [username, name, hashedPassword, securityQuestion?.trim() || null, securityAnswer?.trim() || null]
+    [username, name, email?.trim() || null, hashedPassword, securityQuestion?.trim() || null, securityAnswer?.trim() || null]
   )
   if (!rows[0]) throw new Error('Failed to create user')
   return rows[0]

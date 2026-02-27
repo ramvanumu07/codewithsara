@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS public.users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   username TEXT NOT NULL,
   name TEXT NOT NULL,
+  email TEXT,
   password TEXT NOT NULL,
   security_question TEXT,
   security_answer TEXT,

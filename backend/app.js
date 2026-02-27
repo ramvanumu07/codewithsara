@@ -134,24 +134,30 @@ app.get('/api/health/db', async (req, res) => {
     const code = err.code || ''
     const msg = (err.message || '').toLowerCase()
     const schemaRequired = code === '42P01' || msg.includes('does not exist') || msg.includes('relation')
+    const isConnectionError = /getaddrinfo|ENOTFOUND|ECONNREFUSED|ETIMEDOUT/i.test(msg)
     res.status(503).json({
       ok: false,
       message: schemaRequired
         ? 'Schema not applied. Run backend/database/schema.sql in Neon SQL Editor.'
-        : (err.message || 'Database error'),
-      database: 'neon',
-      error: err.message,
-      code: err.code
+        : isConnectionError
+          ? 'Database connection unavailable.'
+          : 'Database error.',
+      database: 'neon'
     })
   }
 })
 
 app.use((err, req, res, _next) => {
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  res.status(err.status || 500).json({
+  const status = err.status || err.statusCode || 500
+  const msg = err.message || ''
+  const isTechnical = /getaddrinfo|ENOTFOUND|ECONNREFUSED|ETIMEDOUT|connection refused|network error/i.test(msg)
+  const safeMessage = (status >= 500 && (isTechnical || process.env.NODE_ENV !== 'development'))
+    ? 'Service temporarily unavailable. Please try again in a moment.'
+    : (msg || 'Internal server error')
+  res.status(status).json({
     success: false,
-    message: err.message || 'Internal server error',
-    ...(isDevelopment && { stack: err.stack })
+    message: safeMessage,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   })
 })
 

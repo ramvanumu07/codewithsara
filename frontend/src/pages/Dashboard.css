@@ -397,6 +397,67 @@
   transition: width 0.3s ease;
 }
 
+/* Certificate CTA - shown when 45 topics completed */
+.certificate-cta {
+  margin-top: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  border: 1px solid #10a37f;
+  border-radius: 10px;
+}
+
+.certificate-cta-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.certificate-icon {
+  flex-shrink: 0;
+  color: #10a37f;
+}
+
+.certificate-text {
+  flex: 1;
+  min-width: 180px;
+}
+
+.certificate-text strong {
+  display: block;
+  color: #065f46;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.certificate-text p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #047857;
+}
+
+.certificate-download-btn {
+  flex-shrink: 0;
+  padding: 10px 20px;
+  background: #10a37f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.certificate-download-btn:hover:not(:disabled) {
+  background: #0d8a6c;
+}
+
+.certificate-download-btn:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
 /* Continue Learning Section */
 .continue-section {
   text-align: center;
@@ -715,6 +776,15 @@ button.session-completed-title:hover {
     flex-direction: column;
     align-items: stretch;
     gap: 16px;
+  }
+
+  .certificate-cta-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .certificate-download-btn {
+    width: 100%;
   }
 
   .course-locked-icon {

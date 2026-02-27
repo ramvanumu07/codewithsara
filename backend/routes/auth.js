@@ -262,9 +262,17 @@ function generateUsernameSuggestions(username) {
   return [...new Set(suggestions)].slice(0, 5)
 }
 
+function validateEmail(email) {
+  if (!email || typeof email !== 'string') return false
+  const trimmed = email.trim()
+  if (!trimmed) return false
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return re.test(trimmed) && trimmed.length <= 254
+}
+
 router.post('/signup', rateLimitMiddleware, async (req, res) => {
   try {
-    const { username, name, password, confirmPassword, securityQuestion, securityAnswer } = req.body
+    const { username, name, email, password, confirmPassword, securityQuestion, securityAnswer } = req.body
 
     if (!username || !name || !password || !confirmPassword || !securityQuestion || !securityAnswer) {
       return res.status(400).json(createErrorResponse('All fields are required'))
@@ -276,6 +284,10 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
 
     if (!validateName(name)) {
       return res.status(400).json(createErrorResponse('Name must be at least 2 characters long'))
+    }
+
+    if (email && !validateEmail(email)) {
+      return res.status(400).json(createErrorResponse('Please enter a valid email address'))
     }
 
     const passwordValidation = validatePassword(password)
@@ -296,7 +308,7 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds)
     const hashedSecurityAnswer = await bcrypt.hash(securityAnswer.toLowerCase().trim(), saltRounds)
 
-    const user = await createUser(username, name.trim(), hashedPassword, securityQuestion, hashedSecurityAnswer)
+    const user = await createUser(username, name.trim(), hashedPassword, securityQuestion, hashedSecurityAnswer, email?.trim() || null)
 
     // Create first-topic progress row so new user has progress as soon as they exist (dashboard/continue work immediately)
     try {
