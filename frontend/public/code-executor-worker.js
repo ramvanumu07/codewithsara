@@ -321,9 +321,13 @@ class CodeExecutor {
   }
 }
 
+// Store current taskId so onerror can include it (uncaught errors don't have message context)
+let currentTaskId = null;
+
 // Web Worker message handler
 self.onmessage = function (event) {
   const { code, testCases, functionName, solutionType, taskId } = event.data;
+  currentTaskId = taskId;
 
   try {
     const executor = new CodeExecutor();
@@ -340,14 +344,18 @@ self.onmessage = function (event) {
       error: error.message,
       results: []
     });
+  } finally {
+    currentTaskId = null;
   }
 };
 
-// Handle uncaught errors
+// Handle uncaught errors (e.g. async timeout in executeCodeSafely)
 self.onerror = function (error) {
   self.postMessage({
+    taskId: currentTaskId,
     success: false,
-    error: `Runtime error: ${error.message}`,
+    error: error?.message || 'Runtime error',
     results: []
   });
+  currentTaskId = null;
 };

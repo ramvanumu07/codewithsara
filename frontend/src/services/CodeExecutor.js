@@ -59,7 +59,7 @@ class CodeExecutionService {
   constructor() {
     this.worker = null;
     this.pendingExecutions = new Map();
-    this.executionTimeout = 10000; // 10 seconds total timeout
+    this.executionTimeout = 20000; // 20 seconds (covers slow worker load + execution)
   }
 
   /**
@@ -86,8 +86,10 @@ class CodeExecutionService {
       });
 
       try {
-        // Create new worker for each execution (isolation)
-        this.worker = new Worker('/code-executor-worker.js');
+        // Worker at root - use BASE_URL for subpath deployments (e.g. /app/)
+        const base = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
+        const workerPath = base.replace(/\/$/, '') + '/code-executor-worker.js';
+        this.worker = new Worker(new URL(workerPath, window.location.origin).href);
         
         this.worker.onmessage = (event) => {
           this.handleWorkerMessage(event.data);
@@ -108,7 +110,9 @@ class CodeExecutionService {
 
       } catch (error) {
         this.cleanup(taskId);
-        reject(error);
+        const msg = error?.message || '';
+        const isLoadFail = msg.includes('Failed to load') || msg.includes('404') || msg.includes('import');
+        reject(new Error(isLoadFail ? 'Code execution environment failed to load. Please refresh the page and try again.' : msg));
       }
     });
   }
