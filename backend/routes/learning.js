@@ -19,7 +19,7 @@ import {
   getUserById
 } from '../services/database.js'
 import { generateCertificatePDF, CERTIFICATE_TOPICS } from '../services/certificate.js'
-import { saveInitialMessage, getChatHistoryString } from '../services/chatService.js'
+import { saveInitialMessage, getChatHistoryString, getChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getAllTopics } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
@@ -129,7 +129,7 @@ async function executeCodeSecurely(code, testCases = [], functionName = null, so
   }
 }
 
-function buildSessionPrompt(topicId, conversationHistory, completedTopics = []) {
+function buildSessionSystemPrompt(topicId, completedTopics = []) {
   const topic = findTopicById(courses, topicId)
   if (!topic) {
     throw new Error(`Topic not found: ${topicId}`)
@@ -141,7 +141,6 @@ function buildSessionPrompt(topicId, conversationHistory, completedTopics = []) 
   return buildSessionPromptFromShared({
     topicTitle: topic.title,
     goals,
-    conversationHistory,
     completedList
   })
 }
@@ -282,25 +281,26 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
     })
 
     // Get student context and chat history for prompt
-    const [completedTopics, conversationHistory] = await Promise.all([
+    const [completedTopics, chatHistory] = await Promise.all([
       getCompletedTopicsForUser(userId),
-      getChatHistoryString(userId, topicId)
+      getChatHistory(userId, topicId)
     ])
     const outcomes = topic ? formatLearningObjectives(topic.outcomes) : 'Learn programming concepts'
 
-    // Build the session prompt with actual conversation history
-    const sessionPrompt = buildSessionPrompt(topicId, conversationHistory || '', completedTopics)
+    const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
+    const historyMessages = getLastNExchangesAsMessages(chatHistory)
 
     const messages = [
-      { role: 'system', content: sessionPrompt },
-      { role: 'user', content: `Start teaching the first concept.` }
+      { role: 'system', content: systemPrompt },
+      ...historyMessages,
+      { role: 'user', content: 'Start teaching the first concept.' }
     ]
 
     // Log finalized system prompt for testing (file + console)
     const promptLogPath = path.join(process.cwd(), 'logs', 'last-system-prompt.txt')
     try {
       fs.mkdirSync(path.dirname(promptLogPath), { recursive: true })
-      fs.writeFileSync(promptLogPath, `[SESSION/START] topicId=${topicId}\n---\n${  sessionPrompt}`, 'utf8')
+      fs.writeFileSync(promptLogPath, `[SESSION/START] topicId=${topicId}\n---\n${systemPrompt}`, 'utf8')
     } catch (e) {
       // ignore
     }

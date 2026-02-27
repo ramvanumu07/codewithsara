@@ -8,7 +8,7 @@ import fs from 'fs'
 import path from 'path'
 import { authenticateToken } from './auth.js'
 import { callAI, streamAI } from '../services/ai.js'
-import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, truncateHistoryForPrompt, updateChatPhase } from '../services/chatService.js'
+import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, getLastNExchangesAsMessages, updateChatPhase } from '../services/chatService.js'
 import { getChatSessionRow, getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getTopicsTaughtSoFar } from '../utils/curriculum.js'
@@ -40,7 +40,7 @@ function validateChatRequest(req, res) {
 
 // ============ PROMPT BUILDING FUNCTIONS ============
 
-function buildEmbeddedSessionPrompt(topicId, conversationHistory, completedTopics = []) {
+function buildSessionSystemPrompt(topicId, completedTopics = []) {
   const topic = findTopicById(courses, topicId)
   if (!topic) {
     throw new Error(`Topic not found: ${topicId}`)
@@ -52,7 +52,6 @@ function buildEmbeddedSessionPrompt(topicId, conversationHistory, completedTopic
   return buildSessionPromptFromShared({
     topicTitle: topic.title,
     goals,
-    conversationHistory,
     completedList
   })
 }
@@ -85,26 +84,20 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
       return res.status(400).json(createErrorResponse('Session already completed. You can view the conversation but cannot send new messages.', 'SESSION_ALREADY_COMPLETE'))
     }
 
-    const [conversationHistory, completedTopics] = await Promise.all([
-      getChatHistoryString(userId, topicId),
+    const [chatHistory, completedTopics] = await Promise.all([
+      getChatHistory(userId, topicId),
       getCompletedTopics(userId)
     ])
 
-    const conversationHistoryForPrompt = message.trim()
-      ? `${conversationHistory ? `${conversationHistory}\n` : ''}USER: ${message.trim()}`
-      : conversationHistory
-
-    const promptHistory = truncateHistoryForPrompt(conversationHistoryForPrompt, 10)
-    const embeddedPrompt = buildEmbeddedSessionPrompt(topicId, promptHistory, completedTopics)
+    const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
+    const historyMessages = getLastNExchangesAsMessages(chatHistory)
+    const userContent = message.trim() || 'Start teaching the first concept.'
 
     const messages = [
-      { role: 'system', content: embeddedPrompt }
+      { role: 'system', content: systemPrompt },
+      ...historyMessages,
+      { role: 'user', content: userContent }
     ]
-    if (message.trim()) {
-      messages.push({ role: 'user', content: message.trim() })
-    } else {
-      messages.push({ role: 'user', content: 'Start teaching the first concept.' })
-    }
 
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
@@ -195,26 +188,20 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       return res.status(400).json(createErrorResponse('Session already completed. You can view the conversation but cannot send new messages.', 'SESSION_ALREADY_COMPLETE'))
     }
 
-    const [conversationHistory, completedTopics] = await Promise.all([
-      getChatHistoryString(userId, topicId),
+    const [chatHistory, completedTopics] = await Promise.all([
+      getChatHistory(userId, topicId),
       getCompletedTopics(userId)
     ])
 
-    const conversationHistoryForPrompt = message.trim()
-      ? `${conversationHistory ? `${conversationHistory}\n` : ''}USER: ${message.trim()}`
-      : conversationHistory
-
-    const promptHistory = truncateHistoryForPrompt(conversationHistoryForPrompt, 10)
-    const embeddedPrompt = buildEmbeddedSessionPrompt(topicId, promptHistory, completedTopics)
+    const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
+    const historyMessages = getLastNExchangesAsMessages(chatHistory)
+    const userContent = message.trim() || 'Start teaching the first concept.'
 
     const messages = [
-      { role: 'system', content: embeddedPrompt }
+      { role: 'system', content: systemPrompt },
+      ...historyMessages,
+      { role: 'user', content: userContent }
     ]
-    if (message.trim()) {
-      messages.push({ role: 'user', content: message.trim() })
-    } else {
-      messages.push({ role: 'user', content: 'Start teaching the first concept.' })
-    }
 
     const aiResponse = await callAI(messages, 1500, 0.5)
     const completionPhrases = ['Congratulations', "You've Mastered", 'ready for the playground']

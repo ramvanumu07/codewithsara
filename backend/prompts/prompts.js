@@ -5,11 +5,11 @@
 
 /**
  * Session teaching prompt (mentor, one topic, outcomes).
- * @param {{ topicTitle: string, goals: string, conversationHistory: string, completedList: string }} options
+ * Conversation history is passed separately via the messages array for better model comprehension.
+ * @param {{ topicTitle: string, goals: string, completedList?: string }} options
  * @returns {string}
  */
-export function buildSessionPrompt({ topicTitle, goals, conversationHistory, completedList: _completedList }) {
-  const history = conversationHistory || 'Starting new conversation...'
+export function buildSessionPrompt({ topicTitle, goals, completedList: _completedList }) {
   const goalCount = goals.split('\n').length
 
   return `
@@ -19,8 +19,6 @@ CURRENT TEACHING CONTEXT
 Topic: ${topicTitle}
 Learning Outcomes: 
 ${goals}
-Recent Conversation: 
-${history}
 
 TEACHING PROTOCOL
 1. Determine Current Outcome:

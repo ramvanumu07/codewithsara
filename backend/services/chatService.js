@@ -136,6 +136,26 @@ export function truncateHistoryForPrompt(historyString, maxMessages = 50) {
   return serializeMessagesToHistory(trimmed)
 }
 
+/** Max exchanges (user+assistant pairs) to include in session prompt context */
+export const SESSION_CONTEXT_EXCHANGES = 5
+
+/**
+ * Get last N exchanges as API-ready messages (role + content).
+ * Used for passing conversation history in the messages array instead of embedding in system prompt.
+ * @param {Array<{role: string, content: string}>} messages - Full chat history
+ * @param {number} maxExchanges - Max user+assistant pairs (default SESSION_CONTEXT_EXCHANGES)
+ * @returns {Array<{role: string, content: string}>}
+ */
+export function getLastNExchangesAsMessages(messages, maxExchanges = SESSION_CONTEXT_EXCHANGES) {
+  if (!messages?.length) return []
+  const maxMessages = maxExchanges * 2
+  const trimmed = messages.length <= maxMessages ? messages : messages.slice(-maxMessages)
+  return trimmed.map((m) => ({
+    role: (m.role === 'assistant' || m.role === 'agent') ? 'assistant' : 'user',
+    content: (m.content || '').trim()
+  })).filter((m) => m.content)
+}
+
 /**
  * Get chat history as structured messages array (parsed from text format)
  * OPTIMIZED with caching and performance monitoring
@@ -292,5 +312,7 @@ export default {
   clearChatHistory,
   getChatHistoryString,
   updateChatPhase,
-  truncateHistoryForPrompt
+  truncateHistoryForPrompt,
+  getLastNExchangesAsMessages,
+  SESSION_CONTEXT_EXCHANGES
 }
