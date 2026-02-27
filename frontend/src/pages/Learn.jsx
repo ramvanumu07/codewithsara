@@ -321,6 +321,8 @@ const Learn = () => {
   const [isTyping, setIsTyping] = useState(false)
   const [sessionComplete, setSessionComplete] = useState(false)
   const messagesEndRef = useRef(null)
+  // Prevent double sessionChat('') from React StrictMode / effect re-run (race causes different AI responses, then visibilitychange overwrites UI)
+  const sessionStartInProgressRef = useRef(null)
 
   // Session: code editor visibility — synced with fixed toggle and localStorage
   // Always show chat on load/reload; editor toggle state is not persisted for session phase
@@ -413,6 +415,9 @@ const Learn = () => {
                 setSessionComplete(true)
               }
             } else {
+              // Prevent double sessionChat('') from StrictMode / effect re-run (race → different AI responses, then visibilitychange overwrites)
+              if (sessionStartInProgressRef.current === requestedTopicId) return
+              sessionStartInProgressRef.current = requestedTopicId
               // Start new session - use non-streaming for reliability
               const streamMessage = { role: 'assistant', content: '', timestamp: new Date().toISOString() }
               setMessages([streamMessage])
@@ -431,10 +436,14 @@ const Learn = () => {
               } catch (err) {
                 const msg = err?.response?.data?.message || err?.response?.data?.error || err?.message
                 setMessages([{ role: 'assistant', content: msg || 'Sorry, the AI could not respond. Please try again.', timestamp: new Date().toISOString() }])
+              } finally {
+                sessionStartInProgressRef.current = null
               }
             }
           } catch (historyError) {
-            // Start new session on error
+            // Start new session on error (e.g. getHistory failed)
+            if (sessionStartInProgressRef.current === requestedTopicId) return
+            sessionStartInProgressRef.current = requestedTopicId
             try {
               const streamMessage = { role: 'assistant', content: '', timestamp: new Date().toISOString() }
               setMessages([streamMessage])
@@ -453,10 +462,13 @@ const Learn = () => {
               } catch (err) {
                 const msg = err?.response?.data?.message || err?.response?.data?.error || err?.message
                 setMessages([{ role: 'assistant', content: msg || 'Sorry, the AI could not respond. Please try again.', timestamp: new Date().toISOString() }])
+              } finally {
+                sessionStartInProgressRef.current = null
               }
             } catch (startError) {
               const msg = startError?.response?.data?.message || startError?.response?.data?.error || startError?.message
               setError(msg || 'Failed to initialize chat session')
+              sessionStartInProgressRef.current = null
             }
           }
         } else if (phase === 'assignment') {
