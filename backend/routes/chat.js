@@ -94,7 +94,7 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
       ? `${conversationHistory ? `${conversationHistory}\n` : ''}USER: ${message.trim()}`
       : conversationHistory
 
-    const promptHistory = truncateHistoryForPrompt(conversationHistoryForPrompt, 14)
+    const promptHistory = truncateHistoryForPrompt(conversationHistoryForPrompt, 10)
     const embeddedPrompt = buildEmbeddedSessionPrompt(topicId, promptHistory, completedTopics)
 
     const messages = [
@@ -204,7 +204,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       ? `${conversationHistory ? `${conversationHistory}\n` : ''}USER: ${message.trim()}`
       : conversationHistory
 
-    const promptHistory = truncateHistoryForPrompt(conversationHistoryForPrompt, 14)
+    const promptHistory = truncateHistoryForPrompt(conversationHistoryForPrompt, 10)
     const embeddedPrompt = buildEmbeddedSessionPrompt(topicId, promptHistory, completedTopics)
 
     const messages = [
