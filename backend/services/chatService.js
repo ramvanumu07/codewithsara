@@ -6,7 +6,6 @@
 import {
   getChatSessionRow,
   upsertChatSessionRow,
-  insertChatSessionRow,
   updateChatSessionPhase,
   deleteChatSessionRow
 } from './database.js'
@@ -227,12 +226,12 @@ export async function saveInitialMessage(userId, topicId, message, phase = 'sess
 
   const initialHistory = `AGENT: ${message.trim()}`
   const now = new Date().toISOString()
-  await insertChatSessionRow(userId, topicId, {
+  // Use upsert so we can overwrite when row exists with empty messages (e.g. user cleared in Neon)
+  await upsertChatSessionRow(userId, topicId, {
     messages: initialHistory,
     message_count: 1,
     phase,
     last_message_at: now,
-    created_at: now,
     updated_at: now
   })
 
