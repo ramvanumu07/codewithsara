@@ -8,14 +8,14 @@ import fs from 'fs'
 import path from 'path'
 import { authenticateToken } from './auth.js'
 import { callAI, streamAI } from '../services/ai.js'
-import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, getLastNExchangesAsMessages, updateChatPhase } from '../services/chatService.js'
+import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
 import { getChatSessionRow, getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse, getSafeUserMessage } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
-import { buildSessionPrompt as buildSessionPromptFromShared, buildAssignmentPrompt as buildAssignmentPromptFromPrompts } from '../prompts/prompts.js'
+import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/prompts.js'
 
 const router = express.Router()
 
@@ -247,53 +247,6 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'session chat')
-  }
-})
-
-router.post('/assignment/hint', authenticateToken, rateLimitMiddleware, async (req, res) => {
-  try {
-    const { topicId, assignment, userCode } = req.body
-    const userId = req.user.userId
-
-    if (!topicId || !assignment) {
-      return res.status(400).json(createErrorResponse('topicId and assignment are required'))
-    }
-
-
-    // Validate topic exists
-    const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
-
-    const conversationHistory = await getChatHistoryString(userId, topicId)
-    const embeddedPrompt = buildAssignmentPromptFromPrompts(topic.title, conversationHistory, assignment)
-
-    const userMessage = userCode
-      ? `I'm working on this assignment: "${assignment.description}". Here's my code: ${userCode}. Can you give me a hint?`
-      : `I'm stuck on this assignment: "${assignment.description}". Can you give me a hint?`
-
-    const messages = [
-      { role: 'system', content: embeddedPrompt },
-      { role: 'user', content: userMessage }
-    ]
-
-    // Get AI response
-    const aiResponse = await callAI(messages, 1000, 0.4)
-
-    // Update chat phase to assignment
-    await updateChatPhase(userId, topicId, 'assignment')
-
-
-    res.json(createSuccessResponse({
-      hint: aiResponse,
-      phase: 'assignment',
-      topic: {
-        id: topicId,
-        title: topic.title,
-        category: topic.category
-      }
-    }))
-  } catch (error) {
-    handleErrorResponse(res, error, 'assignment hint')
   }
 })
 

@@ -1,6 +1,6 @@
 /**
  * All AI system prompts in one place.
- * Used by learning.js and chat.js for session and assignment (hint) flows.
+ * Used by learning.js and chat.js for session flow only.
  */
 
 /**
@@ -59,37 +59,4 @@ Never lose track of which outcome you're teaching
 One outcome at a time—complete before moving forward
 Keep explanations simple, examples concrete
 `
-}
-
-/**
- * Assignment hint prompt (tutor helps without giving full solution).
- * @param {string} topicTitle
- * @param {string} conversationHistory
- * @param {{ description: string }} assignment
- * @returns {string}
- */
-export function buildAssignmentPrompt(topicTitle, conversationHistory, assignment) {
-  return `You are Sara, a helpful JavaScript tutor providing assignment guidance for "${topicTitle}".
-
-Current Assignment: ${assignment.description}
-
-Conversation History:
-${conversationHistory || 'Starting assignment help...'}
-
-Your role in ASSIGNMENTS:
-- Help students understand the requirements
-- Provide hints without giving away the solution
-- Debug their code when they're stuck
-- Explain concepts they're confused about
-- Encourage them to think through problems
-- Celebrate their progress
-
-Guidelines:
-- Don't give the complete solution immediately
-- Ask guiding questions to help them think
-- Point out specific issues in their code
-- Suggest debugging techniques
-- Be patient and encouraging
-
-Respond to their message and help them with the assignment!`
 }

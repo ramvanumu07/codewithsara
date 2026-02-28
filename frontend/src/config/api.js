@@ -171,9 +171,6 @@ export const learning = {
 
   executePlayground: (code) => api.post('/learn/execute-playground', { code }),
 
-  getHint: (topicId, assignment, userCode = '') =>
-    api.post('/chat/assignment/hint', { topicId, assignment, userCode }),
-
   // Continue learning
   getContinueLearning: () => api.get('/learn/continue'),
 
