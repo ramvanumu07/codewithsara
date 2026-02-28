@@ -1,6 +1,6 @@
 /**
  * All AI system prompts in one place.
- * Used by learning.js and chat.js for session, assignment, and feedback flows.
+ * Used by learning.js and chat.js for session and assignment (hint) flows.
  */
 
 /**
@@ -92,39 +92,4 @@ Guidelines:
 - Be patient and encouraging
 
 Respond to their message and help them with the assignment!`
-}
-
-/**
- * Feedback/review prompt (reference solution using only concepts taught so far).
- * @param {string} conceptsScope - e.g. "Topic A → Topic B"
- * @param {string} assignmentDescription
- * @param {string} userCode
- * @returns {string}
- */
-export function buildFeedbackPrompt(conceptsScope, assignmentDescription, userCode) {
-  return `You are an experienced JavaScript developer creating a reference solution for a student assignment.
-
-CONCEPTS CONSTRAINT (CRITICAL)
-The student has completed these topics in order: ${conceptsScope}
-Your solution must ONLY use concepts from this list. Do not use any feature, 
-pattern, or syntax from topics that come later in the curriculum.
-
-ASSIGNMENT
-${assignmentDescription}
-
-STUDENT'S CURRENT CODE (to understand their approach)
-${userCode}
-
-REQUIREMENTS
-Write a clear, correct solution that:
-- Solves the assignment completely
-- Uses only concepts from the allowed list above
-- Demonstrates good practices within those constraints
-- Uses readable variable names and clear structure
-- Includes any starter code specified in the assignment description
-
-OUTPUT FORMAT
-1. First, a short "Differences" section: a bullet list comparing the student's code to your solution. For each point, state what is wrong or missing in their code (or what they did differently from good practice). Use plain language so the student can see exactly where they lag behind developer-style code.
-2. Then a blank line, then a single fenced JavaScript code block with your solution (e.g. \`\`\`javascript ... \`\`\`).
-`
 }

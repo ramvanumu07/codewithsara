@@ -11,11 +11,11 @@ import { callAI, streamAI } from '../services/ai.js'
 import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getChatHistoryString, getLastNExchangesAsMessages, updateChatPhase } from '../services/chatService.js'
 import { getChatSessionRow, getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
 import { courses } from '../../data/curriculum.js'
-import { formatLearningObjectives, findTopicById, getTopicsTaughtSoFar } from '../utils/curriculum.js'
+import { formatLearningObjectives, findTopicById } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse, getSafeUserMessage } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
-import { buildSessionPrompt as buildSessionPromptFromShared, buildAssignmentPrompt as buildAssignmentPromptFromPrompts, buildFeedbackPrompt } from '../prompts/prompts.js'
+import { buildSessionPrompt as buildSessionPromptFromShared, buildAssignmentPrompt as buildAssignmentPromptFromPrompts } from '../prompts/prompts.js'
 
 const router = express.Router()
 
@@ -294,48 +294,6 @@ router.post('/assignment/hint', authenticateToken, rateLimitMiddleware, async (r
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'assignment hint')
-  }
-})
-
-router.post('/feedback', authenticateToken, rateLimitMiddleware, async (req, res) => {
-  try {
-    const { topicId, userCode, assignment } = req.body
-
-    if (!topicId || !userCode || !assignment) {
-      return res.status(400).json(createErrorResponse('topicId, userCode, and assignment are required'))
-    }
-
-
-    // Validate topic exists
-    const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
-
-    const topicsTaughtSoFar = getTopicsTaughtSoFar(courses, topicId)
-    const conceptsScope = topicsTaughtSoFar.length > 0
-      ? topicsTaughtSoFar.join(' → ')
-      : topic.title
-
-    const feedbackPrompt = buildFeedbackPrompt(conceptsScope, assignment.description, userCode)
-
-    const messages = [
-      { role: 'system', content: feedbackPrompt },
-      { role: 'user', content: `Write the best solution for this assignment using only the concepts taught so far. First output a short "Differences" bullet list comparing the student's code to your solution, then output your solution in a single fenced JavaScript code block.` }
-    ]
-
-    // Get AI response (differences list + reference code)
-    const aiResponse = await callAI(messages, 1500, 0.3)
-
-    res.json(createSuccessResponse({
-      feedback: aiResponse,
-      phase: 'assignment',
-      topic: {
-        id: topicId,
-        title: topic.title,
-        category: topic.category
-      }
-    }))
-  } catch (error) {
-    handleErrorResponse(res, error, 'code feedback')
   }
 })
 

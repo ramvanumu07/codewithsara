@@ -46,7 +46,7 @@ function toFriendlyError(error) {
 // ============ AI OPERATIONS ============
 
 /**
- * Call AI and return full response (for hint, feedback, session start).
+ * Call AI and return full response (for hint and session start).
  * Tries models in GROQ_MODELS order; falls back to next on 404/deprecated.
  */
 export async function callAI(messages, maxTokens = 1000, temperature = 0.5, model = undefined) {

@@ -174,10 +174,6 @@ export const learning = {
   getHint: (topicId, assignment, userCode = '') =>
     api.post('/chat/assignment/hint', { topicId, assignment, userCode }),
 
-  // Feedback
-  getFeedback: (topicId, userCode, assignment) =>
-    api.post('/chat/feedback', { topicId, userCode, assignment }),
-
   // Continue learning
   getContinueLearning: () => api.get('/learn/continue'),
 

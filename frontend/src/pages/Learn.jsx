@@ -349,10 +349,7 @@ const Learn = () => {
   const [showIncompleteModal, setShowIncompleteModal] = useState(false)
   const [incompleteModalMessage, setIncompleteModalMessage] = useState('')
   const [submitLoading, setSubmitLoading] = useState(false)
-  const [reviewLoading, setReviewLoading] = useState(false)
   const assignmentTextareaRef = useRef(null)
-
-  // Feedback phase states
 
   // Do not auto-scroll when AI responds: user stays at message start to read from top
 
@@ -1007,20 +1004,15 @@ const Learn = () => {
     }
   }
 
-  // Review: generate AI review only when user clicks Review (enabled only after all tests pass)
-  const handleReviewAssignment = async () => {
+  // Review: show reference solution (no AI call — AI is used only in session phase)
+  const handleReviewAssignment = () => {
     const currentTask = assignments[currentAssignment]
     if (!currentTask) return
-    try {
-      setReviewLoading(true)
-      setAssignmentReview('')
-      const feedbackRes = await learning.getFeedback(topicId, assignmentCode, currentTask)
-      const reviewText = feedbackRes?.data?.data?.feedback || ''
-      setAssignmentReview(reviewText)
-    } catch (feedbackErr) {
-      setAssignmentReview('Could not load AI review. Please try again.')
-    } finally {
-      setReviewLoading(false)
+    const refSol = currentTask.reference_solution
+    if (refSol && typeof refSol === 'string') {
+      setAssignmentReview('**Reference solution:**\n\n```javascript\n' + refSol.trim() + '\n```')
+    } else {
+      setAssignmentReview('No reference solution available for this assignment.')
     }
   }
 
@@ -1616,26 +1608,26 @@ const Learn = () => {
                 </button>
                 <button
                   onClick={handleReviewAssignment}
-                  disabled={reviewLoading || !allTestsPassedForReview}
+                  disabled={!allTestsPassedForReview}
                   className="playground-review-btn"
                   style={{
                     height: 32,
                     minHeight: 32,
                     padding: '0 12px',
-                    backgroundColor: (reviewLoading || !allTestsPassedForReview) ? '#d1d5db' : '#059669',
-                    color: (reviewLoading || !allTestsPassedForReview) ? '#9ca3af' : 'white',
+                    backgroundColor: !allTestsPassedForReview ? '#d1d5db' : '#059669',
+                    color: !allTestsPassedForReview ? '#9ca3af' : 'white',
                     border: 'none',
                     borderRadius: '6px',
                     fontSize: '0.875rem',
                     fontWeight: '500',
                     fontFamily: 'var(--sara-font)',
-                    cursor: (reviewLoading || !allTestsPassedForReview) ? 'not-allowed' : 'pointer',
+                    cursor: !allTestsPassedForReview ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s ease',
-                    boxShadow: (reviewLoading || !allTestsPassedForReview) ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.1)',
+                    boxShadow: !allTestsPassedForReview ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.1)',
                     minWidth: '72px',
                     boxSizing: 'border-box'
                   }}
-                  title="Get AI review (available after all tests pass)"
+                  title="Show reference solution (available after all tests pass)"
                 >
                   Review
                 </button>
@@ -2038,7 +2030,7 @@ const Learn = () => {
                 fontFamily: 'var(--sara-font)',
                 boxSizing: 'border-box'
               }}>
-                {assignmentReview ? 'AI Review' : 'Test Results'}
+                {assignmentReview ? 'Reference solution' : 'Test Results'}
               </div>
             </div>
 
@@ -2071,7 +2063,7 @@ const Learn = () => {
                     <div style={{ maxWidth: '720px', margin: '0 auto' }}>
                       {showReviewOnly ? (
                         <>
-                          <div style={{ color: '#111827', fontWeight: 600, marginBottom: '12px', fontSize: '0.9375rem', fontFamily: 'var(--sara-font)' }}>AI Review</div>
+                          <div style={{ color: '#111827', fontWeight: 600, marginBottom: '12px', fontSize: '0.9375rem', fontFamily: 'var(--sara-font)' }}>Reference solution</div>
                           <div className="message-text" style={{ color: '#374151', fontSize: '0.9375rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
                             {renderFormattedReview(assignmentReview)}
                           </div>
