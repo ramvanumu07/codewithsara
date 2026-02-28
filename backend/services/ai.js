@@ -208,5 +208,3 @@ export async function * streamAI(messages, maxTokens = 1000, temperature = 0.5, 
   throw friendly || lastError || new Error('All Groq models failed')
 }
 
-/** Expose model list for debugging/admin. */
-export { GROQ_MODELS, getDefaultModel }

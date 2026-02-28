@@ -50,13 +50,6 @@ export async function invalidateChatHistoryCache(userId, topicId) {
   }
 }
 
-export async function clearUserChatCache(userId) {
-  // cache.js does not export keys(pattern); per-user clear would require it. No-op for now.
-  try {
-    console.warn('clearUserChatCache: not implemented without cache.keys()')
-  } catch (_) {}
-}
-
 export async function getCacheStats() {
   try {
     return {

@@ -6,7 +6,6 @@
 import {
   getChatSessionRow,
   upsertChatSessionRow,
-  updateChatSessionPhase,
   deleteChatSessionRow
 } from './database.js'
 import { getCachedChatHistory, setCachedChatHistory, invalidateChatHistoryCache } from './chatCache.js'
@@ -119,21 +118,6 @@ function serializeMessagesToHistory(messages) {
     const prefix = m.role === 'user' ? 'USER' : 'AGENT'
     return `${prefix}: ${(m.content || '').trim()}`
   }).join('\n')
-}
-
-/**
- * Truncate conversation history to last N messages for prompt context only.
- * Full history is still stored and displayed; use this when building the AI prompt.
- * @param {string} historyString - Full history in USER:/AGENT: format
- * @param {number} maxMessages - Max messages to include (default 50 ≈ 25 turns)
- * @returns {string} Truncated history string
- */
-export function truncateHistoryForPrompt(historyString, maxMessages = 50) {
-  if (!historyString || typeof historyString !== 'string' || !historyString.trim()) {return historyString || ''}
-  const messages = parseTextToMessagesOptimized(historyString)
-  if (messages.length <= maxMessages) {return historyString}
-  const trimmed = messages.slice(-maxMessages)
-  return serializeMessagesToHistory(trimmed)
 }
 
 /** Max exchanges (user+assistant pairs) to include in session prompt context */
@@ -274,13 +258,6 @@ export async function clearChatHistory(userId, topicId) {
 }
 
 /**
- * Update chat session phase (e.g. session → assignment).
- */
-export async function updateChatPhase(userId, topicId, phase) {
-  await updateChatSessionPhase(userId, topicId, phase)
-}
-
-/**
  * Get chat messages in string format (USER:/AGENT: for prompts and storage).
  */
 export async function getChatHistoryString(userId, topicId) {
@@ -311,8 +288,6 @@ export default {
   saveInitialMessage,
   clearChatHistory,
   getChatHistoryString,
-  updateChatPhase,
-  truncateHistoryForPrompt,
   getLastNExchangesAsMessages,
   SESSION_CONTEXT_EXCHANGES
 }

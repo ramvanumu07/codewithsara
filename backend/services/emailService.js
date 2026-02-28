@@ -161,21 +161,6 @@ The Sara Team
   }
 }
 
-/**
- * Test email configuration
- * @returns {Promise<boolean>} - Success status
- */
-export async function testEmailConfiguration() {
-  try {
-    const transporter = createTransporter()
-    await transporter.verify()
-    return true
-  } catch (error) {
-    return false
-  }
-}
-
 export default {
-  sendPasswordResetEmail,
-  testEmailConfiguration
+  sendPasswordResetEmail
 }

@@ -64,15 +64,6 @@ export const auth = {
   signup: (username, name, email, password, confirmPassword, securityQuestion, securityAnswer) =>
     api.post('/auth/signup', { username, name, email, password, confirmPassword, securityQuestion, securityAnswer }),
 
-  getSecurityQuestion: (username) =>
-    api.post('/auth/get-security-question', { username }),
-
-  verifySecurityAnswer: (username, securityAnswer, newPassword, confirmPassword) =>
-    api.post('/auth/verify-security-answer', { username, securityAnswer, newPassword, confirmPassword }),
-
-  verifySecurityAnswerOnly: (username, securityAnswer) =>
-    api.post('/auth/verify-security-answer-only', { username, securityAnswer }),
-
   getProfile: () => api.get('/auth/profile'),
 
   logout: () => api.post('/auth/logout'),
@@ -85,14 +76,8 @@ export const learning = {
   // Get all courses
   getCourses: () => api.get('/learn/courses'),
 
-  // Get all topics
-  getTopics: () => api.get('/learn/topics'),
-
   // Get specific topic details
   getTopic: (topicId) => api.get(`/learn/topic/${topicId}`),
-
-  // Get session state for a topic
-  getState: (topicId) => api.get(`/learn/state/${topicId}`),
 
   // Start session for a topic
   startSession: (topicId, assignments = []) =>
@@ -151,17 +136,7 @@ export const learning = {
     }
   },
 
-  // Playtime
-  startPlaytime: (topicId) =>
-    api.post('/learn/playtime/start', { topicId }),
-
-  completePlaytime: (topicId) =>
-    api.post('/learn/playtime/complete', { topicId }),
-
   // Assignments
-  startAssignments: (topicId) =>
-    api.post('/learn/assignment/start', { topicId }),
-
   completeAssignment: (topicId, assignmentIndex, code) =>
     api.post('/learn/assignment/complete', { topicId, assignmentIndex, code }),
 
@@ -202,17 +177,12 @@ export const learning = {
 
 // Progress API
 export const progress = {
-  getAll: () => api.get('/learn/progress', { params: { _t: Date.now() } }),
-  resetAll: () => api.delete('/learn/debug/reset-progress'),
-  clearCache: () => api.post('/learn/debug/clear-cache'),
-  debugAllSources: () => api.get('/learn/debug/all-data-sources'),
-  debugTopic: (topicId) => api.get(`/learn/debug/progress/${topicId}`)
+  getAll: () => api.get('/learn/progress', { params: { _t: Date.now() } })
 }
 
 // Chat History API
 export const chat = {
-  getHistory: (topicId) => api.get(`/chat/history/${topicId}`),
-  clearHistory: (topicId) => api.delete(`/chat/history/${topicId}`)
+  getHistory: (topicId) => api.get(`/chat/history/${topicId}`)
 }
 
 // ============ HELPER FUNCTIONS ============
