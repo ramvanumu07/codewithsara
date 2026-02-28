@@ -14,7 +14,6 @@ export const courses = [
           'Basic arithmetic expressions in logs',
           'String concatenation (+) and the space problem',
           'Comma-separated logging and auto-spacing',
-          'Logic vs. String representation (The Quote Trap)'
         ],
         "tasks": [
           {
