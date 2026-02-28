@@ -122,9 +122,9 @@ export const courses = [
         ],
         "tasks": [
           {
-            "description": '// Do not rename a and b, use them as input for your program.\n// While testing we will change their values.\nconst a = 15;\nconst b = 27;\n\n// Swap the values of a and b using a third variable\n// Print both values after swapping\n// For example, if a = 15 and b = 27, your output should be:\n// 27\n// 15',
+            "description": '// Do not rename a and b, use them as input for your program.\n// While testing we will change their values.\nconst a = 15;\nconst b = 27;\n\n// Create 3 let variables: two for storing a and b, one for swapping\n// Swap the values using the third variable, then print both values after swapping\n// For example, if a = 15 and b = 27, your output should be:\n// 27\n// 15',
             "solution_type": "script",
-            "reference_solution": "const a = 15;\nconst b = 27;\nlet temp = a;\nconsole.log(b);\nconsole.log(temp);",
+            "reference_solution": "const a = 15;\nconst b = 27;\nlet valueA = a;\nlet valueB = b;\nlet temp = valueA;\nvalueA = valueB;\nvalueB = temp;\nconsole.log(valueA);\nconsole.log(valueB);",
             "testCases": [
               {
                 "input": { "a": 15, "b": 27 },
@@ -276,7 +276,7 @@ export const courses = [
           {
             "description": '// Do not rename x, y, z, use them as input for your program.\n// While testing we will change their values.\nconst x = 6;\nconst y = 4;\nconst z = 2;\n\n// Calculate: (x + y) * z\n// Store the result and then calculate: result - x\n// Print both values\n// For example, if x = 6, y = 4, z = 2, your output should be:\n// 20\n// 14',
             "solution_type": "script",
-            "reference_solution": "const x = 6;\nconst y = 4;\nconst z = 2;\nconst result = (x + y) * z;\nconst secondResult = result - x;\nconsole.log(result);\nconsole.log(secondResult);",
+            "reference_solution": "const x = 6;\nconst y = 4;\nconst z = 2;\nconst product = (x + y) * z;\nconst productMinusX = product - x;\nconsole.log(product);\nconsole.log(productMinusX);",
             "testCases": [
               {
                 "input": { "x": 6, "y": 4, "z": 2 },
@@ -515,7 +515,7 @@ export const courses = [
           {
             "description": '// Do not rename a, b, c, d, use them as input for your program.\n// While testing we will change their values.\nconst a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\n\n// Calculate: a + b * c - d\n// Then calculate: (a + b) * (c - d)\n// Print both results\n// For example, if a = 10, b = 5, c = 3, d = 2, your output should be:\n// 23\n// 15',
             "solution_type": "script",
-            "reference_solution": "const a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\nconst result1 = a + b * c - d;\nconst result2 = (a + b) * (c - d);\nconsole.log(result1);\nconsole.log(result2);",
+            "reference_solution": "const a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\nconst withoutParentheses = a + b * c - d;\nconst withParentheses = (a + b) * (c - d);\nconsole.log(withoutParentheses);\nconsole.log(withParentheses);",
             "testCases": [
               {
                 "input": { "a": 10, "b": 5, "c": 3, "d": 2 },
@@ -904,7 +904,7 @@ export const courses = [
           {
             "description": '// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = 15;\nconst b = 25;\nconst c = 10;\n\n// Calculate absolute difference between a and b\n// Then calculate absolute difference between that result and c\n// Print both absolute differences\n// For example, if a = 15, b = 25, c = 10, your output should be:\n// 10\n// 0',
             "solution_type": "script",
-            "reference_solution": "const a = 15;\nconst b = 25;\nconst c = 10;\nconst diff1 = Math.abs(a - b);\nconst diff2 = Math.abs(diff1 - c);\nconsole.log(diff1);\nconsole.log(diff2);",
+            "reference_solution": "const a = 15;\nconst b = 25;\nconst c = 10;\nconst absDiffAB = Math.abs(a - b);\nconst absDiffFromC = Math.abs(absDiffAB - c);\nconsole.log(absDiffAB);\nconsole.log(absDiffFromC);",
             "testCases": [
               {
                 "input": { "a": 15, "b": 25, "c": 10 },
@@ -1718,7 +1718,7 @@ export const courses = [
               },
               {
                 "input": { "a": "7", "b": 7, "c": 1 },
-                "expectedOutput": "true\nfalse\ntrue\nfalse"
+                "expectedOutput": "true\nfalse\nfalse\nfalse"
               },
               {
                 "input": { "a": "3", "b": 3, "c": 0 },
@@ -1726,7 +1726,7 @@ export const courses = [
               },
               {
                 "input": { "a": "1", "b": 1, "c": 1 },
-                "expectedOutput": "true\nfalse\ntrue\nfalse"
+                "expectedOutput": "true\nfalse\nfalse\nfalse"
               }
             ]
           },
@@ -8520,7 +8520,7 @@ export const courses = [
             ]
           },
           {
-            "description": "/*\n  Implement the below function that uses indexOf() to find the second occurrence.\n  Use indexOf() to find the position of the second occurrence of \"the\".\n  Hint: Use indexOf() twice with a starting position parameter.\n  Examples:\n    findSecondOccurrence(\"the cat in the hat\") => 11\n    findSecondOccurrence(\"hello hello world\") => 6\n    findSecondOccurrence(\"test test test\") => 5\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findSecondOccurrence(str) {\n  // Implementation here\n}",
+            "description": "/*\n  Implement the below function that uses indexOf() to find the second occurrence.\n  Use indexOf() to find the position of the second occurrence of \"the\".\n  Hint: Use indexOf() twice with a starting position parameter.\n  Examples:\n    findSecondOccurrence(\"the cat in the hat\") => 11\n    findSecondOccurrence(\"the thing in the box\") => 13\n    findSecondOccurrence(\"the the end\") => 4\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findSecondOccurrence(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findSecondOccurrence",
             "reference_solution": "function findSecondOccurrence(str) {\n  const first = str.indexOf('the');\n  if (first === -1) return -1;\n  return str.indexOf('the', first + 1);\n}",
@@ -8530,12 +8530,12 @@ export const courses = [
                 "expectedOutput": "11"
               },
               {
-                "input": { "str": "hello hello world" },
-                "expectedOutput": "6"
+                "input": { "str": "the thing in the box" },
+                "expectedOutput": "13"
               },
               {
-                "input": { "str": "test test test" },
-                "expectedOutput": "5"
+                "input": { "str": "the the end" },
+                "expectedOutput": "4"
               }
             ]
           },
@@ -8704,7 +8704,7 @@ export const courses = [
             ]
           },
           {
-            "description": "/*\n  Implement the below function that uses case-insensitive regex to match \"hello\".\n  Create a case-insensitive regex to match all occurrences of \"hello\".\n  Use match() with global and case-insensitive flags.\n  Examples:\n    matchHelloCaseInsensitive(\"hello HELLO HeLLo\") => [\"hello\",\"HELLO\",\"HeLLo\"]\n    matchHelloCaseInsensitive(\"Test test TEST\") => [\"Test\",\"test\",\"TEST\"]\n    matchHelloCaseInsensitive(\"world\") => null\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction matchHelloCaseInsensitive(str) {\n  // Implementation here\n}",
+            "description": "/*\n  Implement the below function that uses case-insensitive regex to match \"hello\".\n  Create a case-insensitive regex to match all occurrences of \"hello\".\n  Use match() with global and case-insensitive flags.\n  Examples:\n    matchHelloCaseInsensitive(\"hello HELLO HeLLo\") => [\"hello\",\"HELLO\",\"HeLLo\"]\n    matchHelloCaseInsensitive(\"Say hello and HELLO\") => [\"hello\",\"HELLO\"]\n    matchHelloCaseInsensitive(\"world\") => null\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction matchHelloCaseInsensitive(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "matchHelloCaseInsensitive",
             "reference_solution": "function matchHelloCaseInsensitive(str) {\n  return str.match(/hello/gi);\n}",
@@ -8714,8 +8714,8 @@ export const courses = [
                 "expectedOutput": "[\"hello\",\"HELLO\",\"HeLLo\"]"
               },
               {
-                "input": { "str": "Test test TEST" },
-                "expectedOutput": "[\"Test\",\"test\",\"TEST\"]"
+                "input": { "str": "Say hello and HELLO" },
+                "expectedOutput": "[\"hello\",\"HELLO\"]"
               },
               {
                 "input": { "str": "world" },
@@ -9035,14 +9035,14 @@ export const courses = [
             ]
           },
           {
-            "description": "/*\n  Implement the below function that chains map, filter, and reduce.\n  Chain map, filter, and reduce to: double each, filter even results, then sum them.\n  Examples:\n    mapFilterReduce([1, 2, 3, 4, 5]) => 20\n    mapFilterReduce([2, 4, 6]) => 24\n    mapFilterReduce([1, 3, 5]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction mapFilterReduce(arr) {\n  // Implementation here\n}",
+            "description": "/*\n  Implement the below function that chains map, filter, and reduce.\n  Chain map, filter, and reduce to: double each, filter even results, then sum them.\n  Examples:\n    mapFilterReduce([1, 2, 3, 4, 5]) => 30\n    mapFilterReduce([2, 4, 6]) => 24\n    mapFilterReduce([1, 3, 5]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction mapFilterReduce(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "mapFilterReduce",
             "reference_solution": "function mapFilterReduce(arr) {\n  return arr.map(n => n * 2).filter(n => n % 2 === 0).reduce((sum, n) => sum + n, 0);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
-                "expectedOutput": "20"
+                "expectedOutput": "30"
               },
               {
                 "input": { "arr": [2, 4, 6] },
@@ -9630,15 +9630,15 @@ export const courses = [
             "reference_solution": "function createTemperatureAndConvert(value, operation) {\n  class Temperature { constructor(c) { this._celsius = c; }\n    get fahrenheit() { return (this._celsius * 9/5) + 32; }\n    set fahrenheit(f) { this._celsius = (f - 32) * 5/9; }\n    getCelsius() { return this._celsius; } }\n  if (operation === 'get') { const t = new Temperature(value); return t.fahrenheit; }\n  const t = new Temperature(0); t.fahrenheit = value; return t.getCelsius();\n}",
             "testCases": [
               {
-                "input": { "celsius": 0, "operation": "get" },
+                "input": { "value": 0, "operation": "get" },
                 "expectedOutput": "32"
               },
               {
-                "input": { "celsius": 100, "operation": "get" },
+                "input": { "value": 100, "operation": "get" },
                 "expectedOutput": "212"
               },
               {
-                "input": { "fahrenheit": 32, "operation": "set" },
+                "input": { "value": 32, "operation": "set" },
                 "expectedOutput": "0"
               }
             ]
@@ -9856,15 +9856,15 @@ export const courses = [
             "reference_solution": "function simulateNamedExports(functionName, a, b) {\n  const add = (x, y) => x + y;\n  const subtract = (x, y) => x - y;\n  return functionName === 'add' ? add(a, b) : subtract(a, b);\n}",
             "testCases": [
               {
-                "input": { "function": "add", "a": 10, "b": 5 },
+                "input": { "functionName": "add", "a": 10, "b": 5 },
                 "expectedOutput": "15"
               },
               {
-                "input": { "function": "subtract", "a": 10, "b": 5 },
+                "input": { "functionName": "subtract", "a": 10, "b": 5 },
                 "expectedOutput": "5"
               },
               {
-                "input": { "function": "add", "a": 20, "b": 30 },
+                "input": { "functionName": "add", "a": 20, "b": 30 },
                 "expectedOutput": "50"
               }
             ]
@@ -9956,15 +9956,15 @@ export const courses = [
             "reference_solution": "function simulateMixedExports(functionName, a, b) {\n  const divide = (x, y) => x / y;\n  const modulo = (x, y) => x % y;\n  return functionName === 'divide' ? divide(a, b) : modulo(a, b);\n}",
             "testCases": [
               {
-                "input": { "function": "divide", "a": 20, "b": 4 },
+                "input": { "functionName": "divide", "a": 20, "b": 4 },
                 "expectedOutput": "5"
               },
               {
-                "input": { "function": "modulo", "a": 20, "b": 6 },
+                "input": { "functionName": "modulo", "a": 20, "b": 6 },
                 "expectedOutput": "2"
               },
               {
-                "input": { "function": "divide", "a": 100, "b": 10 },
+                "input": { "functionName": "divide", "a": 100, "b": 10 },
                 "expectedOutput": "10"
               }
             ]
@@ -9996,15 +9996,15 @@ export const courses = [
             "reference_solution": "function simulateSelectiveImport(functionName, n) {\n  const square = x => x * x;\n  const cube = x => x * x * x;\n  return functionName === 'square' ? square(n) : cube(n);\n}",
             "testCases": [
               {
-                "input": { "function": "square", "n": 5 },
+                "input": { "functionName": "square", "n": 5 },
                 "expectedOutput": "25"
               },
               {
-                "input": { "function": "cube", "n": 3 },
+                "input": { "functionName": "cube", "n": 3 },
                 "expectedOutput": "27"
               },
               {
-                "input": { "function": "square", "n": 10 },
+                "input": { "functionName": "square", "n": 10 },
                 "expectedOutput": "100"
               }
             ]
