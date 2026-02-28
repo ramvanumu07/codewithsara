@@ -20,6 +20,7 @@ export const courses = [
           {
             "description": '// Print the result of 147 + 289\n// Your output should be:\n// 436',
             "solution_type": "script",
+            "reference_solution": "console.log(147 + 289)",
             "testCases": [
               {
                 "input": {},
@@ -30,6 +31,7 @@ export const courses = [
           {
             "description": '// Print the result of 100 divided by 8\n// Your output should be:\n// 12.5',
             "solution_type": "script",
+            "reference_solution": "console.log(100 / 8)",
             "testCases": [
               {
                 "input": {},
@@ -40,6 +42,7 @@ export const courses = [
           {
             "description": '// Print the result of (15 + 25) * 3 - 10\n// Your output should be:\n// 110',
             "solution_type": "script",
+            "reference_solution": "console.log((15 + 25) * 3 - 10)",
             "testCases": [
               {
                 "input": {},
@@ -50,6 +53,7 @@ export const courses = [
           {
             "description": '// Print three separate calculations, each on a new line:\n// 45 + 78\n// 200 - 63\n// 12 * 9\n// Your output should be:\n// 123\n// 137\n// 108',
             "solution_type": "script",
+            "reference_solution": "console.log(45 + 78)\nconsole.log(200 - 63)\nconsole.log(12 * 9)",
             "testCases": [
               {
                 "input": {},
@@ -60,6 +64,7 @@ export const courses = [
           {
             "description": '// Print "Hello" and "World" with exactly one space between them using the + operator\n// Your output should be:\n// Hello World',
             "solution_type": "script",
+            "reference_solution": 'console.log("Hello" + " " + "World")',
             "testCases": [
               {
                 "input": {},
@@ -70,6 +75,7 @@ export const courses = [
           {
             "description": '// Print the text "The answer is" followed by the calculation 7 * 6\n// Your output should be:\n// The answer is 42',
             "solution_type": "script",
+            "reference_solution": 'console.log("The answer is " + (7 * 6))',
             "testCases": [
               {
                 "input": {},
@@ -80,6 +86,7 @@ export const courses = [
           {
             "description": '// Print: He said "JavaScript is amazing"\n// (Include the double quotes in the output)\n// Your output should be:\n// He said "JavaScript is amazing"',
             "solution_type": "script",
+            "reference_solution": 'console.log(\'He said "JavaScript is amazing"\')',
             "testCases": [
               {
                 "input": {},
@@ -90,6 +97,7 @@ export const courses = [
           {
             "description": '// Print three values using comma separation: the number 100, the text "items", and the calculation 50 * 2\n// Your output should be:\n// 100 items 100',
             "solution_type": "script",
+            "reference_solution": 'console.log(100, "items", 50 * 2)',
             "testCases": [
               {
                 "input": {},
@@ -116,6 +124,7 @@ export const courses = [
           {
             "description": '// Do not rename a and b, use them as input for your program.\n// While testing we will change their values.\nconst a = 15;\nconst b = 27;\n\n// Swap the values of a and b using a third variable\n// Print both values after swapping\n// For example, if a = 15 and b = 27, your output should be:\n// 27\n// 15',
             "solution_type": "script",
+            "reference_solution": "const a = 15;\nconst b = 27;\nlet temp = a;\nconsole.log(b);\nconsole.log(temp);",
             "testCases": [
               {
                 "input": { "a": 15, "b": 27 },
@@ -134,6 +143,7 @@ export const courses = [
           {
             "description": '// Do not rename num1, num2, num3, use them as input for your program.\n// While testing we will change their values.\nconst num1 = 5;\nconst num2 = 12;\nconst num3 = 8;\n\n// Calculate a running sum: start with num1, add num2, then add num3\n// Print the sum after each addition\n// For example, if num1 = 5, num2 = 12, num3 = 8, your output should be:\n// 5\n// 17\n// 25',
             "solution_type": "script",
+            "reference_solution": "const num1 = 5;\nconst num2 = 12;\nconst num3 = 8;\nlet sum = num1;\nconsole.log(sum);\nsum = sum + num2;\nconsole.log(sum);\nsum = sum + num3;\nconsole.log(sum);",
             "testCases": [
               {
                 "input": { "num1": 5, "num2": 12, "num3": 8 },
@@ -152,6 +162,7 @@ export const courses = [
           {
             "description": '// Do not rename start and increment, use them as input for your program.\n// While testing we will change their values.\nconst start = 10;\nconst increment = 3;\n\n// Create a counter starting at \'start\' and increment it 4 times by \'increment\'\n// Print the counter value after each increment\n// For example, if start = 10 and increment = 3, your output should be:\n// 13\n// 16\n// 19\n// 22',
             "solution_type": "script",
+            "reference_solution": "const start = 10;\nconst increment = 3;\nlet counter = start;\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);",
             "testCases": [
               {
                 "input": { "start": 10, "increment": 3 },
@@ -170,6 +181,7 @@ export const courses = [
           {
             "description": '// Do not rename celsius, use it as input for your program.\n// While testing we will change its value.\nconst celsius = 100;\n\n// Convert celsius to Fahrenheit using: (celsius * 9/5) + 32, then store that result\n// Convert the Fahrenheit value to Kelvin using: (F - 32) * 5/9 + 273.15\n// Print both converted values (Fahrenheit first, then Kelvin)\n// For example, if celsius = 100, your output should be:\n// 212\n// 373.15',
             "solution_type": "script",
+            "reference_solution": "const celsius = 100;\nconst fahrenheit = (celsius * 9 / 5) + 32;\nconst kelvin = (fahrenheit - 32) * 5 / 9 + 273.15;\nconsole.log(fahrenheit);\nconsole.log(kelvin);",
             "testCases": [
               {
                 "input": { "celsius": 100 },
@@ -188,6 +200,7 @@ export const courses = [
           {
             "description": '// Do not rename principal, rate, time, use them as input for your program.\n// While testing we will change their values.\nconst principal = 1000;\nconst rate = 5;\nconst time = 2;\n\n// Calculate simple interest: (principal * rate * time) / 100\n// Calculate total amount: principal + interest\n// Print the interest and then the total amount\n// For example, if principal = 1000, rate = 5, time = 2, your output should be:\n// 100\n// 1100',
             "solution_type": "script",
+            "reference_solution": "const principal = 1000;\nconst rate = 5;\nconst time = 2;\nconst interest = (principal * rate * time) / 100;\nconst total = principal + interest;\nconsole.log(interest);\nconsole.log(total);",
             "testCases": [
               {
                 "input": { "principal": 1000, "rate": 5, "time": 2 },
@@ -206,6 +219,7 @@ export const courses = [
           {
             "description": '// Do not rename length and width, use them as input for your program.\n// While testing we will change their values.\nconst length = 8;\nconst width = 5;\n\n// Calculate the area and perimeter of a rectangle\n// Area = length * width\n// Perimeter = 2 * (length + width)\n// Print area first, then perimeter\n// For example, if length = 8 and width = 5, your output should be:\n// 40\n// 26',
             "solution_type": "script",
+            "reference_solution": "const length = 8;\nconst width = 5;\nconst area = length * width;\nconst perimeter = 2 * (length + width);\nconsole.log(area);\nconsole.log(perimeter);",
             "testCases": [
               {
                 "input": { "length": 8, "width": 5 },
@@ -224,6 +238,7 @@ export const courses = [
           {
             "description": '// Do not rename score1, score2, score3, use them as input for your program.\n// While testing we will change their values.\nconst score1 = 85;\nconst score2 = 92;\nconst score3 = 78;\n\n// Calculate the sum of all scores\n// Calculate the average (sum divided by 3)\n// Print the sum and then the average\n// For example, if scores are 85, 92, 78, your output should be:\n// 255\n// 85',
             "solution_type": "script",
+            "reference_solution": "const score1 = 85;\nconst score2 = 92;\nconst score3 = 78;\nconst sum = score1 + score2 + score3;\nconst average = sum / 3;\nconsole.log(sum);\nconsole.log(average);",
             "testCases": [
               {
                 "input": { "score1": 85, "score2": 92, "score3": 78 },
@@ -242,6 +257,7 @@ export const courses = [
           {
             "description": '// Do not rename distance and time, use them as input for your program.\n// While testing we will change their values.\nconst distance = 150;\nconst time = 3;\n\n// Calculate speed: distance / time\n// Calculate double the speed\n// Print original speed and then doubled speed\n// For example, if distance = 150 and time = 3, your output should be:\n// 50\n// 100',
             "solution_type": "script",
+            "reference_solution": "const distance = 150;\nconst time = 3;\nconst speed = distance / time;\nconst doubledSpeed = speed * 2;\nconsole.log(speed);\nconsole.log(doubledSpeed);",
             "testCases": [
               {
                 "input": { "distance": 150, "time": 3 },
@@ -260,6 +276,7 @@ export const courses = [
           {
             "description": '// Do not rename x, y, z, use them as input for your program.\n// While testing we will change their values.\nconst x = 6;\nconst y = 4;\nconst z = 2;\n\n// Calculate: (x + y) * z\n// Store the result and then calculate: result - x\n// Print both values\n// For example, if x = 6, y = 4, z = 2, your output should be:\n// 20\n// 14',
             "solution_type": "script",
+            "reference_solution": "const x = 6;\nconst y = 4;\nconst z = 2;\nconst result = (x + y) * z;\nconst secondResult = result - x;\nconsole.log(result);\nconsole.log(secondResult);",
             "testCases": [
               {
                 "input": { "x": 6, "y": 4, "z": 2 },
@@ -293,6 +310,7 @@ export const courses = [
           {
             "description": '// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = 12;\nconst b = 25;\nconst c = 18;\n\n// Calculate and print:\n// 1. Sum of all three numbers\n// 2. Product of all three numbers\n// 3. Average of all three numbers\n// For example, if a = 12, b = 25, c = 18, your output should be:\n// 55\n// 5400\n// 18.333333333333332',
             "solution_type": "script",
+            "reference_solution": "const a = 12;\nconst b = 25;\nconst c = 18;\nconst sum = a + b + c;\nconst product = a * b * c;\nconst average = sum / 3;\nconsole.log(sum);\nconsole.log(product);\nconsole.log(average);",
             "testCases": [
               {
                 "input": { "a": 12, "b": 25, "c": 18 },
@@ -319,6 +337,7 @@ export const courses = [
           {
             "description": '// Do not rename obtained and total, use them as input for your program.\n// While testing we will change their values.\nconst obtained = 427;\nconst total = 500;\n\n// Calculate the percentage: (obtained / total) * 100\n// Print the percentage value\n// For example, if obtained = 427 and total = 500, your output should be:\n// 85.4',
             "solution_type": "script",
+            "reference_solution": "const obtained = 427;\nconst total = 500;\nconst percentage = (obtained / total) * 100;\nconsole.log(percentage);",
             "testCases": [
               {
                 "input": { "obtained": 427, "total": 500 },
@@ -349,6 +368,7 @@ export const courses = [
           {
             "description": '// Do not rename num, use it as input for your program.\n// num will be a positive integer.\n// While testing we will change its value.\nconst num = 5847;\n\n// Extract and print the last digit of num\n// Hint: Use the modulo operator\n// For example, if num = 5847, your output should be:\n// 7',
             "solution_type": "script",
+            "reference_solution": "const num = 5847;\nconst lastDigit = num % 10;\nconsole.log(lastDigit);",
             "testCases": [
               {
                 "input": { "num": 5847 },
@@ -375,6 +395,7 @@ export const courses = [
           {
             "description": '// Do not rename amount, use it as input for your program.\n// amount will be a positive integer representing total rupees.\n// While testing we will change its value.\nconst amount = 1847;\n\n// Break down the amount into 500, 100, 50, and remaining rupees\n// Calculate how many 500 notes, then from remainder how many 100 notes,\n// then from that remainder how many 50 notes, and finally the remaining amount\n// Print all four values in order\n// For example, if amount = 1847, your output should be:\n// 3\n// 3\n// 0\n// 47',
             "solution_type": "script",
+            "reference_solution": "const amount = 1847;\nconst notes500 = (amount - amount % 500) / 500;\nlet remainder = amount % 500;\nconst notes100 = (remainder - remainder % 100) / 100;\nremainder = remainder % 100;\nconst notes50 = (remainder - remainder % 50) / 50;\nremainder = remainder % 50;\nconsole.log(notes500);\nconsole.log(notes100);\nconsole.log(notes50);\nconsole.log(remainder);",
             "testCases": [
               {
                 "input": { "amount": 1847 },
@@ -405,6 +426,7 @@ export const courses = [
           {
             "description": '// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 47;\n\n// Calculate the remainder when num is divided by 2\n// Print the remainder (0 for even, 1 for odd)\n// For example, if num = 47, your output should be:\n// 1',
             "solution_type": "script",
+            "reference_solution": "const num = 47;\nconst remainder = num % 2;\nconsole.log(remainder);",
             "testCases": [
               {
                 "input": { "num": 47 },
@@ -435,6 +457,7 @@ export const courses = [
           {
             "description": '// Do not rename num, use it as input for your program.\n// num will be a two-digit number.\n// While testing we will change its value.\nconst num = 73;\n\n// Reverse the digits and print the reversed number\n// Extract tens and units digits, then form reversed number\n// For example, if num = 73, your output should be:\n// 37',
             "solution_type": "script",
+            "reference_solution": "const num = 73;\nconst tens = (num - num % 10) / 10;\nconst units = num % 10;\nconst reversed = units * 10 + tens;\nconsole.log(reversed);",
             "testCases": [
               {
                 "input": { "num": 73 },
@@ -465,6 +488,7 @@ export const courses = [
           {
             "description": '// Do not rename principal and rate, use them as input for your program.\n// While testing we will change their values.\nconst principal = 10000;\nconst rate = 8;\n\n// Calculate the amount after 1 year with compound interest\n// Formula: principal * (1 + rate/100)\n// Print the final amount\n// For example, if principal = 10000 and rate = 8, your output should be:\n// 10800',
             "solution_type": "script",
+            "reference_solution": "const principal = 10000;\nconst rate = 8;\nconst amount = principal * (1 + rate / 100);\nconsole.log(amount);",
             "testCases": [
               {
                 "input": { "principal": 10000, "rate": 8 },
@@ -491,6 +515,7 @@ export const courses = [
           {
             "description": '// Do not rename a, b, c, d, use them as input for your program.\n// While testing we will change their values.\nconst a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\n\n// Calculate: a + b * c - d\n// Then calculate: (a + b) * (c - d)\n// Print both results\n// For example, if a = 10, b = 5, c = 3, d = 2, your output should be:\n// 23\n// 15',
             "solution_type": "script",
+            "reference_solution": "const a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\nconst result1 = a + b * c - d;\nconst result2 = (a + b) * (c - d);\nconsole.log(result1);\nconsole.log(result2);",
             "testCases": [
               {
                 "input": { "a": 10, "b": 5, "c": 3, "d": 2 },
@@ -521,6 +546,7 @@ export const courses = [
           {
             "description": '// Do not rename hours, minutes, seconds, use them as input for your program.\n// While testing we will change their values.\nconst hours = 2;\nconst minutes = 15;\nconst seconds = 30;\n\n// Convert the total time to seconds\n// 1 hour = 3600 seconds, 1 minute = 60 seconds\n// Print total seconds\n// For example, if hours = 2, minutes = 15, seconds = 30, your output should be:\n// 8130',
             "solution_type": "script",
+            "reference_solution": "const hours = 2;\nconst minutes = 15;\nconst seconds = 30;\nconst totalSeconds = hours * 3600 + minutes * 60 + seconds;\nconsole.log(totalSeconds);",
             "testCases": [
               {
                 "input": { "hours": 2, "minutes": 15, "seconds": 30 },
@@ -551,6 +577,7 @@ export const courses = [
           {
             "description": '// Do not rename radius, use it as input for your program.\n// While testing we will change its value.\nconst radius = 7;\n\n// Calculate the area of a circle: π * radius * radius\n// Use 3.14159 as the value of π\n// Print the area\n// For example, if radius = 7, your output should be:\n// 153.93804',
             "solution_type": "script",
+            "reference_solution": "const radius = 7;\nconst pi = 3.14159;\nconst area = pi * radius * radius;\nconsole.log(area);",
             "testCases": [
               {
                 "input": { "radius": 7 },
@@ -581,6 +608,7 @@ export const courses = [
           {
             "description": '// Do not rename num, use it as input for your program.\n// num will be a three-digit number.\n// While testing we will change its value.\nconst num = 456;\n\n// Extract all three digits and calculate their sum\n// Use division and modulo operations\n// Print the sum of digits\n// For example, if num = 456, your output should be:\n// 15',
             "solution_type": "script",
+            "reference_solution": "const num = 456;\nconst digit1 = (num - num % 100) / 100;\nconst digit2 = (num % 100 - num % 10) / 10;\nconst digit3 = num % 10;\nconst sumOfDigits = digit1 + digit2 + digit3;\nconsole.log(sumOfDigits);",
             "testCases": [
               {
                 "input": { "num": 456 },
@@ -611,6 +639,7 @@ export const courses = [
           {
             "description": '// Do not rename costPrice and sellingPrice, use them as input for your program.\n// While testing we will change their values.\nconst costPrice = 850;\nconst sellingPrice = 1020;\n\n// Calculate the profit or loss amount (sellingPrice - costPrice)\n// Then calculate the profit/loss percentage: (difference / costPrice) * 100\n// Print the amount first, then the percentage\n// For example, if costPrice = 850 and sellingPrice = 1020, your output should be:\n// 170\n// 20',
             "solution_type": "script",
+            "reference_solution": "const costPrice = 850;\nconst sellingPrice = 1020;\nconst difference = sellingPrice - costPrice;\nconst percentage = (difference / costPrice) * 100;\nconsole.log(difference);\nconsole.log(percentage);",
             "testCases": [
               {
                 "input": { "costPrice": 850, "sellingPrice": 1020 },
@@ -641,6 +670,7 @@ export const courses = [
           {
             "description": '// Do not rename n1, n2, n3, n4, n5, use them as input for your program.\n// While testing we will change their values.\nconst n1 = 23;\nconst n2 = 45;\nconst n3 = 67;\nconst n4 = 12;\nconst n5 = 89;\n\n// Calculate the sum of all five numbers\n// Calculate the average by dividing sum by 5\n// Print the average\n// For example, if numbers are 23, 45, 67, 12, 89, your output should be:\n// 47.2',
             "solution_type": "script",
+            "reference_solution": "const n1 = 23;\nconst n2 = 45;\nconst n3 = 67;\nconst n4 = 12;\nconst n5 = 89;\nconst sum = n1 + n2 + n3 + n4 + n5;\nconst average = sum / 5;\nconsole.log(average);",
             "testCases": [
               {
                 "input": { "n1": 23, "n2": 45, "n3": 67, "n4": 12, "n5": 89 },
@@ -671,6 +701,7 @@ export const courses = [
           {
             "description": '// Do not rename weight and height, use them as input for your program.\n// weight is in kilograms, height is in meters.\n// While testing we will change their values.\nconst weight = 70;\nconst height = 1.75;\n\n// Calculate BMI: weight / (height * height)\n// Print the BMI value\n// For example, if weight = 70 and height = 1.75, your output should be:\n// 22.857142857142858',
             "solution_type": "script",
+            "reference_solution": "const weight = 70;\nconst height = 1.75;\nconst bmi = weight / (height * height);\nconsole.log(bmi);",
             "testCases": [
               {
                 "input": { "weight": 70, "height": 1.75 },
@@ -718,6 +749,7 @@ export const courses = [
           {
             "description": '// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 47.6;\n\n// Apply different rounding methods and print the results\n// Print round, floor, ceil, trunc of num in order\n// For example, if num = 47.6, your output should be:\n// 48\n// 47\n// 48\n// 47',
             "solution_type": "script",
+            "reference_solution": "const num = 47.6;\nconsole.log(Math.round(num));\nconsole.log(Math.floor(num));\nconsole.log(Math.ceil(num));\nconsole.log(Math.trunc(num));",
             "testCases": [
               {
                 "input": { "num": 47.6 },
@@ -748,6 +780,7 @@ export const courses = [
           {
             "description": '// Do not rename x1, y1, x2, y2, use them as input for your program.\n// While testing we will change their values.\nconst x1 = 3;\nconst y1 = 4;\nconst x2 = 7;\nconst y2 = 1;\n\n// Calculate the distance between points (x1, y1) and (x2, y2)\n// Distance formula: √[(x2-x1)² + (y2-y1)²]\n// Print the distance\n// For example, if points are (3,4) and (7,1), your output should be:\n// 5',
             "solution_type": "script",
+            "reference_solution": "const x1 = 3;\nconst y1 = 4;\nconst x2 = 7;\nconst y2 = 1;\nconst distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);\nconsole.log(distance);",
             "testCases": [
               {
                 "input": { "x1": 3, "y1": 4, "x2": 7, "y2": 1 },
@@ -778,6 +811,7 @@ export const courses = [
           {
             "description": '// Do not rename num, use it as input for your program.\n// num will be a positive integer.\n// While testing we will change its value.\nconst num = 144;\n\n// Find the square root of num\n// Verify by squaring the result\n// Print the square root, then the squared verification\n// For example, if num = 144, your output should be:\n// 12\n// 144',
             "solution_type": "script",
+            "reference_solution": "const num = 144;\nconst sqrt = Math.sqrt(num);\nconst verification = sqrt * sqrt;\nconsole.log(sqrt);\nconsole.log(verification);",
             "testCases": [
               {
                 "input": { "num": 144 },
@@ -808,6 +842,7 @@ export const courses = [
           {
             "description": '// Do not rename a, b, c, d, e, use them as input for your program.\n// While testing we will change their values.\nconst a = 45;\nconst b = 23;\nconst c = 89;\nconst d = 12;\nconst e = 67;\n\n// Find minimum, maximum, and range (max - min)\n// Print min, max, range in order\n// For example, if numbers are 45, 23, 89, 12, 67, your output should be:\n// 12\n// 89\n// 77',
             "solution_type": "script",
+            "reference_solution": "const a = 45;\nconst b = 23;\nconst c = 89;\nconst d = 12;\nconst e = 67;\nconst minVal = Math.min(a, b, c, d, e);\nconst maxVal = Math.max(a, b, c, d, e);\nconst range = maxVal - minVal;\nconsole.log(minVal);\nconsole.log(maxVal);\nconsole.log(range);",
             "testCases": [
               {
                 "input": { "a": 45, "b": 23, "c": 89, "d": 12, "e": 67 },
@@ -838,6 +873,7 @@ export const courses = [
           {
             "description": '// Do not rename radius, use it as input for your program.\n// While testing we will change its value.\nconst radius = 7;\n\n// Calculate circumference and area of a circle\n// Circumference = 2πr, Area = πr²\n// Print circumference, then area\n// For example, if radius = 7, your output should be:\n// 43.982297150257104\n// 153.93804002589985',
             "solution_type": "script",
+            "reference_solution": "const radius = 7;\nconst circumference = 2 * Math.PI * radius;\nconst area = Math.PI * radius * radius;\nconsole.log(circumference);\nconsole.log(area);",
             "testCases": [
               {
                 "input": { "radius": 7 },
@@ -868,6 +904,7 @@ export const courses = [
           {
             "description": '// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = 15;\nconst b = 25;\nconst c = 10;\n\n// Calculate absolute difference between a and b\n// Then calculate absolute difference between that result and c\n// Print both absolute differences\n// For example, if a = 15, b = 25, c = 10, your output should be:\n// 10\n// 0',
             "solution_type": "script",
+            "reference_solution": "const a = 15;\nconst b = 25;\nconst c = 10;\nconst diff1 = Math.abs(a - b);\nconst diff2 = Math.abs(diff1 - c);\nconsole.log(diff1);\nconsole.log(diff2);",
             "testCases": [
               {
                 "input": { "a": 15, "b": 25, "c": 10 },
@@ -898,6 +935,7 @@ export const courses = [
           {
             "description": '// Do not rename principal, rate, time, use them as input for your program.\n// While testing we will change their values.\nconst principal = 1000;\nconst rate = 5;\nconst time = 3;\n\n// Calculate final amount with compound interest\n// Amount = principal × (1 + rate/100)^time\n// Print the final amount\n// For example, if principal = 1000, rate = 5, time = 3, your output should be:\n// 1157.625',
             "solution_type": "script",
+            "reference_solution": "const principal = 1000;\nconst rate = 5;\nconst time = 3;\nconst amount = principal * Math.pow(1 + rate / 100, time);\nconsole.log(amount);",
             "testCases": [
               {
                 "input": { "principal": 1000, "rate": 5, "time": 3 },
@@ -928,6 +966,7 @@ export const courses = [
           {
             "description": '// Do not rename temp1, temp2, temp3, temp4, temp5, use them as input for your program.\n// While testing we will change their values.\nconst temp1 = 23.5;\nconst temp2 = 19.8;\nconst temp3 = 27.3;\nconst temp4 = 15.2;\nconst temp5 = 21.9;\n\n// Find minimum temperature, maximum temperature, and average\n// Round the average to 2 decimal places\n// Print min, max, rounded average in order\n// For example, if temps are 23.5, 19.8, 27.3, 15.2, 21.9, your output should be:\n// 15.2\n// 27.3\n// 21.54',
             "solution_type": "script",
+            "reference_solution": "const temp1 = 23.5;\nconst temp2 = 19.8;\nconst temp3 = 27.3;\nconst temp4 = 15.2;\nconst temp5 = 21.9;\nconst minTemp = Math.min(temp1, temp2, temp3, temp4, temp5);\nconst maxTemp = Math.max(temp1, temp2, temp3, temp4, temp5);\nconst average = (temp1 + temp2 + temp3 + temp4 + temp5) / 5;\nconst roundedAvg = Math.round(average * 100) / 100;\nconsole.log(minTemp);\nconsole.log(maxTemp);\nconsole.log(roundedAvg);",
             "testCases": [
               {
                 "input": { "temp1": 23.5, "temp2": 19.8, "temp3": 27.3, "temp4": 15.2, "temp5": 21.9 },
@@ -958,6 +997,7 @@ export const courses = [
           {
             "description": '// Do not rename a, b, use them as input for your program.\n// a and b are the two legs of a right triangle.\n// While testing we will change their values.\nconst a = 3;\nconst b = 4;\n\n// Calculate the hypotenuse of the right triangle\n// Pythagorean theorem: c = √(a² + b²)\n// Print the hypotenuse\n// For example, if a = 3 and b = 4, your output should be:\n// 5',
             "solution_type": "script",
+            "reference_solution": "const a = 3;\nconst b = 4;\nconst hypotenuse = Math.sqrt(a * a + b * b);\nconsole.log(hypotenuse);",
             "testCases": [
               {
                 "input": { "a": 3, "b": 4 },
@@ -988,6 +1028,7 @@ export const courses = [
           {
             "description": '// Do not rename dividend, divisor, use them as input for your program.\n// While testing we will change their values.\nconst dividend = 47;\nconst divisor = 6;\n\n// Divide dividend by divisor\n// Print the result rounded down, then rounded up\n// For example, if dividend = 47 and divisor = 6, your output should be:\n// 7\n// 8',
             "solution_type": "script",
+            "reference_solution": "const dividend = 47;\nconst divisor = 6;\nconst quotient = dividend / divisor;\nconsole.log(Math.floor(quotient));\nconsole.log(Math.ceil(quotient));",
             "testCases": [
               {
                 "input": { "dividend": 47, "divisor": 6 },
@@ -1018,6 +1059,7 @@ export const courses = [
           {
             "description": '// Do not rename radius, use it as input for your program.\n// While testing we will change its value.\nconst radius = 5;\n\n// Calculate the volume of a sphere\n// Volume = (4/3) × π × radius³\n// Print the volume\n// For example, if radius = 5, your output should be:\n// 523.5987755982989',
             "solution_type": "script",
+            "reference_solution": "const radius = 5;\nconst volume = (4 / 3) * Math.PI * Math.pow(radius, 3);\nconsole.log(volume);",
             "testCases": [
               {
                 "input": { "radius": 5 },
@@ -1048,6 +1090,7 @@ export const courses = [
           {
             "description": '// Do not rename base, exponent, use them as input for your program.\n// While testing we will change their values.\nconst base = 2;\nconst exponent = 10;\n\n// Calculate base raised to the power of exponent\n// Then calculate the exponent-th root of the result to verify\n// Print the power result, then the root verification\n// For example, if base = 2 and exponent = 10, your output should be:\n// 1024\n// 2',
             "solution_type": "script",
+            "reference_solution": "const base = 2;\nconst exponent = 10;\nconst powerResult = Math.pow(base, exponent);\nconst rootVerification = Math.pow(powerResult, 1 / exponent);\nconsole.log(powerResult);\nconsole.log(rootVerification);",
             "testCases": [
               {
                 "input": { "base": 2, "exponent": 10 },
@@ -1078,6 +1121,7 @@ export const courses = [
           {
             "description": '// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 27;\n\n// Calculate the cube root of num\n// Cube root is the same as raising to power (1/3)\n// Print the cube root\n// For example, if num = 27, your output should be:\n// 3',
             "solution_type": "script",
+            "reference_solution": "const num = 27;\nconst cubeRoot = Math.pow(num, 1 / 3);\nconsole.log(cubeRoot);",
             "testCases": [
               {
                 "input": { "num": 27 },
@@ -1108,6 +1152,7 @@ export const courses = [
           {
             "description": '// Do not rename initial, growthRate, periods, use them as input for your program.\n// While testing we will change their values.\nconst initial = 100;\nconst growthRate = 1.5;\nconst periods = 4;\n\n// Calculate value after exponential growth\n// Final = initial × (growthRate)^periods\n// Print the final value\n// For example, if initial = 100, growthRate = 1.5, periods = 4, your output should be:\n// 506.25',
             "solution_type": "script",
+            "reference_solution": "const initial = 100;\nconst growthRate = 1.5;\nconst periods = 4;\nconst final = initial * Math.pow(growthRate, periods);\nconsole.log(final);",
             "testCases": [
               {
                 "input": { "initial": 100, "growthRate": 1.5, "periods": 4 },
@@ -1138,6 +1183,7 @@ export const courses = [
           {
             "description": '// Do not rename a, b, c, use them as input for your program.\n// a, b, c are the three sides of a triangle.\n// While testing we will change their values.\nconst a = 5;\nconst b = 6;\nconst c = 7;\n\n// Calculate the area using Heron\'s formula\n// s = (a + b + c) / 2\n// Area = √[s(s-a)(s-b)(s-c)]\n// Print the area\n// For example, if sides are 5, 6, 7, your output should be:\n// 14.696938456699069',
             "solution_type": "script",
+            "reference_solution": "const a = 5;\nconst b = 6;\nconst c = 7;\nconst s = (a + b + c) / 2;\nconst area = Math.sqrt(s * (s - a) * (s - b) * (s - c));\nconsole.log(area);",
             "testCases": [
               {
                 "input": { "a": 5, "b": 6, "c": 7 },
@@ -1180,6 +1226,7 @@ export const courses = [
           {
             "description": "// Do not rename a, b, c, d, use them as input for your program.\n// While testing we will change their values.\nconst a = undefined;\nconst b = null;\nconst c = 42;\nconst d = \"hello\";\n\n// Print the type of each variable using typeof\n// For example, if a = undefined, b = null, c = 42, d = \"hello\", your output should be:\n// undefined\n// object\n// number\n// string",
             "solution_type": "script",
+            "reference_solution": "const a = undefined;\nconst b = null;\nconst c = 42;\nconst d = \"hello\";\nconsole.log(typeof a);\nconsole.log(typeof b);\nconsole.log(typeof c);\nconsole.log(typeof d);",
             "testCases": [
               {
                 "input": { "a": null, "b": null, "c": 42, "d": "hello" },
@@ -1221,6 +1268,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"JavaScript\";\n\n// Print the length of the string\n// For example, if str = \"JavaScript\", your output should be:\n// 10",
             "solution_type": "script",
+            "reference_solution": "const str = \"JavaScript\";\nconsole.log(str.length);",
             "testCases": [
               {
                 "input": { "str": "JavaScript" },
@@ -1251,6 +1299,7 @@ export const courses = [
           {
             "description": "// Do not rename word, use it as input for your program.\n// While testing we will change its value.\nconst word = \"Programming\";\n\n// Print the first character and the last character\n// For example, if word = \"Programming\", your output should be:\n// P\n// g",
             "solution_type": "script",
+            "reference_solution": "const word = \"Programming\";\nconsole.log(word[0]);\nconsole.log(word[word.length - 1]);",
             "testCases": [
               {
                 "input": { "word": "Programming" },
@@ -1281,6 +1330,7 @@ export const courses = [
           {
             "description": "// Do not rename firstName and lastName, use them as input for your program.\n// While testing we will change their values.\nconst firstName = \"John\";\nconst lastName = \"Smith\";\n\n// Create and print: \"firstName lastName\" and \"lastName, firstName\"\n// For example, if firstName = \"John\" and lastName = \"Smith\", your output should be:\n// John Smith\n// Smith, John",
             "solution_type": "script",
+            "reference_solution": "const firstName = \"John\";\nconst lastName = \"Smith\";\nconsole.log(firstName + \" \" + lastName);\nconsole.log(lastName + \", \" + firstName);",
             "testCases": [
               {
                 "input": { "firstName": "John", "lastName": "Smith" },
@@ -1311,6 +1361,7 @@ export const courses = [
           {
             "description": "// Do not rename text, use it as input for your program.\n// While testing we will change its value.\nconst text = \"Hello World\";\n\n// Transform to uppercase, then get its length\n// Print the uppercase version and its length\n// For example, if text = \"Hello World\", your output should be:\n// HELLO WORLD\n// 11",
             "solution_type": "script",
+            "reference_solution": "const text = \"Hello World\";\nconst upper = text.toUpperCase();\nconsole.log(upper);\nconsole.log(upper.length);",
             "testCases": [
               {
                 "input": { "text": "Hello World" },
@@ -1341,6 +1392,7 @@ export const courses = [
           {
             "description": "// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = \"Data\";\nconst b = \"Base\";\nconst c = \"System\";\n\n// Create: a+b, b+c, and a+b+c\n// Print all three combinations\n// For example, if a = \"Data\", b = \"Base\", c = \"System\", your output should be:\n// DataBase\n// BaseSystem\n// DataBaseSystem",
             "solution_type": "script",
+            "reference_solution": "const a = \"Data\";\nconst b = \"Base\";\nconst c = \"System\";\nconsole.log(a + b);\nconsole.log(b + c);\nconsole.log(a + b + c);",
             "testCases": [
               {
                 "input": { "a": "Data", "b": "Base", "c": "System" },
@@ -1371,6 +1423,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Function\";\n\n// Print characters at positions 0, 2, 4, and 6\n// For example, if str = \"Function\", your output should be:\n// F\n// n\n// t\n// o",
             "solution_type": "script",
+            "reference_solution": "const str = \"Function\";\nconsole.log(str[0]);\nconsole.log(str[2]);\nconsole.log(str[4]);\nconsole.log(str[6]);",
             "testCases": [
               {
                 "input": { "str": "Function" },
@@ -1401,6 +1454,7 @@ export const courses = [
           {
             "description": "// Do not rename str1 and str2, use them as input for your program.\n// While testing we will change their values.\nconst str1 = \"Computer\";\nconst str2 = \"Science\";\n\n// Calculate: length of str1, length of str2, sum of both lengths, difference of lengths\n// Print all four values\n// For example, if str1 = \"Computer\" and str2 = \"Science\", your output should be:\n// 8\n// 7\n// 15\n// 1",
             "solution_type": "script",
+            "reference_solution": "const str1 = \"Computer\";\nconst str2 = \"Science\";\nconst len1 = str1.length;\nconst len2 = str2.length;\nconsole.log(len1);\nconsole.log(len2);\nconsole.log(len1 + len2);\nconsole.log(Math.abs(len1 - len2));",
             "testCases": [
               {
                 "input": { "str1": "Computer", "str2": "Science" },
@@ -1431,6 +1485,7 @@ export const courses = [
           {
             "description": "// Do not rename word, use it as input for your program.\n// While testing we will change its value.\nconst word = \"JavaScript\";\n\n// Print original, uppercase version, lowercase version, then length of uppercase\n// For example, if word = \"JavaScript\", your output should be:\n// JavaScript\n// JAVASCRIPT\n// javascript\n// 10",
             "solution_type": "script",
+            "reference_solution": "const word = \"JavaScript\";\nconst upper = word.toUpperCase();\nconst lower = word.toLowerCase();\nconsole.log(word);\nconsole.log(upper);\nconsole.log(lower);\nconsole.log(upper.length);",
             "testCases": [
               {
                 "input": { "word": "JavaScript" },
@@ -1461,6 +1516,7 @@ export const courses = [
           {
             "description": "// Do not rename text, use it as input for your program.\n// While testing we will change its value.\nconst text = \"Algorithm\";\n\n// Extract characters at positions 0, 1, 2 and concatenate them\n// Then extract characters at positions 3, 4, 5 and concatenate them\n// Print both results\n// For example, if text = \"Algorithm\", your output should be:\n// Alg\n// ori",
             "solution_type": "script",
+            "reference_solution": "const text = \"Algorithm\";\nconst part1 = text[0] + text[1] + text[2];\nconst part2 = text[3] + text[4] + text[5];\nconsole.log(part1);\nconsole.log(part2);",
             "testCases": [
               {
                 "input": { "text": "Algorithm" },
@@ -1537,6 +1593,7 @@ export const courses = [
           {
             "description": "// Do not rename num and str, use them as input for your program.\n// While testing we will change their values.\nconst num = 42;\nconst str = \"10\";\n\n// Calculate num + str, num - str, num * str\n// Print all three results\n// For example, if num = 42 and str = \"10\", your output should be:\n// 4210\n// 32\n// 420",
             "solution_type": "script",
+            "reference_solution": "const num = 42;\nconst str = \"10\";\nconsole.log(num + str);\nconsole.log(num - str);\nconsole.log(num * str);",
             "testCases": [
               {
                 "input": { "num": 42, "str": "10" },
@@ -1567,6 +1624,7 @@ export const courses = [
           {
             "description": "// Do not rename flag1 and flag2, use them as input for your program.\n// While testing we will change their values.\nconst flag1 = true;\nconst flag2 = false;\n\n// Calculate flag1 + 5, flag2 + 5, flag1 * 10, flag2 * 10\n// Print all four results\n// For example, if flag1 = true and flag2 = false, your output should be:\n// 6\n// 5\n// 10\n// 0",
             "solution_type": "script",
+            "reference_solution": "const flag1 = true;\nconst flag2 = false;\nconsole.log(flag1 + 5);\nconsole.log(flag2 + 5);\nconsole.log(flag1 * 10);\nconsole.log(flag2 * 10);",
             "testCases": [
               {
                 "input": { "flag1": true, "flag2": false },
@@ -1589,6 +1647,7 @@ export const courses = [
           {
             "description": "// Do not rename x and y, use them as input for your program.\n// While testing we will change their values.\nconst x = null;\nconst y = undefined;\n\n// Calculate x + 10, y + 10, x * 2, y * 2\n// Print all four results\n// For example, if x = null and y = undefined, your output should be:\n// 10\n// NaN\n// 0\n// NaN",
             "solution_type": "script",
+            "reference_solution": "const x = null;\nconst y = undefined;\nconsole.log(x + 10);\nconsole.log(y + 10);\nconsole.log(x * 2);\nconsole.log(y * 2);",
             "testCases": [
               {
                 "input": { "x": null, "y": null },
@@ -1611,6 +1670,7 @@ export const courses = [
           {
             "description": "// Do not rename val1 and val2, use them as input for your program.\n// While testing we will change their values.\nconst val1 = \"7\";\nconst val2 = \"3\";\n\n// Calculate val1 + val2, val1 - val2, val1 / val2\n// Print all three results\n// For example, if val1 = \"7\" and val2 = \"3\", your output should be:\n// 73\n// 4\n// 2.3333333333333335",
             "solution_type": "script",
+            "reference_solution": "const val1 = \"7\";\nconst val2 = \"3\";\nconsole.log(val1 + val2);\nconsole.log(val1 - val2);\nconsole.log(val1 / val2);",
             "testCases": [
               {
                 "input": { "val1": "7", "val2": "3" },
@@ -1641,6 +1701,7 @@ export const courses = [
           {
             "description": "// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = \"5\";\nconst b = 5;\nconst c = 0;\n\n// Calculate a == b, a === b, c == false, c === false\n// Print all four boolean results\n// For example, if a = \"5\", b = 5, c = 0, your output should be:\n// true\n// false\n// true\n// false",
             "solution_type": "script",
+            "reference_solution": "const a = \"5\";\nconst b = 5;\nconst c = 0;\nconsole.log(a == b);\nconsole.log(a === b);\nconsole.log(c == false);\nconsole.log(c === false);",
             "testCases": [
               {
                 "input": { "a": "5", "b": 5, "c": 0 },
@@ -1671,6 +1732,7 @@ export const courses = [
           {
             "description": "// Do not rename text, use it as input for your program.\n// While testing we will change its value.\nconst text = \"hello\";\n\n// Calculate text * 1, text - 0, text / 2\n// Print all three results\n// For example, if text = \"hello\", your output should be:\n// NaN\n// NaN\n// NaN",
             "solution_type": "script",
+            "reference_solution": "const text = \"hello\";\nconsole.log(text * 1);\nconsole.log(text - 0);\nconsole.log(text / 2);",
             "testCases": [
               {
                 "input": { "text": "hello" },
@@ -1713,6 +1775,7 @@ export const courses = [
           {
             "description": "// Use a and b as input.\n// Print the result of (a == b) followed by (a === b).\nconst a = 10;\nconst b = \"10\";\n\n// For a = 10, b = \"10\", output:\n// true\n// false",
             "solution_type": "script",
+            "reference_solution": "const a = 10;\nconst b = \"10\";\nconsole.log(a == b);\nconsole.log(a === b);",
             "testCases": [
               { "input": { "a": 10, "b": "10" }, "expectedOutput": "true\nfalse" },
               { "input": { "a": 0, "b": false }, "expectedOutput": "true\nfalse" },
@@ -1722,6 +1785,7 @@ export const courses = [
           {
             "description": "// Use x as input.\n// Use comparison and logical operators to check if x is between 50 and 100 (inclusive).\n// Print the boolean result.\nconst x = 75;\n\n// For x = 75, output: true",
             "solution_type": "script",
+            "reference_solution": "const x = 75;\nconsole.log(x >= 50 && x <= 100);",
             "testCases": [
               { "input": { "x": 75 }, "expectedOutput": "true" },
               { "input": { "x": 50 }, "expectedOutput": "true" },
@@ -1732,6 +1796,7 @@ export const courses = [
           {
             "description": "// Use val as input.\n// Use the NOT (!) operator to print the opposite of the value's truthiness.\n// Then print the 'double NOT' (!!) to show its actual boolean value.\nconst val = \"Hello\";\n\n// For val = \"Hello\", output:\n// false\n// true",
             "solution_type": "script",
+            "reference_solution": "const val = \"Hello\";\nconsole.log(!val);\nconsole.log(!!val);",
             "testCases": [
               { "input": { "val": "Hello" }, "expectedOutput": "false\ntrue" },
               { "input": { "val": "" }, "expectedOutput": "true\nfalse" },
@@ -1741,6 +1806,7 @@ export const courses = [
           {
             "description": "// Short-circuiting OR (||)\n// Print the value of (input || \"Default\").\n// This mimics assigning a fallback value without an if-statement.\nconst input = \"\";\n\n// For input = \"\", output: Default",
             "solution_type": "script",
+            "reference_solution": "const input = \"\";\nconsole.log(input || \"Default\");",
             "testCases": [
               { "input": { "input": "" }, "expectedOutput": "Default" },
               { "input": { "input": "User123" }, "expectedOutput": "User123" },
@@ -1750,6 +1816,7 @@ export const courses = [
           {
             "description": "// Short-circuiting AND (&&)\n// Print the value of (isValid && \"Success\").\n// If isValid is false, it should print false. If true, it should print \"Success\".\nconst isValid = true;\n\n// For isValid = true, output: Success",
             "solution_type": "script",
+            "reference_solution": "const isValid = true;\nconsole.log(isValid && \"Success\");",
             "testCases": [
               { "input": { "isValid": true }, "expectedOutput": "Success" },
               { "input": { "isValid": false }, "expectedOutput": "false" }
@@ -1758,6 +1825,7 @@ export const courses = [
           {
             "description": "// Relational Strings\n// Print the result of (str1 > str2).\n// This checks alphabetical (Unicode) priority.\nconst str1 = \"apple\";\nconst str2 = \"banana\";\n\n// For \"apple\" > \"banana\", output: false",
             "solution_type": "script",
+            "reference_solution": "const str1 = \"apple\";\nconst str2 = \"banana\";\nconsole.log(str1 > str2);",
             "testCases": [
               { "input": { "str1": "apple", "str2": "banana" }, "expectedOutput": "false" },
               { "input": { "str1": "cat", "str2": "can" }, "expectedOutput": "true" },
@@ -1767,6 +1835,7 @@ export const courses = [
           {
             "description": "// Multiple Logic Gates\n// Check if (a is even) AND (b is even).\n// Print the boolean result.\nconst a = 4;\nconst b = 8;\n\n// For 4 and 8, output: true",
             "solution_type": "script",
+            "reference_solution": "const a = 4;\nconst b = 8;\nconsole.log(a % 2 === 0 && b % 2 === 0);",
             "testCases": [
               { "input": { "a": 4, "b": 8 }, "expectedOutput": "true" },
               { "input": { "a": 3, "b": 8 }, "expectedOutput": "false" },
@@ -1788,6 +1857,7 @@ export const courses = [
           {
             "description": "// Do not rename age, use it as input for your program.\n// While testing we will change its value.\nconst age = 20;\n\n// Check if age is 18 or greater\n// If true, print: \"You are eligible to vote\"\n// If false, print nothing",
             "solution_type": "script",
+            "reference_solution": "const age = 20;\nif (age >= 18) {\n  console.log(\"You are eligible to vote\");\n}",
             "testCases": [
               {
                 "input": { "age": 20 },
@@ -1810,6 +1880,7 @@ export const courses = [
           {
             "description": "// Do not rename number, use it as input for your program.\n// While testing we will change its value.\nconst number = 10;\n\n// Check if number is even (divisible by 2)\n// If true, print: \"Even number\"\n// If false, print nothing",
             "solution_type": "script",
+            "reference_solution": "const number = 10;\nif (number % 2 === 0) {\n  console.log(\"Even number\");\n}",
             "testCases": [
               {
                 "input": { "number": 10 },
@@ -1832,6 +1903,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Hello\";\n\n// Check if the length of str is greater than 3\n// If true, print: \"Long string\"\n// If false, print nothing",
             "solution_type": "script",
+            "reference_solution": "const str = \"Hello\";\nif (str.length > 3) {\n  console.log(\"Long string\");\n}",
             "testCases": [
               {
                 "input": { "str": "Hello" },
@@ -1858,6 +1930,7 @@ export const courses = [
           {
             "description": "// Do not rename a and b, use them as input for your program.\n// While testing we will change their values.\nconst a = 8;\nconst b = 12;\n\n// Check if both a and b are greater than 5\n// If true, print: \"Both numbers are large\"\n// If false, print nothing",
             "solution_type": "script",
+            "reference_solution": "const a = 8;\nconst b = 12;\nif (a > 5 && b > 5) {\n  console.log(\"Both numbers are large\");\n}",
             "testCases": [
               {
                 "input": { "a": 8, "b": 12 },
@@ -1884,6 +1957,7 @@ export const courses = [
           {
             "description": "// Do not rename value, use it as input for your program.\n// While testing we will change its value.\nconst value = 0;\n\n// Check if value is truthy (not 0, not empty string, not null, not undefined, not false)\n// If true, print: \"Truthy value\"\n// If false, print nothing\n// Hint: You can use if (value) to check truthiness",
             "solution_type": "script",
+            "reference_solution": "const value = 0;\nif (value) {\n  console.log(\"Truthy value\");\n}",
             "testCases": [
               {
                 "input": { "value": 5 },
@@ -1910,6 +1984,7 @@ export const courses = [
           {
             "description": "// Do not rename x and y, use them as input for your program.\n// While testing we will change their values.\nconst x = 10;\nconst y = 20;\n\n// Check if the sum of x and y is greater than 25\n// If true, print: \"Sum is large\"\n// If false, print nothing",
             "solution_type": "script",
+            "reference_solution": "const x = 10;\nconst y = 20;\nif (x + y > 25) {\n  console.log(\"Sum is large\");\n}",
             "testCases": [
               {
                 "input": { "x": 10, "y": 20 },
@@ -1947,6 +2022,7 @@ export const courses = [
           {
             "description": "// Do not rename number, use it as input for your program.\n// While testing we will change its value.\nconst number = 7;\n\n// Check if number is even or odd\n// If even, print: \"Even\"\n// Otherwise, print: \"Odd\"",
             "solution_type": "script",
+            "reference_solution": "const number = 7;\nif (number % 2 === 0) {\n  console.log(\"Even\");\n} else {\n  console.log(\"Odd\");\n}",
             "testCases": [
               {
                 "input": { "number": 7 },
@@ -1969,6 +2045,7 @@ export const courses = [
           {
             "description": "// Do not rename age, use it as input for your program.\n// While testing we will change its value.\nconst age = 16;\n\n// Check if age is 18 or greater\n// If true, print: \"Adult\"\n// Otherwise, print: \"Minor\"",
             "solution_type": "script",
+            "reference_solution": "const age = 16;\nif (age >= 18) {\n  console.log(\"Adult\");\n} else {\n  console.log(\"Minor\");\n}",
             "testCases": [
               {
                 "input": { "age": 16 },
@@ -1991,6 +2068,7 @@ export const courses = [
           {
             "description": "// Do not rename temperature, use it as input for your program.\n// While testing we will change its value.\nconst temperature = 15;\n\n// Check if temperature is greater than 25\n// If true, print: \"Hot\"\n// Otherwise, print: \"Cold\"",
             "solution_type": "script",
+            "reference_solution": "const temperature = 15;\nif (temperature > 25) {\n  console.log(\"Hot\");\n} else {\n  console.log(\"Cold\");\n}",
             "testCases": [
               {
                 "input": { "temperature": 15 },
@@ -2013,6 +2091,7 @@ export const courses = [
           {
             "description": "// Do not rename score, use it as input for your program.\n// While testing we will change its value.\nconst score = 45;\n\n// Check if score is 50 or greater\n// If true, print: \"Pass\"\n// Otherwise, print: \"Fail\"",
             "solution_type": "script",
+            "reference_solution": "const score = 45;\nif (score >= 50) {\n  console.log(\"Pass\");\n} else {\n  console.log(\"Fail\");\n}",
             "testCases": [
               {
                 "input": { "score": 45 },
@@ -2035,6 +2114,7 @@ export const courses = [
           {
             "description": "// Do not rename num1 and num2, use them as input for your program.\n// While testing we will change their values.\nconst num1 = 15;\nconst num2 = 20;\n\n// Compare num1 and num2\n// If num1 is greater, print: \"First is larger\"\n// Otherwise, print: \"Second is larger or equal\"",
             "solution_type": "script",
+            "reference_solution": "const num1 = 15;\nconst num2 = 20;\nif (num1 > num2) {\n  console.log(\"First is larger\");\n} else {\n  console.log(\"Second is larger or equal\");\n}",
             "testCases": [
               {
                 "input": { "num1": 15, "num2": 20 },
@@ -2057,6 +2137,7 @@ export const courses = [
           {
             "description": "// Do not rename year, use it as input for your program.\n// While testing we will change its value.\nconst year = 2023;\n\n// Check if year is divisible by 4 (simplified leap year check)\n// If true, print: \"Leap year\"\n// Otherwise, print: \"Not a leap year\"",
             "solution_type": "script",
+            "reference_solution": "const year = 2023;\nif (year % 4 === 0) {\n  console.log(\"Leap year\");\n} else {\n  console.log(\"Not a leap year\");\n}",
             "testCases": [
               {
                 "input": { "year": 2023 },
@@ -2079,6 +2160,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Hello\";\n\n// Check if str has length greater than 5\n// If true, print: \"Long\"\n// Otherwise, print: \"Short\"",
             "solution_type": "script",
+            "reference_solution": "const str = \"Hello\";\nif (str.length > 5) {\n  console.log(\"Long\");\n} else {\n  console.log(\"Short\");\n}",
             "testCases": [
               {
                 "input": { "str": "Hello" },
@@ -2117,6 +2199,7 @@ export const courses = [
           {
             "description": "// Do not rename score, use it as input for your program.\n// While testing we will change its value.\nconst score = 75;\n\n// Check the grade based on score:\n// If score >= 90, print: \"A\"\n// Else if score >= 80, print: \"B\"\n// Else if score >= 70, print: \"C\"\n// Else if score >= 60, print: \"D\"\n// Otherwise, print: \"F\"",
             "solution_type": "script",
+            "reference_solution": "const score = 75;\nif (score >= 90) {\n  console.log(\"A\");\n} else if (score >= 80) {\n  console.log(\"B\");\n} else if (score >= 70) {\n  console.log(\"C\");\n} else if (score >= 60) {\n  console.log(\"D\");\n} else {\n  console.log(\"F\");\n}",
             "testCases": [
               {
                 "input": { "score": 75 },
@@ -2147,6 +2230,7 @@ export const courses = [
           {
             "description": "// Do not rename age, use it as input for your program.\n// While testing we will change its value.\nconst age = 25;\n\n// Categorize age group:\n// If age < 13, print: \"Child\"\n// Else if age < 20, print: \"Teenager\"\n// Else if age < 60, print: \"Adult\"\n// Otherwise, print: \"Senior\"",
             "solution_type": "script",
+            "reference_solution": "const age = 25;\nif (age < 13) {\n  console.log(\"Child\");\n} else if (age < 20) {\n  console.log(\"Teenager\");\n} else if (age < 60) {\n  console.log(\"Adult\");\n} else {\n  console.log(\"Senior\");\n}",
             "testCases": [
               {
                 "input": { "age": 25 },
@@ -2177,6 +2261,7 @@ export const courses = [
           {
             "description": "// Do not rename temperature, use it as input for your program.\n// While testing we will change its value.\nconst temperature = 22;\n\n// Categorize the weather:\n// If temperature > 30, print: \"Hot\"\n// Else if temperature > 20, print: \"Warm\"\n// Else if temperature > 10, print: \"Cool\"\n// Otherwise, print: \"Cold\"",
             "solution_type": "script",
+            "reference_solution": "const temperature = 22;\nif (temperature > 30) {\n  console.log(\"Hot\");\n} else if (temperature > 20) {\n  console.log(\"Warm\");\n} else if (temperature > 10) {\n  console.log(\"Cool\");\n} else {\n  console.log(\"Cold\");\n}",
             "testCases": [
               {
                 "input": { "temperature": 22 },
@@ -2207,6 +2292,7 @@ export const courses = [
           {
             "description": "// Do not rename number, use it as input for your program.\n// While testing we will change its value.\nconst number = 0;\n\n// Classify the number:\n// If number > 0, print: \"Positive\"\n// Else if number < 0, print: \"Negative\"\n// Otherwise, print: \"Zero\"",
             "solution_type": "script",
+            "reference_solution": "const number = 0;\nif (number > 0) {\n  console.log(\"Positive\");\n} else if (number < 0) {\n  console.log(\"Negative\");\n} else {\n  console.log(\"Zero\");\n}",
             "testCases": [
               {
                 "input": { "number": 0 },
@@ -2229,6 +2315,7 @@ export const courses = [
           {
             "description": "// Do not rename dayNumber, use it as input for your program.\n// While testing we will change its value.\nconst dayNumber = 3;\n\n// Convert day number to day name:\n// If dayNumber === 1, print: \"Monday\"\n// Else if dayNumber === 2, print: \"Tuesday\"\n// Else if dayNumber === 3, print: \"Wednesday\"\n// Else if dayNumber === 4, print: \"Thursday\"\n// Else if dayNumber === 5, print: \"Friday\"\n// Else if dayNumber === 6, print: \"Saturday\"\n// Else if dayNumber === 7, print: \"Sunday\"\n// Otherwise, print: \"Invalid day\"",
             "solution_type": "script",
+            "reference_solution": "const dayNumber = 3;\nif (dayNumber === 1) {\n  console.log(\"Monday\");\n} else if (dayNumber === 2) {\n  console.log(\"Tuesday\");\n} else if (dayNumber === 3) {\n  console.log(\"Wednesday\");\n} else if (dayNumber === 4) {\n  console.log(\"Thursday\");\n} else if (dayNumber === 5) {\n  console.log(\"Friday\");\n} else if (dayNumber === 6) {\n  console.log(\"Saturday\");\n} else if (dayNumber === 7) {\n  console.log(\"Sunday\");\n} else {\n  console.log(\"Invalid day\");\n}",
             "testCases": [
               {
                 "input": { "dayNumber": 3 },
@@ -2259,6 +2346,7 @@ export const courses = [
           {
             "description": "// Do not rename hours, use it as input for your program.\n// While testing we will change its value.\nconst hours = 14;\n\n// Determine time of day:\n// If hours < 12, print: \"Morning\"\n// Else if hours < 17, print: \"Afternoon\"\n// Else if hours < 21, print: \"Evening\"\n// Otherwise, print: \"Night\"",
             "solution_type": "script",
+            "reference_solution": "const hours = 14;\nif (hours < 12) {\n  console.log(\"Morning\");\n} else if (hours < 17) {\n  console.log(\"Afternoon\");\n} else if (hours < 21) {\n  console.log(\"Evening\");\n} else {\n  console.log(\"Night\");\n}",
             "testCases": [
               {
                 "input": { "hours": 14 },
@@ -2289,6 +2377,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 15;\n\n// Check divisibility (order matters!):\n// If num is divisible by 15, print: \"Divisible by 15\"\n// Else if num is divisible by 5, print: \"Divisible by 5\"\n// Else if num is divisible by 3, print: \"Divisible by 3\"\n// Otherwise, print: \"Not divisible by 3, 5, or 15\"\n// Note: This demonstrates why condition order matters",
             "solution_type": "script",
+            "reference_solution": "const num = 15;\nif (num % 15 === 0) {\n  console.log(\"Divisible by 15\");\n} else if (num % 5 === 0) {\n  console.log(\"Divisible by 5\");\n} else if (num % 3 === 0) {\n  console.log(\"Divisible by 3\");\n} else {\n  console.log(\"Not divisible by 3, 5, or 15\");\n}",
             "testCases": [
               {
                 "input": { "num": 15 },
@@ -2319,6 +2408,7 @@ export const courses = [
           {
             "description": "// Do not rename price, use it as input for your program.\n// While testing we will change its value.\nconst price = 1500;\n\n// Determine discount category:\n// If price >= 2000, print: \"20% discount\"\n// Else if price >= 1000, print: \"10% discount\"\n// Else if price >= 500, print: \"5% discount\"\n// Otherwise, print: \"No discount\"",
             "solution_type": "script",
+            "reference_solution": "const price = 1500;\nif (price >= 2000) {\n  console.log(\"20% discount\");\n} else if (price >= 1000) {\n  console.log(\"10% discount\");\n} else if (price >= 500) {\n  console.log(\"5% discount\");\n} else {\n  console.log(\"No discount\");\n}",
             "testCases": [
               {
                 "input": { "price": 1500 },
@@ -2360,6 +2450,7 @@ export const courses = [
           {
             "description": "// Do not rename age and hasLicense, use them as input for your program.\n// While testing we will change their values.\nconst age = 20;\nconst hasLicense = true;\n\n// Check if person can drive:\n// First check if age >= 18\n//   If true, then check if hasLicense is true\n//     If true, print: \"Can drive\"\n//     Otherwise, print: \"Has age but no license\"\n//   Otherwise, print: \"Too young to drive\"",
             "solution_type": "script",
+            "reference_solution": "const age = 20;\nconst hasLicense = true;\nif (age >= 18) {\n  if (hasLicense) {\n    console.log(\"Can drive\");\n  } else {\n    console.log(\"Has age but no license\");\n  }\n} else {\n  console.log(\"Too young to drive\");\n}",
             "testCases": [
               {
                 "input": { "age": 20, "hasLicense": true },
@@ -2386,6 +2477,7 @@ export const courses = [
           {
             "description": "// Do not rename number, use it as input for your program.\n// While testing we will change its value.\nconst number = 12;\n\n// Check if number is positive and even:\n// First check if number > 0\n//   If true, then check if number is even (divisible by 2)\n//     If true, print: \"Positive even number\"\n//     Otherwise, print: \"Positive odd number\"\n//   Otherwise, print: \"Not positive\"",
             "solution_type": "script",
+            "reference_solution": "const number = 12;\nif (number > 0) {\n  if (number % 2 === 0) {\n    console.log(\"Positive even number\");\n  } else {\n    console.log(\"Positive odd number\");\n  }\n} else {\n  console.log(\"Not positive\");\n}",
             "testCases": [
               {
                 "input": { "number": 12 },
@@ -2412,6 +2504,7 @@ export const courses = [
           {
             "description": "// Do not rename score and attendance, use them as input for your program.\n// While testing we will change their values.\nconst score = 85;\nconst attendance = 90;\n\n// Determine if student passes with distinction:\n// First check if score >= 75\n//   If true, then check if attendance >= 80\n//     If true, print: \"Pass with distinction\"\n//     Otherwise, print: \"Pass but low attendance\"\n//   Otherwise, print: \"Fail\"",
             "solution_type": "script",
+            "reference_solution": "const score = 85;\nconst attendance = 90;\nif (score >= 75) {\n  if (attendance >= 80) {\n    console.log(\"Pass with distinction\");\n  } else {\n    console.log(\"Pass but low attendance\");\n  }\n} else {\n  console.log(\"Fail\");\n}",
             "testCases": [
               {
                 "input": { "score": 85, "attendance": 90 },
@@ -2438,6 +2531,7 @@ export const courses = [
           {
             "description": "// Do not rename temperature and isRaining, use them as input for your program.\n// While testing we will change their values.\nconst temperature = 25;\nconst isRaining = false;\n\n// Suggest outdoor activity:\n// First check if temperature > 20\n//   If true, then check if isRaining is false\n//     If true, print: \"Good day for outdoor activity\"\n//     Otherwise, print: \"Warm but raining\"\n//   Otherwise, check if isRaining is false\n//     If true, print: \"Cold but dry\"\n//     Otherwise, print: \"Cold and raining\"",
             "solution_type": "script",
+            "reference_solution": "const temperature = 25;\nconst isRaining = false;\nif (temperature > 20) {\n  if (!isRaining) {\n    console.log(\"Good day for outdoor activity\");\n  } else {\n    console.log(\"Warm but raining\");\n  }\n} else {\n  if (!isRaining) {\n    console.log(\"Cold but dry\");\n  } else {\n    console.log(\"Cold and raining\");\n  }\n}",
             "testCases": [
               {
                 "input": { "temperature": 25, "isRaining": false },
@@ -2464,6 +2558,7 @@ export const courses = [
           {
             "description": "// Do not rename age and income, use them as input for your program.\n// While testing we will change their values.\nconst age = 30;\nconst income = 50000;\n\n// Determine loan eligibility:\n// First check if age >= 21\n//   If true, then check if age <= 60\n//     If true, then check if income >= 30000\n//       If true, print: \"Eligible for loan\"\n//       Otherwise, print: \"Age OK but income too low\"\n//     Otherwise, print: \"Too old\"\n//   Otherwise, print: \"Too young\"",
             "solution_type": "script",
+            "reference_solution": "const age = 30;\nconst income = 50000;\nif (age >= 21) {\n  if (age <= 60) {\n    if (income >= 30000) {\n      console.log(\"Eligible for loan\");\n    } else {\n      console.log(\"Age OK but income too low\");\n    }\n  } else {\n    console.log(\"Too old\");\n  }\n} else {\n  console.log(\"Too young\");\n}",
             "testCases": [
               {
                 "input": { "age": 30, "income": 50000 },
@@ -2494,6 +2589,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 15;\n\n// Classify number in detail:\n// First check if num > 0\n//   If true, then check if num > 10\n//     If true, print: \"Large positive\"\n//     Otherwise, print: \"Small positive\"\n//   Otherwise, check if num < 0\n//     If true, print: \"Negative\"\n//     Otherwise, print: \"Zero\"",
             "solution_type": "script",
+            "reference_solution": "const num = 15;\nif (num > 0) {\n  if (num > 10) {\n    console.log(\"Large positive\");\n  } else {\n    console.log(\"Small positive\");\n  }\n} else if (num < 0) {\n  console.log(\"Negative\");\n} else {\n  console.log(\"Zero\");\n}",
             "testCases": [
               {
                 "input": { "num": 15 },
@@ -2524,6 +2620,7 @@ export const courses = [
           {
             "description": "// Do not rename isMember, purchaseAmount, use them as input for your program.\n// While testing we will change their values.\nconst isMember = true;\nconst purchaseAmount = 150;\n\n// Calculate discount eligibility:\n// First check if isMember is true\n//   If true, then check if purchaseAmount >= 100\n//     If true, print: \"20% member discount\"\n//     Otherwise, print: \"10% member discount\"\n//   Otherwise, check if purchaseAmount >= 200\n//     If true, print: \"5% non-member discount\"\n//     Otherwise, print: \"No discount\"",
             "solution_type": "script",
+            "reference_solution": "const isMember = true;\nconst purchaseAmount = 150;\nif (isMember) {\n  if (purchaseAmount >= 100) {\n    console.log(\"20% member discount\");\n  } else {\n    console.log(\"10% member discount\");\n  }\n} else {\n  if (purchaseAmount >= 200) {\n    console.log(\"5% non-member discount\");\n  } else {\n    console.log(\"No discount\");\n  }\n}",
             "testCases": [
               {
                 "input": { "isMember": true, "purchaseAmount": 150 },
@@ -2554,6 +2651,7 @@ export const courses = [
           {
             "description": "// Do not rename year, use it as input for your program.\n// While testing we will change its value.\nconst year = 2024;\n\n// Complete leap year check (nested logic):\n// First check if year is divisible by 4\n//   If true, then check if year is divisible by 100\n//     If true, then check if year is divisible by 400\n//       If true, print: \"Leap year\"\n//       Otherwise, print: \"Not a leap year\"\n//     Otherwise, print: \"Leap year\"\n//   Otherwise, print: \"Not a leap year\"",
             "solution_type": "script",
+            "reference_solution": "const year = 2024;\nif (year % 4 === 0) {\n  if (year % 100 === 0) {\n    if (year % 400 === 0) {\n      console.log(\"Leap year\");\n    } else {\n      console.log(\"Not a leap year\");\n    }\n  } else {\n    console.log(\"Leap year\");\n  }\n} else {\n  console.log(\"Not a leap year\");\n}",
             "testCases": [
               {
                 "input": { "year": 2024 },
@@ -2604,6 +2702,7 @@ export const courses = [
           {
             "description": "// Create a Date object for January 1, 2025\n// Remember: months are zero-indexed (0 = January, 11 = December)\n// Print the full date using toDateString()\n// Your output should be: Wed Jan 01 2025",
             "solution_type": "script",
+            "reference_solution": "const d = new Date(2025, 0, 1);\nconsole.log(d.toDateString());",
             "testCases": [
               {
                 "input": {},
@@ -2632,6 +2731,7 @@ export const courses = [
           {
             "description": "// Do not rename dateStr, use it as input for your program.\n// While testing we will change its value.\nconst dateStr = \"2024-03-15\";\n\n// Parse the date string and extract the month number\n// Remember: getMonth() returns 0-11, so add 1 for human-readable month\n// Print the month number (1-12)\n// For \"2024-03-15\", your output should be: 3",
             "solution_type": "script",
+            "reference_solution": "const dateStr = \"2024-03-15\";\nconst d = new Date(dateStr);\nconsole.log(d.getMonth() + 1);",
             "testCases": [
               {
                 "input": { "dateStr": "2024-03-15" },
@@ -2654,6 +2754,7 @@ export const courses = [
           {
             "description": "// Do not rename dateStr, use it as input for your program.\n// While testing we will change its value.\nconst dateStr = \"2024-08-25\";\n\n// Parse the date and get the day of the week\n// Use getDay() which returns 0 (Sunday) to 6 (Saturday)\n// Convert to day name and print it\n// For \"2024-08-25\", your output should be: Sunday",
             "solution_type": "script",
+            "reference_solution": "const dateStr = \"2024-08-25\";\nconst days = [\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"];\nconst d = new Date(dateStr);\nconsole.log(days[d.getDay()]);",
             "testCases": [
               {
                 "input": { "dateStr": "2024-08-25" },
@@ -2676,6 +2777,7 @@ export const courses = [
           {
             "description": "// Create a date for your birthday this year: December 25\n// Extract and print three components on separate lines:\n// - Day of month using getDate()\n// - Month number (remember to add 1 to getMonth())\n// - Year using getFullYear()\n// Your output should be:\n// 25\n// 12\n// 2025",
             "solution_type": "script",
+            "reference_solution": "const d = new Date(2025, 11, 25);\nconsole.log(d.getDate());\nconsole.log(d.getMonth() + 1);\nconsole.log(d.getFullYear());",
             "testCases": [
               {
                 "input": {},
@@ -2686,6 +2788,7 @@ export const courses = [
           {
             "description": "// Do not rename dateStr1 and dateStr2, use them as input for your program.\n// While testing we will change their values.\nconst dateStr1 = \"2024-06-15\";\nconst dateStr2 = \"2024-08-20\";\n\n// Compare two dates and determine which is earlier\n// If dateStr1 is earlier, print: \"First date is earlier\"\n// If dateStr2 is earlier, print: \"Second date is earlier\"\n// If they are the same, print: \"Same date\"\n// Hint: You can compare Date objects directly with < and >",
             "solution_type": "script",
+            "reference_solution": "const dateStr1 = \"2024-06-15\";\nconst dateStr2 = \"2024-08-20\";\nconst d1 = new Date(dateStr1);\nconst d2 = new Date(dateStr2);\nif (d1 < d2) {\n  console.log(\"First date is earlier\");\n} else if (d2 < d1) {\n  console.log(\"Second date is earlier\");\n} else {\n  console.log(\"Same date\");\n}",
             "testCases": [
               {
                 "input": { "dateStr1": "2024-06-15", "dateStr2": "2024-08-20" },
@@ -2708,6 +2811,7 @@ export const courses = [
           {
             "description": "// Do not rename dateStr, use it as input for your program.\n// While testing we will change its value.\nconst dateStr = \"2024-03-10\";\n\n// Parse the date and add 7 days to it\n// Use getDate() and setDate() methods\n// Print the new date in ISO format (YYYY-MM-DD) using toISOString().split('T')[0]\n// For \"2024-03-10\", your output should be: 2024-03-17",
             "solution_type": "script",
+            "reference_solution": "const dateStr = \"2024-03-10\";\nconst d = new Date(dateStr);\nd.setDate(d.getDate() + 7);\nconsole.log(d.toISOString().split('T')[0]);",
             "testCases": [
               {
                 "input": { "dateStr": "2024-03-10" },
@@ -2730,6 +2834,7 @@ export const courses = [
           {
             "description": "// Do not rename dateStr1 and dateStr2, use them as input for your program.\n// While testing we will change their values.\nconst dateStr1 = \"2024-01-01\";\nconst dateStr2 = \"2024-01-15\";\n\n// Calculate the difference in days between two dates\n// Use getTime() to get timestamps in milliseconds\n// Convert milliseconds to days (1 day = 24 * 60 * 60 * 1000 ms)\n// Print the absolute difference in days\n// For \"2024-01-01\" and \"2024-01-15\", your output should be: 14",
             "solution_type": "script",
+            "reference_solution": "const dateStr1 = \"2024-01-01\";\nconst dateStr2 = \"2024-01-15\";\nconst d1 = new Date(dateStr1);\nconst d2 = new Date(dateStr2);\nconst msPerDay = 24 * 60 * 60 * 1000;\nconst diff = d2.getTime() - d1.getTime();\nconst days = diff > 0 ? diff : -diff;\nconsole.log(Math.floor(days / msPerDay));",
             "testCases": [
               {
                 "input": { "dateStr1": "2024-01-01", "dateStr2": "2024-01-15" },
@@ -2752,6 +2857,7 @@ export const courses = [
           {
             "description": "// Create a date for March 15, 2024\n// Modify it to change the month to June (month index 5)\n// Use setMonth() method\n// Print the modified date using toDateString()\n// Your output should be: Sat Jun 15 2024",
             "solution_type": "script",
+            "reference_solution": "const d = new Date(2024, 2, 15);\nd.setMonth(5);\nconsole.log(d.toDateString());",
             "testCases": [
               {
                 "input": {},
@@ -2762,6 +2868,7 @@ export const courses = [
           {
             "description": "// Do not rename dateStr, use it as input for your program.\n// While testing we will change its value.\nconst dateStr = \"2024-07-04\";\n\n// Parse the date and check if it falls on a weekend\n// Use getDay() - it returns 0 for Sunday, 6 for Saturday\n// If weekend (Saturday or Sunday), print: \"Weekend\"\n// Otherwise, print: \"Weekday\"",
             "solution_type": "script",
+            "reference_solution": "const dateStr = \"2024-07-04\";\nconst d = new Date(dateStr);\nconst day = d.getDay();\nif (day === 0 || day === 6) {\n  console.log(\"Weekend\");\n} else {\n  console.log(\"Weekday\");\n}",
             "testCases": [
               {
                 "input": { "dateStr": "2024-07-04" },
@@ -2784,6 +2891,7 @@ export const courses = [
           {
             "description": "// Do not rename year, month, day (use them as input for your program).\n// While testing we will change their values.\nconst year = 2024;\nconst month = 2;  // Human-readable month (1-12)\nconst day = 29;\n\n// Create a Date object using year, month, and day\n// Remember: Date constructor uses 0-indexed months, so subtract 1 from month\n// Check if the date is valid by comparing if the day matches\n// If valid, print: \"Valid date\"\n// If invalid (e.g., Feb 30), print: \"Invalid date\"\n// Hint: new Date(2024, 1, 30) will roll over to March, so getDate() won't match",
             "solution_type": "script",
+            "reference_solution": "const year = 2024;\nconst month = 2;\nconst day = 29;\nconst d = new Date(year, month - 1, day);\nif (d.getDate() === day && d.getMonth() === month - 1 && d.getFullYear() === year) {\n  console.log(\"Valid date\");\n} else {\n  console.log(\"Invalid date\");\n}",
             "testCases": [
               {
                 "input": { "year": 2024, "month": 2, "day": 29 },
@@ -2806,6 +2914,7 @@ export const courses = [
           {
             "description": "// Do not rename dateStr, use it as input for your program.\n// While testing we will change its value.\nconst dateStr = \"2024-08-15\";\n\n// Parse the date and format it as \"Month Day, Year\"\n// Create an array of month names: [\"January\", \"February\", ...]\n// Use getMonth(), getDate(), and getFullYear()\n// For \"2024-08-15\", your output should be: August 15, 2024",
             "solution_type": "script",
+            "reference_solution": "const dateStr = \"2024-08-15\";\nconst months = [\"January\", \"February\", \"March\", \"April\", \"May\", \"June\", \"July\", \"August\", \"September\", \"October\", \"November\", \"December\"];\nconst d = new Date(dateStr);\nconsole.log(months[d.getMonth()] + \" \" + d.getDate() + \", \" + d.getFullYear());",
             "testCases": [
               {
                 "input": { "dateStr": "2024-08-15" },
@@ -2841,6 +2950,7 @@ export const courses = [
           {
             "description": "// Print numbers from 1 to 5 using a while loop\n// Each number should be on a new line\n// Your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5",
             "solution_type": "script",
+            "reference_solution": "let i = 1;\nwhile (i <= 5) {\n  console.log(i);\n  i++;\n}",
             "testCases": [
               {
                 "input": {},
@@ -2851,6 +2961,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 10;\n\n// Print all even numbers from 2 to n (inclusive)\n// Each number should be on a new line\n// For n = 10, your output should be:\n// 2\n// 4\n// 6\n// 8\n// 10",
             "solution_type": "script",
+            "reference_solution": "const n = 10;\nlet i = 2;\nwhile (i <= n) {\n  console.log(i);\n  i += 2;\n}",
             "testCases": [
               {
                 "input": { "n": 10 },
@@ -2873,6 +2984,7 @@ export const courses = [
           {
             "description": "// Do not rename limit, use it as input for your program.\n// While testing we will change its value.\nconst limit = 5;\n\n// Calculate the sum of numbers from 1 to limit\n// Print only the final sum\n// For limit = 5, your output should be: 15\n// (Because 1 + 2 + 3 + 4 + 5 = 15)",
             "solution_type": "script",
+            "reference_solution": "const limit = 5;\nlet sum = 0;\nlet i = 1;\nwhile (i <= limit) {\n  sum += i;\n  i++;\n}\nconsole.log(sum);",
             "testCases": [
               {
                 "input": { "limit": 5 },
@@ -2895,6 +3007,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 7;\n\n// Print the multiplication table for num from 1 to 10\n// Format: num x i = result\n// For num = 7, your output should be:\n// 7 x 1 = 7\n// 7 x 2 = 14\n// 7 x 3 = 21\n// ... up to 7 x 10 = 70",
             "solution_type": "script",
+            "reference_solution": "const num = 7;\nlet i = 1;\nwhile (i <= 10) {\n  console.log(num + \" x \" + i + \" = \" + (num * i));\n  i++;\n}",
             "testCases": [
               {
                 "input": { "num": 7 },
@@ -2909,6 +3022,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 5;\n\n// Calculate the factorial of num\n// Factorial of n = n × (n-1) × (n-2) × ... × 1\n// Print only the final result\n// For num = 5, your output should be: 120\n// (Because 5 × 4 × 3 × 2 × 1 = 120)",
             "solution_type": "script",
+            "reference_solution": "const num = 5;\nlet result = 1;\nlet i = 1;\nwhile (i <= num) {\n  result *= i;\n  i++;\n}\nconsole.log(result);",
             "testCases": [
               {
                 "input": { "num": 5 },
@@ -2931,6 +3045,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 12345;\n\n// Count the number of digits in num\n// Use a while loop to repeatedly divide by 10\n// Print only the count\n// For num = 12345, your output should be: 5",
             "solution_type": "script",
+            "reference_solution": "const num = 12345;\nlet count = 0;\nlet n = num;\nif (n === 0) {\n  count = 1;\n} else {\n  if (n < 0) n = -n;\n  while (n > 0) {\n    count++;\n    n = Math.floor(n / 10);\n  }\n}\nconsole.log(count);",
             "testCases": [
               {
                 "input": { "num": 12345 },
@@ -2953,6 +3068,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 12321;\n\n// Reverse the digits of num\n// For num = 12321, your output should be: 12321\n// For num = 1234, output should be: 4321\n// Hint: Use modulo (%) to extract last digit, then divide by 10",
             "solution_type": "script",
+            "reference_solution": "const num = 12321;\nlet n = num;\nif (n < 0) n = -n;\nlet reversed = 0;\nwhile (n > 0) {\n  reversed = reversed * 10 + (n % 10);\n  n = Math.floor(n / 10);\n}\nconsole.log(reversed);",
             "testCases": [
               {
                 "input": { "num": 12321 },
@@ -2975,6 +3091,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 7;\n\n// Print the first n numbers in the Fibonacci sequence\n// Fibonacci: 0, 1, 1, 2, 3, 5, 8, 13, ...\n// Each number is the sum of the previous two\n// Print each number on a new line\n// For n = 7, your output should be:\n// 0\n// 1\n// 1\n// 2\n// 3\n// 5\n// 8",
             "solution_type": "script",
+            "reference_solution": "const n = 7;\nlet a = 0;\nlet b = 1;\nlet i = 0;\nwhile (i < n) {\n  console.log(a);\n  const next = a + b;\n  a = b;\n  b = next;\n  i++;\n}",
             "testCases": [
               {
                 "input": { "n": 7 },
@@ -2997,6 +3114,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 29;\n\n// Check if num is a prime number\n// A prime number is only divisible by 1 and itself\n// Print: \"Prime\" if it's prime, otherwise print: \"Not prime\"\n// Hint: Check divisibility from 2 to num-1",
             "solution_type": "script",
+            "reference_solution": "const num = 29;\nif (num < 2) {\n  console.log(\"Not prime\");\n} else {\n  let isPrime = true;\n  let i = 2;\n  while (i < num) {\n    if (num % i === 0) {\n      isPrime = false;\n      break;\n    }\n    i++;\n  }\n  if (isPrime) {\n    console.log(\"Prime\");\n  } else {\n    console.log(\"Not prime\");\n  }\n}",
             "testCases": [
               {
                 "input": { "num": 29 },
@@ -3023,6 +3141,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 28;\n\n// Check if num is a perfect number\n// A perfect number equals the sum of its proper divisors (excluding itself)\n// Example: 28 = 1 + 2 + 4 + 7 + 14\n// Print: \"Perfect number\" if true, otherwise print: \"Not perfect\"",
             "solution_type": "script",
+            "reference_solution": "const num = 28;\nlet sum = 0;\nlet i = 1;\nwhile (i < num) {\n  if (num % i === 0) {\n    sum += i;\n  }\n  i++;\n}\nif (sum === num) {\n  console.log(\"Perfect number\");\n} else {\n  console.log(\"Not perfect\");\n}",
             "testCases": [
               {
                 "input": { "num": 28 },
@@ -3058,6 +3177,7 @@ export const courses = [
           {
             "description": "// Print numbers from 1 to 10 using a for loop\n// Each number should be on a new line\n// Your output should be:\n// 1\n// 2\n// 3\n// ... up to 10",
             "solution_type": "script",
+            "reference_solution": "for (let i = 1; i <= 10; i++) {\n  console.log(i);\n}",
             "testCases": [
               {
                 "input": {},
@@ -3068,6 +3188,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 15;\n\n// Print all odd numbers from 1 to n (inclusive)\n// Each number should be on a new line\n// For n = 15, your output should be:\n// 1\n// 3\n// 5\n// ... up to 15",
             "solution_type": "script",
+            "reference_solution": "const n = 15;\nfor (let i = 1; i <= n; i += 2) {\n  console.log(i);\n}",
             "testCases": [
               {
                 "input": { "n": 15 },
@@ -3090,6 +3211,7 @@ export const courses = [
           {
             "description": "// Do not rename start and end, use them as input for your program.\n// While testing we will change their values.\nconst start = 5;\nconst end = 10;\n\n// Print numbers from start to end (inclusive) in reverse order\n// Each number should be on a new line\n// For start = 5 and end = 10, your output should be:\n// 10\n// 9\n// 8\n// 7\n// 6\n// 5",
             "solution_type": "script",
+            "reference_solution": "const start = 5;\nconst end = 10;\nfor (let i = end; i >= start; i--) {\n  console.log(i);\n}",
             "testCases": [
               {
                 "input": { "start": 5, "end": 10 },
@@ -3108,6 +3230,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 20;\n\n// Calculate the sum of all numbers from 1 to n that are divisible by 3\n// Print only the final sum\n// For n = 20, the numbers are: 3, 6, 9, 12, 15, 18\n// Your output should be: 63",
             "solution_type": "script",
+            "reference_solution": "const n = 20;\nlet sum = 0;\nfor (let i = 1; i <= n; i++) {\n  if (i % 3 === 0) {\n    sum += i;\n  }\n}\nconsole.log(sum);",
             "testCases": [
               {
                 "input": { "n": 20 },
@@ -3130,6 +3253,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Hello\";\n\n// Print each character of the string on a new line\n// Use str.length to get the length and str[i] to access characters\n// For str = \"Hello\", your output should be:\n// H\n// e\n// l\n// l\n// o",
             "solution_type": "script",
+            "reference_solution": "const str = \"Hello\";\nfor (let i = 0; i < str.length; i++) {\n  console.log(str[i]);\n}",
             "testCases": [
               {
                 "input": { "str": "Hello" },
@@ -3148,6 +3272,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"JavaScript\";\n\n// Count the number of vowels (a, e, i, o, u) in the string\n// Case-insensitive: treat 'A' and 'a' as the same\n// Print only the count\n// For str = \"JavaScript\", your output should be: 3",
             "solution_type": "script",
+            "reference_solution": "const str = \"JavaScript\";\nlet count = 0;\nfor (let i = 0; i < str.length; i++) {\n  const c = str[i];\n  if (c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u' || c === 'A' || c === 'E' || c === 'I' || c === 'O' || c === 'U') {\n    count++;\n  }\n}\nconsole.log(count);",
             "testCases": [
               {
                 "input": { "str": "JavaScript" },
@@ -3170,6 +3295,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 5;\n\n// Print a pattern of stars forming a right triangle\n// For n = 5, your output should be:\n// *\n// **\n// ***\n// ****\n// *****",
             "solution_type": "script",
+            "reference_solution": "const n = 5;\nlet line = \"\";\nfor (let i = 0; i < n; i++) {\n  line += \"*\";\n  console.log(line);\n}",
             "testCases": [
               {
                 "input": { "n": 5 },
@@ -3192,6 +3318,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 12345;\n\n// Calculate the sum of all digits in num\n// Convert num to a string to iterate through digits\n// Print only the final sum\n// For num = 12345, your output should be: 15\n// (Because 1 + 2 + 3 + 4 + 5 = 15)",
             "solution_type": "script",
+            "reference_solution": "const num = 12345;\nconst str = String(num);\nlet sum = 0;\nfor (let i = 0; i < str.length; i++) {\n  sum += Number(str[i]);\n}\nconsole.log(sum);",
             "testCases": [
               {
                 "input": { "num": 12345 },
@@ -3214,6 +3341,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"racecar\";\n\n// Check if str is a palindrome (reads the same forwards and backwards)\n// Compare characters from start and end moving towards center\n// Print: \"Palindrome\" if true, otherwise print: \"Not palindrome\"\n// Hint: Compare str[i] with str[str.length - 1 - i]",
             "solution_type": "script",
+            "reference_solution": "const str = \"racecar\";\nlet isPalindrome = true;\nfor (let i = 0; i < str.length; i++) {\n  if (str[i] !== str[str.length - 1 - i]) {\n    isPalindrome = false;\n    break;\n  }\n}\nif (isPalindrome) {\n  console.log(\"Palindrome\");\n} else {\n  console.log(\"Not palindrome\");\n}",
             "testCases": [
               {
                 "input": { "str": "racecar" },
@@ -3240,6 +3368,7 @@ export const courses = [
           {
             "description": "// Do not rename limit, use it as input for your program.\n// While testing we will change its value.\nconst limit = 50;\n\n// Print all prime numbers from 2 to limit\n// A prime number is only divisible by 1 and itself\n// Each prime should be on a new line\n// For limit = 50, your output should be:\n// 2\n// 3\n// 5\n// 7\n// ... up to 47",
             "solution_type": "script",
+            "reference_solution": "const limit = 50;\nfor (let num = 2; num <= limit; num++) {\n  let isPrime = true;\n  for (let i = 2; i < num; i++) {\n    if (num % i === 0) {\n      isPrime = false;\n      break;\n    }\n  }\n  if (isPrime) {\n    console.log(num);\n  }\n}",
             "testCases": [
               {
                 "input": { "limit": 20 },
@@ -3270,6 +3399,7 @@ export const courses = [
           {
             "description": "// Print numbers from 1 to 20, but stop when you reach 10\n// Use a for loop with break statement\n// Your output should be:\n// 1\n// 2\n// 3\n// ... up to 10",
             "solution_type": "script",
+            "reference_solution": "for (let i = 1; i <= 20; i++) {\n  console.log(i);\n  if (i === 10) break;\n}",
             "testCases": [
               {
                 "input": {},
@@ -3280,6 +3410,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 20;\n\n// Print numbers from 1 to n, but skip multiples of 3\n// Use continue statement to skip multiples of 3\n// For n = 20, your output should be:\n// 1\n// 2\n// 4\n// 5\n// 7\n// 8\n// ... (skipping 3, 6, 9, 12, 15, 18)",
             "solution_type": "script",
+            "reference_solution": "const n = 20;\nfor (let i = 1; i <= n; i++) {\n  if (i % 3 === 0) continue;\n  console.log(i);\n}",
             "testCases": [
               {
                 "input": { "n": 15 },
@@ -3298,6 +3429,7 @@ export const courses = [
           {
             "description": "// Do not rename str and target, use them as input for your program.\n// While testing we will change their values.\nconst str = \"JavaScript\";\nconst target = \"S\";\n\n// Find the first occurrence of target character in str\n// Print the index (position) where it's found\n// Use break to stop searching once found\n// If not found, print: -1\n// For str = \"JavaScript\" and target = \"S\", your output should be: 4",
             "solution_type": "script",
+            "reference_solution": "const str = \"JavaScript\";\nconst target = \"S\";\nlet index = -1;\nfor (let i = 0; i < str.length; i++) {\n  if (str[i] === target) {\n    index = i;\n    break;\n  }\n}\nconsole.log(index);",
             "testCases": [
               {
                 "input": { "str": "JavaScript", "target": "S" },
@@ -3320,6 +3452,7 @@ export const courses = [
           {
             "description": "// Do not rename limit, use it as input for your program.\n// While testing we will change its value.\nconst limit = 30;\n\n// Print all even numbers from 1 to limit, but stop if you encounter a number greater than 20\n// Use continue for odd numbers and break for numbers > 20\n// For limit = 30, your output should be:\n// 2\n// 4\n// 6\n// ... up to 20",
             "solution_type": "script",
+            "reference_solution": "const limit = 30;\nfor (let i = 1; i <= limit; i++) {\n  if (i % 2 !== 0) continue;\n  if (i > 20) break;\n  console.log(i);\n}",
             "testCases": [
               {
                 "input": { "limit": 30 },
@@ -3338,6 +3471,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Hello World\";\n\n// Print all characters except vowels (a, e, i, o, u)\n// Use continue to skip vowels\n// Case-insensitive: skip both 'a' and 'A'\n// For str = \"Hello World\", your output should be:\n// H\n// l\n// l\n//  \n// W\n// r\n// l\n// d",
             "solution_type": "script",
+            "reference_solution": "const str = \"Hello World\";\nfor (let i = 0; i < str.length; i++) {\n  const c = str[i];\n  if (c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u' || c === 'A' || c === 'E' || c === 'I' || c === 'O' || c === 'U') continue;\n  console.log(c);\n}",
             "testCases": [
               {
                 "input": { "str": "Hello World" },
@@ -3356,6 +3490,7 @@ export const courses = [
           {
             "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 84;\n\n// Find the smallest divisor of num (greater than 1)\n// Use break once you find the first divisor\n// Print the divisor\n// For num = 84, your output should be: 2",
             "solution_type": "script",
+            "reference_solution": "const num = 84;\nlet divisor = num;\nfor (let i = 2; i < num; i++) {\n  if (num % i === 0) {\n    divisor = i;\n    break;\n  }\n}\nconsole.log(divisor);",
             "testCases": [
               {
                 "input": { "num": 84 },
@@ -3378,6 +3513,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 50;\n\n// Print numbers from 1 to n, but:\n// - Skip numbers divisible by 5\n// - Stop completely when you reach a number divisible by 7 and greater than 30\n// Use continue for divisible by 5, break for the stopping condition\n// For n = 50, your output should be numbers 1-34 (excluding 5, 10, 15, 20, 25, 30) and stopping at 35",
             "solution_type": "script",
+            "reference_solution": "const n = 50;\nfor (let i = 1; i <= n; i++) {\n  if (i % 5 === 0) continue;\n  if (i % 7 === 0 && i > 30) break;\n  console.log(i);\n}",
             "testCases": [
               {
                 "input": { "n": 50 },
@@ -3396,6 +3532,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"a1b2c3d4\";\n\n// Print only the digit characters from the string\n// Use continue to skip non-digit characters\n// Hint: A character is a digit if it's between '0' and '9'\n// For str = \"a1b2c3d4\", your output should be:\n// 1\n// 2\n// 3\n// 4",
             "solution_type": "script",
+            "reference_solution": "const str = \"a1b2c3d4\";\nfor (let i = 0; i < str.length; i++) {\n  const c = str[i];\n  if (c < '0' || c > '9') continue;\n  console.log(c);\n}",
             "testCases": [
               {
                 "input": { "str": "a1b2c3d4" },
@@ -3430,6 +3567,7 @@ export const courses = [
           {
             "description": "// Do not rename rows and cols, use them as input for your program.\n// While testing we will change their values.\nconst rows = 3;\nconst cols = 4;\n\n// Print a grid of stars (*) with the given dimensions\n// Each row should be on a new line\n// For rows = 3 and cols = 4, your output should be:\n// ****\n// ****\n// ****",
             "solution_type": "script",
+            "reference_solution": "const rows = 3;\nconst cols = 4;\nfor (let r = 0; r < rows; r++) {\n  let line = \"\";\n  for (let c = 0; c < cols; c++) {\n    line += \"*\";\n  }\n  console.log(line);\n}",
             "testCases": [
               {
                 "input": { "rows": 3, "cols": 4 },
@@ -3452,6 +3590,7 @@ export const courses = [
           {
             "description": "// Print the multiplication table from 1 to 5\n// Format each line as: \"1 2 3 4 5\" (space-separated)\n// Your output should be:\n// 1 2 3 4 5\n// 2 4 6 8 10\n// 3 6 9 12 15\n// 4 8 12 16 20\n// 5 10 15 20 25",
             "solution_type": "script",
+            "reference_solution": "for (let i = 1; i <= 5; i++) {\n  let line = \"\";\n  for (let j = 1; j <= 5; j++) {\n    if (j > 1) line += \" \";\n    line += i * j;\n  }\n  console.log(line);\n}",
             "testCases": [
               {
                 "input": {},
@@ -3462,6 +3601,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 4;\n\n// Print a right triangle pattern of numbers\n// Each row i should have numbers from 1 to i\n// For n = 4, your output should be:\n// 1\n// 1 2\n// 1 2 3\n// 1 2 3 4",
             "solution_type": "script",
+            "reference_solution": "const n = 4;\nfor (let i = 1; i <= n; i++) {\n  let line = \"\";\n  for (let j = 1; j <= i; j++) {\n    if (j > 1) line += \" \";\n    line += j;\n  }\n  console.log(line);\n}",
             "testCases": [
               {
                 "input": { "n": 4 },
@@ -3484,6 +3624,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 5;\n\n// Print a pyramid pattern of stars\n// Row i should have i stars\n// For n = 5, your output should be:\n// *\n// **\n// ***\n// ****\n// *****\n// ****\n// ***\n// **\n// *",
             "solution_type": "script",
+            "reference_solution": "const n = 5;\nfor (let i = 1; i <= n; i++) {\n  let line = \"\";\n  for (let j = 0; j < i; j++) line += \"*\";\n  console.log(line);\n}\nfor (let i = n - 1; i >= 1; i--) {\n  let line = \"\";\n  for (let j = 0; j < i; j++) line += \"*\";\n  console.log(line);\n}",
             "testCases": [
               {
                 "input": { "n": 5 },
@@ -3502,6 +3643,7 @@ export const courses = [
           {
             "description": "// Do not rename str1 and str2, use them as input for your program.\n// While testing we will change their values.\nconst str1 = \"abc\";\nconst str2 = \"xy\";\n\n// Print all possible pairs of characters from str1 and str2\n// Format: \"char1char2\" (concatenated, no space)\n// For str1 = \"abc\" and str2 = \"xy\", your output should be:\n// ax\n// ay\n// bx\n// by\n// cx\n// cy",
             "solution_type": "script",
+            "reference_solution": "const str1 = \"abc\";\nconst str2 = \"xy\";\nfor (let i = 0; i < str1.length; i++) {\n  for (let j = 0; j < str2.length; j++) {\n    console.log(str1[i] + str2[j]);\n  }\n}",
             "testCases": [
               {
                 "input": { "str1": "abc", "str2": "xy" },
@@ -3520,6 +3662,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 4;\n\n// Print a hollow square pattern\n// Only the border should have stars, inside should be spaces\n// For n = 4, your output should be:\n// ****\n// *  *\n// *  *\n// ****",
             "solution_type": "script",
+            "reference_solution": "const n = 4;\nfor (let r = 0; r < n; r++) {\n  let line = \"\";\n  for (let c = 0; c < n; c++) {\n    if (r === 0 || r === n - 1 || c === 0 || c === n - 1) {\n      line += \"*\";\n    } else {\n      line += \" \";\n    }\n  }\n  console.log(line);\n}",
             "testCases": [
               {
                 "input": { "n": 4 },
@@ -3542,6 +3685,7 @@ export const courses = [
           {
             "description": "// Do not rename limit, use it as input for your program.\n// While testing we will change its value.\nconst limit = 20;\n\n// Find and print all pairs of numbers (a, b) where:\n// - Both a and b are between 1 and limit\n// - a < b\n// - a + b equals 10\n// Format: \"a + b = 10\"\n// For limit = 20, your output should be:\n// 1 + 9 = 10\n// 2 + 8 = 10\n// 3 + 7 = 10\n// 4 + 6 = 10",
             "solution_type": "script",
+            "reference_solution": "const limit = 20;\nfor (let a = 1; a <= limit; a++) {\n  for (let b = a + 1; b <= limit; b++) {\n    if (a + b === 10) {\n      console.log(a + \" + \" + b + \" = 10\");\n    }\n  }\n}",
             "testCases": [
               {
                 "input": { "limit": 20 },
@@ -3560,6 +3704,7 @@ export const courses = [
           {
             "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 3;\n\n// Print a pattern where each row shows row number repeated row times\n// For n = 3, your output should be:\n// 1\n// 2 2\n// 3 3 3",
             "solution_type": "script",
+            "reference_solution": "const n = 3;\nfor (let i = 1; i <= n; i++) {\n  let line = \"\";\n  for (let j = 0; j < i; j++) {\n    if (j > 0) line += \" \";\n    line += i;\n  }\n  console.log(line);\n}",
             "testCases": [
               {
                 "input": { "n": 3 },
@@ -3582,6 +3727,7 @@ export const courses = [
           {
             "description": "// Do not rename rows and cols, use them as input for your program.\n// While testing we will change their values.\nconst rows = 3;\nconst cols = 4;\n\n// Print a grid showing coordinates (row, col) for each position\n// Format: \"(row,col)\" with space between coordinates\n// For rows = 3 and cols = 4, your output should be:\n// (0,0) (0,1) (0,2) (0,3)\n// (1,0) (1,1) (1,2) (1,3)\n// (2,0) (2,1) (2,2) (2,3)",
             "solution_type": "script",
+            "reference_solution": "const rows = 3;\nconst cols = 4;\nfor (let r = 0; r < rows; r++) {\n  let line = \"\";\n  for (let c = 0; c < cols; c++) {\n    if (c > 0) line += \" \";\n    line += \"(\" + r + \",\" + c + \")\";\n  }\n  console.log(line);\n}",
             "testCases": [
               {
                 "input": { "rows": 3, "cols": 4 },
@@ -3600,6 +3746,7 @@ export const courses = [
           {
             "description": "// Do not rename limit, use it as input for your program.\n// While testing we will change its value.\nconst limit = 30;\n\n// Count and print the total number of prime numbers from 2 to limit\n// Use nested loops: outer loop for each number, inner loop to check if prime\n// Print only the final count\n// For limit = 30, there are 10 primes: 2,3,5,7,11,13,17,19,23,29\n// Your output should be: 10",
             "solution_type": "script",
+            "reference_solution": "const limit = 30;\nlet count = 0;\nfor (let num = 2; num <= limit; num++) {\n  let isPrime = true;\n  for (let i = 2; i < num; i++) {\n    if (num % i === 0) {\n      isPrime = false;\n      break;\n    }\n  }\n  if (isPrime) count++;\n}\nconsole.log(count);",
             "testCases": [
               {
                 "input": { "limit": 30 },
@@ -3638,6 +3785,7 @@ export const courses = [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [10, 20, 30, 40, 50];\n\n// Print the first and last elements of the array\n// Each on a new line\n// For numbers = [10, 20, 30, 40, 50], your output should be:\n// 10\n// 50",
             "solution_type": "script",
+            "reference_solution": "const numbers = [10, 20, 30, 40, 50];\nconsole.log(numbers[0]);\nconsole.log(numbers[numbers.length - 1]);",
             "testCases": [
               {
                 "input": { "numbers": [10, 20, 30, 40, 50] },
@@ -3660,6 +3808,7 @@ export const courses = [
           {
             "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [3, 7, 2, 9, 1];\n\n// Print each element of the array on a new line\n// For arr = [3, 7, 2, 9, 1], your output should be:\n// 3\n// 7\n// 2\n// 9\n// 1",
             "solution_type": "script",
+            "reference_solution": "const arr = [3, 7, 2, 9, 1];\nfor (let i = 0; i < arr.length; i++) {\n  console.log(arr[i]);\n}",
             "testCases": [
               {
                 "input": { "arr": [3, 7, 2, 9, 1] },
@@ -3682,6 +3831,7 @@ export const courses = [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [5, 10, 15, 20, 25];\n\n// Calculate and print the sum of all elements in the array\n// For numbers = [5, 10, 15, 20, 25], your output should be: 75",
             "solution_type": "script",
+            "reference_solution": "const numbers = [5, 10, 15, 20, 25];\nlet sum = 0;\nfor (let i = 0; i < numbers.length; i++) {\n  sum += numbers[i];\n}\nconsole.log(sum);",
             "testCases": [
               {
                 "input": { "numbers": [5, 10, 15, 20, 25] },
@@ -3704,6 +3854,7 @@ export const courses = [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [12, 5, 8, 21, 3];\n\n// Find and print the largest number in the array\n// For numbers = [12, 5, 8, 21, 3], your output should be: 21",
             "solution_type": "script",
+            "reference_solution": "const numbers = [12, 5, 8, 21, 3];\nlet max = numbers[0];\nfor (let i = 1; i < numbers.length; i++) {\n  if (numbers[i] > max) max = numbers[i];\n}\nconsole.log(max);",
             "testCases": [
               {
                 "input": { "numbers": [12, 5, 8, 21, 3] },
@@ -3726,6 +3877,7 @@ export const courses = [
           {
             "description": "// Do not rename arr and target, use them as input for your program.\n// While testing we will change their values.\nconst arr = [10, 20, 30, 40, 50];\nconst target = 30;\n\n// Find the index of target in the array\n// If found, print the index\n// If not found, print: -1\n// For arr = [10, 20, 30, 40, 50] and target = 30, your output should be: 2",
             "solution_type": "script",
+            "reference_solution": "const arr = [10, 20, 30, 40, 50];\nconst target = 30;\nlet index = -1;\nfor (let i = 0; i < arr.length; i++) {\n  if (arr[i] === target) {\n    index = i;\n    break;\n  }\n}\nconsole.log(index);",
             "testCases": [
               {
                 "input": { "arr": [10, 20, 30, 40, 50], "target": 30 },
@@ -3748,6 +3900,7 @@ export const courses = [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [3, 7, 2, 9, 1, 5];\n\n// Count how many even numbers are in the array\n// Print only the count\n// For numbers = [3, 7, 2, 9, 1, 5], your output should be: 1",
             "solution_type": "script",
+            "reference_solution": "const numbers = [3, 7, 2, 9, 1, 5];\nlet count = 0;\nfor (let i = 0; i < numbers.length; i++) {\n  if (numbers[i] % 2 === 0) count++;\n}\nconsole.log(count);",
             "testCases": [
               {
                 "input": { "numbers": [3, 7, 2, 9, 1, 5] },
@@ -3770,6 +3923,7 @@ export const courses = [
           {
             "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [1, 2, 3, 4, 5];\n\n// Print the array in reverse order\n// Each element on a new line\n// For arr = [1, 2, 3, 4, 5], your output should be:\n// 5\n// 4\n// 3\n// 2\n// 1",
             "solution_type": "script",
+            "reference_solution": "const arr = [1, 2, 3, 4, 5];\nfor (let i = arr.length - 1; i >= 0; i--) {\n  console.log(arr[i]);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -3792,6 +3946,7 @@ export const courses = [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [10, 5, 8, 3, 12, 7];\n\n// Print all numbers greater than 7\n// Each number on a new line\n// For numbers = [10, 5, 8, 3, 12, 7], your output should be:\n// 10\n// 8\n// 12",
             "solution_type": "script",
+            "reference_solution": "const numbers = [10, 5, 8, 3, 12, 7];\nfor (let i = 0; i < numbers.length; i++) {\n  if (numbers[i] > 7) console.log(numbers[i]);\n}",
             "testCases": [
               {
                 "input": { "numbers": [10, 5, 8, 3, 12, 7] },
@@ -3814,6 +3969,7 @@ export const courses = [
           {
             "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [5, 2, 8, 2, 9, 2, 3];\n\n// Double each element in the array (multiply by 2)\n// Print the modified array elements on a new line\n// For arr = [5, 2, 8, 2, 9, 2, 3], your output should be:\n// 10\n// 4\n// 16\n// 4\n// 18\n// 4\n// 6",
             "solution_type": "script",
+            "reference_solution": "const arr = [5, 2, 8, 2, 9, 2, 3];\nfor (let i = 0; i < arr.length; i++) {\n  console.log(arr[i] * 2);\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 2, 8, 2, 9, 2, 3] },
@@ -3836,6 +3992,7 @@ export const courses = [
           {
             "description": "// Do not rename words, use it as input for your program.\n// While testing we will change its value.\nconst words = [\"apple\", \"banana\", \"kiwi\", \"grape\", \"watermelon\"];\n\n// Find and print the longest word in the array\n// For words = [\"apple\", \"banana\", \"kiwi\", \"grape\", \"watermelon\"], your output should be: watermelon",
             "solution_type": "script",
+            "reference_solution": "const words = [\"apple\", \"banana\", \"kiwi\", \"grape\", \"watermelon\"];\nlet longest = words[0];\nfor (let i = 1; i < words.length; i++) {\n  if (words[i].length > longest.length) longest = words[i];\n}\nconsole.log(longest);",
             "testCases": [
               {
                 "input": { "words": ["apple", "banana", "kiwi", "grape", "watermelon"] },
@@ -3858,6 +4015,7 @@ export const courses = [
           {
             "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [3, 7, 2, 7, 9, 7, 1];\n\n// Count how many times the number 7 appears in the array\n// Print only the count\n// For arr = [3, 7, 2, 7, 9, 7, 1], your output should be: 3",
             "solution_type": "script",
+            "reference_solution": "const arr = [3, 7, 2, 7, 9, 7, 1];\nlet count = 0;\nfor (let i = 0; i < arr.length; i++) {\n  if (arr[i] === 7) count++;\n}\nconsole.log(count);",
             "testCases": [
               {
                 "input": { "arr": [3, 7, 2, 7, 9, 7, 1] },
@@ -3880,6 +4038,7 @@ export const courses = [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [4, 7, 2, 9, 1, 6];\n\n// Calculate and print the average of all numbers in the array\n// Round to 2 decimal places\n// For numbers = [4, 7, 2, 9, 1, 6], sum = 29, average = 29/6 = 4.83\n// Your output should be: 4.83",
             "solution_type": "script",
+            "reference_solution": "const numbers = [4, 7, 2, 9, 1, 6];\nlet sum = 0;\nfor (let i = 0; i < numbers.length; i++) {\n  sum += numbers[i];\n}\nconst avg = sum / numbers.length;\nconst rounded = Math.round(avg * 100) / 100;\nconsole.log(rounded.toFixed(2));",
             "testCases": [
               {
                 "input": { "numbers": [4, 7, 2, 9, 1, 6] },
@@ -3920,6 +4079,7 @@ export const courses = [
           {
             "description": "// Do not rename person, use it as input for your program.\n// While testing we will change its value.\nconst person = { name: \"Alice\", age: 25, city: \"New York\" };\n\n// Print the name and age properties using dot notation\n// Each on a new line\n// For the given person object, your output should be:\n// Alice\n// 25",
             "solution_type": "script",
+            "reference_solution": "const person = { name: \"Alice\", age: 25, city: \"New York\" };\nconsole.log(person.name);\nconsole.log(person.age);",
             "testCases": [
               {
                 "input": { "person": { "name": "Alice", "age": 25, "city": "New York" } },
@@ -3938,6 +4098,7 @@ export const courses = [
           {
             "description": "// Do not rename car and key, use them as input for your program.\n// While testing we will change their values.\nconst car = { brand: \"Toyota\", model: \"Camry\", year: 2020 };\nconst key = \"model\";\n\n// Access the property using the variable key with bracket notation\n// Print the value\n// For car = { brand: \"Toyota\", model: \"Camry\", year: 2020 } and key = \"model\"\n// Your output should be: Camry",
             "solution_type": "script",
+            "reference_solution": "const car = { brand: \"Toyota\", model: \"Camry\", year: 2020 };\nconst key = \"model\";\nconsole.log(car[key]);",
             "testCases": [
               {
                 "input": { "car": { "brand": "Toyota", "model": "Camry", "year": 2020 }, "key": "model" },
@@ -3956,6 +4117,7 @@ export const courses = [
           {
             "description": "// Do not rename product, use it as input for your program.\n// While testing we will change its value.\nconst product = { name: \"Laptop\", price: 999 };\n\n// Add a new property 'stock' with value 50\n// Then add a property 'category' with value \"Electronics\"\n// Print all values using Object.values(), each on a new line\n// Your output should be:\n// Laptop\n// 999\n// 50\n// Electronics",
             "solution_type": "script",
+            "reference_solution": "const product = { name: \"Laptop\", price: 999 };\nproduct.stock = 50;\nproduct.category = \"Electronics\";\nconst vals = Object.values(product);\nfor (let i = 0; i < vals.length; i++) {\n  console.log(vals[i]);\n}",
             "testCases": [
               {
                 "input": { "product": { "name": "Laptop", "price": 999 } },
@@ -3970,6 +4132,7 @@ export const courses = [
           {
             "description": "// Do not rename user, use it as input for your program.\n// While testing we will change its value.\nconst user = { username: \"john_doe\", email: \"john@example.com\", age: 28 };\n\n// Print all the keys of the object using Object.keys()\n// Each key on a new line\n// For the given user object, your output should be:\n// username\n// email\n// age",
             "solution_type": "script",
+            "reference_solution": "const user = { username: \"john_doe\", email: \"john@example.com\", age: 28 };\nconst keys = Object.keys(user);\nfor (let i = 0; i < keys.length; i++) {\n  console.log(keys[i]);\n}",
             "testCases": [
               {
                 "input": { "user": { "username": "john_doe", "email": "john@example.com", "age": 28 } },
@@ -3988,6 +4151,7 @@ export const courses = [
           {
             "description": "// Do not rename company, use it as input for your program.\n// While testing we will change its value.\nconst company = {\n  name: \"TechCorp\",\n  location: { city: \"San Francisco\", country: \"USA\" },\n  employees: 500\n};\n\n// Access and print the city from the nested location object\n// For the given company object, your output should be: San Francisco",
             "solution_type": "script",
+            "reference_solution": "const company = { name: \"TechCorp\", location: { city: \"San Francisco\", country: \"USA\" }, employees: 500 };\nconsole.log(company.location.city);",
             "testCases": [
               {
                 "input": { "company": { "name": "TechCorp", "location": { "city": "San Francisco", "country": "USA" }, "employees": 500 } },
@@ -4006,6 +4170,7 @@ export const courses = [
           {
             "description": "// Do not rename obj and propertyName, use them as input for your program.\n// While testing we will change their values.\nconst obj = { name: \"Alice\", age: 30, city: \"Paris\" };\nconst propertyName = \"age\";\n\n// Check if the property exists in the object using the 'in' operator\n// Print: \"Found\" if it exists, otherwise print: \"Not found\"\n// For obj = { name: \"Alice\", age: 30, city: \"Paris\" } and propertyName = \"age\"\n// Your output should be: Found",
             "solution_type": "script",
+            "reference_solution": "const obj = { name: \"Alice\", age: 30, city: \"Paris\" };\nconst propertyName = \"age\";\nif (propertyName in obj) {\n  console.log(\"Found\");\n} else {\n  console.log(\"Not found\");\n}",
             "testCases": [
               {
                 "input": { "obj": { "name": "Alice", "age": 30, "city": "Paris" }, "propertyName": "age" },
@@ -4028,6 +4193,7 @@ export const courses = [
           {
             "description": "// Do not rename scores, use it as input for your program.\n// While testing we will change its value.\nconst scores = { math: 85, science: 90, english: 78, history: 88 };\n\n// Calculate the total sum of all scores using Object.values()\n// Print only the total\n// For the given scores object, your output should be: 341",
             "solution_type": "script",
+            "reference_solution": "const scores = { math: 85, science: 90, english: 78, history: 88 };\nconst vals = Object.values(scores);\nlet sum = 0;\nfor (let i = 0; i < vals.length; i++) sum += vals[i];\nconsole.log(sum);",
             "testCases": [
               {
                 "input": { "scores": { "math": 85, "science": 90, "english": 78, "history": 88 } },
@@ -4046,6 +4212,7 @@ export const courses = [
           {
             "description": "// Do not rename inventory, use it as input for your program.\n// While testing we will change its value.\nconst inventory = { apples: 50, bananas: 30, oranges: 40 };\n\n// Use a for...in loop to print each item and its quantity\n// Format: \"item: quantity\"\n// For the given inventory, your output should be:\n// apples: 50\n// bananas: 30\n// oranges: 40",
             "solution_type": "script",
+            "reference_solution": "const inventory = { apples: 50, bananas: 30, oranges: 40 };\nfor (const item in inventory) {\n  console.log(item + \": \" + inventory[item]);\n}",
             "testCases": [
               {
                 "input": { "inventory": { "apples": 50, "bananas": 30, "oranges": 40 } },
@@ -4064,6 +4231,7 @@ export const courses = [
           {
             "description": "// Do not rename student, use it as input for your program.\n// While testing we will change its value.\nconst student = {\n  name: \"Emma\",\n  grades: { math: 92, science: 88, english: 85 },\n  age: 16\n};\n\n// Calculate the average grade from the nested grades object\n// Print the average rounded to 2 decimal places\n// For the given student, average = (92 + 88 + 85) / 3 = 88.33\n// Your output should be: 88.33",
             "solution_type": "script",
+            "reference_solution": "const student = { name: \"Emma\", grades: { math: 92, science: 88, english: 85 }, age: 16 };\nconst grades = student.grades;\nconst vals = Object.values(grades);\nlet sum = 0;\nfor (let i = 0; i < vals.length; i++) sum += vals[i];\nconst avg = sum / vals.length;\nconsole.log(avg.toFixed(2));",
             "testCases": [
               {
                 "input": { "student": { "name": "Emma", "grades": { "math": 92, "science": 88, "english": 85 }, "age": 16 } },
@@ -4082,6 +4250,7 @@ export const courses = [
           {
             "description": "// Do not rename settings, use it as input for your program.\n// While testing we will change its value.\nconst settings = { theme: \"dark\", notifications: true, language: \"en\", autoSave: false };\n\n// Count how many properties have boolean values (true or false)\n// Use typeof to check if value is 'boolean'\n// Print only the count\n// For the given settings, your output should be: 2",
             "solution_type": "script",
+            "reference_solution": "const settings = { theme: \"dark\", notifications: true, language: \"en\", autoSave: false };\nconst vals = Object.values(settings);\nlet count = 0;\nfor (let i = 0; i < vals.length; i++) {\n  if (typeof vals[i] === 'boolean') count++;\n}\nconsole.log(count);",
             "testCases": [
               {
                 "input": { "settings": { "theme": "dark", "notifications": true, "language": "en", "autoSave": false } },
@@ -4104,6 +4273,7 @@ export const courses = [
           {
             "description": "// Do not rename book, use it as input for your program.\n// While testing we will change its value.\nconst book = { title: \"1984\", author: \"George Orwell\", pages: 328, published: 1949 };\n\n// Create a new object with only the title and author properties\n// Print the new object's values using Object.values(), each on a new line\n// For the given book, your output should be:\n// 1984\n// George Orwell",
             "solution_type": "script",
+            "reference_solution": "const book = { title: \"1984\", author: \"George Orwell\", pages: 328, published: 1949 };\nconst summary = { title: book.title, author: book.author };\nconst vals = Object.values(summary);\nfor (let i = 0; i < vals.length; i++) console.log(vals[i]);",
             "testCases": [
               {
                 "input": { "book": { "title": "1984", "author": "George Orwell", "pages": 328, "published": 1949 } },
@@ -4118,6 +4288,7 @@ export const courses = [
           {
             "description": "// Do not rename data, use it as input for your program.\n// While testing we will change its value.\nconst data = { a: 10, b: 20, c: 30, d: 40, e: 50 };\n\n// Print all keys whose values are greater than 25\n// Each key on a new line\n// For the given data, your output should be:\n// c\n// d\n// e",
             "solution_type": "script",
+            "reference_solution": "const data = { a: 10, b: 20, c: 30, d: 40, e: 50 };\nfor (const key in data) {\n  if (data[key] > 25) console.log(key);\n}",
             "testCases": [
               {
                 "input": { "data": { "a": 10, "b": 20, "c": 30, "d": 40, "e": 50 } },
@@ -4156,6 +4327,7 @@ export const courses = [
           {
             "description": "// Create a new Map and add three key-value pairs:\n// - \"name\" -> \"Alice\"\n// - \"age\" -> 25\n// - \"city\" -> \"Paris\"\n// Print the value associated with the key \"name\"\n// Your output should be: Alice",
             "solution_type": "script",
+            "reference_solution": "const map = new Map();\nmap.set(\"name\", \"Alice\");\nmap.set(\"age\", 25);\nmap.set(\"city\", \"Paris\");\nconsole.log(map.get(\"name\"));",
             "testCases": [
               {
                 "input": {},
@@ -4166,6 +4338,7 @@ export const courses = [
           {
             "description": "// Do not rename map and key, use them as input for your program.\n// While testing we will change their values.\nconst map = new Map([[\"a\", 10], [\"b\", 20], [\"c\", 30]]);\nconst key = \"b\";\n\n// Check if the key exists in the map using has()\n// If it exists, print the value using get()\n// If it doesn't exist, print: \"Not found\"\n// For key = \"b\", your output should be: 20",
             "solution_type": "script",
+            "reference_solution": "const map = new Map([[\"a\", 10], [\"b\", 20], [\"c\", 30]]);\nconst key = \"b\";\nif (map.has(key)) {\n  console.log(map.get(key));\n} else {\n  console.log(\"Not found\");\n}",
             "testCases": [
               {
                 "input": { "map": "new Map([[\"a\", 10], [\"b\", 20], [\"c\", 30]])", "key": "b" },
@@ -4184,6 +4357,7 @@ export const courses = [
           {
             "description": "// Do not rename map, use it as input for your program.\n// While testing we will change its value.\nconst map = new Map([[\"apple\", 5], [\"banana\", 3], [\"orange\", 7]]);\n\n// Print the size of the map (number of entries)\n// Then print all keys using keys(), each on a new line\n// For the given map, your output should be:\n// 3\n// apple\n// banana\n// orange",
             "solution_type": "script",
+            "reference_solution": "const map = new Map([[\"apple\", 5], [\"banana\", 3], [\"orange\", 7]]);\nconsole.log(map.size);\nfor (const k of map.keys()) {\n  console.log(k);\n}",
             "testCases": [
               {
                 "input": { "map": "new Map([[\"apple\", 5], [\"banana\", 3], [\"orange\", 7]])" },
@@ -4202,6 +4376,7 @@ export const courses = [
           {
             "description": "// Do not rename map, use it as input for your program.\n// While testing we will change its value.\nconst map = new Map([[\"math\", 90], [\"science\", 85], [\"english\", 88]]);\n\n// Calculate the sum of all values in the map using values()\n// Print only the total sum\n// For the given map, your output should be: 263",
             "solution_type": "script",
+            "reference_solution": "const map = new Map([[\"math\", 90], [\"science\", 85], [\"english\", 88]]);\nlet sum = 0;\nfor (const v of map.values()) {\n  sum += v;\n}\nconsole.log(sum);",
             "testCases": [
               {
                 "input": { "map": "new Map([[\"math\", 90], [\"science\", 85], [\"english\", 88]])" },
@@ -4220,6 +4395,7 @@ export const courses = [
           {
             "description": "// Create a new Set with the following values: 1, 2, 3, 4, 5\n// Add the value 6 to the set\n// Check if the value 3 exists using has()\n// Print: \"Found\" if it exists, otherwise print: \"Not found\"\n// Your output should be: Found",
             "solution_type": "script",
+            "reference_solution": "const set = new Set([1, 2, 3, 4, 5]);\nset.add(6);\nif (set.has(3)) {\n  console.log(\"Found\");\n} else {\n  console.log(\"Not found\");\n}",
             "testCases": [
               {
                 "input": {},
@@ -4230,6 +4406,7 @@ export const courses = [
           {
             "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [1, 2, 2, 3, 4, 4, 5, 5, 5];\n\n// Create a Set from the array to get unique values\n// Print the size of the set (number of unique values)\n// For arr = [1, 2, 2, 3, 4, 4, 5, 5, 5], your output should be: 5",
             "solution_type": "script",
+            "reference_solution": "const arr = [1, 2, 2, 3, 4, 4, 5, 5, 5];\nconst set = new Set(arr);\nconsole.log(set.size);",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 2, 3, 4, 4, 5, 5, 5] },
@@ -4252,6 +4429,7 @@ export const courses = [
           {
             "description": "// Do not rename set, use it as input for your program.\n// While testing we will change its value.\nconst set = new Set([10, 20, 30, 40, 50]);\n\n// Delete the value 30 from the set using delete()\n// Print all remaining values in the set, each on a new line\n// For the given set, your output should be:\n// 10\n// 20\n// 40\n// 50",
             "solution_type": "script",
+            "reference_solution": "const set = new Set([10, 20, 30, 40, 50]);\nset.delete(30);\nfor (const v of set) {\n  console.log(v);\n}",
             "testCases": [
               {
                 "input": { "set": "new Set([10, 20, 30, 40, 50])" },
@@ -4270,6 +4448,7 @@ export const courses = [
           {
             "description": "// Do not rename arr1 and arr2, use them as input for your program.\n// While testing we will change their values.\nconst arr1 = [1, 2, 3, 4];\nconst arr2 = [3, 4, 5, 6];\n\n// Find the common elements between arr1 and arr2 using Sets\n// Print the common elements, each on a new line\n// Hint: Create a set from arr1, then check which elements from arr2 are in the set\n// For arr1 = [1, 2, 3, 4] and arr2 = [3, 4, 5, 6], your output should be:\n// 3\n// 4",
             "solution_type": "script",
+            "reference_solution": "const arr1 = [1, 2, 3, 4];\nconst arr2 = [3, 4, 5, 6];\nconst set1 = new Set(arr1);\nfor (let i = 0; i < arr2.length; i++) {\n  if (set1.has(arr2[i])) {\n    console.log(arr2[i]);\n  }\n}",
             "testCases": [
               {
                 "input": { "arr1": [1, 2, 3, 4], "arr2": [3, 4, 5, 6] },
@@ -4292,6 +4471,7 @@ export const courses = [
           {
             "description": "// Do not rename map, use it as input for your program.\n// While testing we will change its value.\nconst map = new Map([[\"a\", 10], [\"b\", 20], [\"c\", 30], [\"d\", 25]]);\n\n// Count how many entries have values greater than 20\n// Use entries() to iterate through the map\n// Print only the count\n// For the given map, your output should be: 2",
             "solution_type": "script",
+            "reference_solution": "const map = new Map([[\"a\", 10], [\"b\", 20], [\"c\", 30], [\"d\", 25]]);\nlet count = 0;\nfor (const entry of map.entries()) {\n  if (entry[1] > 20) count++;\n}\nconsole.log(count);",
             "testCases": [
               {
                 "input": { "map": "new Map([[\"a\", 10], [\"b\", 20], [\"c\", 30], [\"d\", 25]])" },
@@ -4314,6 +4494,7 @@ export const courses = [
           {
             "description": "// Do not rename words, use it as input for your program.\n// While testing we will change its value.\nconst words = [\"apple\", \"banana\", \"apple\", \"orange\", \"banana\", \"apple\"];\n\n// Count the frequency of each word using a Map\n// Print each word and its count in the format: \"word: count\"\n// For the given words array, your output should be:\n// apple: 3\n// banana: 2\n// orange: 1",
             "solution_type": "script",
+            "reference_solution": "const words = [\"apple\", \"banana\", \"apple\", \"orange\", \"banana\", \"apple\"];\nconst freq = new Map();\nfor (let i = 0; i < words.length; i++) {\n  const w = words[i];\n  if (freq.has(w)) {\n    freq.set(w, freq.get(w) + 1);\n  } else {\n    freq.set(w, 1);\n  }\n}\nfor (const entry of freq.entries()) {\n  console.log(entry[0] + \": \" + entry[1]);\n}",
             "testCases": [
               {
                 "input": { "words": ["apple", "banana", "apple", "orange", "banana", "apple"] },
@@ -4332,6 +4513,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"javascript\";\n\n// Find all unique characters in the string using a Set\n// Convert the string to an array, create a Set, then print the count of unique characters\n// For str = \"javascript\", unique characters are: j, a, v, s, c, r, i, p, t (9 unique)\n// Your output should be: 9",
             "solution_type": "script",
+            "reference_solution": "const str = \"javascript\";\nconst chars = [];\nfor (let i = 0; i < str.length; i++) {\n  chars.push(str[i]);\n}\nconst set = new Set(chars);\nconsole.log(set.size);",
             "testCases": [
               {
                 "input": { "str": "javascript" },
@@ -4354,6 +4536,7 @@ export const courses = [
           {
             "description": "// Do not rename map, use it as input for your program.\n// While testing we will change its value.\nconst map = new Map([[1, \"one\"], [2, \"two\"], [3, \"three\"]]);\n\n// Iterate through the map using entries()\n// Print each entry in the format: \"key -> value\"\n// For the given map, your output should be:\n// 1 -> one\n// 2 -> two\n// 3 -> three",
             "solution_type": "script",
+            "reference_solution": "const map = new Map([[1, \"one\"], [2, \"two\"], [3, \"three\"]]);\nfor (const entry of map.entries()) {\n  console.log(entry[0] + \" -> \" + entry[1]);\n}",
             "testCases": [
               {
                 "input": { "map": "new Map([[1, \"one\"], [2, \"two\"], [3, \"three\"]])" },
@@ -4387,6 +4570,7 @@ export const courses = [
           {
             "description": "// Do not rename colors, use it as input for your program.\n// While testing we will change its value.\nconst colors = [\"red\", \"green\", \"blue\"];\n\n// Use array destructuring to extract the first two colors into variables\n// Print them on separate lines\n// For colors = [\"red\", \"green\", \"blue\"], your output should be:\n// red\n// green",
             "solution_type": "script",
+            "reference_solution": "const colors = [\"red\", \"green\", \"blue\"];\nconst [first, second] = colors;\nconsole.log(first);\nconsole.log(second);",
             "testCases": [
               {
                 "input": { "colors": ["red", "green", "blue"] },
@@ -4405,6 +4589,7 @@ export const courses = [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [10, 20, 30, 40, 50];\n\n// Use array destructuring to get the first element and the rest of the array\n// Use the rest operator (...)\n// Print the first element on one line, then print the rest array elements each on a new line\n// For numbers = [10, 20, 30, 40, 50], your output should be:\n// 10\n// 20\n// 30\n// 40\n// 50",
             "solution_type": "script",
+            "reference_solution": "const numbers = [10, 20, 30, 40, 50];\nconst [first, ...rest] = numbers;\nconsole.log(first);\nfor (let i = 0; i < rest.length; i++) {\n  console.log(rest[i]);\n}",
             "testCases": [
               {
                 "input": { "numbers": [10, 20, 30, 40, 50] },
@@ -4423,6 +4608,7 @@ export const courses = [
           {
             "description": "// Do not rename person, use it as input for your program.\n// While testing we will change its value.\nconst person = { name: \"Alice\", age: 25, city: \"Paris\" };\n\n// Use object destructuring to extract name and age\n// Print them on separate lines\n// For the given person object, your output should be:\n// Alice\n// 25",
             "solution_type": "script",
+            "reference_solution": "const person = { name: \"Alice\", age: 25, city: \"Paris\" };\nconst { name, age } = person;\nconsole.log(name);\nconsole.log(age);",
             "testCases": [
               {
                 "input": { "person": { "name": "Alice", "age": 25, "city": "Paris" } },
@@ -4441,6 +4627,7 @@ export const courses = [
           {
             "description": "// Do not rename user, use it as input for your program.\n// While testing we will change its value.\nconst user = { username: \"john_doe\", email: \"john@example.com\" };\n\n// Use object destructuring with default values\n// Extract username, email, and age (with default value 18)\n// Print all three values on separate lines\n// For the given user object (which doesn't have age), your output should be:\n// john_doe\n// john@example.com\n// 18",
             "solution_type": "script",
+            "reference_solution": "const user = { username: \"john_doe\", email: \"john@example.com\" };\nconst { username, email, age = 18 } = user;\nconsole.log(username);\nconsole.log(email);\nconsole.log(age);",
             "testCases": [
               {
                 "input": { "user": { "username": "john_doe", "email": "john@example.com" } },
@@ -4459,6 +4646,7 @@ export const courses = [
           {
             "description": "// Do not rename data, use it as input for your program.\n// While testing we will change its value.\nconst data = { id: 101, info: { name: \"Product A\", price: 50 } };\n\n// Use nested destructuring to extract id, name, and price\n// Print all three values on separate lines\n// For the given data object, your output should be:\n// 101\n// Product A\n// 50",
             "solution_type": "script",
+            "reference_solution": "const data = { id: 101, info: { name: \"Product A\", price: 50 } };\nconst { id, info: { name, price } } = data;\nconsole.log(id);\nconsole.log(name);\nconsole.log(price);",
             "testCases": [
               {
                 "input": { "data": { "id": 101, "info": { "name": "Product A", "price": 50 } } },
@@ -4477,6 +4665,7 @@ export const courses = [
           {
             "description": "// Do not rename a and b, use them as input for your program.\n// While testing we will change their values.\nconst a = 10;\nconst b = 20;\n\n// Swap the values of a and b using array destructuring\n// Do NOT use a temporary variable\n// Print both values after swapping on separate lines\n// For a = 10 and b = 20, your output should be:\n// 20\n// 10",
             "solution_type": "script",
+            "reference_solution": "const a = 10;\nconst b = 20;\nconst [swappedA, swappedB] = [b, a];\nconsole.log(swappedA);\nconsole.log(swappedB);",
             "testCases": [
               {
                 "input": { "a": 10, "b": 20 },
@@ -4499,6 +4688,7 @@ export const courses = [
           {
             "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [1, 2, 3, 4, 5, 6];\n\n// Use array destructuring to skip the first two elements and extract the rest\n// Print the extracted elements, each on a new line\n// For arr = [1, 2, 3, 4, 5, 6], your output should be:\n// 3\n// 4\n// 5\n// 6",
             "solution_type": "script",
+            "reference_solution": "const arr = [1, 2, 3, 4, 5, 6];\nconst [, , ...rest] = arr;\nfor (let i = 0; i < rest.length; i++) {\n  console.log(rest[i]);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5, 6] },
@@ -4517,6 +4707,7 @@ export const courses = [
           {
             "description": "// Do not rename config, use it as input for your program.\n// While testing we will change its value.\nconst config = { host: \"localhost\", port: 3000, timeout: 5000 };\n\n// Use object destructuring with renaming\n// Extract 'host' as 'serverHost' and 'port' as 'serverPort'\n// Print both renamed variables on separate lines\n// For the given config, your output should be:\n// localhost\n// 3000",
             "solution_type": "script",
+            "reference_solution": "const config = { host: \"localhost\", port: 3000, timeout: 5000 };\nconst { host: serverHost, port: serverPort } = config;\nconsole.log(serverHost);\nconsole.log(serverPort);",
             "testCases": [
               {
                 "input": { "config": { "host": "localhost", "port": 3000, "timeout": 5000 } },
@@ -4535,6 +4726,7 @@ export const courses = [
           {
             "description": "// Do not rename students, use it as input for your program.\n// While testing we will change its value.\nconst students = [\n  { name: \"Alice\", grade: 85 },\n  { name: \"Bob\", grade: 92 },\n  { name: \"Charlie\", grade: 78 }\n];\n\n// Use array and object destructuring to extract the name from the first student\n// and the grade from the second student\n// Print both values on separate lines\n// For the given students array, your output should be:\n// Alice\n// 92",
             "solution_type": "script",
+            "reference_solution": "const students = [{ name: \"Alice\", grade: 85 }, { name: \"Bob\", grade: 92 }, { name: \"Charlie\", grade: 78 }];\nconst [{ name: firstName }, { grade: secondGrade }] = students;\nconsole.log(firstName);\nconsole.log(secondGrade);",
             "testCases": [
               {
                 "input": { "students": [{ "name": "Alice", "grade": 85 }, { "name": "Bob", "grade": 92 }, { "name": "Charlie", "grade": 78 }] },
@@ -4553,6 +4745,7 @@ export const courses = [
           {
             "description": "// Do not rename response, use it as input for your program.\n// While testing we will change its value.\nconst response = {\n  status: 200,\n  data: {\n    user: { id: 1, name: \"John\" },\n    posts: [\"post1\", \"post2\"]\n  }\n};\n\n// Use nested destructuring to extract:\n// - status from the top level\n// - name from data.user\n// - The first post from data.posts array\n// Print all three values on separate lines\n// For the given response, your output should be:\n// 200\n// John\n// post1",
             "solution_type": "script",
+            "reference_solution": "const response = { status: 200, data: { user: { id: 1, name: \"John\" }, posts: [\"post1\", \"post2\"] } };\nconst { status, data: { user: { name }, posts: [firstPost] } } = response;\nconsole.log(status);\nconsole.log(name);\nconsole.log(firstPost);",
             "testCases": [
               {
                 "input": { "response": { "status": 200, "data": { "user": { "id": 1, "name": "John" }, "posts": ["post1", "post2"] } } },
@@ -4582,6 +4775,7 @@ export const courses = [
           {
             "description": "// Do not rename arr1 and arr2, use them as input for your program.\n// While testing we will change their values.\nconst arr1 = [1, 2, 3];\nconst arr2 = [4, 5, 6];\n\n// Use the spread operator to combine arr1 and arr2 into a new array\n// Print each element of the combined array on a new line\n// For arr1 = [1, 2, 3] and arr2 = [4, 5, 6], your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5\n// 6",
             "solution_type": "script",
+            "reference_solution": "const arr1 = [1, 2, 3];\nconst arr2 = [4, 5, 6];\nconst combined = [...arr1, ...arr2];\nfor (let i = 0; i < combined.length; i++) {\n  console.log(combined[i]);\n}",
             "testCases": [
               {
                 "input": { "arr1": [1, 2, 3], "arr2": [4, 5, 6] },
@@ -4600,6 +4794,7 @@ export const courses = [
           {
             "description": "// Do not rename original, use it as input for your program.\n// While testing we will change its value.\nconst original = [1, 2, 3, 4, 5];\n\n// Create a shallow copy of the array using the spread operator\n// Modify the first element of the copy to be 100\n// Print the first element of the original array, then the first element of the copy\n// This demonstrates that they are independent\n// For original = [1, 2, 3, 4, 5], your output should be:\n// 1\n// 100",
             "solution_type": "script",
+            "reference_solution": "const original = [1, 2, 3, 4, 5];\nconst copy = [...original];\ncopy[0] = 100;\nconsole.log(original[0]);\nconsole.log(copy[0]);",
             "testCases": [
               {
                 "input": { "original": [1, 2, 3, 4, 5] },
@@ -4618,6 +4813,7 @@ export const courses = [
           {
             "description": "// Do not rename obj1 and obj2, use them as input for your program.\n// While testing we will change their values.\nconst obj1 = { a: 1, b: 2 };\nconst obj2 = { c: 3, d: 4 };\n\n// Use the spread operator to merge obj1 and obj2 into a new object\n// Print all values of the merged object using Object.values(), each on a new line\n// For obj1 = { a: 1, b: 2 } and obj2 = { c: 3, d: 4 }, your output should be:\n// 1\n// 2\n// 3\n// 4",
             "solution_type": "script",
+            "reference_solution": "const obj1 = { a: 1, b: 2 };\nconst obj2 = { c: 3, d: 4 };\nconst merged = { ...obj1, ...obj2 };\nconst vals = Object.values(merged);\nfor (let i = 0; i < vals.length; i++) {\n  console.log(vals[i]);\n}",
             "testCases": [
               {
                 "input": { "obj1": { "a": 1, "b": 2 }, "obj2": { "c": 3, "d": 4 } },
@@ -4636,6 +4832,7 @@ export const courses = [
           {
             "description": "// Do not rename user, use it as input for your program.\n// While testing we will change its value.\nconst user = { name: \"Alice\", age: 25, city: \"Paris\" };\n\n// Create a new object using spread that copies user and updates the age to 26\n// Print the age from the original object, then the age from the new object\n// For the given user, your output should be:\n// 25\n// 26",
             "solution_type": "script",
+            "reference_solution": "const user = { name: \"Alice\", age: 25, city: \"Paris\" };\nconst updated = { ...user, age: 26 };\nconsole.log(user.age);\nconsole.log(updated.age);",
             "testCases": [
               {
                 "input": { "user": { "name": "Alice", "age": 25, "city": "Paris" } },
@@ -4654,6 +4851,7 @@ export const courses = [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [5, 10, 15, 20, 25];\n\n// Use rest syntax with array destructuring to get the first element and the rest\n// Calculate the sum of the rest elements (excluding the first)\n// Print the first element on one line, then the sum on the next line\n// For numbers = [5, 10, 15, 20, 25], rest = [10, 15, 20, 25], sum = 70\n// Your output should be:\n// 5\n// 70",
             "solution_type": "script",
+            "reference_solution": "const numbers = [5, 10, 15, 20, 25];\nconst [first, ...rest] = numbers;\nlet sum = 0;\nfor (let i = 0; i < rest.length; i++) sum += rest[i];\nconsole.log(first);\nconsole.log(sum);",
             "testCases": [
               {
                 "input": { "numbers": [5, 10, 15, 20, 25] },
@@ -4672,6 +4870,7 @@ export const courses = [
           {
             "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [10, 20, 30, 40, 50];\n\n// Use spread operator to insert the number 25 between 20 and 30\n// Create a new array with: first 2 elements, then 25, then the rest\n// Print each element of the new array on a new line\n// For arr = [10, 20, 30, 40, 50], your output should be:\n// 10\n// 20\n// 25\n// 30\n// 40\n// 50",
             "solution_type": "script",
+            "reference_solution": "const arr = [10, 20, 30, 40, 50];\nconst newArr = [...arr.slice(0, 2), 25, ...arr.slice(2)];\nfor (let i = 0; i < newArr.length; i++) {\n  console.log(newArr[i]);\n}",
             "testCases": [
               {
                 "input": { "arr": [10, 20, 30, 40, 50] },
@@ -4690,6 +4889,7 @@ export const courses = [
           {
             "description": "// Do not rename obj, use it as input for your program.\n// While testing we will change its value.\nconst obj = { a: 1, b: 2, c: 3, d: 4 };\n\n// Use rest syntax with object destructuring to extract 'a' and gather the rest\n// Print the value of 'a', then print the count of remaining properties\n// For obj = { a: 1, b: 2, c: 3, d: 4 }, rest has 3 properties\n// Your output should be:\n// 1\n// 3",
             "solution_type": "script",
+            "reference_solution": "const obj = { a: 1, b: 2, c: 3, d: 4 };\nconst { a, ...rest } = obj;\nconsole.log(a);\nconsole.log(Object.keys(rest).length);",
             "testCases": [
               {
                 "input": { "obj": { "a": 1, "b": 2, "c": 3, "d": 4 } },
@@ -4708,6 +4908,7 @@ export const courses = [
           {
             "description": "// Do not rename arrays, use it as input for your program.\n// While testing we will change its value.\nconst arrays = [[1, 2], [3, 4], [5, 6]];\n\n// Use spread operator to flatten the array of arrays into a single array\n// Print each element of the flattened array on a new line\n// For arrays = [[1, 2], [3, 4], [5, 6]], your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5\n// 6",
             "solution_type": "script",
+            "reference_solution": "const arrays = [[1, 2], [3, 4], [5, 6]];\nlet flat = [];\nfor (let i = 0; i < arrays.length; i++) {\n  flat = [...flat, ...arrays[i]];\n}\nfor (let i = 0; i < flat.length; i++) {\n  console.log(flat[i]);\n}",
             "testCases": [
               {
                 "input": { "arrays": [[1, 2], [3, 4], [5, 6]] },
@@ -4726,6 +4927,7 @@ export const courses = [
           {
             "description": "// Do not rename defaults and overrides, use them as input for your program.\n// While testing we will change their values.\nconst defaults = { theme: \"light\", fontSize: 14, language: \"en\" };\nconst overrides = { fontSize: 16, language: \"fr\" };\n\n// Merge defaults and overrides using spread operator\n// overrides should take precedence over defaults\n// Print all values from the merged object using Object.values(), each on a new line\n// For the given objects, your output should be:\n// light\n// 16\n// fr",
             "solution_type": "script",
+            "reference_solution": "const defaults = { theme: \"light\", fontSize: 14, language: \"en\" };\nconst overrides = { fontSize: 16, language: \"fr\" };\nconst merged = { ...defaults, ...overrides };\nconst vals = Object.values(merged);\nfor (let i = 0; i < vals.length; i++) {\n  console.log(vals[i]);\n}",
             "testCases": [
               {
                 "input": { "defaults": { "theme": "light", "fontSize": 14, "language": "en" }, "overrides": { "fontSize": 16, "language": "fr" } },
@@ -4744,6 +4946,7 @@ export const courses = [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"hello\";\n\n// Use spread operator to convert the string into an array of characters\n// Then use rest syntax to get the first character and the rest\n// Print the first character, then print the count of remaining characters\n// For str = \"hello\", first = 'h', rest has 4 characters\n// Your output should be:\n// h\n// 4",
             "solution_type": "script",
+            "reference_solution": "const str = \"hello\";\nconst chars = [...str];\nconst [first, ...rest] = chars;\nconsole.log(first);\nconsole.log(rest.length);",
             "testCases": [
               {
                 "input": { "str": "hello" },
@@ -4783,6 +4986,7 @@ export const courses = [
           {
             "description": "// Do not rename user, use it as input for your program.\n// While testing we will change its value.\nconst user = { name: \"Alice\", age: 25, city: \"Paris\" };\n\n// Convert the user object to a JSON string using JSON.stringify()\n// Print the JSON string\n// For the given user, your output should be:\n// {\"name\":\"Alice\",\"age\":25,\"city\":\"Paris\"}",
             "solution_type": "script",
+            "reference_solution": "const user = { name: \"Alice\", age: 25, city: \"Paris\" };\nconsole.log(JSON.stringify(user));",
             "testCases": [
               {
                 "input": { "user": { "name": "Alice", "age": 25, "city": "Paris" } },
@@ -4801,6 +5005,7 @@ export const courses = [
           {
             "description": "// Do not rename jsonStr, use it as input for your program.\n// While testing we will change its value.\nconst jsonStr = '{\"product\":\"Laptop\",\"price\":999,\"inStock\":true}';\n\n// Parse the JSON string using JSON.parse()\n// Extract and print the product name and price on separate lines\n// For the given jsonStr, your output should be:\n// Laptop\n// 999",
             "solution_type": "script",
+            "reference_solution": "const jsonStr = '{\"product\":\"Laptop\",\"price\":999,\"inStock\":true}';\nconst obj = JSON.parse(jsonStr);\nconsole.log(obj.product);\nconsole.log(obj.price);",
             "testCases": [
               {
                 "input": { "jsonStr": "{\"product\":\"Laptop\",\"price\":999,\"inStock\":true}" },
@@ -4819,6 +5024,7 @@ export const courses = [
           {
             "description": "// Do not rename data, use it as input for your program.\n// While testing we will change its value.\nconst data = { name: \"Test\", value: 42, active: true };\n\n// Convert data to a JSON string with indentation (use 2 spaces)\n// Print the formatted JSON string\n// For the given data, your output should be:\n// {\n//   \"name\": \"Test\",\n//   \"value\": 42,\n//   \"active\": true\n// }",
             "solution_type": "script",
+            "reference_solution": "const data = { name: \"Test\", value: 42, active: true };\nconsole.log(JSON.stringify(data, null, 2));",
             "testCases": [
               {
                 "input": { "data": { "name": "Test", "value": 42, "active": true } },
@@ -4837,6 +5043,7 @@ export const courses = [
           {
             "description": "// Do not rename original, use it as input for your program.\n// While testing we will change its value.\nconst original = { name: \"Alice\", scores: [85, 90, 95] };\n\n// Create a deep clone of the original object using JSON methods\n// Modify the first score in the clone to 100\n// Print the first score from original, then from the clone\n// This demonstrates they are independent\n// For the given original, your output should be:\n// 85\n// 100",
             "solution_type": "script",
+            "reference_solution": "const original = { name: \"Alice\", scores: [85, 90, 95] };\nconst clone = JSON.parse(JSON.stringify(original));\nclone.scores[0] = 100;\nconsole.log(original.scores[0]);\nconsole.log(clone.scores[0]);",
             "testCases": [
               {
                 "input": { "original": { "name": "Alice", "scores": [85, 90, 95] } },
@@ -4855,6 +5062,7 @@ export const courses = [
           {
             "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [1, 2, 3, 4, 5];\n\n// Convert the array to a JSON string\n// Then parse it back and print each element on a new line\n// For arr = [1, 2, 3, 4, 5], your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5",
             "solution_type": "script",
+            "reference_solution": "const arr = [1, 2, 3, 4, 5];\nconst str = JSON.stringify(arr);\nconst parsed = JSON.parse(str);\nfor (let i = 0; i < parsed.length; i++) {\n  console.log(parsed[i]);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -4873,6 +5081,7 @@ export const courses = [
           {
             "description": "// Do not rename obj, use it as input for your program.\n// While testing we will change its value.\nconst obj = {\n  id: 1,\n  name: \"John\",\n  email: \"john@example.com\",\n  password: \"secret123\",\n  role: \"user\"\n};\n\n// Convert obj to JSON, but exclude the 'password' field\n// Use the replacer parameter in JSON.stringify()\n// Print the resulting JSON string\n// For the given obj, your output should be:\n// {\"id\":1,\"name\":\"John\",\"email\":\"john@example.com\",\"role\":\"user\"}",
             "solution_type": "script",
+            "reference_solution": "const obj = { id: 1, name: \"John\", email: \"john@example.com\", password: \"secret123\", role: \"user\" };\nfunction replacer(key, value) {\n  if (key === 'password') return undefined;\n  return value;\n}\nconsole.log(JSON.stringify(obj, replacer));",
             "testCases": [
               {
                 "input": { "obj": { "id": 1, "name": "John", "email": "john@example.com", "password": "secret123", "role": "user" } },
@@ -4887,6 +5096,7 @@ export const courses = [
           {
             "description": "// Do not rename nested, use it as input for your program.\n// While testing we will change its value.\nconst nested = {\n  user: {\n    name: \"Bob\",\n    address: {\n      city: \"Paris\",\n      country: \"France\"\n    }\n  }\n};\n\n// Convert the nested object to JSON and back\n// Access and print the city from the parsed object\n// For the given nested object, your output should be: Paris",
             "solution_type": "script",
+            "reference_solution": "const nested = { user: { name: \"Bob\", address: { city: \"Paris\", country: \"France\" } } };\nconst str = JSON.stringify(nested);\nconst parsed = JSON.parse(str);\nconsole.log(parsed.user.address.city);",
             "testCases": [
               {
                 "input": { "nested": { "user": { "name": "Bob", "address": { "city": "Paris", "country": "France" } } } },
@@ -4905,6 +5115,7 @@ export const courses = [
           {
             "description": "// Do not rename jsonStr, use it as input for your program.\n// While testing we will change its value.\nconst jsonStr = '[{\"name\":\"Alice\",\"age\":25},{\"name\":\"Bob\",\"age\":30},{\"name\":\"Charlie\",\"age\":35}]';\n\n// Parse the JSON string (array of objects)\n// Calculate and print the average age\n// Round to 2 decimal places\n// For the given jsonStr, average = (25 + 30 + 35) / 3 = 30.00\n// Your output should be: 30.00",
             "solution_type": "script",
+            "reference_solution": "const jsonStr = '[{\"name\":\"Alice\",\"age\":25},{\"name\":\"Bob\",\"age\":30},{\"name\":\"Charlie\",\"age\":35}]';\nconst arr = JSON.parse(jsonStr);\nlet sum = 0;\nfor (let i = 0; i < arr.length; i++) sum += arr[i].age;\nconst avg = sum / arr.length;\nconsole.log(avg.toFixed(2));",
             "testCases": [
               {
                 "input": { "jsonStr": "[{\"name\":\"Alice\",\"age\":25},{\"name\":\"Bob\",\"age\":30},{\"name\":\"Charlie\",\"age\":35}]" },
@@ -4923,6 +5134,7 @@ export const courses = [
           {
             "description": "// Do not rename data, use it as input for your program.\n// While testing we will change its value.\nconst data = {\n  items: [\n    { name: \"Item1\", price: 10 },\n    { name: \"Item2\", price: 20 },\n    { name: \"Item3\", price: 30 }\n  ]\n};\n\n// Convert data to JSON string, parse it back\n// Calculate the total price of all items\n// Print only the total\n// For the given data, your output should be: 60",
             "solution_type": "script",
+            "reference_solution": "const data = { items: [{ name: \"Item1\", price: 10 }, { name: \"Item2\", price: 20 }, { name: \"Item3\", price: 30 }] };\nconst str = JSON.stringify(data);\nconst parsed = JSON.parse(str);\nlet total = 0;\nfor (let i = 0; i < parsed.items.length; i++) total += parsed.items[i].price;\nconsole.log(total);",
             "testCases": [
               {
                 "input": { "data": { "items": [{ "name": "Item1", "price": 10 }, { "name": "Item2", "price": 20 }, { "name": "Item3", "price": 30 }] } },
@@ -4941,6 +5153,7 @@ export const courses = [
           {
             "description": "// Do not rename config, use it as input for your program.\n// While testing we will change its value.\nconst config = {\n  theme: \"dark\",\n  fontSize: 14,\n  notifications: true,\n  autoSave: false\n};\n\n// Convert config to JSON string, parse it back\n// Count how many boolean properties exist\n// Print only the count\n// For the given config, your output should be: 2",
             "solution_type": "script",
+            "reference_solution": "const config = { theme: \"dark\", fontSize: 14, notifications: true, autoSave: false };\nconst str = JSON.stringify(config);\nconst parsed = JSON.parse(str);\nlet count = 0;\nfor (const key in parsed) {\n  if (typeof parsed[key] === 'boolean') count++;\n}\nconsole.log(count);",
             "testCases": [
               {
                 "input": { "config": { "theme": "dark", "fontSize": 14, "notifications": true, "autoSave": false } },
@@ -4977,6 +5190,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that takes no parameters and returns \"Hello, World!\".\n  Examples:\n    greet() => \"Hello, World!\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction greet() {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "greet",
+            "reference_solution": "function greet() {\n  return \"Hello, World!\";\n}",
             "testCases": [
               {
                 "input": {},
@@ -4988,6 +5202,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to double a number.\n  Examples:\n    double(5) => 10\n    double(7) => 14\n    double(0) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction double(num) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "double",
+            "reference_solution": "function double(num) {\n  return num * 2;\n}",
             "testCases": [
               {
                 "input": { "num": 5 },
@@ -5011,6 +5226,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to add two numbers.\n  Examples:\n    add(10, 20) => 30\n    add(5, 15) => 20\n    add(0, 0) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction add(a, b) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "add",
+            "reference_solution": "function add(a, b) {\n  return a + b;\n}",
             "testCases": [
               {
                 "input": { "a": 10, "b": 20 },
@@ -5034,6 +5250,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to check if a number is even.\n  Examples:\n    isEven(4) => true\n    isEven(7) => false\n    isEven(0) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction isEven(num) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "isEven",
+            "reference_solution": "function isEven(num) {\n  return num % 2 === 0;\n}",
             "testCases": [
               {
                 "input": { "num": 4 },
@@ -5057,6 +5274,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to find the maximum of two numbers.\n  If they're equal, return either one.\n  Examples:\n    getMax(15, 10) => 15\n    getMax(5, 20) => 20\n    getMax(10, 10) => 10\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction getMax(x, y) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "getMax",
+            "reference_solution": "function getMax(x, y) {\n  if (x >= y) return x;\n  return y;\n}",
             "testCases": [
               {
                 "input": { "x": 15, "y": 10 },
@@ -5080,6 +5298,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to calculate the area of a rectangle.\n  Area = width × height\n  Examples:\n    calculateArea(5, 10) => 50\n    calculateArea(7, 3) => 21\n    calculateArea(1, 1) => 1\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction calculateArea(width, height) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "calculateArea",
+            "reference_solution": "function calculateArea(width, height) {\n  return width * height;\n}",
             "testCases": [
               {
                 "input": { "width": 5, "height": 10 },
@@ -5103,6 +5322,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to count vowels in a string.\n  Count vowels (a, e, i, o, u) - case insensitive.\n  Examples:\n    countVowels(\"hello\") => 2\n    countVowels(\"JavaScript\") => 3\n    countVowels(\"AEIOU\") => 5\n    countVowels(\"xyz\") => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction countVowels(str) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "countVowels",
+            "reference_solution": "function countVowels(str) {\n  const lower = str.toLowerCase();\n  let count = 0;\n  for (let i = 0; i < lower.length; i++) {\n    const c = lower[i];\n    if (c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u') count++;\n  }\n  return count;\n}",
             "testCases": [
               {
                 "input": { "str": "hello" },
@@ -5126,6 +5346,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to reverse a string.\n  Examples:\n    reverseString(\"hello\") => \"olleh\"\n    reverseString(\"world\") => \"dlrow\"\n    reverseString(\"JavaScript\") => \"tpircSavaJ\"\n    reverseString(\"a\") => \"a\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction reverseString(str) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "reverseString",
+            "reference_solution": "function reverseString(str) {\n  let result = '';\n  for (let i = str.length - 1; i >= 0; i--) {\n    result += str[i];\n  }\n  return result;\n}",
             "testCases": [
               {
                 "input": { "str": "hello" },
@@ -5149,6 +5370,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to check if a string is a palindrome.\n  A palindrome reads the same forwards and backwards.\n  Examples:\n    isPalindrome(\"racecar\") => true\n    isPalindrome(\"hello\") => false\n    isPalindrome(\"madam\") => true\n    isPalindrome(\"noon\") => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction isPalindrome(str) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "isPalindrome",
+            "reference_solution": "function isPalindrome(str) {\n  let reversed = '';\n  for (let i = str.length - 1; i >= 0; i--) {\n    reversed += str[i];\n  }\n  return str === reversed;\n}",
             "testCases": [
               {
                 "input": { "str": "racecar" },
@@ -5176,6 +5398,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to calculate the sum of all elements in an array.\n  Examples:\n    sumArray([1, 2, 3, 4, 5]) => 15\n    sumArray([10, 20, 30]) => 60\n    sumArray([5]) => 5\n    sumArray([0, 0, 0]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sumArray(arr) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "sumArray",
+            "reference_solution": "function sumArray(arr) {\n  let sum = 0;\n  for (let i = 0; i < arr.length; i++) {\n    sum += arr[i];\n  }\n  return sum;\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -5199,6 +5422,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to find the largest number in an array.\n  Examples:\n    findMax([5, 12, 8, 21, 3]) => 21\n    findMax([1, 2, 3, 4, 5]) => 5\n    findMax([100]) => 100\n    findMax([50, 25, 75, 10]) => 75\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findMax(arr) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "findMax",
+            "reference_solution": "function findMax(arr) {\n  let max = arr[0];\n  for (let i = 1; i < arr.length; i++) {\n    if (arr[i] > max) max = arr[i];\n  }\n  return max;\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 12, 8, 21, 3] },
@@ -5222,6 +5446,7 @@ export const courses = [
             "description": "/*\n  Implement the below function to calculate the factorial of a number.\n  Factorial of n = n × (n-1) × (n-2) × ... × 1\n  Examples:\n    factorial(5) => 120 => 5 × 4 × 3 × 2 × 1\n    factorial(3) => 6 => 3 × 2 × 1\n    factorial(1) => 1\n    factorial(7) => 5040\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction factorial(n) {\n  // Implementation here.\n}",
             "solution_type": "function",
             "function_name": "factorial",
+            "reference_solution": "function factorial(n) {\n  let result = 1;\n  for (let i = 1; i <= n; i++) {\n    result *= i;\n  }\n  return result;\n}",
             "testCases": [
               {
                 "input": { "n": 5 },
@@ -5261,6 +5486,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function that takes no parameters and returns \"Hello!\".\n  Examples:\n    greet() => \"Hello!\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst greet = () => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "greet",
+            "reference_solution": "const greet = () => {\n  return \"Hello!\";\n};",
             "testCases": [
               {
                 "input": {},
@@ -5272,6 +5498,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to calculate the square of a number.\n  Examples:\n    square(5) => 25\n    square(7) => 49\n    square(0) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst square = (num) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "square",
+            "reference_solution": "const square = (num) => {\n  return num * num;\n};",
             "testCases": [
               {
                 "input": { "num": 5 },
@@ -5295,6 +5522,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to multiply two numbers.\n  Examples:\n    multiply(6, 7) => 42\n    multiply(5, 5) => 25\n    multiply(0, 100) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst multiply = (a, b) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "multiply",
+            "reference_solution": "const multiply = (a, b) => {\n  return a * b;\n};",
             "testCases": [
               {
                 "input": { "a": 6, "b": 7 },
@@ -5318,6 +5546,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to check if a number is positive.\n  Examples:\n    isPositive(5) => true\n    isPositive(-3) => false\n    isPositive(0) => false\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst isPositive = (num) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "isPositive",
+            "reference_solution": "const isPositive = (num) => {\n  return num > 0;\n};",
             "testCases": [
               {
                 "input": { "num": 5 },
@@ -5341,6 +5570,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to create a full name from first and last names.\n  Examples:\n    getFullName(\"John\", \"Doe\") => \"John Doe\"\n    getFullName(\"Jane\", \"Smith\") => \"Jane Smith\"\n    getFullName(\"Alice\", \"Johnson\") => \"Alice Johnson\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst getFullName = (firstName, lastName) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "getFullName",
+            "reference_solution": "const getFullName = (firstName, lastName) => {\n  return firstName + \" \" + lastName;\n};",
             "testCases": [
               {
                 "input": { "firstName": "John", "lastName": "Doe" },
@@ -5364,6 +5594,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to create a person object.\n  Return an object with name and age properties.\n  Examples:\n    createPerson(\"Alice\", 25) => {\"name\":\"Alice\",\"age\":25}\n    createPerson(\"Bob\", 30) => {\"name\":\"Bob\",\"age\":30}\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst createPerson = (name, age) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "createPerson",
+            "reference_solution": "const createPerson = (name, age) => {\n  return { name: name, age: age };\n};",
             "testCases": [
               {
                 "input": { "name": "Alice", "age": 25 },
@@ -5387,6 +5618,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to filter even numbers from an array.\n  Examples:\n    filterEven([1, 2, 3, 4, 5, 6]) => [2,4,6]\n    filterEven([10, 15, 20, 25]) => [10,20]\n    filterEven([1, 3, 5, 7]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst filterEven = (arr) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "filterEven",
+            "reference_solution": "const filterEven = (arr) => {\n  const result = [];\n  for (let i = 0; i < arr.length; i++) {\n    if (arr[i] % 2 === 0) result.push(arr[i]);\n  }\n  return result;\n};",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5, 6] },
@@ -5410,6 +5642,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to double all values in an array.\n  Examples:\n    doubleValues([1, 2, 3, 4]) => [2,4,6,8]\n    doubleValues([5, 10, 15]) => [10,20,30]\n    doubleValues([0, 1, 2]) => [0,2,4]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst doubleValues = (arr) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "doubleValues",
+            "reference_solution": "const doubleValues = (arr) => {\n  const result = [];\n  for (let i = 0; i < arr.length; i++) {\n    result.push(arr[i] * 2);\n  }\n  return result;\n};",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4] },
@@ -5433,6 +5666,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to calculate the sum of all elements in an array.\n  Examples:\n    sumAll([1, 2, 3, 4, 5]) => 15\n    sumAll([10, 20, 30]) => 60\n    sumAll([5]) => 5\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst sumAll = (arr) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "sumAll",
+            "reference_solution": "const sumAll = (arr) => {\n  let sum = 0;\n  for (let i = 0; i < arr.length; i++) {\n    sum += arr[i];\n  }\n  return sum;\n};",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -5456,6 +5690,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to get the length of each string in an array.\n  Examples:\n    getLengths([\"hi\", \"hello\", \"hey\"]) => [2,5,3]\n    getLengths([\"JavaScript\", \"is\", \"awesome\"]) => [10,2,7]\n    getLengths([\"a\", \"ab\", \"abc\"]) => [1,2,3]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst getLengths = (arr) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "getLengths",
+            "reference_solution": "const getLengths = (arr) => {\n  const result = [];\n  for (let i = 0; i < arr.length; i++) {\n    result.push(arr[i].length);\n  }\n  return result;\n};",
             "testCases": [
               {
                 "input": { "arr": ["hi", "hello", "hey"] },
@@ -5479,6 +5714,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to filter adults (18+) from an array of people.\n  Each person is an object with name and age properties.\n  Examples:\n    getAdults([{name: \"Alice\", age: 25}, {name: \"Bob\", age: 15}]) => [{\"name\":\"Alice\",\"age\":25}]\n    getAdults([{name: \"Charlie\", age: 30}, {name: \"Diana\", age: 20}]) => [{\"name\":\"Charlie\",\"age\":30},{\"name\":\"Diana\",\"age\":20}]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst getAdults = (people) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "getAdults",
+            "reference_solution": "const getAdults = (people) => {\n  const result = [];\n  for (let i = 0; i < people.length; i++) {\n    if (people[i].age >= 18) result.push(people[i]);\n  }\n  return result;\n};",
             "testCases": [
               {
                 "input": { "people": [{ "name": "Alice", "age": 25 }, { "name": "Bob", "age": 15 }] },
@@ -5502,6 +5738,7 @@ export const courses = [
             "description": "/*\n  Implement the below arrow function to perform basic calculator operations.\n  Operation can be \"add\", \"subtract\", \"multiply\", or \"divide\".\n  Examples:\n    calculator(10, 5, \"add\") => 15\n    calculator(10, 5, \"subtract\") => 5\n    calculator(10, 5, \"multiply\") => 50\n    calculator(10, 5, \"divide\") => 2\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst calculator = (a, b, operation) => {\n  // Implementation here\n};",
             "solution_type": "function",
             "function_name": "calculator",
+            "reference_solution": "const calculator = (a, b, operation) => {\n  if (operation === \"add\") return a + b;\n  if (operation === \"subtract\") return a - b;\n  if (operation === \"multiply\") return a * b;\n  if (operation === \"divide\") return a / b;\n  return 0;\n};",
             "testCases": [
               {
                 "input": { "a": 10, "b": 5, "operation": "add" },
@@ -5542,6 +5779,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to count down from n to 1.\n  Print each number on a new line. Stop when n reaches 0 or less.\n  Examples:\n    countdown(5) => prints \"5\\n4\\n3\\n2\\n1\"\n    countdown(3) => prints \"3\\n2\\n1\"\n    countdown(0) => prints nothing\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction countdown(n) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "countdown",
+            "reference_solution": "function countdown(n) {\n  if (n <= 0) return;\n  console.log(n);\n  countdown(n - 1);\n}",
             "testCases": [
               {
                 "input": { "n": 5 },
@@ -5565,6 +5803,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to calculate the sum of numbers from 1 to n.\n  Examples:\n    sumToN(5) => 15 (1+2+3+4+5)\n    sumToN(10) => 55\n    sumToN(1) => 1\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sumToN(n) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sumToN",
+            "reference_solution": "function sumToN(n) {\n  if (n <= 0) return 0;\n  return n + sumToN(n - 1);\n}",
             "testCases": [
               {
                 "input": { "n": 5 },
@@ -5588,6 +5827,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to calculate the factorial of n.\n  Factorial of n = n × (n-1) × (n-2) × ... × 1\n  Examples:\n    factorial(5) => 120 (5 × 4 × 3 × 2 × 1)\n    factorial(3) => 6 (3 × 2 × 1)\n    factorial(0) => 1\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction factorial(n) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "factorial",
+            "reference_solution": "function factorial(n) {\n  if (n <= 0) return 1;\n  return n * factorial(n - 1);\n}",
             "testCases": [
               {
                 "input": { "n": 5 },
@@ -5611,6 +5851,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to calculate base raised to the power of exponent.\n  Examples:\n    power(2, 3) => 8 (2 × 2 × 2)\n    power(5, 2) => 25 (5 × 5)\n    power(10, 0) => 1\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction power(base, exponent) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "power",
+            "reference_solution": "function power(base, exponent) {\n  if (exponent === 0) return 1;\n  return base * power(base, exponent - 1);\n}",
             "testCases": [
               {
                 "input": { "base": 2, "exponent": 3 },
@@ -5634,6 +5875,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to count the digits in a number.\n  Examples:\n    countDigits(12345) => 5\n    countDigits(999) => 3\n    countDigits(7) => 1\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction countDigits(num) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "countDigits",
+            "reference_solution": "function countDigits(num) {\n  if (num < 0) num = -num;\n  if (num < 10) return 1;\n  return 1 + countDigits(Math.floor(num / 10));\n}",
             "testCases": [
               {
                 "input": { "num": 12345 },
@@ -5657,6 +5899,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to find the nth Fibonacci number.\n  Fibonacci sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21...\n  Examples:\n    fibonacci(6) => 8\n    fibonacci(0) => 0\n    fibonacci(1) => 1\n    fibonacci(8) => 21\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction fibonacci(n) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "fibonacci",
+            "reference_solution": "function fibonacci(n) {\n  if (n === 0) return 0;\n  if (n === 1) return 1;\n  return fibonacci(n - 1) + fibonacci(n - 2);\n}",
             "testCases": [
               {
                 "input": { "n": 6 },
@@ -5680,6 +5923,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to reverse a string.\n  Examples:\n    reverseString(\"hello\") => \"olleh\"\n    reverseString(\"world\") => \"dlrow\"\n    reverseString(\"a\") => \"a\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction reverseString(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "reverseString",
+            "reference_solution": "function reverseString(str) {\n  if (str.length <= 1) return str;\n  return reverseString(str.slice(1)) + str[0];\n}",
             "testCases": [
               {
                 "input": { "str": "hello" },
@@ -5703,6 +5947,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to calculate the sum of all elements in an array.\n  Examples:\n    sumArray([1, 2, 3, 4, 5]) => 15\n    sumArray([10, 20, 30]) => 60\n    sumArray([5]) => 5\n    sumArray([]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sumArray(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sumArray",
+            "reference_solution": "function sumArray(arr) {\n  if (arr.length === 0) return 0;\n  return arr[0] + sumArray(arr.slice(1));\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -5726,6 +5971,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to check if a string is a palindrome.\n  A palindrome reads the same forwards and backwards.\n  Examples:\n    isPalindrome(\"racecar\") => true\n    isPalindrome(\"hello\") => false\n    isPalindrome(\"madam\") => true\n    isPalindrome(\"a\") => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction isPalindrome(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "isPalindrome",
+            "reference_solution": "function isPalindrome(str) {\n  if (str.length <= 1) return true;\n  if (str[0] !== str[str.length - 1]) return false;\n  return isPalindrome(str.slice(1, -1));\n}",
             "testCases": [
               {
                 "input": { "str": "racecar" },
@@ -5749,6 +5995,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to find the maximum number in an array.\n  Examples:\n    findMax([3, 7, 2, 9, 4]) => 9\n    findMax([1, 2, 3, 4, 5]) => 5\n    findMax([100]) => 100\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findMax(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findMax",
+            "reference_solution": "function findMax(arr) {\n  if (arr.length === 0) return undefined;\n  if (arr.length === 1) return arr[0];\n  const restMax = findMax(arr.slice(1));\n  return arr[0] > restMax ? arr[0] : restMax;\n}",
             "testCases": [
               {
                 "input": { "arr": [3, 7, 2, 9, 4] },
@@ -5772,6 +6019,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to count occurrences of a target value in an array.\n  Examples:\n    countOccurrences([1, 2, 3, 2, 4, 2], 2) => 3\n    countOccurrences([5, 5, 5, 5], 5) => 4\n    countOccurrences([1, 2, 3], 4) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction countOccurrences(arr, target) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "countOccurrences",
+            "reference_solution": "function countOccurrences(arr, target) {\n  if (arr.length === 0) return 0;\n  const count = arr[0] === target ? 1 : 0;\n  return count + countOccurrences(arr.slice(1), target);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 2, 4, 2], "target": 2 },
@@ -5795,6 +6043,7 @@ export const courses = [
             "description": "/*\n  Implement the below recursive function to flatten a nested array.\n  Return a new array with all elements at the top level.\n  Examples:\n    flatten([1, [2, 3], [4, [5, 6]]]) => [1,2,3,4,5,6]\n    flatten([1, 2, 3]) => [1,2,3]\n    flatten([[1], [2], [3]]) => [1,2,3]\n    flatten([]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction flatten(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "flatten",
+            "reference_solution": "function flatten(arr) {\n  if (arr.length === 0) return [];\n  const first = arr[0];\n  const rest = flatten(arr.slice(1));\n  if (Array.isArray(first)) {\n    return flatten(first).concat(rest);\n  }\n  return [first].concat(rest);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, [2, 3], [4, [5, 6]]] },
@@ -5832,6 +6081,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a greeting closure.\n  Return an inner function that combines greeting with a name.\n  Examples:\n    createGreeting(\"Hello, \") => returns a function\n    const greeter = createGreeting(\"Hello, \")\n    greeter(\"Alice\") => \"Hello, Alice\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createGreeting(greeting) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createGreeting",
+            "reference_solution": "function createGreeting(greeting) {\n  return function(name) {\n    return greeting + name;\n  };\n}",
             "testCases": [
               {
                 "input": { "greeting": "Hello, " },
@@ -5843,6 +6093,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a counter with closure.\n  Return an object with increment and getValue methods.\n  The count should start at 0 and persist across method calls.\n  Examples:\n    createCounter() => {increment: function, getValue: function}\n    const counter = createCounter()\n    counter.increment(); counter.getValue() => 1\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createCounter() {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createCounter",
+            "reference_solution": "function createCounter() {\n  let count = 0;\n  return {\n    increment: function() {\n      count++;\n    },\n    getValue: function() {\n      return count;\n    }\n  };\n}",
             "testCases": [
               {
                 "input": {},
@@ -5854,6 +6105,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a multiplier closure.\n  Return a function that multiplies numbers by the given multiplier.\n  Examples:\n    createMultiplier(2) => returns a function\n    const doubler = createMultiplier(2)\n    doubler(5) => 10\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createMultiplier(multiplier) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createMultiplier",
+            "reference_solution": "function createMultiplier(multiplier) {\n  return function(num) {\n    return num * multiplier;\n  };\n}",
             "testCases": [
               {
                 "input": { "multiplier": 2 },
@@ -5865,6 +6117,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates an adder closure.\n  Return a function that adds the given x value to any input.\n  Examples:\n    createAdder(10) => returns a function\n    const addTen = createAdder(10)\n    addTen(5) => 15\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createAdder(x) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createAdder",
+            "reference_solution": "function createAdder(x) {\n  return function(num) {\n    return num + x;\n  };\n}",
             "testCases": [
               {
                 "input": { "x": 10 },
@@ -5876,6 +6129,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a secret keeper with closure.\n  Return an object with getSecret and setSecret methods for data privacy.\n  Examples:\n    secretKeeper(\"myPassword\") => {getSecret: function, setSecret: function}\n    const keeper = secretKeeper(\"myPassword\")\n    keeper.getSecret() => \"myPassword\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction secretKeeper(secret) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "secretKeeper",
+            "reference_solution": "function secretKeeper(secret) {\n  return {\n    getSecret: function() {\n      return secret;\n    },\n    setSecret: function(newSecret) {\n      secret = newSecret;\n    }\n  };\n}",
             "testCases": [
               {
                 "input": { "secret": "myPassword" },
@@ -5887,6 +6141,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a bank account with closure.\n  Return an object with deposit, withdraw, and getBalance methods.\n  Examples:\n    createBankAccount(100) => {deposit: function, withdraw: function, getBalance: function}\n    const account = createBankAccount(100)\n    account.getBalance() => 100\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createBankAccount(initialBalance) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createBankAccount",
+            "reference_solution": "function createBankAccount(initialBalance) {\n  let balance = initialBalance;\n  return {\n    deposit: function(amount) {\n      balance += amount;\n    },\n    withdraw: function(amount) {\n      balance -= amount;\n    },\n    getBalance: function() {\n      return balance;\n    }\n  };\n}",
             "testCases": [
               {
                 "input": { "initialBalance": 100 },
@@ -5898,6 +6153,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a limited counter with closure.\n  Return an object with increment and getValue methods that respect the limit.\n  Examples:\n    createLimitedCounter(3) => {increment: function, getValue: function}\n    const counter = createLimitedCounter(3)\n    counter.getValue() => 0 (starts at 0)\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createLimitedCounter(limit) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createLimitedCounter",
+            "reference_solution": "function createLimitedCounter(limit) {\n  let count = 0;\n  return {\n    increment: function() {\n      if (count < limit) count++;\n    },\n    getValue: function() {\n      return count;\n    }\n  };\n}",
             "testCases": [
               {
                 "input": { "limit": 3 },
@@ -5909,6 +6165,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a logger with closure.\n  Return a function that formats messages with the given prefix.\n  Examples:\n    createLogger(\"INFO\") => returns a function\n    const logger = createLogger(\"INFO\")\n    logger(\"Server started\") => \"INFO: Server started\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createLogger(prefix) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createLogger",
+            "reference_solution": "function createLogger(prefix) {\n  return function(message) {\n    return prefix + \": \" + message;\n  };\n}",
             "testCases": [
               {
                 "input": { "prefix": "INFO" },
@@ -5920,6 +6177,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a temperature converter with closure.\n  Return a function that converts temperatures based on the unit.\n  C to F: (C × 9/5) + 32, F to C: (F - 32) × 5/9\n  Examples:\n    createTemperatureConverter(\"C\") => returns a function\n    const cToF = createTemperatureConverter(\"C\")\n    cToF(0) => 32\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createTemperatureConverter(unit) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createTemperatureConverter",
+            "reference_solution": "function createTemperatureConverter(unit) {\n  if (unit === \"C\") {\n    return function(celsius) {\n      return (celsius * 9 / 5) + 32;\n    };\n  } else {\n    return function(fahrenheit) {\n      return (fahrenheit - 32) * 5 / 9;\n    };\n  }\n}",
             "testCases": [
               {
                 "input": { "unit": "C" },
@@ -5931,6 +6189,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates an ID generator with closure.\n  Return a function that generates sequential IDs starting from 1.\n  Examples:\n    createIdGenerator() => returns a function\n    const generator = createIdGenerator()\n    generator() => 1, generator() => 2, generator() => 3\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createIdGenerator() {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createIdGenerator",
+            "reference_solution": "function createIdGenerator() {\n  let id = 0;\n  return function() {\n    id++;\n    return id;\n  };\n}",
             "testCases": [
               {
                 "input": {},
@@ -5942,6 +6201,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a \"once\" wrapper with closure.\n  Return a function that can only be called once and caches the result.\n  Examples:\n    once(someFunction) => returns a wrapped function\n    const onceWrapper = once(() => \"result\")\n    onceWrapper() => \"result\" (first call)\n    onceWrapper() => \"result\" (cached, same result)\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction once(fn) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "once",
+            "reference_solution": "function once(fn) {\n  let called = false;\n  let result;\n  return function() {\n    if (!called) {\n      result = fn.apply(this, arguments);\n      called = true;\n    }\n    return result;\n  };\n}",
             "testCases": [
               {
                 "input": { "fn": "function" },
@@ -5953,6 +6213,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that creates a calculator with closure.\n  Return an object with add, subtract, multiply, divide, and getValue methods.\n  The total starts at 0 and persists across operations.\n  Examples:\n    createCalculator() => {add: function, subtract: function, multiply: function, divide: function, getValue: function}\n    const calc = createCalculator()\n    calc.getValue() => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createCalculator() {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createCalculator",
+            "reference_solution": "function createCalculator() {\n  let total = 0;\n  return {\n    add: function(x) { total += x; },\n    subtract: function(x) { total -= x; },\n    multiply: function(x) { total *= x; },\n    divide: function(x) { total /= x; },\n    getValue: function() { return total; }\n  };\n}",
             "testCases": [
               {
                 "input": {},
@@ -5976,6 +6237,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses forEach to process an array of numbers.\n  Use forEach to collect each number into a result string, separated by newlines.\n  Examples:\n    printNumbers([1, 2, 3, 4, 5]) => \"1\\n2\\n3\\n4\\n5\"\n    printNumbers([10, 20, 30]) => \"10\\n20\\n30\"\n    printNumbers([7]) => \"7\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction printNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "printNumbers",
+            "reference_solution": "function printNumbers(arr) {\n  let result = [];\n  arr.forEach(function(n) {\n    result.push(String(n));\n  });\n  return result.join('\\n');\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -5995,6 +6257,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses forEach to convert strings to uppercase.\n  Use forEach to process each string and return them joined by newlines.\n  Examples:\n    uppercaseStrings([\"apple\", \"banana\", \"cherry\"]) => \"APPLE\\nBANANA\\nCHERRY\"\n    uppercaseStrings([\"hello\", \"world\"]) => \"HELLO\\nWORLD\"\n    uppercaseStrings([\"test\"]) => \"TEST\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction uppercaseStrings(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "uppercaseStrings",
+            "reference_solution": "function uppercaseStrings(arr) {\n  let result = [];\n  arr.forEach(function(s) {\n    result.push(s.toUpperCase());\n  });\n  return result.join('\\n');\n}",
             "testCases": [
               {
                 "input": { "arr": ["apple", "banana", "cherry"] },
@@ -6014,6 +6277,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses forEach to double numbers.\n  Use forEach to process each number and return doubled values joined by newlines.\n  Examples:\n    doubleNumbers([2, 4, 6, 8]) => \"4\\n8\\n12\\n16\"\n    doubleNumbers([1, 3, 5]) => \"2\\n6\\n10\"\n    doubleNumbers([10]) => \"20\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction doubleNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "doubleNumbers",
+            "reference_solution": "function doubleNumbers(arr) {\n  let result = [];\n  arr.forEach(function(n) {\n    result.push(String(n * 2));\n  });\n  return result.join('\\n');\n}",
             "testCases": [
               {
                 "input": { "arr": [2, 4, 6, 8] },
@@ -6033,6 +6297,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses forEach with index parameter.\n  Use forEach to format each element with its index and return joined by newlines.\n  Examples:\n    formatWithIndex([\"cat\", \"dog\", \"bird\"]) => \"Index 0: cat\\nIndex 1: dog\\nIndex 2: bird\"\n    formatWithIndex([\"apple\", \"banana\"]) => \"Index 0: apple\\nIndex 1: banana\"\n    formatWithIndex([\"test\"]) => \"Index 0: test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction formatWithIndex(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "formatWithIndex",
+            "reference_solution": "function formatWithIndex(arr) {\n  let result = [];\n  arr.forEach(function(el, i) {\n    result.push('Index ' + i + ': ' + el);\n  });\n  return result.join('\\n');\n}",
             "testCases": [
               {
                 "input": { "arr": ["cat", "dog", "bird"] },
@@ -6052,6 +6317,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses forEach to calculate the sum of all elements.\n  Use forEach to accumulate the sum and return the total.\n  Examples:\n    calculateSum([5, 10, 15, 20]) => 50\n    calculateSum([1, 2, 3, 4]) => 10\n    calculateSum([100]) => 100\n    calculateSum([0, 0, 0]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction calculateSum(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "calculateSum",
+            "reference_solution": "function calculateSum(arr) {\n  let sum = 0;\n  arr.forEach(function(n) {\n    sum += n;\n  });\n  return sum;\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 10, 15, 20] },
@@ -6075,6 +6341,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses forEach to find the maximum value.\n  Use forEach to track the maximum value and return it.\n  Examples:\n    findMaximum([3, 7, 2, 9, 1]) => 9\n    findMaximum([5, 15, 10]) => 15\n    findMaximum([42]) => 42\n    findMaximum([1, 1, 1]) => 1\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findMaximum(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findMaximum",
+            "reference_solution": "function findMaximum(arr) {\n  if (arr.length === 0) return undefined;\n  let max = arr[0];\n  arr.forEach(function(n) {\n    if (n > max) max = n;\n  });\n  return max;\n}",
             "testCases": [
               {
                 "input": { "arr": [3, 7, 2, 9, 1] },
@@ -6098,6 +6365,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses forEach to filter even numbers.\n  Use forEach to collect only even numbers and return them joined by newlines.\n  Examples:\n    filterEvenNumbers([1, 2, 3, 4, 5, 6]) => \"2\\n4\\n6\"\n    filterEvenNumbers([10, 15, 20, 25]) => \"10\\n20\"\n    filterEvenNumbers([1, 3, 5]) => \"\"\n    filterEvenNumbers([8]) => \"8\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterEvenNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterEvenNumbers",
+            "reference_solution": "function filterEvenNumbers(arr) {\n  let result = [];\n  arr.forEach(function(n) {\n    if (n % 2 === 0) result.push(String(n));\n  });\n  return result.join('\\n');\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5, 6] },
@@ -6121,6 +6389,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses forEach to extract names from objects.\n  Use forEach to collect each person's name and return them joined by newlines.\n  Examples:\n    extractNames([{name: \"Alice\", age: 25}, {name: \"Bob\", age: 30}]) => \"Alice\\nBob\"\n    extractNames([{name: \"Charlie\", age: 22}]) => \"Charlie\"\n    extractNames([{name: \"Diana\", age: 28}, {name: \"Eve\", age: 35}]) => \"Diana\\nEve\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction extractNames(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "extractNames",
+            "reference_solution": "function extractNames(arr) {\n  let result = [];\n  arr.forEach(function(obj) {\n    result.push(obj.name);\n  });\n  return result.join('\\n');\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Alice", "age": 25 }, { "name": "Bob", "age": 30 }] },
@@ -6152,6 +6421,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to double numbers.\n  Use map to create a new array with each number doubled.\n  Examples:\n    doubleNumbers([1, 2, 3, 4, 5]) => [2,4,6,8,10]\n    doubleNumbers([10, 20, 30]) => [20,40,60]\n    doubleNumbers([0]) => [0]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction doubleNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "doubleNumbers",
+            "reference_solution": "function doubleNumbers(arr) {\n  return arr.map(function(n) { return n * 2; });\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -6175,6 +6445,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to convert strings to uppercase.\n  Use map to create a new array with each string in uppercase.\n  Examples:\n    uppercaseStrings([\"hello\", \"world\", \"javascript\"]) => [\"HELLO\",\"WORLD\",\"JAVASCRIPT\"]\n    uppercaseStrings([\"apple\", \"banana\"]) => [\"APPLE\",\"BANANA\"]\n    uppercaseStrings([\"test\"]) => [\"TEST\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction uppercaseStrings(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "uppercaseStrings",
+            "reference_solution": "function uppercaseStrings(arr) {\n  return arr.map(function(s) { return s.toUpperCase(); });\n}",
             "testCases": [
               {
                 "input": { "arr": ["hello", "world", "javascript"] },
@@ -6194,6 +6465,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to square numbers.\n  Use map to create a new array with each number squared.\n  Examples:\n    squareNumbers([1, 2, 3, 4]) => [1,4,9,16]\n    squareNumbers([5, 10]) => [25,100]\n    squareNumbers([0]) => [0]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction squareNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "squareNumbers",
+            "reference_solution": "function squareNumbers(arr) {\n  return arr.map(function(n) { return n * n; });\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4] },
@@ -6217,6 +6489,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to get string lengths.\n  Use map to create a new array containing the length of each string.\n  Examples:\n    getStringLengths([\"cat\", \"elephant\", \"dog\"]) => [3,8,3]\n    getStringLengths([\"hi\", \"hello\", \"hey\"]) => [2,5,3]\n    getStringLengths([\"\"]) => [0]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction getStringLengths(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "getStringLengths",
+            "reference_solution": "function getStringLengths(arr) {\n  return arr.map(function(s) { return s.length; });\n}",
             "testCases": [
               {
                 "input": { "arr": ["cat", "elephant", "dog"] },
@@ -6240,6 +6513,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to divide numbers by 10.\n  Use map to create a new array with each number divided by 10.\n  Examples:\n    divideByTen([10, 20, 30, 40]) => [1,2,3,4]\n    divideByTen([50, 100]) => [5,10]\n    divideByTen([0]) => [0]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction divideByTen(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "divideByTen",
+            "reference_solution": "function divideByTen(arr) {\n  return arr.map(function(n) { return n / 10; });\n}",
             "testCases": [
               {
                 "input": { "arr": [10, 20, 30, 40] },
@@ -6263,6 +6537,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to extract names from objects.\n  Use map to create a new array containing only the names from person objects.\n  Examples:\n    extractNames([{name: \"Alice\", age: 25}, {name: \"Bob\", age: 30}]) => [\"Alice\",\"Bob\"]\n    extractNames([{name: \"Charlie\", age: 22}]) => [\"Charlie\"]\n    extractNames([{name: \"Diana\", age: 28}, {name: \"Eve\", age: 35}]) => [\"Diana\",\"Eve\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction extractNames(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "extractNames",
+            "reference_solution": "function extractNames(arr) {\n  return arr.map(function(obj) { return obj.name; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Alice", "age": 25 }, { "name": "Bob", "age": 30 }] },
@@ -6282,6 +6557,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to add 100 to each number.\n  Use map to create a new array where each number has 100 added to it.\n  Examples:\n    addHundred([5, 10, 15, 20]) => [105,110,115,120]\n    addHundred([0, 50]) => [100,150]\n    addHundred([1]) => [101]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction addHundred(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "addHundred",
+            "reference_solution": "function addHundred(arr) {\n  return arr.map(function(n) { return n + 100; });\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 10, 15, 20] },
@@ -6301,6 +6577,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to convert numbers to booleans.\n  Use map to create a new array where each number is converted to a boolean.\n  Even numbers should be true, odd numbers should be false.\n  Examples:\n    numbersToEvenBooleans([1, 2, 3, 4, 5]) => [false,true,false,true,false]\n    numbersToEvenBooleans([10, 15, 20]) => [true,false,true]\n    numbersToEvenBooleans([7]) => [false]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction numbersToEvenBooleans(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "numbersToEvenBooleans",
+            "reference_solution": "function numbersToEvenBooleans(arr) {\n  return arr.map(function(n) { return n % 2 === 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -6324,6 +6601,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to format student data.\n  Use map to create a new array of strings formatted as: \"name: score\".\n  Examples:\n    formatStudents([{name: \"Alice\", score: 85}, {name: \"Bob\", score: 92}]) => [\"Alice: 85\",\"Bob: 92\"]\n    formatStudents([{name: \"Charlie\", score: 78}]) => [\"Charlie: 78\"]\n    formatStudents([{name: \"Diana\", score: 95}, {name: \"Eve\", score: 88}]) => [\"Diana: 95\",\"Eve: 88\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction formatStudents(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "formatStudents",
+            "reference_solution": "function formatStudents(arr) {\n  return arr.map(function(obj) { return obj.name + ': ' + obj.score; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Alice", "score": 85 }, { "name": "Bob", "score": 92 }] },
@@ -6343,6 +6621,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses map to convert strings to numbers.\n  Use map to create a new array with each string converted to a number.\n  Examples:\n    stringsToNumbers([\"1\", \"2\", \"3\", \"4\"]) => [1,2,3,4]\n    stringsToNumbers([\"10\", \"20\"]) => [10,20]\n    stringsToNumbers([\"5\"]) => [5]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction stringsToNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "stringsToNumbers",
+            "reference_solution": "function stringsToNumbers(arr) {\n  return arr.map(function(s) { return Number(s); });\n}",
             "testCases": [
               {
                 "input": { "arr": ["1", "2", "3", "4"] },
@@ -6378,6 +6657,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get even numbers.\n  Use filter to create a new array containing only even numbers.\n  Examples:\n    filterEvenNumbers([1, 2, 3, 4, 5, 6, 7, 8]) => [2,4,6,8]\n    filterEvenNumbers([10, 15, 20, 25]) => [10,20]\n    filterEvenNumbers([1, 3, 5]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterEvenNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterEvenNumbers",
+            "reference_solution": "function filterEvenNumbers(arr) {\n  return arr.filter(function(n) { return n % 2 === 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5, 6, 7, 8] },
@@ -6401,6 +6681,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get numbers greater than 30.\n  Use filter to create a new array containing only numbers greater than 30.\n  Examples:\n    filterGreaterThan30([10, 25, 30, 45, 50, 60]) => [45,50,60]\n    filterGreaterThan30([5, 10, 15]) => []\n    filterGreaterThan30([100, 200]) => [100,200]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterGreaterThan30(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterGreaterThan30",
+            "reference_solution": "function filterGreaterThan30(arr) {\n  return arr.filter(function(n) { return n > 30; });\n}",
             "testCases": [
               {
                 "input": { "arr": [10, 25, 30, 45, 50, 60] },
@@ -6424,6 +6705,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get long strings.\n  Use filter to create a new array containing only strings with length greater than 5.\n  Examples:\n    filterLongStrings([\"apple\", \"banana\", \"kiwi\", \"grape\", \"watermelon\"]) => [\"banana\",\"watermelon\"]\n    filterLongStrings([\"hi\", \"hello\", \"hey\"]) => []\n    filterLongStrings([\"JavaScript\", \"is\", \"awesome\"]) => [\"JavaScript\",\"awesome\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterLongStrings(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterLongStrings",
+            "reference_solution": "function filterLongStrings(arr) {\n  return arr.filter(function(s) { return s.length > 5; });\n}",
             "testCases": [
               {
                 "input": { "arr": ["apple", "banana", "kiwi", "grape", "watermelon"] },
@@ -6447,6 +6729,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get adults.\n  Use filter to create a new array containing only people aged 18 or older.\n  Examples:\n    filterAdults([{name: \"Alice\", age: 25}, {name: \"Bob\", age: 17}, {name: \"Charlie\", age: 30}]) => [{\"name\":\"Alice\",\"age\":25},{\"name\":\"Charlie\",\"age\":30}]\n    filterAdults([{name: \"Diana\", age: 15}, {name: \"Eve\", age: 16}]) => []\n    filterAdults([{name: \"Frank\", age: 18}]) => [{\"name\":\"Frank\",\"age\":18}]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterAdults(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterAdults",
+            "reference_solution": "function filterAdults(arr) {\n  return arr.filter(function(obj) { return obj.age >= 18; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Alice", "age": 25 }, { "name": "Bob", "age": 17 }, { "name": "Charlie", "age": 30 }] },
@@ -6470,6 +6753,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get numbers divisible by 10.\n  Use filter to create a new array containing only numbers divisible by 10.\n  Examples:\n    filterDivisibleBy10([5, 10, 15, 20, 25, 30]) => [10,20,30]\n    filterDivisibleBy10([3, 7, 11]) => []\n    filterDivisibleBy10([100, 200, 300]) => [100,200,300]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterDivisibleBy10(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterDivisibleBy10",
+            "reference_solution": "function filterDivisibleBy10(arr) {\n  return arr.filter(function(n) { return n % 10 === 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 10, 15, 20, 25, 30] },
@@ -6493,6 +6777,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get strings starting with 'c'.\n  Use filter to create a new array containing only strings that start with the letter 'c'.\n  Examples:\n    filterStartsWithC([\"hello\", \"world\", \"javascript\", \"code\"]) => [\"code\"]\n    filterStartsWithC([\"cat\", \"dog\", \"cow\"]) => [\"cat\",\"cow\"]\n    filterStartsWithC([\"apple\", \"banana\"]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterStartsWithC(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterStartsWithC",
+            "reference_solution": "function filterStartsWithC(arr) {\n  return arr.filter(function(s) { return s[0] === 'c'; });\n}",
             "testCases": [
               {
                 "input": { "arr": ["hello", "world", "javascript", "code"] },
@@ -6516,6 +6801,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get odd numbers.\n  Use filter to create a new array containing only odd numbers.\n  Examples:\n    filterOddNumbers([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) => [1,3,5,7,9]\n    filterOddNumbers([2, 4, 6, 8]) => []\n    filterOddNumbers([11, 13, 15]) => [11,13,15]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterOddNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterOddNumbers",
+            "reference_solution": "function filterOddNumbers(arr) {\n  return arr.filter(function(n) { return n % 2 !== 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] },
@@ -6539,6 +6825,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get cheap items.\n  Use filter to create a new array containing only items with price less than 1.0.\n  Examples:\n    filterCheapItems([{name: \"Apple\", price: 1.5}, {name: \"Banana\", price: 0.8}, {name: \"Orange\", price: 2.0}]) => [{\"name\":\"Banana\",\"price\":0.8}]\n    filterCheapItems([{name: \"Grape\", price: 3.0}, {name: \"Melon\", price: 5.0}]) => []\n    filterCheapItems([{name: \"Cherry\", price: 0.5}]) => [{\"name\":\"Cherry\",\"price\":0.5}]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterCheapItems(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterCheapItems",
+            "reference_solution": "function filterCheapItems(arr) {\n  return arr.filter(function(obj) { return obj.price < 1.0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Apple", "price": 1.5 }, { "name": "Banana", "price": 0.8 }, { "name": "Orange", "price": 2.0 }] },
@@ -6558,6 +6845,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get numbers in range.\n  Use filter to create a new array containing numbers between 3 and 7 (inclusive).\n  Examples:\n    filterNumbersInRange([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) => [3,4,5,6,7]\n    filterNumbersInRange([1, 2, 8, 9]) => []\n    filterNumbersInRange([5, 6]) => [5,6]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterNumbersInRange(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterNumbersInRange",
+            "reference_solution": "function filterNumbersInRange(arr) {\n  return arr.filter(function(n) { return n >= 3 && n <= 7; });\n}",
             "testCases": [
               {
                 "input": { "arr": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
@@ -6581,6 +6869,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses filter to get strings with exactly 3 characters.\n  Use filter to create a new array containing strings with exactly 3 characters.\n  Examples:\n    filterThreeCharStrings([\"a\", \"ab\", \"abc\", \"abcd\", \"abcde\"]) => [\"abc\"]\n    filterThreeCharStrings([\"cat\", \"dog\", \"bird\"]) => [\"cat\",\"dog\"]\n    filterThreeCharStrings([\"hello\", \"hi\"]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterThreeCharStrings(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterThreeCharStrings",
+            "reference_solution": "function filterThreeCharStrings(arr) {\n  return arr.filter(function(s) { return s.length === 3; });\n}",
             "testCases": [
               {
                 "input": { "arr": ["a", "ab", "abc", "abcd", "abcde"] },
@@ -6617,6 +6906,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses find to get first number greater than 12.\n  Use find to get the first number greater than 12.\n  Examples:\n    findFirstGreaterThan12([5, 10, 15, 20, 25]) => 15\n    findFirstGreaterThan12([1, 2, 3]) => undefined\n    findFirstGreaterThan12([13, 14, 15]) => 13\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findFirstGreaterThan12(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findFirstGreaterThan12",
+            "reference_solution": "function findFirstGreaterThan12(arr) {\n  return arr.find(function(n) { return n > 12; });\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 10, 15, 20, 25] },
@@ -6640,6 +6930,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses findIndex to get index of first number greater than 12.\n  Use findIndex to get the index of the first number greater than 12.\n  Examples:\n    findIndexGreaterThan12([5, 10, 15, 20, 25]) => 2\n    findIndexGreaterThan12([1, 2, 3]) => -1\n    findIndexGreaterThan12([13, 14, 15]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findIndexGreaterThan12(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findIndexGreaterThan12",
+            "reference_solution": "function findIndexGreaterThan12(arr) {\n  return arr.findIndex(function(n) { return n > 12; });\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 10, 15, 20, 25] },
@@ -6663,6 +6954,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses find to get first string starting with 'c'.\n  Use find to get the first string that starts with the letter 'c'.\n  Examples:\n    findFirstStartsWithC([\"apple\", \"banana\", \"cherry\", \"date\"]) => \"cherry\"\n    findFirstStartsWithC([\"cat\", \"dog\", \"cow\"]) => \"cat\"\n    findFirstStartsWithC([\"apple\", \"banana\"]) => undefined\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findFirstStartsWithC(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findFirstStartsWithC",
+            "reference_solution": "function findFirstStartsWithC(arr) {\n  return arr.find(function(s) { return s[0] === 'c'; });\n}",
             "testCases": [
               {
                 "input": { "arr": ["apple", "banana", "cherry", "date"] },
@@ -6686,6 +6978,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses find to get object with specific id.\n  Use find to get the object with id equal to 2.\n  Examples:\n    findObjectById2([{id: 1, name: \"Alice\"}, {id: 2, name: \"Bob\"}, {id: 3, name: \"Charlie\"}]) => {\"id\":2,\"name\":\"Bob\"}\n    findObjectById2([{id: 1, name: \"Alice\"}]) => undefined\n    findObjectById2([{id: 5, name: \"Diana\"}, {id: 2, name: \"Eve\"}]) => {\"id\":2,\"name\":\"Eve\"}\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findObjectById2(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findObjectById2",
+            "reference_solution": "function findObjectById2(arr) {\n  return arr.find(function(obj) { return obj.id === 2; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "id": 1, "name": "Alice" }, { "id": 2, "name": "Bob" }, { "id": 3, "name": "Charlie" }] },
@@ -6705,6 +6998,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses findIndex to get index of object with specific id.\n  Use findIndex to get the index of the object with id equal to 3.\n  Examples:\n    findIndexById3([{id: 1, name: \"Alice\"}, {id: 2, name: \"Bob\"}, {id: 3, name: \"Charlie\"}]) => 2\n    findIndexById3([{id: 5, name: \"Diana\"}]) => -1\n    findIndexById3([{id: 3, name: \"Eve\"}, {id: 4, name: \"Frank\"}]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findIndexById3(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findIndexById3",
+            "reference_solution": "function findIndexById3(arr) {\n  return arr.findIndex(function(obj) { return obj.id === 3; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "id": 1, "name": "Alice" }, { "id": 2, "name": "Bob" }, { "id": 3, "name": "Charlie" }] },
@@ -6724,6 +7018,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses find to get first odd number.\n  Use find to get the first odd number.\n  Examples:\n    findFirstOdd([2, 4, 6, 8, 10]) => undefined\n    findFirstOdd([1, 2, 3]) => 1\n    findFirstOdd([2, 3, 4]) => 3\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findFirstOdd(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findFirstOdd",
+            "reference_solution": "function findFirstOdd(arr) {\n  return arr.find(function(n) { return n % 2 !== 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [2, 4, 6, 8, 10] },
@@ -6747,6 +7042,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses findIndex to get index of first number divisible by 5.\n  Use findIndex to get the index of the first number divisible by 5.\n  Examples:\n    findIndexDivisibleBy5([3, 6, 9, 12, 15]) => 4\n    findIndexDivisibleBy5([1, 2, 3]) => -1\n    findIndexDivisibleBy5([5, 10]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findIndexDivisibleBy5(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findIndexDivisibleBy5",
+            "reference_solution": "function findIndexDivisibleBy5(arr) {\n  return arr.findIndex(function(n) { return n % 5 === 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [3, 6, 9, 12, 15] },
@@ -6770,6 +7066,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses find to get first long string.\n  Use find to get the first string with length greater than 10.\n  Examples:\n    findFirstLongString([\"short\", \"medium length\", \"tiny\", \"a bit longer\"]) => \"medium length\"\n    findFirstLongString([\"hi\", \"hello\"]) => undefined\n    findFirstLongString([\"JavaScript is awesome\"]) => \"JavaScript is awesome\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findFirstLongString(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findFirstLongString",
+            "reference_solution": "function findFirstLongString(arr) {\n  return arr.find(function(s) { return s.length > 10; });\n}",
             "testCases": [
               {
                 "input": { "arr": ["short", "medium length", "tiny", "a bit longer"] },
@@ -6789,6 +7086,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses findIndex to get index of first adult.\n  Use findIndex to get the index of the first person aged 18 or older.\n  Examples:\n    findIndexFirstAdult([{name: \"Alice\", age: 17}, {name: \"Bob\", age: 25}, {name: \"Charlie\", age: 30}]) => 1\n    findIndexFirstAdult([{name: \"Diana\", age: 15}, {name: \"Eve\", age: 16}]) => -1\n    findIndexFirstAdult([{name: \"Frank\", age: 18}]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findIndexFirstAdult(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findIndexFirstAdult",
+            "reference_solution": "function findIndexFirstAdult(arr) {\n  return arr.findIndex(function(obj) { return obj.age >= 18; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Alice", "age": 17 }, { "name": "Bob", "age": 25 }, { "name": "Charlie", "age": 30 }] },
@@ -6808,6 +7106,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses find to get first even number with fallback message.\n  Use find to get the first even number.\n  If no even number exists, return \"No even number found\".\n  Otherwise return the number.\n  Examples:\n    findFirstEvenOrMessage([1, 3, 5, 7, 9, 11]) => \"No even number found\"\n    findFirstEvenOrMessage([1, 2, 3]) => 2\n    findFirstEvenOrMessage([8, 10]) => 8\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findFirstEvenOrMessage(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findFirstEvenOrMessage",
+            "reference_solution": "function findFirstEvenOrMessage(arr) {\n  const found = arr.find(function(n) { return n % 2 === 0; });\n  return found !== undefined ? found : 'No even number found';\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 3, 5, 7, 9, 11] },
@@ -6843,6 +7142,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses some to check if at least one number is even.\n  Use some to check if at least one number is even.\n  Examples:\n    hasAnyEven([1, 3, 5, 7, 9]) => false\n    hasAnyEven([1, 2, 3]) => true\n    hasAnyEven([2, 4, 6]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction hasAnyEven(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "hasAnyEven",
+            "reference_solution": "function hasAnyEven(arr) {\n  return arr.some(function(n) { return n % 2 === 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 3, 5, 7, 9] },
@@ -6866,6 +7166,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses every to check if all numbers are even.\n  Use every to check if all numbers are even.\n  Examples:\n    areAllEven([2, 4, 6, 8, 10]) => true\n    areAllEven([2, 3, 4]) => false\n    areAllEven([1, 3, 5]) => false\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction areAllEven(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "areAllEven",
+            "reference_solution": "function areAllEven(arr) {\n  return arr.every(function(n) { return n % 2 === 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [2, 4, 6, 8, 10] },
@@ -6889,6 +7190,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses some to check if at least one number is greater than 45.\n  Use some to check if at least one number is greater than 45.\n  Examples:\n    hasAnyGreaterThan45([10, 20, 30, 40, 50]) => true\n    hasAnyGreaterThan45([10, 20, 30]) => false\n    hasAnyGreaterThan45([100, 200]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction hasAnyGreaterThan45(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "hasAnyGreaterThan45",
+            "reference_solution": "function hasAnyGreaterThan45(arr) {\n  return arr.some(function(n) { return n > 45; });\n}",
             "testCases": [
               {
                 "input": { "arr": [10, 20, 30, 40, 50] },
@@ -6912,6 +7214,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses every to check if all numbers are greater than 3.\n  Use every to check if all numbers are greater than 3.\n  Examples:\n    areAllGreaterThan3([5, 10, 15, 20, 25]) => true\n    areAllGreaterThan3([1, 2, 3]) => false\n    areAllGreaterThan3([4, 5, 6]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction areAllGreaterThan3(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "areAllGreaterThan3",
+            "reference_solution": "function areAllGreaterThan3(arr) {\n  return arr.every(function(n) { return n > 3; });\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 10, 15, 20, 25] },
@@ -6935,6 +7238,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses some to check if at least one string starts with 'b'.\n  Use some to check if at least one string starts with 'b'.\n  Examples:\n    hasAnyStartsWithB([\"apple\", \"banana\", \"cherry\"]) => true\n    hasAnyStartsWithB([\"apple\", \"cherry\"]) => false\n    hasAnyStartsWithB([\"ball\", \"bat\"]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction hasAnyStartsWithB(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "hasAnyStartsWithB",
+            "reference_solution": "function hasAnyStartsWithB(arr) {\n  return arr.some(function(s) { return s[0] === 'b'; });\n}",
             "testCases": [
               {
                 "input": { "arr": ["apple", "banana", "cherry"] },
@@ -6958,6 +7262,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses every to check if all strings have length greater than 3.\n  Use every to check if all strings have length greater than 3.\n  Examples:\n    areAllLongerThan3([\"hello\", \"world\", \"test\"]) => true\n    areAllLongerThan3([\"hi\", \"hello\"]) => false\n    areAllLongerThan3([\"code\", \"java\"]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction areAllLongerThan3(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "areAllLongerThan3",
+            "reference_solution": "function areAllLongerThan3(arr) {\n  return arr.every(function(s) { return s.length > 3; });\n}",
             "testCases": [
               {
                 "input": { "arr": ["hello", "world", "test"] },
@@ -6981,6 +7286,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses some to check if at least one person is under 18.\n  Use some to check if at least one person is under 18.\n  Examples:\n    hasAnyMinor([{name: \"Alice\", age: 25}, {name: \"Bob\", age: 17}, {name: \"Charlie\", age: 30}]) => true\n    hasAnyMinor([{name: \"Diana\", age: 20}, {name: \"Eve\", age: 25}]) => false\n    hasAnyMinor([{name: \"Frank\", age: 16}]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction hasAnyMinor(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "hasAnyMinor",
+            "reference_solution": "function hasAnyMinor(arr) {\n  return arr.some(function(obj) { return obj.age < 18; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Alice", "age": 25 }, { "name": "Bob", "age": 17 }, { "name": "Charlie", "age": 30 }] },
@@ -7004,6 +7310,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses every to check if all people are 18 or older.\n  Use every to check if all people are 18 or older.\n  Examples:\n    areAllAdults([{name: \"Alice\", age: 25}, {name: \"Bob\", age: 30}, {name: \"Charlie\", age: 35}]) => true\n    areAllAdults([{name: \"Diana\", age: 17}, {name: \"Eve\", age: 20}]) => false\n    areAllAdults([{name: \"Frank\", age: 18}]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction areAllAdults(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "areAllAdults",
+            "reference_solution": "function areAllAdults(arr) {\n  return arr.every(function(obj) { return obj.age >= 18; });\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Alice", "age": 25 }, { "name": "Bob", "age": 30 }, { "name": "Charlie", "age": 35 }] },
@@ -7027,6 +7334,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses some to check if at least one number is divisible by 3.\n  Use some to check if at least one number is divisible by 3.\n  Examples:\n    hasAnyDivisibleBy3([5, 10, 15, 20]) => true\n    hasAnyDivisibleBy3([1, 2, 4]) => false\n    hasAnyDivisibleBy3([9, 12]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction hasAnyDivisibleBy3(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "hasAnyDivisibleBy3",
+            "reference_solution": "function hasAnyDivisibleBy3(arr) {\n  return arr.some(function(n) { return n % 3 === 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 10, 15, 20] },
@@ -7050,6 +7358,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses every to check if all numbers are divisible by 10.\n  Use every to check if all numbers are divisible by 10.\n  Examples:\n    areAllDivisibleBy10([10, 20, 30, 40]) => true\n    areAllDivisibleBy10([10, 15, 20]) => false\n    areAllDivisibleBy10([100, 200]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction areAllDivisibleBy10(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "areAllDivisibleBy10",
+            "reference_solution": "function areAllDivisibleBy10(arr) {\n  return arr.every(function(n) { return n % 10 === 0; });\n}",
             "testCases": [
               {
                 "input": { "arr": [10, 20, 30, 40] },
@@ -7086,6 +7395,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to calculate the sum of all numbers.\n  Use reduce to calculate the sum of all numbers.\n  Examples:\n    sumNumbers([1, 2, 3, 4, 5]) => 15\n    sumNumbers([10, 20, 30]) => 60\n    sumNumbers([5]) => 5\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sumNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sumNumbers",
+            "reference_solution": "function sumNumbers(arr) {\n  return arr.reduce(function(acc, n) { return acc + n; }, 0);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -7109,6 +7419,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to calculate the product of all numbers.\n  Use reduce to calculate the product of all numbers.\n  Examples:\n    multiplyNumbers([2, 3, 4]) => 24\n    multiplyNumbers([5, 5]) => 25\n    multiplyNumbers([10]) => 10\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction multiplyNumbers(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "multiplyNumbers",
+            "reference_solution": "function multiplyNumbers(arr) {\n  return arr.reduce(function(acc, n) { return acc * n; }, 1);\n}",
             "testCases": [
               {
                 "input": { "arr": [2, 3, 4] },
@@ -7132,6 +7443,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to find the maximum number.\n  Use reduce to find the maximum number.\n  Examples:\n    findMax([10, 5, 20, 15, 30]) => 30\n    findMax([1, 2, 3]) => 3\n    findMax([100]) => 100\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findMax(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findMax",
+            "reference_solution": "function findMax(arr) {\n  return arr.reduce(function(acc, n) { return n > acc ? n : acc; }, arr[0]);\n}",
             "testCases": [
               {
                 "input": { "arr": [10, 5, 20, 15, 30] },
@@ -7155,6 +7467,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to concatenate all strings into one.\n  Use reduce to concatenate all strings into one.\n  Examples:\n    concatenateStrings([\"Hello\", \" \", \"World\", \"!\"]) => \"Hello World!\"\n    concatenateStrings([\"JavaScript\", \" \", \"is\", \" \", \"fun\"]) => \"JavaScript is fun\"\n    concatenateStrings([\"test\"]) => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction concatenateStrings(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "concatenateStrings",
+            "reference_solution": "function concatenateStrings(arr) {\n  return arr.reduce(function(acc, s) { return acc + s; }, '');\n}",
             "testCases": [
               {
                 "input": { "arr": ["Hello", " ", "World", "!"] },
@@ -7178,6 +7491,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to count occurrences of each number.\n  Use reduce to count the occurrences of each number.\n  Return an object where keys are numbers and values are counts.\n  Examples:\n    countOccurrences([1, 2, 2, 3, 3, 3, 4]) => {\"1\":1,\"2\":2,\"3\":3,\"4\":1}\n    countOccurrences([5, 5, 5]) => {\"5\":3}\n    countOccurrences([1]) => {\"1\":1}\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction countOccurrences(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "countOccurrences",
+            "reference_solution": "function countOccurrences(arr) {\n  return arr.reduce(function(acc, n) {\n    acc[n] = (acc[n] || 0) + 1;\n    return acc;\n  }, {});\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 2, 3, 3, 3, 4] },
@@ -7201,6 +7515,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to flatten arrays.\n  Use reduce to flatten into a single array.\n  Examples:\n    flattenArrays([[1, 2], [3, 4], [5, 6]]) => [1,2,3,4,5,6]\n    flattenArrays([[10], [20], [30]]) => [10,20,30]\n    flattenArrays([[1, 2, 3]]) => [1,2,3]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction flattenArrays(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "flattenArrays",
+            "reference_solution": "function flattenArrays(arr) {\n  return arr.reduce(function(acc, el) { return acc.concat(el); }, []);\n}",
             "testCases": [
               {
                 "input": { "arr": [[1, 2], [3, 4], [5, 6]] },
@@ -7224,6 +7539,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to filter even numbers.\n  Use reduce to create a new array with only even numbers (like filter).\n  Examples:\n    filterEvenWithReduce([1, 2, 3, 4, 5]) => [2,4]\n    filterEvenWithReduce([10, 15, 20]) => [10,20]\n    filterEvenWithReduce([1, 3, 5]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterEvenWithReduce(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "filterEvenWithReduce",
+            "reference_solution": "function filterEvenWithReduce(arr) {\n  return arr.reduce(function(acc, n) {\n    if (n % 2 === 0) acc.push(n);\n    return acc;\n  }, []);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4, 5] },
@@ -7247,6 +7563,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to double numbers.\n  Use reduce to create a new array with each number doubled (like map).\n  Examples:\n    doubleWithReduce([1, 2, 3, 4]) => [2,4,6,8]\n    doubleWithReduce([5, 10]) => [10,20]\n    doubleWithReduce([0]) => [0]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction doubleWithReduce(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "doubleWithReduce",
+            "reference_solution": "function doubleWithReduce(arr) {\n  return arr.reduce(function(acc, n) {\n    acc.push(n * 2);\n    return acc;\n  }, []);\n}",
             "testCases": [
               {
                 "input": { "arr": [1, 2, 3, 4] },
@@ -7270,6 +7587,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to calculate total age.\n  Use reduce to calculate the total age of all people.\n  Examples:\n    calculateTotalAge([{name: \"Alice\", age: 25}, {name: \"Bob\", age: 30}, {name: \"Charlie\", age: 35}]) => 90\n    calculateTotalAge([{name: \"Diana\", age: 20}]) => 20\n    calculateTotalAge([{name: \"Eve\", age: 22}, {name: \"Frank\", age: 28}]) => 50\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction calculateTotalAge(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "calculateTotalAge",
+            "reference_solution": "function calculateTotalAge(arr) {\n  return arr.reduce(function(acc, obj) { return acc + obj.age; }, 0);\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "name": "Alice", "age": 25 }, { "name": "Bob", "age": 30 }, { "name": "Charlie", "age": 35 }] },
@@ -7289,6 +7607,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to calculate the average.\n  Use reduce to calculate the average.\n  Hint: Sum all numbers, then divide by array length.\n  Examples:\n    calculateAverage([5, 10, 15, 20]) => 12.5\n    calculateAverage([10, 20, 30]) => 20\n    calculateAverage([5]) => 5\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction calculateAverage(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "calculateAverage",
+            "reference_solution": "function calculateAverage(arr) {\n  if (arr.length === 0) return 0;\n  return arr.reduce(function(acc, n) { return acc + n; }, 0) / arr.length;\n}",
             "testCases": [
               {
                 "input": { "arr": [5, 10, 15, 20] },
@@ -7312,6 +7631,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to map strings to their lengths.\n  Use reduce to create an object where keys are strings and values are their lengths.\n  Examples:\n    mapStringLengths([\"apple\", \"banana\", \"cherry\"]) => {\"apple\":5,\"banana\":6,\"cherry\":6}\n    mapStringLengths([\"hi\", \"hello\"]) => {\"hi\":2,\"hello\":5}\n    mapStringLengths([\"test\"]) => {\"test\":4}\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction mapStringLengths(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "mapStringLengths",
+            "reference_solution": "function mapStringLengths(arr) {\n  return arr.reduce(function(acc, s) {\n    acc[s] = s.length;\n    return acc;\n  }, {});\n}",
             "testCases": [
               {
                 "input": { "arr": ["apple", "banana", "cherry"] },
@@ -7331,6 +7651,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses reduce to extract x values.\n  Use reduce to extract all x values into a single array.\n  Examples:\n    extractXValues([{x: 1}, {x: 2}, {x: 3}]) => [1,2,3]\n    extractXValues([{x: 10}]) => [10]\n    extractXValues([{x: 5}, {x: 15}, {x: 25}]) => [5,15,25]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction extractXValues(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "extractXValues",
+            "reference_solution": "function extractXValues(arr) {\n  return arr.reduce(function(acc, obj) {\n    acc.push(obj.x);\n    return acc;\n  }, []);\n}",
             "testCases": [
               {
                 "input": { "arr": [{ "x": 1 }, { "x": 2 }, { "x": 3 }] },
@@ -7362,6 +7683,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses trim() to remove whitespace.\n  Use trim() to remove leading and trailing whitespace.\n  Examples:\n    trimString(\"  Hello World  \") => \"Hello World\"\n    trimString(\"   JavaScript   \") => \"JavaScript\"\n    trimString(\"test\") => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction trimString(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "trimString",
+            "reference_solution": "function trimString(str) {\n  return str.trim();\n}",
             "testCases": [
               {
                 "input": { "str": "  Hello World  " },
@@ -7385,6 +7707,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses replace() to substitute text.\n  Use replace() to replace the search term with the replacement.\n  Examples:\n    replaceText(\"Hello World\", \"World\", \"JavaScript\") => \"Hello JavaScript\"\n    replaceText(\"I love coding\", \"coding\", \"programming\") => \"I love programming\"\n    replaceText(\"test\", \"test\", \"exam\") => \"exam\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction replaceText(str, search, replacement) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "replaceText",
+            "reference_solution": "function replaceText(str, search, replacement) {\n  return str.replace(search, replacement);\n}",
             "testCases": [
               {
                 "input": { "str": "Hello World", "search": "World", "replacement": "JavaScript" },
@@ -7404,6 +7727,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses replaceAll() to replace all occurrences.\n  Use replaceAll() to replace all occurrences of the search term with the replacement.\n  Examples:\n    replaceAllText(\"cat cat cat\", \"cat\", \"dog\") => \"dog dog dog\"\n    replaceAllText(\"hello hello\", \"hello\", \"hi\") => \"hi hi\"\n    replaceAllText(\"test\", \"test\", \"exam\") => \"exam\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction replaceAllText(str, search, replacement) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "replaceAllText",
+            "reference_solution": "function replaceAllText(str, search, replacement) {\n  return str.replaceAll(search, replacement);\n}",
             "testCases": [
               {
                 "input": { "str": "cat cat cat", "search": "cat", "replacement": "dog" },
@@ -7423,6 +7747,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses repeat() to repeat a string.\n  Use repeat() to repeat the string the specified number of times.\n  Examples:\n    repeatString(\"ha\", 3) => \"hahaha\"\n    repeatString(\"abc\", 2) => \"abcabc\"\n    repeatString(\"x\", 5) => \"xxxxx\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction repeatString(str, count) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "repeatString",
+            "reference_solution": "function repeatString(str, count) {\n  return str.repeat(count);\n}",
             "testCases": [
               {
                 "input": { "str": "ha", "count": 3 },
@@ -7446,6 +7771,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses padStart() to pad a string at the beginning.\n  Use padStart() to pad the string to the specified length with the given character.\n  Examples:\n    padStringStart(\"5\", 4, \"0\") => \"0005\"\n    padStringStart(\"42\", 5, \"0\") => \"00042\"\n    padStringStart(\"7\", 3, \"0\") => \"007\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction padStringStart(str, length, padChar) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "padStringStart",
+            "reference_solution": "function padStringStart(str, length, padChar) {\n  return str.padStart(length, padChar);\n}",
             "testCases": [
               {
                 "input": { "str": "5", "length": 4, "padChar": "0" },
@@ -7469,6 +7795,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses padEnd() to pad a string at the end.\n  Use padEnd() to pad the string to the specified length with the given character.\n  Examples:\n    padStringEnd(\"5\", 4, \"0\") => \"5000\"\n    padStringEnd(\"42\", 5, \"0\") => \"42000\"\n    padStringEnd(\"7\", 3, \"0\") => \"700\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction padStringEnd(str, length, padChar) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "padStringEnd",
+            "reference_solution": "function padStringEnd(str, length, padChar) {\n  return str.padEnd(length, padChar);\n}",
             "testCases": [
               {
                 "input": { "str": "5", "length": 4, "padChar": "0" },
@@ -7492,6 +7819,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses trim() and replace() to clean and modify text.\n  Use trim() to remove whitespace and replace() to replace \"awesome\" with \"great\".\n  Examples:\n    trimAndReplace(\"  JavaScript is awesome  \") => \"JavaScript is great\"\n    trimAndReplace(\"  coding is fun  \") => \"coding is great\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction trimAndReplace(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "trimAndReplace",
+            "reference_solution": "function trimAndReplace(str) {\n  return str.trim().replace('awesome', 'great').replace('fun', 'great');\n}",
             "testCases": [
               {
                 "input": { "str": "  JavaScript is awesome  " },
@@ -7507,6 +7835,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses replaceAll() to replace hyphens with spaces.\n  Use replaceAll() to replace all hyphens (-) with spaces.\n  Examples:\n    replaceHyphens(\"hello-world-javascript\") => \"hello world javascript\"\n    replaceHyphens(\"one-two-three\") => \"one two three\"\n    replaceHyphens(\"test\") => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction replaceHyphens(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "replaceHyphens",
+            "reference_solution": "function replaceHyphens(str) {\n  return str.replaceAll('-', ' ');\n}",
             "testCases": [
               {
                 "input": { "str": "hello-world-javascript" },
@@ -7530,6 +7859,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses repeat() to create repeated patterns.\n  Use repeat() to repeat the string the specified number of times.\n  Examples:\n    createPattern(\"*\", 10) => \"**********\"\n    createPattern(\"-\", 5) => \"-----\"\n    createPattern(\"#\", 7) => \"#######\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createPattern(str, count) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "createPattern",
+            "reference_solution": "function createPattern(str, count) {\n  return str.repeat(count);\n}",
             "testCases": [
               {
                 "input": { "str": "*", "count": 10 },
@@ -7549,6 +7879,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses padStart() and padEnd() to center-align text.\n  Use padStart() to center-align by padding with spaces to length 10.\n  Then use padEnd() on the result to make total length 14.\n  Examples:\n    centerAlignText(\"Code\") => \"   Code       \"\n    centerAlignText(\"Hi\") => \"    Hi        \"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction centerAlignText(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "centerAlignText",
+            "reference_solution": "function centerAlignText(str) {\n  const startLen = 5 + Math.floor(str.length / 2);\n  return str.padStart(startLen).padEnd(14);\n}",
             "testCases": [
               {
                 "input": { "str": "Code" },
@@ -7577,6 +7908,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses split() to convert string to array.\n  Use split() to convert it into an array using comma as separator.\n  Examples:\n    splitByComma(\"apple,banana,cherry\") => [\"apple\",\"banana\",\"cherry\"]\n    splitByComma(\"one,two,three\") => [\"one\",\"two\",\"three\"]\n    splitByComma(\"hello\") => [\"hello\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction splitByComma(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "splitByComma",
+            "reference_solution": "function splitByComma(str) {\n  return str.split(',');\n}",
             "testCases": [
               {
                 "input": { "str": "apple,banana,cherry" },
@@ -7600,6 +7932,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses join() to convert array to string.\n  Use join() to convert it into a string with comma separator.\n  Examples:\n    joinWithComma([\"apple\", \"banana\", \"cherry\"]) => \"apple,banana,cherry\"\n    joinWithComma([\"one\", \"two\", \"three\"]) => \"one,two,three\"\n    joinWithComma([\"test\"]) => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction joinWithComma(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "joinWithComma",
+            "reference_solution": "function joinWithComma(arr) {\n  return arr.join(',');\n}",
             "testCases": [
               {
                 "input": { "arr": ["apple", "banana", "cherry"] },
@@ -7623,6 +7956,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses split('') to convert string to character array.\n  Use split('') to convert it into an array of characters.\n  Examples:\n    splitToCharacters(\"hello\") => [\"h\",\"e\",\"l\",\"l\",\"o\"]\n    splitToCharacters(\"abc\") => [\"a\",\"b\",\"c\"]\n    splitToCharacters(\"x\") => [\"x\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction splitToCharacters(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "splitToCharacters",
+            "reference_solution": "function splitToCharacters(str) {\n  return str.split('');\n}",
             "testCases": [
               {
                 "input": { "str": "hello" },
@@ -7646,6 +7980,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses join('') to convert character array to string.\n  Use join('') to convert it into a string with no separator.\n  Examples:\n    joinCharacters([\"H\", \"e\", \"l\", \"l\", \"o\"]) => \"Hello\"\n    joinCharacters([\"a\", \"b\", \"c\"]) => \"abc\"\n    joinCharacters([\"t\", \"e\", \"s\", \"t\"]) => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction joinCharacters(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "joinCharacters",
+            "reference_solution": "function joinCharacters(arr) {\n  return arr.join('');\n}",
             "testCases": [
               {
                 "input": { "arr": ["H", "e", "l", "l", "o"] },
@@ -7669,6 +8004,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses split() to convert string to word array.\n  Use split() with space separator to create an array.\n  Examples:\n    splitBySpace(\"one two three four\") => [\"one\",\"two\",\"three\",\"four\"]\n    splitBySpace(\"hello world\") => [\"hello\",\"world\"]\n    splitBySpace(\"test\") => [\"test\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction splitBySpace(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "splitBySpace",
+            "reference_solution": "function splitBySpace(str) {\n  return str.split(' ');\n}",
             "testCases": [
               {
                 "input": { "str": "one two three four" },
@@ -7692,6 +8028,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses join() to create a sentence.\n  Use join() with space separator to create a sentence.\n  Examples:\n    joinWithSpace([\"JavaScript\", \"is\", \"awesome\"]) => \"JavaScript is awesome\"\n    joinWithSpace([\"Hello\", \"World\"]) => \"Hello World\"\n    joinWithSpace([\"one\"]) => \"one\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction joinWithSpace(arr) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "joinWithSpace",
+            "reference_solution": "function joinWithSpace(arr) {\n  return arr.join(' ');\n}",
             "testCases": [
               {
                 "input": { "arr": ["JavaScript", "is", "awesome"] },
@@ -7715,6 +8052,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that checks if a string is a palindrome.\n  Split it into characters, reverse the array, then join back.\n  Check if the result equals the original string.\n  Examples:\n    isPalindrome(\"racecar\") => true\n    isPalindrome(\"hello\") => false\n    isPalindrome(\"madam\") => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction isPalindrome(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "isPalindrome",
+            "reference_solution": "function isPalindrome(str) {\n  return str.split('').reverse().join('') === str;\n}",
             "testCases": [
               {
                 "input": { "str": "racecar" },
@@ -7738,6 +8076,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that transforms words to uppercase and joins with hyphens.\n  Split into words, convert each word to uppercase, then join with hyphens.\n  Examples:\n    wordsToUppercaseHyphenated(\"hello world\") => \"HELLO-WORLD\"\n    wordsToUppercaseHyphenated(\"one two three\") => \"ONE-TWO-THREE\"\n    wordsToUppercaseHyphenated(\"test\") => \"TEST\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction wordsToUppercaseHyphenated(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "wordsToUppercaseHyphenated",
+            "reference_solution": "function wordsToUppercaseHyphenated(str) {\n  return str.split(' ').map(function(w) { return w.toUpperCase(); }).join('-');\n}",
             "testCases": [
               {
                 "input": { "str": "hello world" },
@@ -7761,6 +8100,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that replaces hyphens with spaces using split and join.\n  Split by hyphen, then join with space.\n  Examples:\n    replaceHyphensWithSpaces(\"apple-banana-cherry\") => \"apple banana cherry\"\n    replaceHyphensWithSpaces(\"one-two-three\") => \"one two three\"\n    replaceHyphensWithSpaces(\"test\") => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction replaceHyphensWithSpaces(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "replaceHyphensWithSpaces",
+            "reference_solution": "function replaceHyphensWithSpaces(str) {\n  return str.split('-').join(' ');\n}",
             "testCases": [
               {
                 "input": { "str": "apple-banana-cherry" },
@@ -7784,6 +8124,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that reverses and uppercases a string.\n  Split into characters, reverse the array, join back, and convert to uppercase.\n  Examples:\n    reverseAndUppercase(\"hello\") => \"OLLEH\"\n    reverseAndUppercase(\"world\") => \"DLROW\"\n    reverseAndUppercase(\"test\") => \"TSET\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction reverseAndUppercase(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "reverseAndUppercase",
+            "reference_solution": "function reverseAndUppercase(str) {\n  return str.split('').reverse().join('').toUpperCase();\n}",
             "testCases": [
               {
                 "input": { "str": "hello" },
@@ -7820,6 +8161,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses slice() to extract substring.\n  Use slice() to extract characters from start to end (exclusive).\n  Examples:\n    sliceString(\"JavaScript\", 0, 4) => \"Java\"\n    sliceString(\"Hello World\", 0, 5) => \"Hello\"\n    sliceString(\"testing\", 0, 4) => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceString(str, start, end) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sliceString",
+            "reference_solution": "function sliceString(str, start, end) {\n  return str.slice(start, end);\n}",
             "testCases": [
               {
                 "input": { "str": "JavaScript", "start": 0, "end": 4 },
@@ -7843,6 +8185,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses slice() to extract from index to end.\n  Use slice() to extract from start index to the end.\n  Examples:\n    sliceFromIndex(\"JavaScript\", 4) => \"Script\"\n    sliceFromIndex(\"Hello World\", 6) => \"World\"\n    sliceFromIndex(\"testing\", 4) => \"ing\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceFromIndex(str, start) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sliceFromIndex",
+            "reference_solution": "function sliceFromIndex(str, start) {\n  return str.slice(start);\n}",
             "testCases": [
               {
                 "input": { "str": "JavaScript", "start": 4 },
@@ -7866,6 +8209,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses slice() with negative index.\n  Use slice() with negative index to extract from the end.\n  Examples:\n    sliceWithNegative(\"JavaScript\", -6) => \"Script\"\n    sliceWithNegative(\"Hello World\", -5) => \"World\"\n    sliceWithNegative(\"testing\", -3) => \"ing\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceWithNegative(str, start) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sliceWithNegative",
+            "reference_solution": "function sliceWithNegative(str, start) {\n  return str.slice(start);\n}",
             "testCases": [
               {
                 "input": { "str": "JavaScript", "start": -6 },
@@ -7889,6 +8233,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses substring() to extract substring.\n  Use substring() to extract characters from start to end.\n  Examples:\n    substringExtract(\"JavaScript\", 0, 4) => \"Java\"\n    substringExtract(\"Hello World\", 0, 5) => \"Hello\"\n    substringExtract(\"testing\", 0, 4) => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction substringExtract(str, start, end) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "substringExtract",
+            "reference_solution": "function substringExtract(str, start, end) {\n  return str.substring(start, end);\n}",
             "testCases": [
               {
                 "input": { "str": "JavaScript", "start": 0, "end": 4 },
@@ -7912,6 +8257,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses substring() to extract from index to end.\n  Use substring() to extract from start index to the end.\n  Examples:\n    substringFromIndex(\"JavaScript\", 4) => \"Script\"\n    substringFromIndex(\"Hello World\", 6) => \"World\"\n    substringFromIndex(\"testing\", 4) => \"ing\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction substringFromIndex(str, start) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "substringFromIndex",
+            "reference_solution": "function substringFromIndex(str, start) {\n  return str.substring(start);\n}",
             "testCases": [
               {
                 "input": { "str": "JavaScript", "start": 4 },
@@ -7935,6 +8281,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses slice() to extract middle substring.\n  Use slice() to extract characters from start to end index.\n  Examples:\n    sliceMiddle(\"Hello World\", 6, 11) => \"World\"\n    sliceMiddle(\"JavaScript\", 4, 10) => \"Script\"\n    sliceMiddle(\"testing\", 2, 5) => \"sti\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceMiddle(str, start, end) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sliceMiddle",
+            "reference_solution": "function sliceMiddle(str, start, end) {\n  return str.slice(start, end);\n}",
             "testCases": [
               {
                 "input": { "str": "Hello World", "start": 6, "end": 11 },
@@ -7954,6 +8301,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses slice() with negative indices.\n  Use slice() with negative indices to extract from start to end.\n  Examples:\n    sliceNegativeRange(\"Hello World\", -5, -1) => \"Worl\"\n    sliceNegativeRange(\"JavaScript\", -6, -1) => \"Scrip\"\n    sliceNegativeRange(\"testing\", -4, -1) => \"tin\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceNegativeRange(str, start, end) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sliceNegativeRange",
+            "reference_solution": "function sliceNegativeRange(str, start, end) {\n  return str.slice(start, end);\n}",
             "testCases": [
               {
                 "input": { "str": "Hello World", "start": -5, "end": -1 },
@@ -7973,6 +8321,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses slice() to get first N characters.\n  Use slice() to get the first N characters.\n  Examples:\n    sliceFirstN(\"programming\", 7) => \"program\"\n    sliceFirstN(\"JavaScript\", 4) => \"Java\"\n    sliceFirstN(\"testing\", 4) => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceFirstN(str, length) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sliceFirstN",
+            "reference_solution": "function sliceFirstN(str, length) {\n  return str.slice(0, length);\n}",
             "testCases": [
               {
                 "input": { "str": "programming", "length": 7 },
@@ -7992,6 +8341,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses slice() to extract middle characters.\n  Use slice() to extract every character except the first and last.\n  Examples:\n    sliceMiddleChars(\"abcdefghij\") => \"bcdefghi\"\n    sliceMiddleChars(\"hello\") => \"ell\"\n    sliceMiddleChars(\"test\") => \"es\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceMiddleChars(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "sliceMiddleChars",
+            "reference_solution": "function sliceMiddleChars(str) {\n  return str.slice(1, -1);\n}",
             "testCases": [
               {
                 "input": { "str": "abcdefghij" },
@@ -8027,6 +8377,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses indexOf() to find position of substring.\n  Use indexOf() to find the position of the search term.\n  Examples:\n    findPosition(\"Hello World\", \"World\") => 6\n    findPosition(\"JavaScript\", \"Script\") => 4\n    findPosition(\"testing\", \"ing\") => 4\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findPosition(str, search) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findPosition",
+            "reference_solution": "function findPosition(str, search) {\n  return str.indexOf(search);\n}",
             "testCases": [
               {
                 "input": { "str": "Hello World", "search": "World" },
@@ -8050,6 +8401,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses indexOf() to find first occurrence.\n  Use indexOf() to find the first occurrence of the search character.\n  Examples:\n    findFirstOccurrence(\"banana\", \"a\") => 1\n    findFirstOccurrence(\"hello\", \"l\") => 2\n    findFirstOccurrence(\"test\", \"t\") => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findFirstOccurrence(str, search) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findFirstOccurrence",
+            "reference_solution": "function findFirstOccurrence(str, search) {\n  return str.indexOf(search);\n}",
             "testCases": [
               {
                 "input": { "str": "banana", "search": "a" },
@@ -8073,6 +8425,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses lastIndexOf() to find last occurrence.\n  Use lastIndexOf() to find the last occurrence of the search character.\n  Examples:\n    findLastOccurrence(\"banana\", \"a\") => 5\n    findLastOccurrence(\"hello\", \"l\") => 3\n    findLastOccurrence(\"test\", \"t\") => 3\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findLastOccurrence(str, search) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findLastOccurrence",
+            "reference_solution": "function findLastOccurrence(str, search) {\n  return str.lastIndexOf(search);\n}",
             "testCases": [
               {
                 "input": { "str": "banana", "search": "a" },
@@ -8096,6 +8449,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses includes() to check if string contains substring.\n  Use includes() to check if the string contains the search term.\n  Examples:\n    containsSubstring(\"JavaScript is awesome\", \"awesome\") => true\n    containsSubstring(\"Hello World\", \"World\") => true\n    containsSubstring(\"testing\", \"xyz\") => false\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction containsSubstring(str, search) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "containsSubstring",
+            "reference_solution": "function containsSubstring(str, search) {\n  return str.includes(search);\n}",
             "testCases": [
               {
                 "input": { "str": "JavaScript is awesome", "search": "awesome" },
@@ -8119,6 +8473,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses startsWith() to check string prefix.\n  Use startsWith() to check if the string starts with the search term.\n  Examples:\n    startsWithPrefix(\"hello.txt\", \"hello\") => true\n    startsWithPrefix(\"JavaScript\", \"Java\") => true\n    startsWithPrefix(\"testing\", \"test\") => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction startsWithPrefix(str, search) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "startsWithPrefix",
+            "reference_solution": "function startsWithPrefix(str, search) {\n  return str.startsWith(search);\n}",
             "testCases": [
               {
                 "input": { "str": "hello.txt", "search": "hello" },
@@ -8142,6 +8497,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses endsWith() to check string suffix.\n  Use endsWith() to check if the string ends with the search term.\n  Examples:\n    endsWithSuffix(\"hello.txt\", \".txt\") => true\n    endsWithSuffix(\"document.pdf\", \".pdf\") => true\n    endsWithSuffix(\"image.png\", \".jpg\") => false\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction endsWithSuffix(str, search) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "endsWithSuffix",
+            "reference_solution": "function endsWithSuffix(str, search) {\n  return str.endsWith(search);\n}",
             "testCases": [
               {
                 "input": { "str": "hello.txt", "search": ".txt" },
@@ -8165,6 +8521,7 @@ export const courses = [
             "description": "/*\n  Implement the below function that uses indexOf() to find the second occurrence.\n  Use indexOf() to find the position of the second occurrence of \"the\".\n  Hint: Use indexOf() twice with a starting position parameter.\n  Examples:\n    findSecondOccurrence(\"the cat in the hat\") => 11\n    findSecondOccurrence(\"hello hello world\") => 6\n    findSecondOccurrence(\"test test test\") => 5\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findSecondOccurrence(str) {\n  // Implementation here\n}",
             "solution_type": "function",
             "function_name": "findSecondOccurrence",
+            "reference_solution": "function findSecondOccurrence(str) {\n  var first = str.indexOf('the');\n  if (first === -1) return -1;\n  return str.indexOf('the', first + 1);\n}",
             "testCases": [
               {
                 "input": { "str": "the cat in the hat" },
