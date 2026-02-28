@@ -59,23 +59,6 @@ export function createErrorResponse(message, code = null, details = null) {
 }
 
 /**
- * Create a server error response
- * @param {string} message - Optional custom message
- * @param {any} details - Optional error details (only in development)
- * @returns {Object} - Standardized server error response
- */
-export function createServerErrorResponse(message = 'Internal server error', details = null) {
-  const response = createErrorResponse(message, 'SERVER_ERROR')
-
-  // Only include details in development environment
-  if (process.env.NODE_ENV === 'development' && details) {
-    response.details = details
-  }
-
-  return response
-}
-
-/**
  * Send a standardized error response
  * @param {Object} res - Express response object
  * @param {string} message - Error message

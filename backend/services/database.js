@@ -443,41 +443,6 @@ export async function upsertChatSessionRow(userId, topicId, payload) {
   )
 }
 
-export async function insertChatSessionRow(userId, topicId, payload) {
-  if (initializeDatabase() === 'DEV_MODE') {
-    const key = `${userId}:${topicId}`
-    DEV_CHAT_SESSIONS.set(key, { user_id: userId, topic_id: topicId, ...payload })
-    return
-  }
-  await query(
-    `INSERT INTO chat_sessions (user_id, topic_id, messages, message_count, phase, last_message_at, created_at, updated_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-    [
-      userId,
-      topicId,
-      payload.messages,
-      payload.message_count ?? 1,
-      payload.phase ?? 'session',
-      payload.last_message_at ?? new Date().toISOString(),
-      payload.created_at ?? new Date().toISOString(),
-      payload.updated_at ?? new Date().toISOString()
-    ]
-  )
-}
-
-export async function updateChatSessionPhase(userId, topicId, phase) {
-  if (initializeDatabase() === 'DEV_MODE') {
-    const key = `${userId}:${topicId}`
-    const row = DEV_CHAT_SESSIONS.get(key)
-    if (row) row.phase = phase
-    return
-  }
-  await query(
-    'UPDATE chat_sessions SET phase = $1, updated_at = NOW() WHERE user_id = $2 AND topic_id = $3',
-    [phase, userId, topicId]
-  )
-}
-
 export async function deleteChatSessionRow(userId, topicId) {
   if (initializeDatabase() === 'DEV_MODE') {
     DEV_CHAT_SESSIONS.delete(`${userId}:${topicId}`)

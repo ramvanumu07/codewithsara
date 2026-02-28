@@ -13,67 +13,6 @@ import { getCachedChatHistory, setCachedChatHistory, invalidateChatHistoryCache 
 // ============ STRUCTURED CHAT OPERATIONS ============
 
 /**
- * Helper function to parse text format to messages array
- */
-function _parseTextToMessages(textHistory) {
-  // Handle null, undefined, or non-string values
-  if (!textHistory || typeof textHistory !== 'string' || textHistory.trim() === '') {
-    return []
-  }
-
-  const messages = []
-  const lines = textHistory.split('\n')
-
-  let currentMessage = null
-  let currentContent = []
-
-  for (const line of lines) {
-    const trimmedLine = line.trim()
-
-    if (trimmedLine.startsWith('USER: ')) {
-      // Save previous message if exists
-      if (currentMessage) {
-        currentMessage.content = currentContent.join('\n').trim()
-        messages.push(currentMessage)
-      }
-
-      // Start new user message
-      currentMessage = {
-        role: 'user',
-        timestamp: new Date().toISOString()
-      }
-      currentContent = [trimmedLine.substring(6).trim()] // Remove "USER: " prefix
-
-    } else if (trimmedLine.startsWith('AGENT: ')) {
-      // Save previous message if exists
-      if (currentMessage) {
-        currentMessage.content = currentContent.join('\n').trim()
-        messages.push(currentMessage)
-      }
-
-      // Start new assistant message
-      currentMessage = {
-        role: 'assistant',
-        timestamp: new Date().toISOString()
-      }
-      currentContent = [trimmedLine.substring(7).trim()] // Remove "AGENT: " prefix
-
-    } else if (trimmedLine !== '' && currentMessage) {
-      // Continuation line for current message
-      currentContent.push(trimmedLine)
-    }
-  }
-
-  // Don't forget the last message
-  if (currentMessage) {
-    currentMessage.content = currentContent.join('\n').trim()
-    messages.push(currentMessage)
-  }
-
-  return messages
-}
-
-/**
  * OPTIMIZED text parsing function - 3x faster than original
  * Uses efficient string operations and reduced memory allocations
  */
@@ -109,15 +48,6 @@ function parseTextToMessagesOptimized(textHistory) {
   }
 
   return messages
-}
-
-/** Serialize messages array to USER:/AGENT: text (for prompt truncation only) */
-function serializeMessagesToHistory(messages) {
-  if (!messages || messages.length === 0) {return ''}
-  return messages.map(m => {
-    const prefix = m.role === 'user' ? 'USER' : 'AGENT'
-    return `${prefix}: ${(m.content || '').trim()}`
-  }).join('\n')
 }
 
 /** Max exchanges (user+assistant pairs) to include in session prompt context */
