@@ -361,7 +361,7 @@ const Signup = () => {
 
             <div className="form-group">
               <label htmlFor="name" className="form-label">
-                Full Name
+                Full name (for certificate)
               </label>
               <input
                 type="text"
@@ -370,7 +370,7 @@ const Signup = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className={`form-input ${errors.name ? 'error' : ''}`}
-                placeholder="Your full name"
+                placeholder="Enter your full name as it will appear on your certificate"
                 disabled={isLoading}
                 autoComplete="name"
                 autoCapitalize="words"

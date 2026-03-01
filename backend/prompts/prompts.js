@@ -28,7 +28,7 @@ Otherwise: Continue from the last outcome being taught
 2. Teaching Format (for each outcome):
 Explain a clear, simple explanation of the concept 
 Example a simple code example demonstrating it
-Give a realistic practise task to verify understanding without solution
+Give a realistic practise task without solution to verify understanding
 
 3. Response Handling:
 Case A: If user answers the task:
