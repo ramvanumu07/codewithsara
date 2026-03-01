@@ -321,6 +321,8 @@ const Learn = () => {
   const [isTyping, setIsTyping] = useState(false)
   const [sessionComplete, setSessionComplete] = useState(false)
   const messagesEndRef = useRef(null)
+  const messagesScrollContainerRef = useRef(null)
+  const lastMessageRef = useRef(null)
   // Prevent double sessionChat('') from React StrictMode / effect re-run (race causes different AI responses, then visibilitychange overwrites UI)
   const sessionStartInProgressRef = useRef(null)
 
@@ -351,7 +353,17 @@ const Learn = () => {
   const [submitLoading, setSubmitLoading] = useState(false)
   const assignmentTextareaRef = useRef(null)
 
-  // Do not auto-scroll when AI responds: user stays at message start to read from top
+  // Scroll so newest message is at top of view (user scrolls up to read previous)
+  useEffect(() => {
+    if (phase !== 'session') return
+    const el = lastMessageRef.current
+    const container = messagesScrollContainerRef.current
+    if (!el || !container) return
+    const raf = requestAnimationFrame(() => {
+      container.scrollTop = el.offsetTop
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [messages, isTyping, phase])
 
   // Handle window resize for responsive layout
   useEffect(() => {
@@ -1415,10 +1427,11 @@ const Learn = () => {
       {/* Session chat view */}
       {phase === 'session' && !showEditorInSession && (
         <div className="session-container" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-          <div className="messages-area" style={{ flex: 1, minHeight: 0, padding: '12px 16px' }}>
+          <div ref={messagesScrollContainerRef} className="messages-area" style={{ flex: 1, minHeight: 0, padding: '12px 16px' }}>
             {messages.map((message, index) => (
               <div
                 key={index}
+                ref={!isTyping && index === messages.length - 1 ? lastMessageRef : null}
                 className={`message-row message-row--${message.role}`}
                 style={{ justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start' }}
               >
@@ -1427,7 +1440,7 @@ const Learn = () => {
             ))}
 
             {isTyping && (
-              <div className="message-row message-row--assistant" style={{ justifyContent: 'flex-start' }}>
+              <div ref={lastMessageRef} className="message-row message-row--assistant" style={{ justifyContent: 'flex-start' }}>
                 <div className="message-content message-content--plain">
                   <div className="typing-dots">
                     <span></span>

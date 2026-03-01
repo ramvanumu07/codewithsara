@@ -110,14 +110,10 @@ export const courses = [
         "id": 'variables-and-constants',
         "title": 'Variables and Constants',
         "outcomes": [
-          'Variables as named memory containers',
+          'Variables',
           'Declaring constants with const',
           'Declaring mutable variables with let',
-          'Initialization and Assignment',
-          'Accessing and using stored values',
-          'Variable Reassignment (let)',
           'Immutability: Why const cannot be reassigned',
-          'Identifier Naming Rules (CamelCase and Reserved Words)'
         ],
         "tasks": [
           {
@@ -297,13 +293,11 @@ export const courses = [
         "id": 'numbers-and-basic-arithmetic',
         "title": 'Numbers and Basic Arithmetic',
         "outcomes": [
-          'Number Types: Integers and Floating-points',
-          'Basic Arithmetic: Addition and Subtraction',
-          'Scale and Ratio: Multiplication and Division',
-          'The Modulo Operator: Finding the Remainder (%)',
-          'Operator Precedence (PEMDAS/BODMAS)',
-          'Overriding Priority with Parentheses',
-          'Compound Logic: Multi-step Calculations'
+          'Numbers',
+          'Basic Arithmetic',
+          'Modulo Operator',
+          'Operator Precedence',
+          'Compound Logic'
         ],
         "tasks": [
           {
@@ -735,7 +729,7 @@ export const courses = [
         "title": 'Built-in Math Utilities',
         "outcomes": [
           'The Math Object: Static Utilities for Computation',
-          'Rounding Logic: Math.round() vs. Math.trunc()',
+          'Rounding Logic: Math.round() and Math.trunc()',
           'Directional Rounding: Math.floor() and Math.ceil()',
           'Absolute Values and Distance: Math.abs()',
           'Powers and Roots: Math.pow() and Math.sqrt()',
@@ -1255,13 +1249,13 @@ export const courses = [
         "id": "strings-and-basic-operations",
         "title": "Strings and Basic Operations",
         "outcomes": [
-          "String Creation: Character Sequences in Memory",
-          "The length Property: Measuring Sequence Size",
-          "Zero-based Indexing: Accessing Specific Characters",
-          "Dynamic Access: Calculating the Last Character Index",
-          "Concatenation: Merging Sequences",
-          "Case Transformation: toUpperCase and toLowerCase Methods",
-          "Method Chaining: Combining Operations in a Single Line"
+          "Strings",
+          "String Creation",
+          "String Length",
+          "String Indexing",
+          "String Concatenation",
+          "String Case Transformation",
+          "String Method Chaining"
         ],
         "tasks": [
           {
