@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [unlockModalCourse, setUnlockModalCourse] = useState(null)
   const [unlocking, setUnlocking] = useState(false)
   const [downloadingCert, setDownloadingCert] = useState(false)
+  const [showHowToRunSteps, setShowHowToRunSteps] = useState(false)
   // Always show dashboard on load/reload; editor toggle state is not persisted for this page
   const [editorToggleOn, setEditorToggleOn] = useState(false)
   const [playgroundCode, setPlaygroundCode] = useState('')
@@ -612,6 +613,96 @@ const Dashboard = () => {
               <h2>{selectedCourseData?.title || 'Course'}</h2>
               <p>{selectedCourseData?.description || 'Master programming concepts step by step with Sara'}</p>
             </div>
+
+            {/* How to run JS code - help link */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
+              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontFamily: 'var(--sara-font)' }}>How to run JS code</span>
+              <button
+                type="button"
+                onClick={() => setShowHowToRunSteps(true)}
+                aria-label="View steps to run JavaScript code"
+                title="View steps"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 20,
+                  height: 20,
+                  padding: 0,
+                  border: 'none',
+                  borderRadius: '50%',
+                  background: '#e5e7eb',
+                  color: '#6b7280',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  fontWeight: 700
+                }}
+              >
+                ?
+              </button>
+            </div>
+
+            {/* How to run JS code - steps modal */}
+            {showHowToRunSteps && (
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="how-to-run-title"
+                style={{
+                  position: 'fixed',
+                  inset: 0,
+                  zIndex: 1000,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: 'rgba(0,0,0,0.4)',
+                  padding: 16
+                }}
+                onClick={() => setShowHowToRunSteps(false)}
+              >
+                <div
+                  style={{
+                    background: 'white',
+                    borderRadius: 12,
+                    padding: 24,
+                    maxWidth: 420,
+                    width: '100%',
+                    boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)'
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <h3 id="how-to-run-title" style={{ margin: '0 0 16px', fontSize: '1.125rem', fontFamily: 'var(--sara-font)' }}>How to run JS code</h3>
+                  <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>In Sara</p>
+                  <ol style={{ margin: '0 0 20px', paddingLeft: 20, color: '#374151', fontSize: '0.875rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
+                    <li style={{ marginBottom: 8 }}>Complete the <strong>Session</strong> for a topic (chat with Sara to learn).</li>
+                    <li style={{ marginBottom: 8 }}>Turn on the <strong>code editor</strong> (toggle at the left) to open the Playground, or go to <strong>Assignments</strong> for a topic.</li>
+                    <li style={{ marginBottom: 8 }}>Write or paste JavaScript in the editor and click <strong>Run</strong>. Output appears in the terminal panel.</li>
+                  </ol>
+                  <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>Without Sara (outside this app)</p>
+                  <ol style={{ margin: 0, paddingLeft: 20, color: '#374151', fontSize: '0.875rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
+                    <li style={{ marginBottom: 8 }}><strong>Browser:</strong> Open DevTools (F12 or right‑click → Inspect), go to the Console tab, type or paste JS, press Enter.</li>
+                    <li style={{ marginBottom: 8 }}><strong>Node.js:</strong> Save code in a <code style={{ background: '#f3f4f6', padding: '1px 4px', borderRadius: 4 }}>.js</code> file and run <code style={{ background: '#f3f4f6', padding: '1px 4px', borderRadius: 4 }}>node filename.js</code> in a terminal.</li>
+                  </ol>
+                  <button
+                    type="button"
+                    onClick={() => setShowHowToRunSteps(false)}
+                    style={{
+                      marginTop: 20,
+                      padding: '8px 16px',
+                      background: '#10a37f',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: 8,
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Got it
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Course locked: show unlock CTA */}
             {selectedCourseData && !unlockedCourseIds.includes(selectedCourseData.id) && (

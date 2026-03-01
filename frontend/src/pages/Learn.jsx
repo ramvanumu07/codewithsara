@@ -1008,28 +1008,24 @@ const Learn = () => {
     }
   }
 
-  // Review: show reference solution (no AI call — AI is used only in session phase)
+  // Show dev style solution (reference_solution from curriculum)
   const handleReviewAssignment = () => {
     const currentTask = assignments[currentAssignment]
     if (!currentTask) return
     const refSol = currentTask.reference_solution
     if (refSol && typeof refSol === 'string') {
-      setAssignmentReview('**Reference solution:**\n\n```javascript\n' + refSol.trim() + '\n```')
+      setAssignmentReview('```javascript\n' + refSol.trim() + '\n```')
     } else {
-      setAssignmentReview('No reference solution available for this assignment.')
+      setAssignmentReview('No dev style solution available for this assignment.')
     }
   }
 
-  // Review button: enabled only when all test cases passed (for current assignment)
-  const assignmentTestResultsForReview = assignmentTestResults ?? assignmentTestResultsRef.current
-  const allTestsPassedForReview = assignmentTestResultsForReview?.length > 0 && assignmentTestResultsForReview.every(r => r.passed)
-
-  // Next: go to next assignment in topic, or next topic's session phase. When topic not complete, can only go forward if current assignment is completed.
+  // Next: go to next assignment only when user has passed all tests for current (via Submit). Review is not required.
   const canGoToNextAssignment = assignmentComplete || (currentAssignment < assignmentsCompletedCount)
   const handleNext = async () => {
     if (currentAssignment < assignments.length - 1) {
       if (!canGoToNextAssignment) {
-        setIncompleteModalMessage('You need to complete and submit the current assignment before you can go to the next one. Click Submit after your code passes the tests.')
+        setIncompleteModalMessage('You need to pass all tests for the current assignment before you can go to the next one.')
         setShowIncompleteModal(true)
         return
       }
@@ -1056,7 +1052,7 @@ const Learn = () => {
     } else {
       // Last assignment — only allow next topic if all assignments completed
       if (!assignmentComplete) {
-        setIncompleteModalMessage('Please complete all assignments in this topic before moving to the next topic. Submit each assignment after your code passes the tests.')
+        setIncompleteModalMessage('Please complete all assignments in this topic before moving to the next topic. Click Test after your code passes the tests for each assignment.')
         setShowIncompleteModal(true)
         return
       }
@@ -1613,28 +1609,27 @@ const Learn = () => {
                 </button>
                 <button
                   onClick={handleReviewAssignment}
-                  disabled={!allTestsPassedForReview}
                   className="playground-review-btn"
                   style={{
                     height: 32,
                     minHeight: 32,
                     padding: '0 12px',
-                    backgroundColor: !allTestsPassedForReview ? '#d1d5db' : '#059669',
-                    color: !allTestsPassedForReview ? '#9ca3af' : 'white',
+                    backgroundColor: '#059669',
+                    color: 'white',
                     border: 'none',
                     borderRadius: '6px',
                     fontSize: '0.875rem',
                     fontWeight: '500',
                     fontFamily: 'var(--sara-font)',
-                    cursor: !allTestsPassedForReview ? 'not-allowed' : 'pointer',
+                    cursor: 'pointer',
                     transition: 'all 0.2s ease',
-                    boxShadow: !allTestsPassedForReview ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                     minWidth: '72px',
                     boxSizing: 'border-box'
                   }}
-                  title="Show reference solution (available after all tests pass)"
+                  title="Show dev style solution"
                 >
-                  Review
+                  Dev style solution
                 </button>
               </div>
             </div>
@@ -1733,9 +1728,11 @@ const Learn = () => {
                   }
                 }}
                 onKeyDown={(e) => {
-                  if (e.ctrlKey && e.key === 'Enter') {
+                  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                     e.preventDefault()
+                    e.stopPropagation()
                     handleRunAssignment()
+                    return
                   }
 
                   // Handle Tab key for indentation
@@ -2035,7 +2032,7 @@ const Learn = () => {
                 fontFamily: 'var(--sara-font)',
                 boxSizing: 'border-box'
               }}>
-                {assignmentReview ? 'Reference solution' : 'Test Results'}
+                {assignmentReview ? 'Dev style solution' : 'Test Results'}
               </div>
             </div>
 
@@ -2067,12 +2064,9 @@ const Learn = () => {
                   >
                     <div style={{ maxWidth: '720px', margin: '0 auto' }}>
                       {showReviewOnly ? (
-                        <>
-                          <div style={{ color: '#111827', fontWeight: 600, marginBottom: '12px', fontSize: '0.9375rem', fontFamily: 'var(--sara-font)' }}>Reference solution</div>
-                          <div className="message-text" style={{ color: '#374151', fontSize: '0.9375rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
-                            {renderFormattedReview(assignmentReview)}
-                          </div>
-                        </>
+                        <div className="message-text" style={{ color: '#374151', fontSize: '0.9375rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
+                          {renderFormattedReview(assignmentReview)}
+                        </div>
                       ) : (
                         <>
                           <div style={{ color: '#6b7280', marginBottom: '16px', fontSize: '0.8125rem' }}>
