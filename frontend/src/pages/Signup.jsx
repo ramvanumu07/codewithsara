@@ -370,7 +370,7 @@ const Signup = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className={`form-input ${errors.name ? 'error' : ''}`}
-                placeholder="Enter your full name as it will appear on your certificate"
+                placeholder="For certificate"
                 disabled={isLoading}
                 autoComplete="name"
                 autoCapitalize="words"

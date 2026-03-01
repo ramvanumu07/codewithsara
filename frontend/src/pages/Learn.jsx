@@ -651,19 +651,11 @@ const Learn = () => {
 
       if (result.success) {
         if (result.results && result.results.length > 0) {
-          // Extract output from results
           const outputs = result.results.map(r => {
-            if (r.error) {
-              return `Error: ${r.error}`
-            }
-            return r.output || r.result || ''
-          }).filter(output => output !== '')
-
-          if (outputs.length > 0) {
-            outputText = outputs.join('\n')
-          } else {
-            outputText = 'Code executed successfully (no output)'
-          }
+            if (r.error) return `Error: ${r.error}`
+            return r.output ?? r.result ?? ''
+          })
+          outputText = outputs.join('\n')
         } else {
           outputText = 'Code executed successfully (no output)'
         }
@@ -844,7 +836,7 @@ const Learn = () => {
         if (first && !first.passed && first.error) {
           outputText = `Error: ${first.error}`
         } else if (result.results && result.results.length > 0) {
-          outputText = result.results.map(r => r.output || r.result || '').filter(Boolean).join('\n') || 'Code executed (no output)'
+          outputText = result.results.map(r => r.output ?? r.result ?? '').join('\n')
         } else {
           outputText = 'Code executed (no output)'
         }

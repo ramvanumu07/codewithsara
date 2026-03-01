@@ -21,7 +21,7 @@ export default function PlayEditor({ code, onCodeChange, onRun, placeholder = '/
       const result = await onRun(code.trim())
       const out = result?.output ?? ''
       const err = !!result?.isError
-      setOutput(out || 'Code executed (no output)')
+      setOutput(out != null ? out : 'Code executed (no output)')
       setOutputError(err)
       if (outputRef.current) {
         const lines = (out || '').split('\n')

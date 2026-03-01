@@ -161,18 +161,7 @@ class CodeExecutor {
     self.console = {
       log: (...args) => {
         if (outputs.length < this.maxOutputLines) {
-          // Handle different types of arguments better
-          const formattedArgs = args.map(arg => {
-            if (typeof arg === 'object' && arg !== null) {
-              try {
-                return JSON.stringify(arg, null, 2);
-              } catch (e) {
-                return String(arg);
-              }
-            }
-            return String(arg);
-          });
-          outputs.push(formattedArgs.join(' '));
+          outputs.push(args.map(arg => String(arg)).join(' '));
         }
       },
       // Also capture other console methods

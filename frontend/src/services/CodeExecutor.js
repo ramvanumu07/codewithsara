@@ -17,7 +17,7 @@ function normalizeExecutionError(message, fromWorker = false) {
 
   // Timeout / infinite loop (main-thread timeout or worker timeout)
   if (m === 'INFINITE_LOOP_OR_TIMEOUT' || m === 'Code execution timeout' ||
-      m.includes('Execution timeout') || m.includes('took too long')) {
+    m.includes('Execution timeout') || m.includes('took too long')) {
     return 'Infinite loop or code took too long to run. Check for loops that never end or reduce the amount of work.';
   }
 
@@ -90,7 +90,7 @@ class CodeExecutionService {
         const base = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
         const workerPath = base.replace(/\/$/, '') + '/code-executor-worker.js';
         this.worker = new Worker(new URL(workerPath, window.location.origin).href);
-        
+
         this.worker.onmessage = (event) => {
           this.handleWorkerMessage(event.data);
         };
@@ -145,14 +145,14 @@ class CodeExecutionService {
     try {
       // First, run on frontend for immediate feedback
       const frontendResult = await this.executeCode(code, testCases, functionName, solutionType);
-      
+
       if (!frontendResult.success) {
         return frontendResult;
       }
 
       // If frontend passes, validate on backend for security
       const backendResult = await this.validateOnBackend(code, testCases, functionName, solutionType, topicId, assignmentIndex);
-      
+
       return {
         ...frontendResult,
         backendValidated: backendResult.success,
@@ -205,17 +205,17 @@ class CodeExecutionService {
   handleWorkerMessage(data) {
     const { taskId } = data;
     const execution = this.pendingExecutions.get(taskId);
-    
+
     if (execution) {
       clearTimeout(execution.timeoutId);
       this.pendingExecutions.delete(taskId);
-      
+
       if (data.success) {
         execution.resolve(data);
       } else {
         execution.reject(new Error(normalizeExecutionError(data.error || 'Code execution failed')));
       }
-      
+
       this.cleanup(taskId);
     }
   }
@@ -225,7 +225,7 @@ class CodeExecutionService {
    */
   handleWorkerError(taskId, error) {
     const execution = this.pendingExecutions.get(taskId);
-    
+
     if (execution) {
       clearTimeout(execution.timeoutId);
       this.pendingExecutions.delete(taskId);
@@ -242,7 +242,7 @@ class CodeExecutionService {
       this.worker.terminate();
       this.worker = null;
     }
-    
+
     const execution = this.pendingExecutions.get(taskId);
     if (execution) {
       clearTimeout(execution.timeoutId);
@@ -265,9 +265,9 @@ class CodeExecutionService {
       clearTimeout(execution.timeoutId);
       execution.reject(new Error('Service destroyed'));
     });
-    
+
     this.pendingExecutions.clear();
-    
+
     if (this.worker) {
       this.worker.terminate();
       this.worker = null;

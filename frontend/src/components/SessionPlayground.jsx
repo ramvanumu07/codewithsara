@@ -69,8 +69,8 @@ export default function SessionPlayground({
       let outputColor = '#10a37f'
       if (result.success) {
         if (result.results?.length > 0) {
-          const outputs = result.results.map(r => (r.error ? `Error: ${r.error}` : (r.output || r.result || ''))).filter(Boolean)
-          outputText = outputs.length ? outputs.join('\n') : 'Code executed successfully (no output)'
+          const outputs = result.results.map(r => (r.error ? `Error: ${r.error}` : (r.output ?? r.result ?? '')))
+          outputText = outputs.join('\n')
         } else {
           outputText = 'Code executed successfully (no output)'
         }
