@@ -68,6 +68,7 @@
   padding: 4px 8px !important;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
+
 .learn-sara-brand:hover {
   color: #0d8a6c !important;
 }
@@ -88,20 +89,24 @@
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   border: 1px solid #e5e7eb;
 }
+
 .assignment-back-btn {
   background-color: #f3f4f6;
   color: #374151;
   border-color: #e5e7eb;
 }
+
 .assignment-back-btn:hover {
   background-color: #e5e7eb;
   border-color: #d1d5db;
 }
+
 .assignment-next-btn {
   background-color: #f0fdf4;
   color: #047857;
   border-color: #86efac;
 }
+
 .assignment-next-btn:hover {
   background-color: #dcfce7;
   border-color: #4ade80;
@@ -236,7 +241,7 @@
 }
 
 .message-content--plain .message-text {
-  line-height: 1.4;
+  line-height: 1.65;
 }
 
 .message-role {
@@ -289,11 +294,16 @@
 
 /* Session chat: minimal gaps between blocks */
 .message-content--plain .message-text .code-block-wrapper {
-  margin: 2px 0;
+  margin: 4px 0 0 0;
+}
+
+/* Tighten gap between code block and text below it */
+.message-content--plain .message-text .code-block-wrapper + * {
+  margin-top: 2px;
 }
 
 .message-content--plain .message-text p {
-  margin: 0 0 2px 0;
+  margin: 0 0 8px 0;
 }
 
 .message-content--plain .message-text ul,
@@ -310,12 +320,14 @@
 .message-text {
   overflow-x: hidden;
 }
+
 .message-text .code-block-wrapper {
   width: 100%;
   max-width: 100%;
   overflow: hidden;
   box-sizing: border-box;
 }
+
 .message-text .code-block {
   width: 100%;
   max-width: 100%;
@@ -326,12 +338,14 @@
   min-width: 0;
   box-sizing: border-box;
 }
+
 .message-text .code-block pre {
   white-space: pre;
   word-break: normal;
   min-width: min-content;
   border: none;
 }
+
 .message-text .code-block-copy-btn:hover {
   background: #4a5568 !important;
 }
@@ -2300,46 +2314,49 @@
     opacity: 1 !important;
   }
 
-/* Desktop: header a bit higher, larger buttons and text */
-@media (min-width: 769px) {
-  .playground-editor-header,
-  .playground-output-header {
-    padding: 10px 14px !important;
-    min-height: 52px !important;
-    box-sizing: border-box !important;
-  }
-  .playground-editor-header > div:first-child,
-  .playground-output-header > div:first-child {
-    padding: 6px 12px !important;
-    font-size: 0.875rem !important;
-    height: 32px !important;
-    min-height: 32px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-  }
-  .playground-run-btn,
-  .playground-reset-btn {
-    padding: 0 12px !important;
-    font-size: 0.875rem !important;
-    min-width: 48px !important;
-    height: 32px !important;
-    min-height: 32px !important;
-    border-radius: 6px !important;
-    box-sizing: border-box !important;
-  }
-}
+  /* Desktop: header a bit higher, larger buttons and text */
+  @media (min-width: 769px) {
 
-/* Professional Button Hover Effects */
-.playground-run-btn:hover:not([style*="cursor: not-allowed"]),
-.playground-reset-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-}
+    .playground-editor-header,
+    .playground-output-header {
+      padding: 10px 14px !important;
+      min-height: 52px !important;
+      box-sizing: border-box !important;
+    }
 
-.playground-run-btn:active:not([style*="cursor: not-allowed"]),
-.playground-reset-btn:active {
-  transform: translateY(0);
-}
+    .playground-editor-header>div:first-child,
+    .playground-output-header>div:first-child {
+      padding: 6px 12px !important;
+      font-size: 0.875rem !important;
+      height: 32px !important;
+      min-height: 32px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+    }
+
+    .playground-run-btn,
+    .playground-reset-btn {
+      padding: 0 12px !important;
+      font-size: 0.875rem !important;
+      min-width: 48px !important;
+      height: 32px !important;
+      min-height: 32px !important;
+      border-radius: 6px !important;
+      box-sizing: border-box !important;
+    }
+  }
+
+  /* Professional Button Hover Effects */
+  .playground-run-btn:hover:not([style*="cursor: not-allowed"]),
+  .playground-reset-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .playground-run-btn:active:not([style*="cursor: not-allowed"]),
+  .playground-reset-btn:active {
+    transform: translateY(0);
+  }
 
   /* Terminal Header Styling */
   .playground-output-header>div:first-child:hover {
@@ -2372,14 +2389,14 @@
   /* ========== TABLET RESPONSIVE (≤768px) ========== */
   @media (max-width: 768px) {
 
-  /* Header a bit higher, larger buttons and text */
-  .playground-editor-header,
-  .playground-output-header {
-    padding: 10px 14px !important;
-    min-height: 52px !important;
-    box-sizing: border-box !important;
-    font-size: 0.875rem !important;
-  }
+    /* Header a bit higher, larger buttons and text */
+    .playground-editor-header,
+    .playground-output-header {
+      padding: 10px 14px !important;
+      min-height: 52px !important;
+      box-sizing: border-box !important;
+      font-size: 0.875rem !important;
+    }
 
     /* Responsive Panels */
     .playground-editor-panel,
@@ -2419,39 +2436,39 @@
       font-size: 0.65rem !important;
     }
 
-  .playground-run-btn,
-  .playground-reset-btn {
-    padding: 0 12px !important;
-    font-size: 0.875rem !important;
-    min-width: 48px !important;
-    height: 32px !important;
-    min-height: 32px !important;
-    border-radius: 6px !important;
-    box-sizing: border-box !important;
-  }
+    .playground-run-btn,
+    .playground-reset-btn {
+      padding: 0 12px !important;
+      font-size: 0.875rem !important;
+      min-width: 48px !important;
+      height: 32px !important;
+      min-height: 32px !important;
+      border-radius: 6px !important;
+      box-sizing: border-box !important;
+    }
 
-  .playground-editor-header>div:first-child,
-  .playground-output-header>div:first-child {
-    padding: 5px 10px !important;
-    font-size: 0.8125rem !important;
-    height: 28px !important;
-    min-height: 28px !important;
-    max-height: 28px !important;
-  }
+    .playground-editor-header>div:first-child,
+    .playground-output-header>div:first-child {
+      padding: 5px 10px !important;
+      font-size: 0.8125rem !important;
+      height: 28px !important;
+      min-height: 28px !important;
+      max-height: 28px !important;
+    }
   }
 
   /* ========== MOBILE RESPONSIVE (≤480px) ========== */
   @media (max-width: 480px) {
 
-  .playground-editor-header,
-  .playground-output-header {
-    padding: 8px 10px !important;
-    min-height: 48px !important;
-    box-sizing: border-box !important;
-    font-size: 0.8125rem !important;
-    flex-wrap: nowrap !important;
-    gap: 8px !important;
-  }
+    .playground-editor-header,
+    .playground-output-header {
+      padding: 8px 10px !important;
+      min-height: 48px !important;
+      box-sizing: border-box !important;
+      font-size: 0.8125rem !important;
+      flex-wrap: nowrap !important;
+      gap: 8px !important;
+    }
 
     .playground-line-numbers,
     .terminal-line-numbers,
@@ -2467,22 +2484,22 @@
       font-size: 0.6rem !important;
     }
 
-  /* Mobile Button Layout - Extra small for mobile */
-  .playground-header-actions {
-    flex-wrap: wrap !important;
-    gap: clamp(2px, 0.8vw, 4px) !important;
-  }
+    /* Mobile Button Layout - Extra small for mobile */
+    .playground-header-actions {
+      flex-wrap: wrap !important;
+      gap: clamp(2px, 0.8vw, 4px) !important;
+    }
 
-  .playground-run-btn,
-  .playground-reset-btn {
-    padding: 0 10px !important;
-    font-size: 0.8125rem !important;
-    min-width: 44px !important;
-    height: 28px !important;
-    min-height: 28px !important;
-    border-radius: 6px !important;
-    box-sizing: border-box !important;
-  }
+    .playground-run-btn,
+    .playground-reset-btn {
+      padding: 0 10px !important;
+      font-size: 0.8125rem !important;
+      min-width: 44px !important;
+      height: 28px !important;
+      min-height: 28px !important;
+      border-radius: 6px !important;
+      box-sizing: border-box !important;
+    }
 
     /* Mobile Splitter */
     .playground-splitter {
@@ -2495,21 +2512,21 @@
       height: clamp(2px, 0.5vh, 3px) !important;
     }
 
-  .playground-editor-header>div:first-child,
-  .playground-output-header>div:first-child {
-    padding: 5px 8px !important;
-    font-size: 0.8125rem !important;
-    height: 28px !important;
-    min-height: 28px !important;
-    max-height: 28px !important;
-  }
+    .playground-editor-header>div:first-child,
+    .playground-output-header>div:first-child {
+      padding: 5px 8px !important;
+      font-size: 0.8125rem !important;
+      height: 28px !important;
+      min-height: 28px !important;
+      max-height: 28px !important;
+    }
 
-  /* Ensure Run/Reset buttons are smaller than Code button on mobile */
-  .learn-header .code-btn {
-    height: clamp(28px, 6vh, 36px) !important;
-    padding: clamp(6px, 1.5vh, 8px) clamp(12px, 3vw, 16px) !important;
-    font-size: clamp(0.7rem, 2.5vw, 0.85rem) !important;
-  }
+    /* Ensure Run/Reset buttons are smaller than Code button on mobile */
+    .learn-header .code-btn {
+      height: clamp(28px, 6vh, 36px) !important;
+      padding: clamp(6px, 1.5vh, 8px) clamp(12px, 3vw, 16px) !important;
+      font-size: clamp(0.7rem, 2.5vw, 0.85rem) !important;
+    }
   }
 
   /* ========== ULTRA-WIDE RESPONSIVE (≥1440px) ========== */

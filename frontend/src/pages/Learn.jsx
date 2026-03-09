@@ -17,7 +17,7 @@ const SESSION_COMPLETE_REASON = 'Session completed. You can view the conversatio
 // Code block: dark background + light text; horizontal scroll for long lines (inline so Vercel applies)
 const codeBlockWrapperStyle = {
   position: 'relative',
-  margin: '2px 0',
+  margin: '4px 0 0 0',
   width: '100%',
   maxWidth: '100%',
   minWidth: 0,
@@ -1279,9 +1279,32 @@ const Learn = () => {
     )
   }
 
-  // Topic notes view: clean document (no session chat)
+  // Topic notes view: same message UI as session so outcome_messages match session display
   if (searchParams.get('view') === 'notes') {
     const notesContent = topic.topic_notes && typeof topic.topic_notes === 'string' && topic.topic_notes.trim()
+    const hasOutcomeMessages =
+      topic.outcome_messages &&
+      Array.isArray(topic.outcome_messages) &&
+      topic.outcomes &&
+      topic.outcome_messages.length === topic.outcomes.length
+    const notesMarkdownComponents = {
+      code: ({ node, inline, className, children, ...props }) =>
+        inline ? (
+          <code {...props}>{children}</code>
+        ) : (
+          <pre className="notes-code-block" style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'Monaco, Consolas, monospace' }}>{children}</pre>
+        ),
+      pre: ({ children }) => {
+        const child = React.Children.only(children)
+        if (child?.type === 'pre') return <>{child}</>
+        return children
+      },
+      p: ({ children }) => <p>{children}</p>,
+      h2: ({ children }) => <h2>{children}</h2>,
+      h3: ({ children }) => <h3>{children}</h3>,
+      ul: ({ children }) => <ul>{children}</ul>,
+      li: ({ children }) => <li>{children}</li>
+    }
     return (
       <div className="learn-container topic-notes-view" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <header className="learn-header" style={{ flexShrink: 0 }}>
@@ -1300,57 +1323,64 @@ const Learn = () => {
           </div>
           <div style={{ width: 80 }} />
         </header>
-        <div
-          className="topic-notes-scroll"
-          style={{
-            flex: 1,
-            overflow: 'auto',
-            padding: '28px 24px 48px',
-            maxWidth: 720,
-            margin: '0 auto',
-            width: '100%',
-            boxSizing: 'border-box'
-          }}
-        >
-          {notesContent ? (
-            <div className="message-text topic-notes-doc">
-              <ReactMarkdown
-                components={{
-                  code: ({ node, inline, className, children, ...props }) =>
-                    inline ? (
-                      <code {...props}>{children}</code>
-                    ) : (
-                      <pre className="notes-code-block" style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'Monaco, Consolas, monospace' }}>{children}</pre>
-                    ),
-                  pre: ({ children }) => {
-                    const child = React.Children.only(children)
-                    if (child?.type === 'pre') return <>{child}</>
-                    return children
-                  },
-                  p: ({ children }) => <p>{children}</p>,
-                  h2: ({ children }) => <h2>{children}</h2>,
-                  h3: ({ children }) => <h3>{children}</h3>,
-                  ul: ({ children }) => <ul>{children}</ul>,
-                  li: ({ children }) => <li>{children}</li>
-                }}
-              >
-                {notesContent}
-              </ReactMarkdown>
+        {hasOutcomeMessages ? (
+          <div className="session-container" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+            <div className="messages-area" style={{ flex: 1, minHeight: 0, padding: '12px 16px' }}>
+              {topic.outcome_messages.map((content, i) => {
+                const outcomeTitle = (topic.outcomes && topic.outcomes[i]) ? topic.outcomes[i] : `Outcome ${i + 1}`
+                const msg = typeof content === 'string' && content.trim() ? content : null
+                // TODO: After all topics have outcome_messages, hide task in notes again (strip from "Now, let's try a simple practice task:" to end)
+                return (
+                  <React.Fragment key={i}>
+                    <div
+                      className="message-row message-row--user"
+                      style={{ justifyContent: 'flex-end' }}
+                    >
+                      <MessageContent content={outcomeTitle} role="user" />
+                    </div>
+                    <div
+                      className="message-row message-row--assistant"
+                      style={{ justifyContent: 'flex-start' }}
+                    >
+                      <MessageContent content={msg || 'No content for this outcome yet.'} role="assistant" />
+                    </div>
+                  </React.Fragment>
+                )
+              })}
             </div>
-          ) : (
-            <div className="topic-notes-doc">
-              <h2>Outcomes</h2>
-              <ul>
-                {(topic.outcomes || []).map((o, i) => (
-                  <li key={i}>{o}</li>
-                ))}
-              </ul>
-              {(!topic.outcomes || topic.outcomes.length === 0) && (
-                <p style={{ color: '#64748b' }}>Notes for this topic are being prepared.</p>
-              )}
-            </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div
+            className="topic-notes-scroll"
+            style={{
+              flex: 1,
+              overflow: 'auto',
+              padding: '28px 24px 48px',
+              maxWidth: 720,
+              margin: '0 auto',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+          >
+            {notesContent ? (
+              <div className="message-text topic-notes-doc">
+                <ReactMarkdown components={notesMarkdownComponents}>{notesContent}</ReactMarkdown>
+              </div>
+            ) : (
+              <div className="topic-notes-doc">
+                <h2>Outcomes</h2>
+                <ul>
+                  {(topic.outcomes || []).map((o, i) => (
+                    <li key={i}>{o}</li>
+                  ))}
+                </ul>
+                {(!topic.outcomes || topic.outcomes.length === 0) && (
+                  <p style={{ color: '#64748b' }}>Notes for this topic are being prepared.</p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     )
   }

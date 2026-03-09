@@ -1,0 +1,13 @@
+---
+description: When committing, stage all changes instead of selective files
+alwaysApply: true
+---
+
+# Git: Stage entire working tree
+
+When the user asks to commit or push to git:
+
+1. **Stage all changes** with `git add -A` (or `git add .`), not selective paths like `git add path/to/file.js`.
+2. Then run `git commit` with an appropriate message and `git push` as needed.
+
+Do not use `git add <file1> <file2>` unless the user explicitly asks to commit only certain files.
