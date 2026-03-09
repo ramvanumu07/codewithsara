@@ -16,10 +16,12 @@ import {
   getUnlockedCourseIds,
   isCourseUnlockedForUser,
   unlockCourseForUser,
-  getUserById
+  getUserById,
+  deleteChatSessionRow
 } from '../services/database.js'
 import { generateCertificatePDF, CERTIFICATE_TOPICS } from '../services/certificate.js'
 import { saveInitialMessage, getChatHistoryString, getChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
+import { invalidateChatHistoryCache } from '../services/chatCache.js'
 import { courses } from '../../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getAllTopics } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
@@ -556,6 +558,16 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
         }
       } else {
         throw progressErr
+      }
+    }
+
+    // When topic is fully completed, remove session chat so user uses topic notes instead
+    if (isTopicComplete) {
+      try {
+        await deleteChatSessionRow(userId, topicId)
+        await invalidateChatHistoryCache(userId, topicId)
+      } catch (deleteErr) {
+        console.warn('Could not delete chat session for completed topic:', deleteErr?.message)
       }
     }
 

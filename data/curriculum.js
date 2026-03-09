@@ -15,6 +15,54 @@ export const courses = [
           'String concatenation (+) and the space problem',
           'Comma-separated logging and auto-spacing',
         ],
+        "topic_notes": `## 1. console.log() basic syntax
+
+- Use console.log() to print values.
+- Whatever you put inside the parentheses is shown in the console.
+
+\`\`\`javascript
+console.log('Hello')
+console.log(42)
+\`\`\`
+
+## 2. String literals (single vs double quotes)
+
+- Strings can use single quotes or double quotes.
+- Use single quotes when the text contains double quotes, so you don't have to escape them.
+
+\`\`\`javascript
+console.log('He said "hello"')
+console.log("Or use double quotes for the whole string")
+\`\`\`
+
+## 3. Printing numbers and arithmetic
+
+- You can log numbers and expressions.
+- The expression is evaluated first, then the result is printed.
+
+\`\`\`javascript
+console.log(147 + 289)
+console.log(100 / 8)
+\`\`\`
+
+## 4. String concatenation (+)
+
+- Use + to join strings. There is no automatic space between them.
+- "Hello" + "World" gives HelloWorld. Add a space by including " " in between.
+
+\`\`\`javascript
+console.log("Hello" + "World")
+console.log("Hello" + " " + "World")
+\`\`\`
+
+## 5. Comma-separated logging
+
+- console.log(a, b, c) prints each value with a single space between them.
+- Handy for mixing text and numbers without concatenation.
+
+\`\`\`javascript
+console.log(100, "items", 50 * 2)
+\`\`\``,
         "tasks": [
           {
             "description": '// Print the result of 147 + 289\n// Your output should be:\n// 436',
@@ -115,6 +163,50 @@ export const courses = [
           'Declaring mutable variables with let',
           'Immutability: Why const cannot be reassigned',
         ],
+        "topic_notes": `## 1. Variables
+
+- Variables hold values so you can reuse them later.
+- Give each variable a name and assign a value with =.
+
+\`\`\`javascript
+let name = 'Sara'
+let age = 10
+console.log(name, age)
+\`\`\`
+
+## 2. Declaring constants with const
+
+- Use const when the value should not change.
+- You must assign a value when you declare it.
+
+\`\`\`javascript
+const PI = 3.14159
+const MAX_SIZE = 100
+console.log(PI, MAX_SIZE)
+\`\`\`
+
+## 3. Declaring mutable variables with let
+
+- Use let when the value will change later.
+- You can assign now and update with = again.
+
+\`\`\`javascript
+let count = 0
+count = count + 1
+count = count + 1
+console.log(count)
+\`\`\`
+
+## 4. Immutability: Why const cannot be reassigned
+
+- const means the variable cannot be reassigned to a new value.
+- You can still change the contents of an object or array stored in const; you cannot do name = somethingElse.
+
+\`\`\`javascript
+const id = 42
+let score = 0
+score = 10
+\`\`\``,
         "tasks": [
           {
             "description": '// Do not rename a and b, use them as input for your program.\n// While testing we will change their values.\nconst a = 15;\nconst b = 27;\n\n// Create 3 let variables: two for storing a and b, one for swapping\n// Swap the values using the third variable, then print both values after swapping\n// For example, if a = 15 and b = 27, your output should be:\n// 27\n// 15',
@@ -299,6 +391,59 @@ export const courses = [
           'Operator Precedence',
           'Compound Logic'
         ],
+        "topic_notes": `## 1. Numbers
+
+- JavaScript has one number type: integers and decimals are both numbers.
+- You can use numbers in variables and in calculations.
+
+\`\`\`javascript
+const age = 25
+const price = 9.99
+console.log(age, price)
+\`\`\`
+
+## 2. Basic Arithmetic
+
+- Use + for add, - for subtract, * for multiply, / for divide.
+- Division can give a decimal result.
+
+\`\`\`javascript
+console.log(10 + 3)
+console.log(10 - 3)
+console.log(10 * 3)
+console.log(10 / 3)
+\`\`\`
+
+## 3. Modulo Operator
+
+- % gives the remainder after division.
+- Handy for checking even/odd or wrapping values.
+
+\`\`\`javascript
+console.log(10 % 3)
+console.log(7 % 2)
+\`\`\`
+
+## 4. Operator Precedence
+
+- * and / happen before + and -.
+- Use parentheses to control order: (a + b) * c.
+
+\`\`\`javascript
+console.log(2 + 3 * 4)
+console.log((2 + 3) * 4)
+\`\`\`
+
+## 5. Compound Logic
+
+- Combine arithmetic in one expression.
+- Store results in variables to reuse.
+
+\`\`\`javascript
+const sum = 12 + 25 + 18
+const average = sum / 3
+console.log(sum, average)
+\`\`\``,
         "tasks": [
           {
             "description": '// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = 12;\nconst b = 25;\nconst c = 18;\n\n// Calculate and print:\n// 1. Sum of all three numbers\n// 2. Product of all three numbers\n// 3. Average of all three numbers\n// For example, if a = 12, b = 25, c = 18, your output should be:\n// 55\n// 5400\n// 18.333333333333332',
@@ -738,6 +883,97 @@ export const courses = [
           'Formula Design: Scaling Random Numbers to a Range',
           'Mathematical Constants: Math.PI and Math.E'
         ],
+        "topic_notes": `## 1. The Math Object: Static Utilities for Computation
+
+- Math is a built-in object with useful number functions.
+- Call them as Math.name() — no need to create an instance.
+
+\`\`\`javascript
+console.log(Math.round(3.7))
+console.log(Math.sqrt(16))
+\`\`\`
+
+## 2. Rounding Logic: Math.round() and Math.trunc()
+
+- Math.round() rounds to the nearest integer (0.5 rounds up).
+- Math.trunc() drops the decimal part and keeps the integer.
+
+\`\`\`javascript
+console.log(Math.round(47.6))
+console.log(Math.trunc(47.6))
+\`\`\`
+
+## 3. Directional Rounding: Math.floor() and Math.ceil()
+
+- Math.floor() rounds down to the nearest integer.
+- Math.ceil() rounds up to the nearest integer.
+
+\`\`\`javascript
+console.log(Math.floor(47.6))
+console.log(Math.ceil(47.6))
+\`\`\`
+
+## 4. Absolute Values and Distance: Math.abs()
+
+- Math.abs(x) returns the absolute value (removes the minus sign).
+- Useful for distance or when sign does not matter.
+
+\`\`\`javascript
+console.log(Math.abs(-10))
+console.log(Math.abs(5 - 12))
+\`\`\`
+
+## 5. Powers and Roots: Math.pow() and Math.sqrt()
+
+- Math.pow(base, exponent) raises a number to a power.
+- Math.sqrt(x) returns the square root of x.
+
+\`\`\`javascript
+console.log(Math.pow(2, 3))
+console.log(Math.sqrt(16))
+\`\`\`
+
+## 6. Boundary Logic: Finding Math.min() and Math.max()
+
+- Math.min() returns the smallest of the arguments.
+- Math.max() returns the largest of the arguments.
+
+\`\`\`javascript
+console.log(Math.min(3, 7, 1, 9))
+console.log(Math.max(3, 7, 1, 9))
+\`\`\`
+
+## 7. Stochastic Logic: Generating Math.random()
+
+- Math.random() returns a decimal from 0 (inclusive) to 1 (exclusive).
+- Each call gives a different value.
+
+\`\`\`javascript
+console.log(Math.random())
+console.log(Math.random())
+\`\`\`
+
+## 8. Formula Design: Scaling Random Numbers to a Range
+
+- Multiply by range size and add minimum to get a number in a range.
+- Use Math.floor() to get an integer.
+
+\`\`\`javascript
+const min = 1
+const max = 6
+const roll = Math.floor(Math.random() * (max - min + 1)) + min
+console.log(roll)
+\`\`\`
+
+## 9. Mathematical Constants: Math.PI and Math.E
+
+- Math.PI is the value of pi (about 3.14159).
+- Math.E is Euler's number (about 2.718).
+
+\`\`\`javascript
+console.log(Math.PI)
+console.log(Math.E)
+\`\`\``,
         "tasks": [
           {
             "description": '// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 47.6;\n\n// Apply different rounding methods and print the results\n// Print round, floor, ceil, trunc of num in order\n// For example, if num = 47.6, your output should be:\n// 48\n// 47\n// 48\n// 47',
@@ -1215,6 +1451,48 @@ export const courses = [
           "Logical Comparison: undefined vs. null",
           "Using the typeof operator for type inspection"
         ],
+        "topic_notes": `## 1. The concept of Uninitialized Memory: undefined
+
+- A variable that is declared but not assigned has the value undefined.
+- Functions that do not return a value also give undefined.
+
+\`\`\`javascript
+let x
+console.log(x)
+\`\`\`
+
+## 2. Intentional Absence of Value: null
+
+- null means no value on purpose (you set it).
+- Use null when you want to say something is empty or missing.
+
+\`\`\`javascript
+let name = null
+console.log(name)
+\`\`\`
+
+## 3. Logical Comparison: undefined vs. null
+
+- undefined means not set yet; null means set to no value.
+- They are not equal when compared with strict equality (===).
+
+\`\`\`javascript
+const a = undefined
+const b = null
+console.log(a === b)
+console.log(a == b)
+\`\`\`
+
+## 4. Using the typeof operator for type inspection
+
+- typeof returns a string naming the type of a value.
+- typeof undefined is "undefined"; typeof null is "object" (a quirk of JavaScript).
+
+\`\`\`javascript
+console.log(typeof undefined)
+console.log(typeof null)
+console.log(typeof 42)
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename a, b, c, d, use them as input for your program.\n// While testing we will change their values.\nconst a = undefined;\nconst b = null;\nconst c = 42;\nconst d = \"hello\";\n\n// Print the type of each variable using typeof\n// For example, if a = undefined, b = null, c = 42, d = \"hello\", your output should be:\n// undefined\n// object\n// number\n// string",
@@ -1257,6 +1535,80 @@ export const courses = [
           "String Case Transformation",
           "String Method Chaining"
         ],
+        "topic_notes": `## 1. Strings
+
+- Strings are text: a sequence of characters in single or double quotes.
+- You can store them in variables and pass them to functions.
+
+\`\`\`javascript
+const greeting = "Hello"
+const name = 'Sara'
+console.log(greeting, name)
+\`\`\`
+
+## 2. String Creation
+
+- Create a string with single quotes, double quotes, or backticks (template literals).
+- Quotes must match on each side.
+
+\`\`\`javascript
+const a = "double"
+const b = 'single'
+const c = \`template\`
+console.log(a, b, c)
+\`\`\`
+
+## 3. String Length
+
+- Every string has a length property: string.length gives the number of characters.
+- It is a number (no parentheses after length).
+
+\`\`\`javascript
+const word = "JavaScript"
+console.log(word.length)
+\`\`\`
+
+## 4. String Indexing
+
+- Characters are indexed from 0. Use string[index] to get one character.
+- The first character is at index 0, the last at length - 1.
+
+\`\`\`javascript
+const str = "Hi"
+console.log(str[0])
+console.log(str[1])
+\`\`\`
+
+## 5. String Concatenation
+
+- Use + to join strings. You can also mix strings and other values (they are converted to strings).
+
+\`\`\`javascript
+const first = "Hello"
+const second = "World"
+console.log(first + " " + second)
+\`\`\`
+
+## 6. String Case Transformation
+
+- toUpperCase() returns the string in uppercase. toLowerCase() returns it in lowercase.
+- These methods return a new string; they do not change the original.
+
+\`\`\`javascript
+const word = "JavaScript"
+console.log(word.toUpperCase())
+console.log(word.toLowerCase())
+\`\`\`
+
+## 7. String Method Chaining
+
+- You can call one method on the result of another: string.method1().method2().
+- Order matters: each method works on the value returned by the previous one.
+
+\`\`\`javascript
+const text = "  Hello World  "
+console.log(text.trim().toLowerCase())
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"JavaScript\";\n\n// Print the length of the string\n// For example, if str = \"JavaScript\", your output should be:\n// 10",
@@ -1583,6 +1935,89 @@ export const courses = [
           "Equality Logic: Type coercion in == vs. ===",
           "Safe Coding: Strategies to avoid implicit bugs"
         ],
+        "topic_notes": `## 1. Introduction to Coercion: Automatic Type Switching
+
+- JavaScript can convert values from one type to another automatically when needed.
+- This happens in expressions, function arguments, and when using operators.
+
+\`\`\`javascript
+console.log("5" - 2)
+console.log("5" * 2)
+\`\`\`
+
+## 2. Explicit vs. Implicit: Manual vs. Automatic conversion
+
+- Explicit: you convert on purpose (e.g. Number(str), String(n)).
+- Implicit: the engine converts for you (e.g. number + string).
+
+\`\`\`javascript
+const str = "42"
+console.log(Number(str) + 1)
+console.log(str + 1)
+\`\`\`
+
+## 3. The String Bias: Coercion with the + operator
+
+- + prefers string: if either side is a string, the other is converted to string and they are concatenated.
+- So number + string gives a string, not a number.
+
+\`\`\`javascript
+console.log(42 + "10")
+console.log("7" + "3")
+\`\`\`
+
+## 4. Numeric Focus: Coercion with -, *, and / operators
+
+- -, *, and / try to work with numbers. Strings that look like numbers are converted to numbers.
+- If conversion fails, you get NaN.
+
+\`\`\`javascript
+console.log("10" - 3)
+console.log("10" * 3)
+console.log("10" / 2)
+\`\`\`
+
+## 5. Boolean Logic: The Truthy and Falsy concept
+
+- In conditions, values are coerced to boolean. Falsy: false, 0, "", null, undefined, NaN.
+- Everything else is truthy.
+
+\`\`\`javascript
+if ("hello") console.log("truthy")
+if (0) console.log("won't run")
+else console.log("falsy")
+\`\`\`
+
+## 6. The Not-a-Number (NaN) behavior and traps
+
+- NaN is the result of invalid math (e.g. undefined * 2). NaN is not equal to itself: NaN === NaN is false.
+- Use Number.isNaN(x) to check for NaN safely.
+
+\`\`\`javascript
+console.log(undefined + 10)
+console.log(Number.isNaN(NaN))
+\`\`\`
+
+## 7. Equality Logic: Type coercion in == vs. ===
+
+- == allows type coercion (e.g. 5 == "5" is true). === checks type and value (5 === "5" is false).
+- Prefer === to avoid surprise conversions.
+
+\`\`\`javascript
+console.log(5 == "5")
+console.log(5 === "5")
+\`\`\`
+
+## 8. Safe Coding: Strategies to avoid implicit bugs
+
+- Use === instead of ==. Convert explicitly with Number() or String() when you need a type.
+- Check for NaN with Number.isNaN(), not value === NaN.
+
+\`\`\`javascript
+const input = "123"
+const num = Number(input)
+if (!Number.isNaN(num)) console.log(num + 1)
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename num and str, use them as input for your program.\n// While testing we will change their values.\nconst num = 42;\nconst str = \"10\";\n\n// Calculate num + str, num - str, num * str\n// Print all three results\n// For example, if num = 42 and str = \"10\", your output should be:\n// 4210\n// 32\n// 420",
@@ -1765,6 +2200,48 @@ export const courses = [
           "Logical Gates: AND (&&), OR (||), and NOT (!)",
           "Short-circuiting: How JS optimizes logical checks"
         ],
+        "topic_notes": `## 1. Abstract vs. Strict Equality: == vs ===
+
+- == (abstract) converts types and then compares. 10 == "10" is true.
+- === (strict) compares type and value. 10 === "10" is false. Prefer === to avoid surprises.
+
+\`\`\`javascript
+console.log(10 == "10")
+console.log(10 === "10")
+\`\`\`
+
+## 2. Relational Operators: >, <, >=, <=
+
+- These compare two values and return true or false.
+- They try to convert to numbers when needed. Strings are compared by character order if both are strings.
+
+\`\`\`javascript
+console.log(5 > 3)
+console.log(10 >= 10)
+console.log(7 < 12)
+\`\`\`
+
+## 3. Logical Gates: AND (&&), OR (||), and NOT (!)
+
+- && is true only when both sides are truthy. || is true when at least one side is truthy.
+- ! flips a value to boolean and negates it.
+
+\`\`\`javascript
+console.log(true && false)
+console.log(true || false)
+console.log(!true)
+\`\`\`
+
+## 4. Short-circuiting: How JS optimizes logical checks
+
+- && stops at the first falsy value and returns it; if all are truthy, returns the last value.
+- || stops at the first truthy value and returns it; if all are falsy, returns the last value.
+
+\`\`\`javascript
+console.log(true && "hello")
+console.log(false && "hello")
+console.log(null || "default")
+\`\`\``,
         "tasks": [
           {
             "description": "// Use a and b as input.\n// Print the result of (a == b) followed by (a === b).\nconst a = 10;\nconst b = \"10\";\n\n// For a = 10, b = \"10\", output:\n// true\n// false",
@@ -1847,6 +2324,51 @@ export const courses = [
           "Condition Evaluation: Resolving Expressions to Booleans",
           "Truthy Execution: How non-booleans trigger branches"
         ],
+        "topic_notes": `## 1. The if Statement: Conditional Execution Syntax
+
+- if (condition) runs the block only when the condition is truthy.
+- Write the condition in parentheses, then the block in curly braces.
+
+\`\`\`javascript
+const age = 20
+if (age >= 18) {
+  console.log("You are eligible to vote")
+}
+\`\`\`
+
+## 2. Code Blocks: Scope and the Curly Brace {}
+
+- Curly braces {} group statements into one block. The block runs as a whole when the if condition is true.
+- Variables declared with let or const inside the block are scoped to that block.
+
+\`\`\`javascript
+if (true) {
+  const message = "inside block"
+  console.log(message)
+}
+\`\`\`
+
+## 3. Condition Evaluation: Resolving Expressions to Booleans
+
+- The condition can be any expression. JavaScript converts its result to boolean (truthy or falsy).
+- Comparison operators (>, <, ===, etc.) already produce true or false.
+
+\`\`\`javascript
+const score = 85
+if (score >= 60) {
+  console.log("Pass")
+}
+\`\`\`
+
+## 4. Truthy Execution: How non-booleans trigger branches
+
+- Truthy values (non-zero numbers, non-empty strings, etc.) make the block run.
+- Falsy values (0, "", null, undefined, NaN, false) skip the block.
+
+\`\`\`javascript
+if ("hello") console.log("runs")
+if (0) console.log("skipped")
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename age, use it as input for your program.\n// While testing we will change its value.\nconst age = 20;\n\n// Check if age is 18 or greater\n// If true, print: \"You are eligible to vote\"\n// If false, print nothing",
@@ -2012,6 +2534,47 @@ export const courses = [
           "Binary Logic: Designing Two-Way Decisions",
           "Mutual Exclusivity: Ensuring only one path executes"
         ],
+        "topic_notes": `## 1. The else Block: Defining the Otherwise Path
+
+- else follows an if and runs only when the if condition is falsy.
+- You get two paths: one when the condition is true, one when it is false.
+
+\`\`\`javascript
+const number = 7
+if (number % 2 === 0) {
+  console.log("Even")
+} else {
+  console.log("Odd")
+}
+\`\`\`
+
+## 2. Binary Logic: Designing Two-Way Decisions
+
+- if-else is for exactly two outcomes: do this or do that.
+- The condition decides which block runs; the other block is skipped.
+
+\`\`\`javascript
+const age = 16
+if (age >= 18) {
+  console.log("Adult")
+} else {
+  console.log("Minor")
+}
+\`\`\`
+
+## 3. Mutual Exclusivity: Ensuring only one path executes
+
+- Only one of the if block or the else block runs, never both.
+- After one block runs, the rest of the if-else is skipped.
+
+\`\`\`javascript
+const score = 85
+if (score >= 60) {
+  console.log("Pass")
+} else {
+  console.log("Fail")
+}
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename number, use it as input for your program.\n// While testing we will change its value.\nconst number = 7;\n\n// Check if number is even or odd\n// If even, print: \"Even\"\n// Otherwise, print: \"Odd\"",
@@ -2189,6 +2752,60 @@ export const courses = [
           "The Final else: Creating a Default Fallback",
           "Execution Flow: Why Condition Order Matters"
         ],
+        "topic_notes": `## 1. The else if Syntax: Expanding Decision Branches
+
+- else if adds more conditions between if and else. Each has its own condition and block.
+- Conditions are checked from top to bottom; the first truthy one runs and the rest are skipped.
+
+\`\`\`javascript
+const score = 75
+if (score >= 90) {
+  console.log("A")
+} else if (score >= 80) {
+  console.log("B")
+} else if (score >= 70) {
+  console.log("C")
+} else {
+  console.log("D or F")
+}
+\`\`\`
+
+## 2. Multi-state Logic: Handling more than two outcomes
+
+- Use else if when you have three or more distinct cases (e.g. letter grades, ranges).
+- Only one branch runs; the rest are skipped after the first match.
+
+\`\`\`javascript
+const day = 3
+if (day === 1) console.log("Mon")
+else if (day === 2) console.log("Tue")
+else if (day === 3) console.log("Wed")
+else console.log("Other")
+\`\`\`
+
+## 3. The Final else: Creating a Default Fallback
+
+- The last else has no condition; it runs when every if and else if above was falsy.
+- Use it as a catch-all for any value that did not match the earlier conditions.
+
+\`\`\`javascript
+const code = "B"
+if (code === "A") console.log("Excellent")
+else if (code === "B") console.log("Good")
+else console.log("Keep trying")
+\`\`\`
+
+## 4. Execution Flow: Why Condition Order Matters
+
+- Put the most specific or strictest conditions first. The first match wins.
+- If you check the broad case first, the specific case below may never run.
+
+\`\`\`javascript
+const x = 90
+if (x >= 60) console.log("Pass")
+else if (x >= 90) console.log("A")
+else console.log("Fail")
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename score, use it as input for your program.\n// While testing we will change its value.\nconst score = 75;\n\n// Check the grade based on score:\n// If score >= 90, print: \"A\"\n// Else if score >= 80, print: \"B\"\n// Else if score >= 70, print: \"C\"\n// Else if score >= 60, print: \"D\"\n// Otherwise, print: \"F\"",
@@ -2440,6 +3057,56 @@ export const courses = [
           "Execution Hierarchy: Outer vs. Inner Flow",
           "Dependency Logic: Managing Complex Conditional Trees"
         ],
+        "topic_notes": `## 1. Nested Structures: Decisions inside Decisions
+
+- You can put an if (or if-else) inside the block of another if. That is nesting.
+- The inner condition is only checked when the outer condition is true.
+
+\`\`\`javascript
+const age = 20
+const hasLicense = true
+if (age >= 18) {
+  if (hasLicense) {
+    console.log("Can drive")
+  } else {
+    console.log("No license")
+  }
+} else {
+  console.log("Too young")
+}
+\`\`\`
+
+## 2. Execution Hierarchy: Outer vs. Inner Flow
+
+- The outer if runs first. Only if its condition is true does the inner if run.
+- Inner blocks are part of the outer block; indentation helps show the hierarchy.
+
+\`\`\`javascript
+const loggedIn = true
+const isAdmin = false
+if (loggedIn) {
+  if (isAdmin) {
+    console.log("Admin panel")
+  } else {
+    console.log("User dashboard")
+  }
+}
+\`\`\`
+
+## 3. Dependency Logic: Managing Complex Conditional Trees
+
+- Use nesting when the second check only makes sense after the first (e.g. age then license).
+- Keep nesting shallow when possible; deep nesting is hard to read. Sometimes else if or early returns can simplify.
+
+\`\`\`javascript
+const score = 85
+const passed = true
+if (passed) {
+  if (score >= 90) console.log("A")
+  else if (score >= 80) console.log("B")
+  else console.log("C")
+}
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename age and hasLicense, use them as input for your program.\n// While testing we will change their values.\nconst age = 20;\nconst hasLicense = true;\n\n// Check if person can drive:\n// First check if age >= 18\n//   If true, then check if hasLicense is true\n//     If true, print: \"Can drive\"\n//     Otherwise, print: \"Has age but no license\"\n//   Otherwise, print: \"Too young to drive\"",
@@ -2692,6 +3359,128 @@ export const courses = [
           "Date Arithmetic: Adding and Subtracting Time",
           "Standard Formatting: ISO and Local Strings"
         ],
+        "topic_notes": `## 1. The Date Object: Tracking time in memory
+
+- Date is a built-in object that represents a single moment in time.
+- Create one with new Date(); then use methods to read or change it.
+
+\`\`\`javascript
+const d = new Date(2025, 0, 15)
+console.log(d.toDateString())
+\`\`\`
+
+## 2. Capturing the current System Time
+
+- new Date() with no arguments gives the current date and time (now).
+
+\`\`\`javascript
+const now = new Date()
+console.log(now)
+\`\`\`
+
+## 3. Parsing Dates from Strings
+
+- new Date("YYYY-MM-DD") parses an ISO-style date string.
+- Other formats may work but can vary by environment.
+
+\`\`\`javascript
+const d = new Date("2024-06-15")
+console.log(d.getFullYear())
+\`\`\`
+
+## 4. Constructing Dates from Numeric Components
+
+- new Date(year, monthIndex, day, ...) builds a date from numbers.
+- monthIndex is 0 for January, 11 for December.
+
+\`\`\`javascript
+const d = new Date(2025, 0, 1)
+console.log(d.toDateString())
+\`\`\`
+
+## 5. The Zero-indexed Month Pitfall
+
+- In the Date constructor, month is 0-indexed: 0 = January, 11 = December.
+- getMonth() also returns 0–11. Add 1 when showing to users.
+
+\`\`\`javascript
+const d = new Date(2024, 2, 10)
+console.log(d.getMonth())
+\`\`\`
+
+## 6. Extracting Components (getMethods)
+
+- getFullYear(), getMonth(), getDate(), getHours(), getMinutes(), getSeconds() return parts of the date.
+- getDay() returns 0 (Sunday) through 6 (Saturday).
+
+\`\`\`javascript
+const d = new Date("2024-08-25")
+console.log(d.getFullYear(), d.getMonth(), d.getDate())
+\`\`\`
+
+## 7. Modifying Date Objects (setMethods)
+
+- setFullYear(), setMonth(), setDate(), setHours(), etc. change the date in place.
+- The same Date object is updated; no new Date is created.
+
+\`\`\`javascript
+const d = new Date("2024-03-10")
+d.setDate(d.getDate() + 7)
+console.log(d.toISOString().split("T")[0])
+\`\`\`
+
+## 8. The Weekday Integer (getDay)
+
+- getDay() returns 0 for Sunday, 1 for Monday, ... 6 for Saturday.
+- Use an array of day names to convert to a string.
+
+\`\`\`javascript
+const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const d = new Date("2024-08-25")
+console.log(days[d.getDay()])
+\`\`\`
+
+## 9. Unix Timestamps and getTime()
+
+- getTime() returns milliseconds since Jan 1, 1970 (Unix epoch).
+- Use it to compare dates or do arithmetic; then convert back to a Date if needed.
+
+\`\`\`javascript
+const d = new Date()
+console.log(d.getTime())
+\`\`\`
+
+## 10. Temporal Logic: Comparing Two Dates
+
+- Compare two Date objects by comparing their getTime() values, or use >, <, === on the Date objects (they are compared by value).
+
+\`\`\`javascript
+const d1 = new Date("2024-01-01")
+const d2 = new Date("2024-06-01")
+console.log(d1 < d2)
+\`\`\`
+
+## 11. Date Arithmetic: Adding and Subtracting Time
+
+- Convert to milliseconds with getTime(), add or subtract, then create a new Date from the result.
+- One day = 24 * 60 * 60 * 1000 milliseconds.
+
+\`\`\`javascript
+const d = new Date("2024-03-10")
+const msPerDay = 24 * 60 * 60 * 1000
+const nextWeek = new Date(d.getTime() + 7 * msPerDay)
+console.log(nextWeek.toISOString().split("T")[0])
+\`\`\`
+
+## 12. Standard Formatting: ISO and Local Strings
+
+- toISOString() gives "YYYY-MM-DDTHH:mm:ss.sssZ" (UTC). toDateString() and toLocaleDateString() give readable local formats.
+
+\`\`\`javascript
+const d = new Date("2024-08-15")
+console.log(d.toISOString().split("T")[0])
+console.log(d.toDateString())
+\`\`\``,
         "tasks": [
           {
             "description": "// Create a Date object for January 1, 2025\n// Remember: months are zero-indexed (0 = January, 11 = December)\n// Print the full date using toDateString()\n// Your output should be: Wed Jan 01 2025",
@@ -2941,6 +3730,71 @@ export const courses = [
           "Loop Termination: Ensuring a Safe Exit",
           "Infinite Loop Risk: Managing System Resources"
         ],
+        "topic_notes": `## 1. The while Loop: Iterative Execution Syntax
+
+- while (condition) { ... } repeats the block as long as the condition is truthy.
+- The condition is checked before each iteration; if false, the loop stops.
+
+\`\`\`javascript
+let i = 1
+while (i <= 3) {
+  console.log(i)
+  i++
+}
+\`\`\`
+
+## 2. The Loop Condition: Controlling the Entry Gate
+
+- The condition decides whether the loop body runs. It is evaluated at the start of each iteration.
+- Use comparisons (e.g. i < 10) or other expressions that become false when you want to stop.
+
+\`\`\`javascript
+let count = 0
+while (count < 3) {
+  console.log("tick")
+  count++
+}
+\`\`\`
+
+## 3. The Counter Pattern: Tracking Iteration State
+
+- Use a variable (often i or count) to track how many times you have run or to control when to stop.
+- Initialize before the loop; update inside the loop (e.g. i++ or count += 2).
+
+\`\`\`javascript
+let i = 0
+while (i < 5) {
+  console.log(i)
+  i++
+}
+\`\`\`
+
+## 4. Loop Termination: Ensuring a Safe Exit
+
+- The condition must eventually become falsy, or the loop never ends.
+- Ensure the variable used in the condition is updated inside the loop so it can reach the exit value.
+
+\`\`\`javascript
+const n = 4
+let i = 1
+while (i <= n) {
+  console.log(i)
+  i++
+}
+\`\`\`
+
+## 5. Infinite Loop Risk: Managing System Resources
+
+- An infinite loop runs forever (condition never becomes false). It can freeze the program or browser.
+- Avoid: always update the variable that the condition depends on, and ensure that update leads to a false condition.
+
+\`\`\`javascript
+let i = 0
+while (i < 3) {
+  console.log(i)
+  i++
+}
+\`\`\``,
         "tasks": [
           {
             "description": "// Print numbers from 1 to 5 using a while loop\n// Each number should be on a new line\n// Your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5",
@@ -3168,6 +4022,58 @@ export const courses = [
           "The Update Expression: Incremental State Change",
           "Architectural Choice: When to use for vs. while"
         ],
+        "topic_notes": `## 1. The for Loop: Compact Iteration Syntax
+
+- for (init; condition; update) { ... } packs initialization, condition, and update in one line.
+- The init runs once; then condition is checked, body runs, update runs; repeat until condition is false.
+
+\`\`\`javascript
+for (let i = 0; i < 3; i++) {
+  console.log(i)
+}
+\`\`\`
+
+## 2. Variable Initialization: Setting the Starting Point
+
+- The first part of for (e.g. let i = 0) runs once before the loop starts.
+- Use it to declare and set the loop variable (counter).
+
+\`\`\`javascript
+for (let i = 1; i <= 5; i++) {
+  console.log(i)
+}
+\`\`\`
+
+## 3. The Limit Condition: Defining the Exit Boundary
+
+- The middle part (e.g. i < 10) is the condition. It is checked before each iteration.
+- When it is false, the loop stops and execution continues after the loop.
+
+\`\`\`javascript
+for (let i = 0; i < 4; i++) {
+  console.log("step", i)
+}
+\`\`\`
+
+## 4. The Update Expression: Incremental State Change
+
+- The third part (e.g. i++) runs after each iteration, before the next condition check.
+- Use it to move the counter toward the exit (e.g. i++, i += 2).
+
+\`\`\`javascript
+for (let i = 2; i <= 8; i += 2) {
+  console.log(i)
+}
+\`\`\`
+
+## 5. Architectural Choice: When to use for vs. while
+
+- Use for when you have a clear start, limit, and step (counting a known number of times).
+- Use while when the number of iterations depends on a condition that is not a simple counter (e.g. "until user quits").
+
+\`\`\`javascript
+for (let i = 0; i < 5; i++) console.log(i)
+\`\`\``,
         "tasks": [
           {
             "description": "// Print numbers from 1 to 10 using a for loop\n// Each number should be on a new line\n// Your output should be:\n// 1\n// 2\n// 3\n// ... up to 10",
@@ -3390,6 +4296,58 @@ export const courses = [
           "Early Termination: Optimizing Search Logic",
           "Conditional Skipping: Filtered Execution Flow"
         ],
+        "topic_notes": `## 1. The break Statement: Immediate Loop Exit
+
+- break exits the loop immediately. No more iterations run; execution continues after the loop.
+- Use it when you have found what you need (e.g. found a value) and want to stop.
+
+\`\`\`javascript
+for (let i = 1; i <= 10; i++) {
+  console.log(i)
+  if (i === 5) break
+}
+\`\`\`
+
+## 2. The continue Statement: Skipping the Current Cycle
+
+- continue skips the rest of the current iteration and goes to the next one.
+- The loop condition is checked again; only the current cycle is skipped.
+
+\`\`\`javascript
+for (let i = 1; i <= 5; i++) {
+  if (i % 2 === 0) continue
+  console.log(i)
+}
+\`\`\`
+
+## 3. Early Termination: Optimizing Search Logic
+
+- Use break when you find the first match so you do not loop through the rest.
+- Saves work in search or find-first scenarios.
+
+\`\`\`javascript
+const arr = [3, 7, 2, 9]
+let found = -1
+for (let i = 0; i < arr.length; i++) {
+  if (arr[i] === 2) {
+    found = i
+    break
+  }
+}
+console.log(found)
+\`\`\`
+
+## 4. Conditional Skipping: Filtered Execution Flow
+
+- Use continue to skip certain items (e.g. skip multiples of 3, skip invalid data) and process only the rest.
+- The loop keeps running; only some iterations do the main work.
+
+\`\`\`javascript
+for (let i = 1; i <= 6; i++) {
+  if (i % 3 === 0) continue
+  console.log(i)
+}
+\`\`\``,
         "tasks": [
           {
             "description": "// Print numbers from 1 to 20, but stop when you reach 10\n// Use a for loop with break statement\n// Your output should be:\n// 1\n// 2\n// 3\n// ... up to 10",
@@ -3558,6 +4516,59 @@ export const courses = [
           "Calculating Workload: Total Iterations (N * M)",
           "Generative Logic: Grid and Pattern Printing"
         ],
+        "topic_notes": `## 1. Nested Loop Syntax: Hierarchical Iteration
+
+- A loop inside another loop: for each iteration of the outer loop, the inner loop runs fully.
+- Use different variables (e.g. i and j) for the outer and inner counters.
+
+\`\`\`javascript
+for (let r = 0; r < 2; r++) {
+  for (let c = 0; c < 3; c++) {
+    console.log(r, c)
+  }
+}
+\`\`\`
+
+## 2. Execution Flow: The Clockwork of Inner and Outer Loops
+
+- Outer loop runs once; inner loop runs from start to finish. Then outer advances, inner runs again.
+- Inner loop completes all its iterations for each single step of the outer loop.
+
+\`\`\`javascript
+for (let i = 1; i <= 2; i++) {
+  for (let j = 1; j <= 2; j++) {
+    console.log(i * j)
+  }
+}
+\`\`\`
+
+## 3. Calculating Workload: Total Iterations (N * M)
+
+- If the outer loop runs N times and the inner runs M times per outer iteration, the body runs N * M times.
+- Nested loops can get slow for large N and M; use when you need every pair or grid cell.
+
+\`\`\`javascript
+const rows = 2
+const cols = 3
+let count = 0
+for (let r = 0; r < rows; r++) {
+  for (let c = 0; c < cols; c++) count++
+}
+console.log(count)
+\`\`\`
+
+## 4. Generative Logic: Grid and Pattern Printing
+
+- Use nested loops to build rows and columns: outer loop for rows, inner for characters in a row.
+- Concatenate into a string per row, then print; or print character by character as needed.
+
+\`\`\`javascript
+for (let r = 0; r < 3; r++) {
+  let line = ""
+  for (let c = 0; c < 4; c++) line += "*"
+  console.log(line)
+}
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename rows and cols, use them as input for your program.\n// While testing we will change their values.\nconst rows = 3;\nconst cols = 4;\n\n// Print a grid of stars (*) with the given dimensions\n// Each row should be on a new line\n// For rows = 3 and cols = 4, your output should be:\n// ****\n// ****\n// ****",
@@ -3776,6 +4787,86 @@ export const courses = [
           "The Accumulator Pattern: Summarizing Array Data",
           "The Search Pattern: Finding Specific Data in a List"
         ],
+        "topic_notes": `## 1. Array Creation: Grouping Data in Memory
+
+- Arrays hold an ordered list of values. Create with square brackets: [1, 2, 3] or [].
+- Elements can be any type: numbers, strings, objects, or other arrays.
+
+\`\`\`javascript
+const nums = [10, 20, 30]
+const mixed = [1, "two", true]
+console.log(nums, mixed)
+\`\`\`
+
+## 2. Zero-based Indexing: Accessing List Members
+
+- The first element is at index 0, the second at 1, and so on. Use array[index] to read or write.
+
+\`\`\`javascript
+const arr = [5, 10, 15]
+console.log(arr[0], arr[1])
+\`\`\`
+
+## 3. The length Property: Measuring Collection Size
+
+- array.length is the number of elements. It updates when you add or remove elements.
+
+\`\`\`javascript
+const arr = [3, 7, 2]
+console.log(arr.length)
+\`\`\`
+
+## 4. Dynamic Access: Finding the Final Element
+
+- The last element is at index length - 1. array[array.length - 1] is the last element.
+
+\`\`\`javascript
+const arr = [10, 20, 30, 40]
+console.log(arr[arr.length - 1])
+\`\`\`
+
+## 5. Mutable Collections: Modifying Elements in Place
+
+- Change an element by assigning to array[index]. You can also add with push() or assign past the end.
+
+\`\`\`javascript
+const arr = [1, 2, 3]
+arr[1] = 20
+console.log(arr)
+\`\`\`
+
+## 6. Linear Traversal: Iterating with for Loops
+
+- Loop from index 0 to length - 1. for (let i = 0; i < arr.length; i++) visits every element.
+
+\`\`\`javascript
+const arr = [3, 7, 2]
+for (let i = 0; i < arr.length; i++) console.log(arr[i])
+\`\`\`
+
+## 7. The Accumulator Pattern: Summarizing Array Data
+
+- Use a variable (e.g. sum, max) outside the loop; update it inside. Start with 0 for sum or arr[0] for max.
+
+\`\`\`javascript
+const nums = [5, 10, 15]
+let sum = 0
+for (let i = 0; i < nums.length; i++) sum += nums[i]
+console.log(sum)
+\`\`\`
+
+## 8. The Search Pattern: Finding Specific Data in a List
+
+- Loop and check each element. Use break when you find the first match, or track the index.
+
+\`\`\`javascript
+const arr = [10, 20, 30]
+let idx = -1
+for (let i = 0; i < arr.length; i++) {
+  if (arr[i] === 20) { idx = i; break }
+}
+console.log(idx)
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [10, 20, 30, 40, 50];\n\n// Print the first and last elements of the array\n// Each on a new line\n// For numbers = [10, 20, 30, 40, 50], your output should be:\n// 10\n// 50",
@@ -4070,6 +5161,100 @@ export const courses = [
           "Iteration: Traversing Objects with for...in",
           "Existence Checks: The \"in\" Operator and hasOwnProperty"
         ],
+        "topic_notes": `## 1. Object Literals: Modeling Entities with Key-Value Pairs
+
+- Objects group data as key-value pairs. Create with { key: value, ... }. Keys are strings; values can be any type.
+
+\`\`\`javascript
+const person = { name: "Alice", age: 25 }
+console.log(person)
+\`\`\`
+
+## 2. Dot Notation vs. Bracket Notation: Accessing Data
+
+- obj.key gets the value for key (when key is a valid identifier). obj["key"] works for any string key.
+
+\`\`\`javascript
+const car = { brand: "Toyota", model: "Camry" }
+console.log(car.brand, car["model"])
+\`\`\`
+
+## 3. Dynamic Keys: Accessing Properties with Variables
+
+- When the key is in a variable, use bracket notation: obj[key]. Dot notation uses the literal name.
+
+\`\`\`javascript
+const obj = { a: 1, b: 2 }
+const k = "b"
+console.log(obj[k])
+\`\`\`
+
+## 4. Mutable State: Adding, Modifying, and Deleting Properties
+
+- Assign to add or change: obj.newKey = value. Delete with delete obj.key.
+
+\`\`\`javascript
+const o = { x: 10 }
+o.y = 20
+o.x = 15
+console.log(o)
+\`\`\`
+
+## 5. Data Hierarchy: Navigating Nested Objects
+
+- Access nested data with a chain: obj.level1.level2. Or bracket notation for dynamic keys.
+
+\`\`\`javascript
+const company = { name: "Tech", location: { city: "SF", country: "USA" } }
+console.log(company.location.city)
+\`\`\`
+
+## 6. Object Methods: Assigning Behavior to Data
+
+- A property whose value is a function is a method. Call it with obj.methodName().
+
+\`\`\`javascript
+const calc = { sum: function (a, b) { return a + b } }
+console.log(calc.sum(2, 3))
+\`\`\`
+
+## 7. The this Keyword: An Introduction to Context
+
+- Inside a method, this refers to the object the method was called on.
+
+\`\`\`javascript
+const obj = { name: "Sara", greet: function () { return "Hi, " + this.name } }
+console.log(obj.greet())
+\`\`\`
+
+## 8. Static Methods: Object.keys() and Object.values()
+
+- Object.keys(obj) returns an array of keys. Object.values(obj) returns an array of values.
+
+\`\`\`javascript
+const o = { a: 1, b: 2 }
+console.log(Object.keys(o))
+console.log(Object.values(o))
+\`\`\`
+
+## 9. Iteration: Traversing Objects with for...in
+
+- for (const key in obj) loops over enumerable keys. Use obj[key] to get the value.
+
+\`\`\`javascript
+const o = { x: 10, y: 20 }
+for (const k in o) console.log(k, o[k])
+\`\`\`
+
+## 10. Existence Checks: The in Operator and hasOwnProperty
+
+- "key" in obj is true if the key exists. obj.hasOwnProperty("key") is true only for own properties.
+
+\`\`\`javascript
+const o = { a: 1 }
+console.log("a" in o)
+console.log(o.hasOwnProperty("a"))
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename person, use it as input for your program.\n// While testing we will change its value.\nconst person = { name: \"Alice\", age: 25, city: \"New York\" };\n\n// Print the name and age properties using dot notation\n// Each on a new line\n// For the given person object, your output should be:\n// Alice\n// 25",
@@ -4318,6 +5503,86 @@ export const courses = [
           "Array-to-Set: The \"Unique Value\" Pattern",
           "Architectural Choice: Map vs. Object & Set vs. Array"
         ],
+        "topic_notes": `## 1. Map: Advanced Key-Value Collections
+
+- Map stores key-value pairs. Keys can be any type (not only strings). Create with new Map() or new Map([ [k,v], ... ]).
+
+\`\`\`javascript
+const map = new Map()
+map.set("name", "Alice")
+map.set("age", 25)
+console.log(map.get("name"))
+\`\`\`
+
+## 2. Map CRUD: set(), get(), has(), and delete()
+
+- set(key, value) adds or updates. get(key) returns the value. has(key) returns true if the key exists. delete(key) removes the entry.
+
+\`\`\`javascript
+const m = new Map([["a", 1], ["b", 2]])
+m.set("c", 3)
+console.log(m.get("b"), m.has("a"))
+\`\`\`
+
+## 3. Map State: size and clear() management
+
+- map.size is the number of entries. clear() removes all entries from the map.
+
+\`\`\`javascript
+const m = new Map([["x", 10], ["y", 20]])
+console.log(m.size)
+\`\`\`
+
+## 4. Map Iteration: entries(), keys(), and values()
+
+- map.entries() (or for...of map) gives [key, value] pairs. keys() and values() give iterables of keys or values.
+
+\`\`\`javascript
+const m = new Map([["a", 1], ["b", 2]])
+for (const [k, v] of m) console.log(k, v)
+\`\`\`
+
+## 5. Set: The Collection of Unique Values
+
+- Set stores unique values (no duplicates). Create with new Set() or new Set([...]). Order of insertion is preserved.
+
+\`\`\`javascript
+const set = new Set([1, 2, 2, 3])
+console.log(set.size)
+console.log([...set])
+\`\`\`
+
+## 6. Set CRUD: add(), has(), and delete()
+
+- add(value) adds a value (duplicates are ignored). has(value) checks membership. delete(value) removes the value.
+
+\`\`\`javascript
+const s = new Set()
+s.add(1)
+s.add(2)
+s.add(1)
+console.log(s.has(1), s.size)
+\`\`\`
+
+## 7. Array-to-Set: The Unique Value Pattern
+
+- new Set(array) removes duplicates. Use [...set] or Array.from(set) to get back an array of unique values.
+
+\`\`\`javascript
+const arr = [1, 2, 2, 3, 3, 3]
+const unique = [...new Set(arr)]
+console.log(unique)
+\`\`\`
+
+## 8. Architectural Choice: Map vs. Object and Set vs. Array
+
+- Use Map when keys are not strings or you need size and iteration order. Use Set when you need uniqueness. Use Object/Array for simple key-value or ordered lists.
+
+\`\`\`javascript
+const m = new Map([["id", 1]])
+const s = new Set([1, 2, 2])
+console.log(m.get("id"), s.size)
+\`\`\``,
         "tasks": [
           {
             "description": "// Create a new Map and add three key-value pairs:\n// - \"name\" -> \"Alice\"\n// - \"age\" -> 25\n// - \"city\" -> \"Paris\"\n// Print the value associated with the key \"name\"\n// Your output should be: Alice",
@@ -4561,6 +5826,77 @@ export const courses = [
           "Parameter Destructuring: Clean Function Inputs",
           "The Swap Trick: Variable Exchange without Temps"
         ],
+        "topic_notes": `## 1. Array Destructuring: Unpacking by Position
+
+- Use [a, b, c] = array to assign the first, second, third elements to variables by position.
+- Left side is a pattern; right side is an array (or any iterable).
+
+\`\`\`javascript
+const colors = ["red", "green", "blue"]
+const [first, second] = colors
+console.log(first, second)
+\`\`\`
+
+## 2. Skipping and Rest: Targeted Array Extraction
+
+- Use empty slots to skip (e.g. [a, , c]). Use ...rest to collect the rest into an array. Rest must be last.
+
+\`\`\`javascript
+const nums = [10, 20, 30, 40]
+const [first, ...rest] = nums
+console.log(first, rest)
+\`\`\`
+
+## 3. Object Destructuring: Unpacking by Key Name
+
+- Use { key1, key2 } = obj to assign properties to variables with the same name. Names must match keys.
+
+\`\`\`javascript
+const person = { name: "Alice", age: 25 }
+const { name, age } = person
+console.log(name, age)
+\`\`\`
+
+## 4. Renaming and Defaults: Safe Data Extraction
+
+- Rename with { key: newName }. Default with { key = value }. Use both when the key might be missing.
+
+\`\`\`javascript
+const user = { username: "john", email: "john@x.com" }
+const { username, age = 18 } = user
+console.log(username, age)
+\`\`\`
+
+## 5. Nested Destructuring: Deep Data Access
+
+- Match nested structure: { a, b: { c, d } } = obj. Extracts obj.b.c and obj.b.d into c and d.
+
+\`\`\`javascript
+const data = { id: 1, info: { name: "Product", price: 50 } }
+const { id, info: { name, price } } = data
+console.log(id, name, price)
+\`\`\`
+
+## 6. Parameter Destructuring: Clean Function Inputs
+
+- Destructure in the parameter list: function f({ name, age }) { ... }. Call with an object; name and age are available inside.
+
+\`\`\`javascript
+function greet({ name }) {
+  return "Hi, " + name
+}
+console.log(greet({ name: "Sara" }))
+\`\`\`
+
+## 7. The Swap Trick: Variable Exchange without Temps
+
+- [a, b] = [b, a] swaps the values of a and b. No temporary variable needed.
+
+\`\`\`javascript
+let a = 5, b = 10
+[a, b] = [b, a]
+console.log(a, b)
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename colors, use it as input for your program.\n// While testing we will change its value.\nconst colors = [\"red\", \"green\", \"blue\"];\n\n// Use array destructuring to extract the first two colors into variables\n// Print them on separate lines\n// For colors = [\"red\", \"green\", \"blue\"], your output should be:\n// red\n// green",
@@ -4766,6 +6102,78 @@ export const courses = [
           "Constraint Logic: Why Rest must be the Final Parameter",
           "Structural Comparison: Spread vs. Rest Identification"
         ],
+        "topic_notes": `## 1. Spread Syntax: Unpacking Elements and Properties
+
+- ... in front of an array or object "spreads" its elements or properties into a new array or object.
+- Use in array literals [...arr] or object literals { ...obj }.
+
+\`\`\`javascript
+const arr = [1, 2, 3]
+console.log([...arr, 4])
+\`\`\`
+
+## 2. Shallow Copying: Creating Independent Arrays and Objects
+
+- [...arr] and { ...obj } create a new array or object with the same top-level values. Nested objects are still shared (shallow copy).
+
+\`\`\`javascript
+const orig = [1, 2, 3]
+const copy = [...orig]
+copy[0] = 100
+console.log(orig[0], copy[0])
+\`\`\`
+
+## 3. Merging Collections: Combining Multiple Data Sources
+
+- [...a, ...b] concatenates arrays. { ...obj1, ...obj2 } merges objects; later keys overwrite earlier ones.
+
+\`\`\`javascript
+const a = [1, 2]
+const b = [3, 4]
+console.log([...a, ...b])
+\`\`\`
+
+## 4. Property Overriding: Updating State with Spread
+
+- { ...obj, key: newValue } copies obj and overrides key. Useful for immutable updates (e.g. in React state).
+
+\`\`\`javascript
+const user = { name: "Alice", age: 25 }
+const updated = { ...user, age: 26 }
+console.log(updated.age)
+\`\`\`
+
+## 5. Rest Syntax: Gathering Remaining Values into an Array
+
+- In destructuring, ...rest collects the remaining elements into an array. const [a, ...rest] = arr.
+
+\`\`\`javascript
+const [first, ...rest] = [10, 20, 30]
+console.log(first, rest)
+\`\`\`
+
+## 6. Constraint Logic: Why Rest must be the Final Parameter
+
+- Rest gathers "the rest"; it must be last in the pattern. [a, ...rest, z] is invalid.
+
+\`\`\`javascript
+function sum(first, ...others) {
+  let s = first
+  for (let i = 0; i < others.length; i++) s += others[i]
+  return s
+}
+console.log(sum(1, 2, 3))
+\`\`\`
+
+## 7. Structural Comparison: Spread vs. Rest Identification
+
+- Same ... syntax: spread where you are building a value (right side, or inside [] or {}); rest where you are destructuring (left side). Context decides.
+
+\`\`\`javascript
+const [x, ...y] = [1, 2, 3]
+const z = [...y, 4]
+console.log(x, z)
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename arr1 and arr2, use them as input for your program.\n// While testing we will change their values.\nconst arr1 = [1, 2, 3];\nconst arr2 = [4, 5, 6];\n\n// Use the spread operator to combine arr1 and arr2 into a new array\n// Print each element of the combined array on a new line\n// For arr1 = [1, 2, 3] and arr2 = [4, 5, 6], your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5\n// 6",
@@ -4977,6 +6385,91 @@ export const courses = [
           "The Deep Clone Trick: Creating Independent Object Copies",
           "Architectural Distinction: JSON vs. JavaScript Object Literals"
         ],
+        "topic_notes": `## 1. JSON Fundamentals: The Universal Data Interchange Format
+
+- JSON is a text format for data. It is language-independent and used for APIs and config. Keys must be double-quoted strings.
+
+\`\`\`javascript
+const str = '{"name":"Alice","age":25}'
+console.log(str)
+\`\`\`
+
+## 2. JSON Syntax Rules: Why it is stricter than JS Objects
+
+- Keys must be in double quotes. No trailing commas. Values: string, number, boolean, null, array, or object. No functions or undefined.
+
+\`\`\`javascript
+const valid = '{"a":1,"b":true}'
+\`\`\`
+
+## 3. JSON.stringify(): Converting Objects to Strings
+
+- JSON.stringify(obj) turns a JavaScript value into a JSON string. Used to send data or store it.
+
+\`\`\`javascript
+const user = { name: "Alice", age: 25 }
+console.log(JSON.stringify(user))
+\`\`\`
+
+## 4. JSON.parse(): Reconstructing Objects from Strings
+
+- JSON.parse(str) turns a JSON string back into a JavaScript value. Throws if the string is invalid.
+
+\`\`\`javascript
+const str = '{"product":"Laptop","price":999}'
+const obj = JSON.parse(str)
+console.log(obj.product, obj.price)
+\`\`\`
+
+## 5. Formatting: Using Spacing and Replacers in stringify
+
+- JSON.stringify(obj, null, 2) adds indentation (2 spaces). Second argument can be a replacer array or function.
+
+\`\`\`javascript
+const data = { name: "Test", value: 42 }
+console.log(JSON.stringify(data, null, 2))
+\`\`\`
+
+## 6. The Reviver: Transforming Data during Parsing
+
+- JSON.parse(str, (key, value) => ...) lets you transform each key-value during parse (e.g. revive Date strings).
+
+\`\`\`javascript
+const str = '{"n":10}'
+const o = JSON.parse(str)
+console.log(o.n)
+\`\`\`
+
+## 7. Serialization Limits: Handling Functions and undefined
+
+- Functions and undefined are omitted by stringify (or become null in arrays). JSON cannot represent them.
+
+\`\`\`javascript
+const o = { a: 1, b: undefined }
+console.log(JSON.stringify(o))
+\`\`\`
+
+## 8. The Deep Clone Trick: Creating Independent Object Copies
+
+- JSON.parse(JSON.stringify(obj)) creates a deep copy. Only works for JSON-serializable data (no functions, no circular refs).
+
+\`\`\`javascript
+const orig = { x: 1, y: [2, 3] }
+const clone = JSON.parse(JSON.stringify(orig))
+clone.y[0] = 99
+console.log(orig.y[0], clone.y[0])
+\`\`\`
+
+## 9. Architectural Distinction: JSON vs. JavaScript Object Literals
+
+- JSON is a string format. Object literals are code. stringify goes from JS to JSON; parse goes from JSON to JS.
+
+\`\`\`javascript
+const obj = { id: 1 }
+const jsonStr = JSON.stringify(obj)
+const back = JSON.parse(jsonStr)
+console.log(back.id)
+\`\`\``,
         "tasks": [
           {
             "description": "// Do not rename user, use it as input for your program.\n// While testing we will change its value.\nconst user = { name: \"Alice\", age: 25, city: \"Paris\" };\n\n// Convert the user object to a JSON string using JSON.stringify()\n// Print the JSON string\n// For the given user, your output should be:\n// {\"name\":\"Alice\",\"age\":25,\"city\":\"Paris\"}",
@@ -5180,6 +6673,103 @@ export const courses = [
           "Identifier Naming: Descriptive Verb-based Names",
           "Software Design: Reusability and Single Responsibility"
         ],
+        "topic_notes": `## 1. Function Declaration: Defining a Reusable Logic Block
+
+- function name() { ... } defines a reusable block of code. Call it with name().
+
+\`\`\`javascript
+function greet() {
+  return "Hello, World!"
+}
+console.log(greet())
+\`\`\`
+
+## 2. The Call Stack: Executing and Invoking Functions
+
+- When you call a function, execution jumps into it; when it returns, execution resumes after the call. Nested calls stack.
+
+\`\`\`javascript
+function one() { return 1 }
+function two() { return one() + 1 }
+console.log(two())
+\`\`\`
+
+## 3. Input Channels: Working with Parameters
+
+- Parameters are placeholders in the function definition. They receive the values you pass when you call the function.
+
+\`\`\`javascript
+function double(num) {
+  return num * 2
+}
+console.log(double(5))
+\`\`\`
+
+## 4. Data Passing: Providing Arguments during Invocation
+
+- Arguments are the values you pass: fn(10, 20). They are assigned to the parameters in order.
+
+\`\`\`javascript
+function add(a, b) {
+  return a + b
+}
+console.log(add(10, 20))
+\`\`\`
+
+## 5. The return Statement: Outputting Data from a Function
+
+- return value sends a value back to the caller. Execution of the function stops at return.
+
+\`\`\`javascript
+function getMax(x, y) {
+  if (x >= y) return x
+  return y
+}
+console.log(getMax(15, 10))
+\`\`\`
+
+## 6. The return vs. console.log Distinction
+
+- return gives a value to the caller; the caller can use it. console.log only prints; it does not pass a value back.
+
+\`\`\`javascript
+function add(a, b) {
+  return a + b
+}
+const sum = add(2, 3)
+console.log(sum)
+\`\`\`
+
+## 7. Multi-input Logic: Handling Multiple Parameters
+
+- Functions can take multiple parameters. Order of arguments must match the order of parameters (or use an options object).
+
+\`\`\`javascript
+function greet(firstName, lastName) {
+  return firstName + " " + lastName
+}
+console.log(greet("Jane", "Doe"))
+\`\`\`
+
+## 8. Identifier Naming: Descriptive Verb-based Names
+
+- Use descriptive names: verbs for actions (getTotal, isValid), nouns for data (user, count). Keeps code readable.
+
+\`\`\`javascript
+function isEven(num) {
+  return num % 2 === 0
+}
+\`\`\`
+
+## 9. Software Design: Reusability and Single Responsibility
+
+- Write small functions that do one thing. Reuse them instead of duplicating logic. Easier to test and change.
+
+\`\`\`javascript
+function double(n) { return n * 2 }
+function triple(n) { return n * 3 }
+console.log(double(5), triple(5))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that takes no parameters and returns \"Hello, World!\".\n  Examples:\n    greet() => \"Hello, World!\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction greet() {\n  // Implementation here.\n}",
@@ -5476,6 +7066,91 @@ export const courses = [
           "Lexical this: How arrows inherit context",
           "Architectural Constraints: When to stick to regular functions"
         ],
+        "topic_notes": `## 1. Arrow Syntax: The Modern Function Expression
+
+- (params) => { body } is an arrow function. Often assigned to a const: const fn = () => { ... }. No function keyword.
+
+\`\`\`javascript
+const greet = () => {
+  return "Hello!"
+}
+console.log(greet())
+\`\`\`
+
+## 2. Concise vs. Full Body: Knowing when to use { }
+
+- One expression after => can omit braces and return: x => x * 2. Multiple statements need { } and explicit return.
+
+\`\`\`javascript
+const double = (n) => n * 2
+const add = (a, b) => {
+  const sum = a + b
+  return sum
+}
+console.log(double(5), add(2, 3))
+\`\`\`
+
+## 3. Parameter Formatting: Rules for () and single inputs
+
+- No params: () => ... . One param: (x) => ... or x => ... (parentheses optional). Two or more: (a, b) => ... .
+
+\`\`\`javascript
+const square = (num) => num * num
+const add = (a, b) => a + b
+console.log(square(5), add(1, 2))
+\`\`\`
+
+## 4. Implicit Return: Returning values without the keyword
+
+- When the body is a single expression (no { }), that expression is returned automatically. No return keyword.
+
+\`\`\`javascript
+const isEven = (n) => n % 2 === 0
+console.log(isEven(4))
+\`\`\`
+
+## 5. The Object Trap: Returning Object Literals safely
+
+- () => ({ key: value }) returns an object. Without parentheses, { } is treated as the function body, not an object.
+
+\`\`\`javascript
+const makePoint = (x, y) => ({ x, y })
+console.log(makePoint(1, 2))
+\`\`\`
+
+## 6. Functional Synergy: Arrow Functions with Array Methods
+
+- Arrow functions are handy as callbacks: arr.map(x => x * 2), arr.filter(x => x > 0). Short and clear.
+
+\`\`\`javascript
+const nums = [1, 2, 3]
+const doubled = nums.map((n) => n * 2)
+console.log(doubled)
+\`\`\`
+
+## 7. Lexical this: How arrows inherit context
+
+- Arrow functions do not have their own this. They use the this from the surrounding (lexical) scope. Useful in callbacks.
+
+\`\`\`javascript
+const obj = {
+  value: 10,
+  getVal: function () {
+    const fn = () => this.value
+    return fn()
+  }
+}
+console.log(obj.getVal())
+\`\`\`
+
+## 8. Architectural Constraints: When to stick to regular functions
+
+- Use regular functions for constructors (new), methods that need their own this, or when you need arguments. Arrows for callbacks and short helpers.
+
+\`\`\`javascript
+const add = (a, b) => a + b
+console.log(add(10, 20))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below arrow function that takes no parameters and returns \"Hello!\".\n  Examples:\n    greet() => \"Hello!\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst greet = () => {\n  // Implementation here\n};",
@@ -5769,6 +7444,119 @@ export const courses = [
           "Stack Overflow: The risk of infinite recursion",
           "Tail Recursion: An introduction to optimization"
         ],
+        "topic_notes": `## 1. Recursion: Functions that call themselves
+
+- A recursive function calls itself (usually with a smaller or simpler input) until a base case is reached.
+- Useful when the problem naturally breaks into smaller instances of the same problem.
+
+\`\`\`javascript
+function countdown(n) {
+  if (n <= 0) return
+  console.log(n)
+  countdown(n - 1)
+}
+countdown(3)
+\`\`\`
+
+## 2. The Base Case: The Stopping Condition
+
+- The base case is the condition where the function stops recursing and returns without calling itself.
+- Without a base case, recursion never stops and you get a stack overflow.
+
+\`\`\`javascript
+function factorial(n) {
+  if (n <= 0) return 1
+  return n * factorial(n - 1)
+}
+console.log(factorial(5))
+\`\`\`
+
+## 3. The Recursive Case: Moving toward the end
+
+- The recursive case calls the function again with a value that moves toward the base case (e.g. n - 1).
+- Each call should make progress so the base case is eventually hit.
+
+\`\`\`javascript
+function sumToN(n) {
+  if (n <= 0) return 0
+  return n + sumToN(n - 1)
+}
+console.log(sumToN(5))
+\`\`\`
+
+## 4. The Call Stack: Visualizing Function Nesting
+
+- Each recursive call adds a frame to the call stack. When the base case returns, frames unwind and return values propagate back.
+
+\`\`\`javascript
+function fact(n) {
+  if (n <= 1) return 1
+  return n * fact(n - 1)
+}
+console.log(fact(4))
+\`\`\`
+
+## 5. Return Value Propagation: Passing data back up the chain
+
+- The return value from the base case is used by the previous call, and so on up the chain. Combine with current step (e.g. n + sumToN(n-1)).
+
+\`\`\`javascript
+function power(base, exp) {
+  if (exp === 0) return 1
+  return base * power(base, exp - 1)
+}
+console.log(power(2, 3))
+\`\`\`
+
+## 6. Recursive Problem Solving: Breaking big tasks into smaller ones
+
+- Define the problem for size n in terms of the same problem for a smaller size plus a simple step. Then handle the smallest size (base case).
+
+\`\`\`javascript
+function countDigits(num) {
+  if (num < 10 && num >= 0) return 1
+  if (num < 0) return countDigits(-num)
+  return 1 + countDigits(Math.floor(num / 10))
+}
+console.log(countDigits(12345))
+\`\`\`
+
+## 7. Architectural Choice: Recursion vs. Iteration
+
+- Recursion can be clearer for tree or divide-and-conquer problems. Loops are often simpler and avoid stack depth limits for linear problems.
+
+\`\`\`javascript
+function sumIterative(n) {
+  let s = 0
+  for (let i = 1; i <= n; i++) s += i
+  return s
+}
+console.log(sumIterative(5))
+\`\`\`
+
+## 8. Stack Overflow: The risk of infinite recursion
+
+- If the base case is never reached or is wrong, the function keeps calling itself until the call stack overflows. Always ensure progress toward the base case.
+
+\`\`\`javascript
+function safeCountdown(n) {
+  if (n <= 0) return
+  console.log(n)
+  safeCountdown(n - 1)
+}
+\`\`\`
+
+## 9. Tail Recursion: An introduction to optimization
+
+- Tail recursion is when the recursive call is the last thing the function does. Some engines can optimize it to avoid growing the stack (JavaScript generally does not, but the pattern is still useful).
+
+\`\`\`javascript
+function sumTail(n, acc = 0) {
+  if (n <= 0) return acc
+  return sumTail(n - 1, acc + n)
+}
+console.log(sumTail(5))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below recursive function to count down from n to 1.\n  Print each number on a new line. Stop when n reaches 0 or less.\n  Examples:\n    countdown(5) => prints \"5\\n4\\n3\\n2\\n1\"\n    countdown(3) => prints \"3\\n2\\n1\"\n    countdown(0) => prints nothing\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction countdown(n) {\n  // Implementation here\n}",
@@ -6071,6 +7859,94 @@ export const courses = [
           "Loop Challenges: Understanding Closures in Iteration",
           "Practical Use Cases: Memoization and Event Logic"
         ],
+        "topic_notes": `## 1. What is a Closure: The persistent link to Lexical Scope
+
+- A closure is a function that keeps access to variables from the scope where it was created, even after that scope has finished.
+- The inner function "closes over" the outer scope's variables.
+
+\`\`\`javascript
+function createGreeting(greeting) {
+  return function (name) {
+    return greeting + name
+  }
+}
+const greeter = createGreeting("Hello, ")
+console.log(greeter("Alice"))
+\`\`\`
+
+## 2. Data Privacy: Creating Private Variables in JS
+
+- Variables declared in an outer function are not directly accessible from outside. Only functions that close over them can read or update them.
+- Return an object with methods that use those variables to expose a controlled API.
+
+\`\`\`javascript
+function secretKeeper(secret) {
+  return {
+    getSecret: function () { return secret },
+    setSecret: function (s) { secret = s }
+  }
+}
+const k = secretKeeper("pass")
+console.log(k.getSecret())
+\`\`\`
+
+## 3. Function Factories: Generating Specialized Logic
+
+- A function that returns another function can "bake in" arguments. The returned function uses the captured value (closure).
+
+\`\`\`javascript
+function createMultiplier(mult) {
+  return function (n) { return n * mult }
+}
+const double = createMultiplier(2)
+console.log(double(5))
+\`\`\`
+
+## 4. State Preservation: The Counter Pattern
+
+- Use a variable in the outer scope; the inner function reads and updates it. The state persists between calls.
+
+\`\`\`javascript
+function createCounter() {
+  let count = 0
+  return {
+    increment: function () { count++ },
+    getValue: function () { return count }
+  }
+}
+const c = createCounter()
+c.increment()
+c.increment()
+console.log(c.getValue())
+\`\`\`
+
+## 5. Loop Challenges: Understanding Closures in Iteration
+
+- In a loop, if you create closures that capture the loop variable, they all see the final value (e.g. i after the loop). Use let (block scope) or pass the value as a parameter to avoid that.
+
+\`\`\`javascript
+function makeFunctions() {
+  const fns = []
+  for (let i = 0; i < 3; i++) {
+    fns.push(function () { return i })
+  }
+  return fns
+}
+const arr = makeFunctions()
+console.log(arr[0](), arr[1](), arr[2]())
+\`\`\`
+
+## 6. Practical Use Cases: Memoization and Event Logic
+
+- Closures can hold cached results (memoization) or hold references for event handlers so they remember which element or ID they belong to.
+
+\`\`\`javascript
+function createAdder(x) {
+  return function (n) { return n + x }
+}
+const add10 = createAdder(10)
+console.log(add10(5))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that creates a greeting closure.\n  Return an inner function that combines greeting with a name.\n  Examples:\n    createGreeting(\"Hello, \") => returns a function\n    const greeter = createGreeting(\"Hello, \")\n    greeter(\"Alice\") => \"Hello, Alice\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createGreeting(greeting) {\n  // Implementation here\n}",
@@ -6227,6 +8103,49 @@ export const courses = [
           "The Void Return: Understanding why forEach returns undefined",
           "Side Effects: Performing Actions per Iteration"
         ],
+        "topic_notes": `## 1. forEach Syntax: Functional List Traversal
+
+- array.forEach(callback) runs the callback once per element, in order. You pass a function that receives (element, index, array).
+
+\`\`\`javascript
+const arr = [10, 20, 30]
+arr.forEach(function (n) {
+  console.log(n)
+})
+\`\`\`
+
+## 2. Callback Parameters: Accessing Element, Index, and Array
+
+- The callback can take up to three arguments: (element, index, array). Use them as needed; index and array are optional.
+
+\`\`\`javascript
+const arr = ["a", "b", "c"]
+arr.forEach(function (el, i) {
+  console.log(i, el)
+})
+\`\`\`
+
+## 3. The Void Return: Understanding why forEach returns undefined
+
+- forEach does not return a value; it returns undefined. Use it for side effects (logging, pushing to another array), not for building a new array. Use map or filter when you need a return value.
+
+\`\`\`javascript
+const arr = [1, 2, 3]
+const result = arr.forEach(function (n) { return n * 2 })
+console.log(result)
+\`\`\`
+
+## 4. Side Effects: Performing Actions per Iteration
+
+- forEach is for doing something with each element (print, mutate, push to a list). The callback's return value is ignored.
+
+\`\`\`javascript
+let sum = 0
+[5, 10, 15].forEach(function (n) {
+  sum += n
+})
+console.log(sum)
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses forEach to process an array of numbers.\n  Use forEach to collect each number into a result string, separated by newlines.\n  Examples:\n    printNumbers([1, 2, 3, 4, 5]) => \"1\\n2\\n3\\n4\\n5\"\n    printNumbers([10, 20, 30]) => \"10\\n20\\n30\"\n    printNumbers([7]) => \"7\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction printNumbers(arr) {\n  // Implementation here\n}",
@@ -6411,6 +8330,46 @@ export const courses = [
           "Index Preservation: Why Input and Output Length Match",
           "Immutability: Protecting the Original Data Source"
         ],
+        "topic_notes": `## 1. map Syntax: Projecting Data to a New Array
+
+- array.map(callback) returns a new array. Each element is replaced by the return value of the callback (element, index, array).
+
+\`\`\`javascript
+const nums = [1, 2, 3]
+const doubled = nums.map(function (n) { return n * 2 })
+console.log(doubled)
+\`\`\`
+
+## 2. Functional Transformation: The Mapping Logic
+
+- The callback defines how to transform one element into one new value. map applies that transformation to every element and collects the results.
+
+\`\`\`javascript
+const words = ["hello", "world"]
+const upper = words.map(function (s) { return s.toUpperCase() })
+console.log(upper)
+\`\`\`
+
+## 3. Index Preservation: Why Input and Output Length Match
+
+- map always produces one output element per input element. The new array has the same length as the original. Order is preserved.
+
+\`\`\`javascript
+const arr = [5, 10, 15]
+const squared = arr.map(function (n) { return n * n })
+console.log(squared.length === arr.length)
+\`\`\`
+
+## 4. Immutability: Protecting the Original Data Source
+
+- map does not change the original array. It builds and returns a new array. Prefer map when you want a transformed copy without mutating the source.
+
+\`\`\`javascript
+const orig = [1, 2, 3]
+const copy = orig.map(function (x) { return x })
+copy[0] = 99
+console.log(orig[0], copy[0])
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses map to double numbers.\n  Use map to create a new array with each number doubled.\n  Examples:\n    doubleNumbers([1, 2, 3, 4, 5]) => [2,4,6,8,10]\n    doubleNumbers([10, 20, 30]) => [20,40,60]\n    doubleNumbers([0]) => [0]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction doubleNumbers(arr) {\n  // Implementation here\n}",
@@ -6647,6 +8606,45 @@ export const courses = [
           "Subset Generation: Why the Resulting Length May Differ",
           "Immutability: Filtering without Altering the Source"
         ],
+        "topic_notes": `## 1. filter Syntax: Extracting Specific Data
+
+- array.filter(callback) returns a new array containing only the elements for which the callback returned a truthy value. Others are left out.
+
+\`\`\`javascript
+const nums = [1, 2, 3, 4, 5, 6]
+const evens = nums.filter(function (n) { return n % 2 === 0 })
+console.log(evens)
+\`\`\`
+
+## 2. The Predicate Function: Returning Booleans for Selection
+
+- The callback is a predicate: it should return true or false. true means keep the element; false means exclude it.
+
+\`\`\`javascript
+const arr = [10, 25, 30, 45, 50]
+const big = arr.filter(function (n) { return n > 30 })
+console.log(big)
+\`\`\`
+
+## 3. Subset Generation: Why the Resulting Length May Differ
+
+- The result can have fewer elements (or none, or the same). Length depends on how many elements pass the predicate. Order is preserved.
+
+\`\`\`javascript
+const words = ["hi", "hello", "hey", "javascript"]
+const long = words.filter(function (s) { return s.length > 5 })
+console.log(long)
+\`\`\`
+
+## 4. Immutability: Filtering without Altering the Source
+
+- filter does not change the original array. It builds and returns a new array with only the elements that passed the test.
+
+\`\`\`javascript
+const orig = [1, 2, 3, 4, 5]
+const filtered = orig.filter(function (n) { return n > 2 })
+console.log(orig.length, filtered.length)
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses filter to get even numbers.\n  Use filter to create a new array containing only even numbers.\n  Examples:\n    filterEvenNumbers([1, 2, 3, 4, 5, 6, 7, 8]) => [2,4,6,8]\n    filterEvenNumbers([10, 15, 20, 25]) => [10,20]\n    filterEvenNumbers([1, 3, 5]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterEvenNumbers(arr) {\n  // Implementation here\n}",
@@ -6896,6 +8894,57 @@ export const courses = [
           "Search Failure (Index): Handling -1 in findIndex",
           "Efficiency: Understanding why searching stops at the first match"
         ],
+        "topic_notes": `## 1. find Syntax: Retrieving the First Matching Element
+
+- array.find(callback) returns the first element for which the callback returns a truthy value. It stops as soon as one match is found.
+- The callback receives (element, index, array). Return true to select that element.
+
+\`\`\`javascript
+const arr = [5, 10, 15, 20]
+const first = arr.find(function (n) { return n > 12 })
+console.log(first)
+\`\`\`
+
+## 2. findIndex Syntax: Locating the Position of a Match
+
+- array.findIndex(callback) returns the index of the first element for which the callback returns true. Stops at the first match.
+- Use it when you need the position, not the value (e.g. for splice or replacement).
+
+\`\`\`javascript
+const arr = [5, 10, 15, 20]
+const idx = arr.findIndex(function (n) { return n > 12 })
+console.log(idx)
+\`\`\`
+
+## 3. Search Failure (Value): Handling undefined in find
+
+- If no element matches, find returns undefined. Check for undefined before using the result if the array might have no match.
+
+\`\`\`javascript
+const arr = [1, 2, 3]
+const found = arr.find(function (n) { return n > 10 })
+console.log(found === undefined)
+\`\`\`
+
+## 4. Search Failure (Index): Handling -1 in findIndex
+
+- If no element matches, findIndex returns -1. A -1 index is invalid for arrays; always check before using the index.
+
+\`\`\`javascript
+const arr = [1, 2, 3]
+const idx = arr.findIndex(function (n) { return n > 10 })
+if (idx !== -1) console.log(arr[idx])
+\`\`\`
+
+## 5. Efficiency: Understanding why searching stops at the first match
+
+- find and findIndex short-circuit: they stop iterating once the first match is found. Use them when you only need one result; avoid scanning the rest of the array.
+
+\`\`\`javascript
+const users = [{ id: 1 }, { id: 2 }, { id: 3 }]
+const user = users.find(function (u) { return u.id === 2 })
+console.log(user)
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses find to get first number greater than 12.\n  Use find to get the first number greater than 12.\n  Examples:\n    findFirstGreaterThan12([5, 10, 15, 20, 25]) => 15\n    findFirstGreaterThan12([1, 2, 3]) => undefined\n    findFirstGreaterThan12([13, 14, 15]) => 13\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findFirstGreaterThan12(arr) {\n  // Implementation here\n}",
@@ -7132,6 +9181,46 @@ export const courses = [
           "Short-Circuit Logic: Optimizing Truth Evaluations",
           "The Vacuous Truth: Empty Array Behavior"
         ],
+        "topic_notes": `## 1. some Syntax: The Logical OR for Arrays
+
+- array.some(callback) returns true if at least one element makes the callback return true. Returns false if none do (or array is empty).
+- Think of it as "does any element satisfy this condition?"
+
+\`\`\`javascript
+const arr = [1, 2, 3, 5]
+const hasEven = arr.some(function (n) { return n % 2 === 0 })
+console.log(hasEven)
+\`\`\`
+
+## 2. every Syntax: The Logical AND for Arrays
+
+- array.every(callback) returns true only if every element makes the callback return true. Returns false as soon as one fails (or true for empty array).
+- Think of it as "do all elements satisfy this condition?"
+
+\`\`\`javascript
+const arr = [2, 4, 6, 8]
+const allEven = arr.every(function (n) { return n % 2 === 0 })
+console.log(allEven)
+\`\`\`
+
+## 3. Short-Circuit Logic: Optimizing Truth Evaluations
+
+- some stops as soon as the callback returns true. every stops as soon as the callback returns false. They do not always traverse the whole array.
+
+\`\`\`javascript
+const arr = [1, 3, 5, 8, 9]
+const hasEven = arr.some(function (n) { return n % 2 === 0 })
+console.log(hasEven)
+\`\`\`
+
+## 4. The Vacuous Truth: Empty Array Behavior
+
+- For an empty array, some returns false (no element satisfies). every returns true (no element fails). This is standard logical behavior for "any" and "all" over an empty set.
+
+\`\`\`javascript
+console.log([].some(function () { return true }))
+console.log([].every(function () { return true }))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses some to check if at least one number is even.\n  Use some to check if at least one number is even.\n  Examples:\n    hasAnyEven([1, 3, 5, 7, 9]) => false\n    hasAnyEven([1, 2, 3]) => true\n    hasAnyEven([2, 4, 6]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction hasAnyEven(arr) {\n  // Implementation here\n}",
@@ -7385,6 +9474,59 @@ export const courses = [
           "The Initial Value: Setting the Starting State",
           "Versatility: Rebuilding map and filter using reduce"
         ],
+        "topic_notes": `## 1. reduce Syntax: The Multipurpose Folding Tool
+
+- array.reduce(callback, initialValue) folds the array into a single value. The callback receives (accumulator, currentElement, index, array) and returns the next accumulator.
+- Use it for sum, product, max, concatenation, building objects, or any single value derived from the array.
+
+\`\`\`javascript
+const arr = [1, 2, 3, 4, 5]
+const sum = arr.reduce(function (acc, n) { return acc + n }, 0)
+console.log(sum)
+\`\`\`
+
+## 2. The Accumulator: Tracking the Running Total
+
+- The accumulator is the value carried from one callback invocation to the next. Your callback must return the updated accumulator; that becomes the acc for the next element.
+
+\`\`\`javascript
+const arr = [2, 3, 4]
+const product = arr.reduce(function (acc, n) { return acc * n }, 1)
+console.log(product)
+\`\`\`
+
+## 3. Current Value: Processing Elements in Sequence
+
+- reduce walks the array left to right. For each element, the callback gets the current accumulator and the current element; it returns the new accumulator for the next step.
+
+\`\`\`javascript
+const arr = ["Hello", " ", "World"]
+const joined = arr.reduce(function (acc, s) { return acc + s }, "")
+console.log(joined)
+\`\`\`
+
+## 4. The Initial Value: Setting the Starting State
+
+- The second argument to reduce is the initial value of the accumulator. For sum use 0; for product use 1; for string concat use ""; for array building use []. Omitting it uses the first element as initial acc and starts from the second (can cause errors on empty arrays).
+
+\`\`\`javascript
+const arr = [10, 5, 20, 15]
+const max = arr.reduce(function (acc, n) { return n > acc ? n : acc }, arr[0])
+console.log(max)
+\`\`\`
+
+## 5. Versatility: Rebuilding map and filter using reduce
+
+- You can implement map by reducing into an array and pushing the transformed element. You can implement filter by reducing into an array and pushing only when the predicate is true.
+
+\`\`\`javascript
+const arr = [1, 2, 3]
+const evens = arr.reduce(function (acc, n) {
+  if (n % 2 === 0) acc.push(n)
+  return acc
+}, [])
+console.log(evens)
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses reduce to calculate the sum of all numbers.\n  Use reduce to calculate the sum of all numbers.\n  Examples:\n    sumNumbers([1, 2, 3, 4, 5]) => 15\n    sumNumbers([10, 20, 30]) => 60\n    sumNumbers([5]) => 5\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sumNumbers(arr) {\n  // Implementation here\n}",
@@ -7673,6 +9815,44 @@ export const courses = [
           "repeat(): Generative Sequence Creation",
           "Padding: Aligning Data with padStart() and padEnd()"
         ],
+        "topic_notes": `## 1. trim(): Removing whitespace from Memory
+
+- str.trim() returns a new string with leading and trailing whitespace (spaces, tabs, newlines) removed. The original string is unchanged.
+- Useful for cleaning user input or comparing strings without accidental spaces.
+
+\`\`\`javascript
+const s = "  Hello World  "
+console.log(s.trim())
+\`\`\`
+
+## 2. replace() and replaceAll(): Pattern Substitution
+
+- str.replace(search, replacement) replaces the first occurrence of search with replacement. str.replaceAll(search, replacement) replaces every occurrence.
+- Both return a new string; they do not modify the original.
+
+\`\`\`javascript
+const s = "cat cat cat"
+console.log(s.replace("cat", "dog"))
+console.log(s.replaceAll("cat", "dog"))
+\`\`\`
+
+## 3. repeat(): Generative Sequence Creation
+
+- str.repeat(count) returns a new string made by concatenating str count times. count must be non-negative. Useful for padding patterns or repeated characters.
+
+\`\`\`javascript
+console.log("ha".repeat(3))
+console.log("0".repeat(5))
+\`\`\`
+
+## 4. Padding: Aligning Data with padStart() and padEnd()
+
+- str.padStart(targetLength, padString) pads the start until the string length is targetLength (or returns str if already long enough). padEnd does the same at the end. padString defaults to space.
+
+\`\`\`javascript
+console.log("5".padStart(4, "0"))
+console.log("hi".padEnd(5, "-"))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses trim() to remove whitespace.\n  Use trim() to remove leading and trailing whitespace.\n  Examples:\n    trimString(\"  Hello World  \") => \"Hello World\"\n    trimString(\"   JavaScript   \") => \"JavaScript\"\n    trimString(\"test\") => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction trimString(str) {\n  // Implementation here\n}",
@@ -7898,6 +10078,52 @@ export const courses = [
           "The Round Trip: Splitting, Modifying, and Joining",
           "Implicit Join: Behavior with Missing or Default Separators"
         ],
+        "topic_notes": `## 1. split Syntax: Deconstructing Strings into Arrays
+
+- str.split(separator) returns an array of substrings. The separator (string or regex) is used to split; it is not included in the result. Empty string "" splits into single characters.
+
+\`\`\`javascript
+const s = "apple,banana,cherry"
+console.log(s.split(","))
+\`\`\`
+
+## 2. join Syntax: Reconstructing Arrays into Strings
+
+- array.join(separator) returns a string made by concatenating all elements with separator between them. Elements are converted to strings. Default separator is comma.
+
+\`\`\`javascript
+const arr = ["apple", "banana", "cherry"]
+console.log(arr.join(","))
+\`\`\`
+
+## 3. The Empty Separator: Character-level Tokenization
+
+- str.split("") splits the string into an array of single characters. Useful for character-by-character processing or reversing a string (split, reverse, join).
+
+\`\`\`javascript
+const s = "hello"
+console.log(s.split(""))
+\`\`\`
+
+## 4. The Round Trip: Splitting, Modifying, and Joining
+
+- A common pattern: split a string into an array, transform or filter the array, then join back into a string. Example: change words, change delimiter, or remove parts.
+
+\`\`\`javascript
+const s = "one two three"
+const words = s.split(" ")
+words[1] = words[1].toUpperCase()
+console.log(words.join(" "))
+\`\`\`
+
+## 5. Implicit Join: Behavior with Missing or Default Separators
+
+- arr.join() with no argument uses comma as separator. join("") concatenates with nothing between elements (useful after split("") or for building a string from characters).
+
+\`\`\`javascript
+console.log(["a", "b", "c"].join())
+console.log(["a", "b", "c"].join(""))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses split() to convert string to array.\n  Use split() to convert it into an array using comma as separator.\n  Examples:\n    splitByComma(\"apple,banana,cherry\") => [\"apple\",\"banana\",\"cherry\"]\n    splitByComma(\"one,two,three\") => [\"one\",\"two\",\"three\"]\n    splitByComma(\"hello\") => [\"hello\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction splitByComma(str) {\n  // Implementation here\n}",
@@ -8151,6 +10377,54 @@ export const courses = [
           "Implicit End: Omission for Remainder Extraction",
           "Negative Indices: Slicing from the End of the Sequence"
         ],
+        "topic_notes": `## 1. slice Syntax: Extracting String Segments
+
+- str.slice(start, end) returns the substring from index start up to but not including end. Omit end to get from start to the end of the string.
+- slice does not modify the original string. Negative indices count from the end (-1 is last character).
+
+\`\`\`javascript
+const s = "JavaScript"
+console.log(s.slice(0, 4))
+console.log(s.slice(4))
+\`\`\`
+
+## 2. substring Syntax: Standard Character Extraction
+
+- str.substring(start, end) returns the substring between start and end (end exclusive). If start > end, they are swapped. Omit end to get from start to the end.
+- Unlike slice, substring does not accept negative indices; they are treated as 0.
+
+\`\`\`javascript
+const s = "Hello World"
+console.log(s.substring(0, 5))
+console.log(s.substring(6))
+\`\`\`
+
+## 3. The Exclusive End: Understanding the (Start, End) Boundary
+
+- For both slice and substring, the end index is exclusive: the character at end is not included. So slice(0, 4) gives indices 0, 1, 2, 3 (four characters).
+
+\`\`\`javascript
+const s = "testing"
+console.log(s.slice(0, 4))
+\`\`\`
+
+## 4. Implicit End: Omission for Remainder Extraction
+
+- When you omit the second argument, you get from start to the end of the string. Useful for "everything after index n".
+
+\`\`\`javascript
+const s = "JavaScript"
+console.log(s.slice(4))
+\`\`\`
+
+## 5. Negative Indices: Slicing from the End of the Sequence
+
+- slice accepts negative indices: -1 is the last character, -2 is second-to-last, etc. slice(-3) gives the last three characters. substring does not support negative indices.
+
+\`\`\`javascript
+const s = "Hello World"
+console.log(s.slice(-5))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses slice() to extract substring.\n  Use slice() to extract characters from start to end (exclusive).\n  Examples:\n    sliceString(\"JavaScript\", 0, 4) => \"Java\"\n    sliceString(\"Hello World\", 0, 5) => \"Hello\"\n    sliceString(\"testing\", 0, 4) => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceString(str, start, end) {\n  // Implementation here\n}",
@@ -8367,6 +10641,45 @@ export const courses = [
           "includes(): Simple Boolean Existence Checks",
           "startsWith() and endsWith(): Boundary Validation"
         ],
+        "topic_notes": `## 1. indexOf(): Locating the First Occurrence
+
+- str.indexOf(searchValue, fromIndex) returns the index of the first occurrence of searchValue, or -1 if not found. Optional fromIndex starts the search at that position.
+
+\`\`\`javascript
+const s = "Hello World"
+console.log(s.indexOf("World"))
+console.log(s.indexOf("x"))
+\`\`\`
+
+## 2. lastIndexOf(): Searching from the End
+
+- str.lastIndexOf(searchValue, fromIndex) returns the index of the last occurrence of searchValue, searching backward. Returns -1 if not found. fromIndex limits how far back to search.
+
+\`\`\`javascript
+const s = "banana"
+console.log(s.lastIndexOf("a"))
+\`\`\`
+
+## 3. includes(): Simple Boolean Existence Checks
+
+- str.includes(searchValue) returns true if the string contains searchValue, false otherwise. Use it when you only need to know whether a substring exists, not its position.
+
+\`\`\`javascript
+const s = "JavaScript is awesome"
+console.log(s.includes("awesome"))
+console.log(s.includes("Python"))
+\`\`\`
+
+## 4. startsWith() and endsWith(): Boundary Validation
+
+- str.startsWith(searchValue) returns true if the string begins with searchValue. str.endsWith(searchValue) returns true if it ends with searchValue. Useful for file extensions, prefixes, or validation.
+
+\`\`\`javascript
+const file = "report.pdf"
+console.log(file.endsWith(".pdf"))
+const lang = "JavaScript"
+console.log(lang.startsWith("Java"))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses indexOf() to find position of substring.\n  Use indexOf() to find the position of the search term.\n  Examples:\n    findPosition(\"Hello World\", \"World\") => 6\n    findPosition(\"JavaScript\", \"Script\") => 4\n    findPosition(\"testing\", \"ing\") => 4\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findPosition(str, search) {\n  // Implementation here\n}",
@@ -8623,6 +10936,111 @@ export const courses = [
           "Capture Groups: Isolating Sub-patterns",
           "The .exec() Method: Iterative Pattern Matching"
         ],
+        "topic_notes": `## 1. Regular Expressions: Defining Patterns in Memory
+
+- A regular expression (regex) describes a pattern of characters. In JavaScript you create one with /pattern/ or new RegExp('pattern'). Use them to test, match, or replace text.
+
+\`\`\`javascript
+const re = /hello/
+console.log(re.test("hello world"))
+\`\`\`
+
+## 2. Literal vs. Constructor: Creating Regex Objects
+
+- Literal: /pattern/ — concise, pattern is fixed at write time. Constructor: new RegExp('pattern') — useful when the pattern is a string variable. Escape backslashes in the string (e.g. \\\\d for \\d).
+
+\`\`\`javascript
+const re1 = /\\d+/
+const re2 = new RegExp('\\\\d+')
+\`\`\`
+
+## 3. The .test() Method: Pattern Verification (Boolean)
+
+- regex.test(str) returns true if the pattern matches somewhere in str, false otherwise. Use it for validation or simple yes/no checks.
+
+\`\`\`javascript
+console.log(/\\d/.test("hello123"))
+console.log(/\\d/.test("hello"))
+\`\`\`
+
+## 4. The .match() Method: Extracting Pattern Matches
+
+- str.match(regex) returns an array of matches (or null). With the g flag it returns all matches; without g it returns the first match plus capture groups. Use it to extract substrings that match the pattern.
+
+\`\`\`javascript
+const s = "Price: $25.99"
+const m = s.match(/\\d+\\.?\\d*/)
+console.log(m ? m[0] : null)
+\`\`\`
+
+## 5. Advanced Substitution: replace() with Regex
+
+- str.replace(regex, replacement) replaces the first match (or all matches if regex has the g flag). replacement can be a string or a function. Use regex for flexible find-and-replace.
+
+\`\`\`javascript
+console.log("hello   world".replace(/\\s+/g, " "))
+\`\`\`
+
+## 6. Character Classes: Searching for Types (\\\\d, \\\\w, \\\\s)
+
+- \\d matches a digit, \\w matches a word character (letter, digit, underscore), \\s matches whitespace. Uppercase (\\D, \\W, \\S) matches the opposite. Use them to match kinds of characters instead of listing them.
+
+\`\`\`javascript
+console.log(/\\d/.test("abc5"))
+console.log(/\\w+/.exec("hello world")[0])
+\`\`\`
+
+## 7. Special Characters and Escaping
+
+- In a regex, . * + ? [ ] ( ) { } ^ $ | \\ have special meaning. To match them literally, escape with \\ (e.g. \\. for a literal dot). In a string passed to RegExp, use \\\\ for one backslash in the pattern.
+
+\`\`\`javascript
+console.log(/\\./.test("a.b"))
+\`\`\`
+
+## 8. Quantifiers: Managing Repetition (+, *, {n})
+
+- + means one or more, * means zero or more, ? means zero or one. {n} means exactly n, {n,} means n or more, {n,m} means between n and m. They apply to the previous character or group.
+
+\`\`\`javascript
+console.log(/\\d{3}-\\d{4}/.test("555-1234"))
+\`\`\`
+
+## 9. Anchors: Start (^) and End ($) Boundaries
+
+- ^ matches the start of the string, $ matches the end. Use them to require the whole string to match (e.g. /^\\d+$/ for a string that is only digits).
+
+\`\`\`javascript
+console.log(/^he/.test("hello"))
+console.log(/ing$/.test("testing"))
+\`\`\`
+
+## 10. Flags: Global (g) and Case-Insensitive (i) searches
+
+- g: find all matches (for match, replace). i: case-insensitive. Add after the closing slash: /pattern/gi or pass as second argument to RegExp.
+
+\`\`\`javascript
+console.log("Hello HELLO".match(/hello/gi))
+\`\`\`
+
+## 11. Capture Groups: Isolating Sub-patterns
+
+- Parentheses ( ) create a capture group. match() returns the full match plus each group. In replace(), use $1, $2 to insert captured text.
+
+\`\`\`javascript
+const m = "2024-01-15".match(/(\\d{4})-(\\d{2})-(\\d{2})/)
+console.log(m && m.slice(1))
+\`\`\`
+
+## 12. The .exec() Method: Iterative Pattern Matching
+
+- regex.exec(str) returns one match at a time (with groups). Call repeatedly while it returns non-null to get successive matches; the regex's lastIndex is updated when using the g flag.
+
+\`\`\`javascript
+const re = /\\d+/g
+let m
+while ((m = re.exec("a1 b2 c3")) !== null) console.log(m[0])
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that uses regex to test if string contains digits.\n  Create a regex pattern to test if the string contains any digit.\n  Use the test() method.\n  Examples:\n    containsDigit(\"hello123\") => true\n    containsDigit(\"hello\") => false\n    containsDigit(\"test456\") => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction containsDigit(str) {\n  // Implementation here\n}",
@@ -8982,6 +11400,75 @@ export const courses = [
           "flatMap(): Combined Transformation and Flattening",
           "Architectural Logic: Choosing the Right Method for the Job"
         ],
+        "topic_notes": `## 1. Method Chaining: Building Logical Data Pipelines
+
+- Array methods that return arrays (map, filter, slice, etc.) can be chained: arr.filter(...).map(...). Each step gets the result of the previous one. Build a pipeline from left to right.
+
+\`\`\`javascript
+const arr = [1, 2, 3, 4, 5, 6]
+const result = arr.filter(n => n % 2 === 0).map(n => n * 2)
+console.log(result)
+\`\`\`
+
+## 2. Code Readability: Formatting and Debugging Chains
+
+- Put each method call on its own line and indent for readability. To debug, log the array at a step: .map(x => { console.log(x); return x }) or break the chain and assign to variables.
+
+\`\`\`javascript
+const result = [1, 2, 3, 4]
+  .filter(n => n > 1)
+  .map(n => n * 2)
+console.log(result)
+\`\`\`
+
+## 3. Multidimensional Arrays: Creating and Accessing 2D Grids
+
+- A 2D array is an array of arrays. Access with arr[row][col]. Create with [[a,b],[c,d]] or by building rows and pushing them. Useful for grids, matrices, or tables.
+
+\`\`\`javascript
+const grid = [[1, 2], [3, 4], [5, 6]]
+console.log(grid[1][0])
+\`\`\`
+
+## 4. Nested Iteration: Traversing Rows and Columns
+
+- Use nested loops or nested map/forEach to visit every element. Outer loop over rows, inner over columns (or vice versa). Watch index order: grid[i][j] vs grid[j][i].
+
+\`\`\`javascript
+const grid = [[1, 2], [3, 4]]
+grid.forEach((row, i) => {
+  row.forEach((cell, j) => console.log(i, j, cell))
+})
+\`\`\`
+
+## 5. Array Flattening: Working with .flat() and Depth
+
+- arr.flat(depth) flattens nested arrays. depth defaults to 1. Use flat(Infinity) to flatten completely. flat() does not mutate the original array.
+
+\`\`\`javascript
+const arr = [[1, 2], [3, [4, 5]]]
+console.log(arr.flat())
+console.log(arr.flat(2))
+\`\`\`
+
+## 6. flatMap(): Combined Transformation and Flattening
+
+- arr.flatMap(fn) is equivalent to arr.map(fn).flat(1). Use it when each element maps to zero or more items (e.g. map to an array and flatten). Saves a separate flat() call.
+
+\`\`\`javascript
+const arr = ["hello world", "test case"]
+console.log(arr.flatMap(s => s.split(" ")))
+\`\`\`
+
+## 7. Architectural Logic: Choosing the Right Method for the Job
+
+- Prefer chainable, declarative methods (map, filter, reduce, flatMap) when they fit. Use loops when you need early exit, complex state, or side effects. Combine flat + reduce for summing nested arrays, or map + filter for transform-then-select.
+
+\`\`\`javascript
+const nested = [[1, 2], [3, 4]]
+const sum = nested.flat().reduce((a, n) => a + n, 0)
+console.log(sum)
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that chains filter and map.\n  Chain filter and map to: filter even numbers, then double them.\n  Examples:\n    filterAndDouble([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) => [4,8,12,16,20]\n    filterAndDouble([5, 10, 15, 20]) => [20,40]\n    filterAndDouble([1, 3, 5]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterAndDouble(arr) {\n  // Implementation here\n}",
@@ -9306,6 +11793,99 @@ export const courses = [
           "Error Propagation: Understanding how errors \"bubble up\"",
           "Strategic Usage: When to catch vs. when to let it fail"
         ],
+        "topic_notes": `## 1. Error Types: Identifying Reference, Syntax, and Type Errors
+
+- ReferenceError: variable or property is not defined. SyntaxError: invalid code (e.g. invalid JSON). TypeError: wrong type (e.g. calling something that is not a function). Each has a name and message you can use to handle or log.
+
+\`\`\`javascript
+try {
+  JSON.parse("{ invalid }")
+} catch (e) {
+  console.log(e.name, e.message)
+}
+\`\`\`
+
+## 2. Error Objects: Accessing .name and .message Properties
+
+- Caught values are Error-like objects. e.name is the error type (e.g. "TypeError"). e.message is a human-readable description. Use them to decide how to handle or to show feedback to the user.
+
+\`\`\`javascript
+try {
+  null.foo
+} catch (e) {
+  console.log(e.name, e.message)
+}
+\`\`\`
+
+## 3. try...catch Syntax: Creating a Safety Net for Logic
+
+- Wrap code that might throw in try { }. If it throws, execution jumps to catch (e) { } and e is the thrown value. Code after the try-catch runs normally. Use it to avoid crashes and to handle expected failures (e.g. parse errors).
+
+\`\`\`javascript
+try {
+  const n = JSON.parse("not json")
+} catch (e) {
+  console.log("Parse failed:", e.message)
+}
+\`\`\`
+
+## 4. The finally Block: Executing Cleanup regardless of outcome
+
+- try { } catch (e) { } finally { } runs finally after try (and catch if there was an error). Use finally for cleanup that must run whether or not an error occurred (e.g. closing a resource, clearing a flag).
+
+\`\`\`javascript
+try {
+  riskyOperation()
+} catch (e) {
+  console.log(e.message)
+} finally {
+  cleanup()
+}
+\`\`\`
+
+## 5. The throw Statement: Manually Triggering Logic Failures
+
+- throw value; throws an exception. Typically throw new Error('message'). The thrown value can be any type; catch receives it. Use throw for validation failures or invalid state that callers should handle.
+
+\`\`\`javascript
+function divide(a, b) {
+  if (b === 0) throw new Error("Division by zero")
+  return a / b
+}
+\`\`\`
+
+## 6. Custom Messaging: Providing Context for Debugging
+
+- Prefer throw new Error('clear message') so logs and tools show what went wrong. Include relevant context (e.g. the invalid input or step) in the message. Custom error classes can extend Error for richer handling.
+
+\`\`\`javascript
+if (!input) throw new Error("Input is required")
+if (input < 0) throw new Error("Input must be non-negative, got: " + input)
+\`\`\`
+
+## 7. Error Propagation: Understanding how errors bubble up
+
+- If code in try throws and is not caught, or throw is inside a function called from try, the error propagates up until a catch handles it or the script fails. Catching at a higher level lets you handle many lower-level failures in one place.
+
+\`\`\`javascript
+function a() { b() }
+function b() { throw new Error("from b") }
+try { a() } catch (e) { console.log(e.message) }
+\`\`\`
+
+## 8. Strategic Usage: When to catch vs. when to let it fail
+
+- Catch when you can recover, show a user message, or log and continue. Let errors propagate when the caller (or a global handler) should decide. Avoid empty catch blocks; at least log the error. Use try-catch around specific risky calls, not whole programs.
+
+\`\`\`javascript
+function safeParseJSON(str) {
+  try {
+    return JSON.parse(str)
+  } catch (e) {
+    return null
+  }
+}
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that demonstrates try-catch with undefined variable.\n  Create a try-catch block that attempts to access an undefined variable.\n  In the catch block, return the error message.\n  Examples:\n    catchUndefinedVariable() => \"undefinedVariable is not defined\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction catchUndefinedVariable() {\n  // Implementation here\n}",
@@ -9515,6 +12095,118 @@ export const courses = [
           "Polymorphism: Overriding Methods for Specialized Logic",
           "Type Checking: Identifying Instances with \"instanceof\""
         ],
+        "topic_notes": `## 1. Classes as Blueprints: Defining the Template
+
+- A class is a template for creating objects with the same shape and behavior. Declare it with class Name { }. Use new Name() to create instances. Classes group data (properties) and behavior (methods) together.
+
+\`\`\`javascript
+class Person {
+  constructor(name, age) {
+    this.name = name
+    this.age = age
+  }
+}
+const p = new Person("Alice", 25)
+\`\`\`
+
+## 2. The constructor Method: Initializing Instance State
+
+- constructor(...args) runs when you call new ClassName(...). Use it to assign properties (e.g. this.x = x). You can only have one constructor per class. It initializes the instance state.
+
+\`\`\`javascript
+class Rectangle {
+  constructor(width, height) {
+    this.width = width
+    this.height = height
+  }
+}
+\`\`\`
+
+## 3. this in Classes: Referencing the Current Instance
+
+- Inside a class, this refers to the instance being created (in constructor) or the instance the method was called on (in methods). Use this.property and this.method() to access instance data and other methods.
+
+\`\`\`javascript
+class Counter {
+  constructor() { this.count = 0 }
+  increment() { this.count++ }
+  getValue() { return this.count }
+}
+\`\`\`
+
+## 4. Methods: Defining Shared Behavior
+
+- Methods are functions defined on the class. They are shared by all instances. Call them as instance.method(). They can use this to read and update instance state.
+
+\`\`\`javascript
+class Circle {
+  constructor(radius) { this.radius = radius }
+  getArea() { return Math.PI * this.radius ** 2 }
+}
+\`\`\`
+
+## 5. Static Members: Properties and Methods belonging to the Blueprint
+
+- static property or static method() belong to the class itself, not instances. Access as ClassName.staticMember. Use for constants (e.g. PI) or utilities that do not need instance data.
+
+\`\`\`javascript
+class MathUtils {
+  static PI = 3.14159
+  static double(x) { return x * 2 }
+}
+console.log(MathUtils.PI)
+\`\`\`
+
+## 6. Encapsulation: Using Getters and Setters for Data Control
+
+- get name() { return this._name } and set name(v) { this._name = v } define property access. Getters and setters let you control or validate values when reading or writing. Use a backing property (e.g. _value) if needed.
+
+\`\`\`javascript
+class Temp {
+  constructor(c) { this._c = c }
+  get fahrenheit() { return (this._c * 9/5) + 32 }
+  set fahrenheit(f) { this._c = (f - 32) * 5/9 }
+}
+\`\`\`
+
+## 7. Inheritance: Extending Logic with extends and super
+
+- class Child extends Parent makes Child inherit Parent's methods and can add or override. super(...) calls the parent constructor; super.method() calls the parent's method. Use extends for "is-a" relationships.
+
+\`\`\`javascript
+class Animal {
+  constructor(name) { this.name = name }
+  speak() { return this.name + " makes a sound" }
+}
+class Dog extends Animal {
+  constructor(name) { super(name) }
+  speak() { return this.name + " barks" }
+}
+\`\`\`
+
+## 8. Polymorphism: Overriding Methods for Specialized Logic
+
+- A subclass can override a parent method by defining a method with the same name. When called on a subclass instance, the overridden version runs. Enables specialized behavior while keeping a common interface.
+
+\`\`\`javascript
+class Shape {
+  area() { return 0 }
+}
+class Square extends Shape {
+  constructor(side) { super(); this.side = side }
+  area() { return this.side * this.side }
+}
+\`\`\`
+
+## 9. Type Checking: Identifying Instances with instanceof
+
+- value instanceof ClassName returns true if value is an instance of that class (or a subclass). Use it to check type before using class-specific methods or to branch logic by type.
+
+\`\`\`javascript
+const d = new Dog("Rex")
+console.log(d instanceof Dog)
+console.log(d instanceof Animal)
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that creates a Person class and returns introduction.\n  Create a class named Person with a constructor that takes name and age.\n  Add a method introduce() that returns \"Hi, I'm {name} and I'm {age} years old\".\n  Create an instance and call introduce().\n  Examples:\n    createPersonAndIntroduce(\"Alice\", 25) => \"Hi, I'm Alice and I'm 25 years old\"\n    createPersonAndIntroduce(\"Bob\", 30) => \"Hi, I'm Bob and I'm 30 years old\"\n    createPersonAndIntroduce(\"Charlie\", 22) => \"Hi, I'm Charlie and I'm 22 years old\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createPersonAndIntroduce(name, age) {\n  // Implementation here\n}",
@@ -9821,6 +12513,82 @@ export const courses = [
           "Module Scope: Why variables stay private by default",
           "Modern Patterns: Dynamic Imports for Performance"
         ],
+        "topic_notes": `## 1. Module Fundamentals: Encapsulation and Code Separation
+
+- A module is a file that exports values (functions, classes, constants) for other files to use. Top-level variables in a module are not global; they are module-scoped. This keeps code organized and avoids naming collisions.
+
+\`\`\`javascript
+// utils.js
+function greet(name) { return "Hello, " + name + "!" }
+export { greet }
+\`\`\`
+
+## 2. Named Exports: Sharing Multiple Values per File
+
+- export const x = 1; export function f() {} or export { x, f } at the end. A file can have many named exports. Import with import { x, f } from './file'. Names must match.
+
+\`\`\`javascript
+// math.js
+export function add(a, b) { return a + b }
+export function subtract(a, b) { return a - b }
+\`\`\`
+
+## 3. Default Exports: Defining the Primary Module Export
+
+- export default value; a module can have only one default export. Use for the main thing the module provides (e.g. a single class or function). Import with import Name from './file' (any name).
+
+\`\`\`javascript
+// Calculator.js
+export default class Calculator { add(a, b) { return a + b } }
+\`\`\`
+
+## 4. Import Logic: Named vs. Default Syntax
+
+- Named: import { a, b } from './m'. Default: import C from './m'. Mixed: import C, { a, b } from './m'. The path is relative to the current file. Omit the extension in many bundlers.
+
+\`\`\`javascript
+import { add, subtract } from './math'
+import Calculator from './Calculator'
+\`\`\`
+
+## 5. Alias Management: Renaming Imports to avoid Conflicts
+
+- import { foo as myFoo } from './m' imports foo under the name myFoo. Use when two modules export the same name or when you want a clearer local name.
+
+\`\`\`javascript
+import { add as sum } from './math'
+import { PI as pi } from './constants'
+\`\`\`
+
+## 6. Namespace Imports: Importing Everything as a Single Object (* as)
+
+- import * as utils from './m' puts all named exports of m into the object utils. Access as utils.foo, utils.bar. Useful when you want one namespace or many names from one module.
+
+\`\`\`javascript
+import * as math from './math'
+math.add(1, 2)
+math.subtract(5, 3)
+\`\`\`
+
+## 7. Module Scope: Why variables stay private by default
+
+- Top-level declarations in a module are not added to the global object. They are visible only inside that module unless exported. So you can use variables and functions internally without exposing them.
+
+\`\`\`javascript
+const secret = 42
+export function getSecret() { return secret }
+\`\`\`
+
+## 8. Modern Patterns: Dynamic Imports for Performance
+
+- import('./module') returns a Promise that resolves to the module object. Use it to load code only when needed (e.g. on route change or button click). Enables code-splitting and smaller initial bundles.
+
+\`\`\`javascript
+async function loadHelper() {
+  const mod = await import('./heavyHelper')
+  return mod.helper()
+}
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that simulates module export and import.\n  Create a function named greet that takes a name parameter and returns \"Hello, {name}!\".\n  Simulate the module export/import pattern.\n  Examples:\n    simulateModuleGreet(\"Alice\") => \"Hello, Alice!\"\n    simulateModuleGreet(\"Bob\") => \"Hello, Bob!\"\n    simulateModuleGreet(\"Charlie\") => \"Hello, Charlie!\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateModuleGreet(name) {\n  // Implementation here\n}",
@@ -10038,6 +12806,95 @@ export const courses = [
           "Callback Hell: The limitation of nested callbacks",
           "Evolution: Why we need Promises"
         ],
+        "topic_notes": `## 1. Execution Models: Synchronous vs. Asynchronous
+
+- Synchronous code runs one statement after another; each must finish before the next runs. Asynchronous code schedules work (e.g. timers, I/O) and continues; the work completes later. JS uses callbacks, then Promises, then async/await to handle async results.
+
+\`\`\`javascript
+console.log("A")
+setTimeout(() => console.log("B"), 0)
+console.log("C")
+\`\`\`
+
+## 2. The Single Thread: Why JS can only do one thing at a time
+
+- JavaScript has one main thread. Only one piece of code runs at a time. Long synchronous work blocks the thread; that is why async APIs (timers, network) schedule callbacks instead of blocking. Workers can run code in parallel in a separate thread.
+
+\`\`\`javascript
+setTimeout(() => console.log("later"), 100)
+console.log("now")
+\`\`\`
+
+## 3. The Event Loop: Managing the Task Queue
+
+- The event loop takes tasks from the queue and runs them one by one. When you call setTimeout(fn, ms), fn is added to the queue after (at least) ms. When the call stack is empty, the loop runs the next task. This gives non-blocking behavior.
+
+\`\`\`javascript
+function run() {
+  console.log("Start")
+  setTimeout(() => console.log("Timeout"), 0)
+  console.log("End")
+}
+\`\`\`
+
+## 4. Timer Logic: setTimeout() and setInterval() Syntax
+
+- setTimeout(callback, delayMs) runs callback once after delayMs (minimum delay). setInterval(callback, delayMs) runs callback repeatedly every delayMs. Both return an id you can pass to clearTimeout/clearInterval to cancel.
+
+\`\`\`javascript
+const id = setTimeout(() => console.log("done"), 1000)
+const id2 = setInterval(() => console.log("tick"), 500)
+\`\`\`
+
+## 5. Resource Management: Clearing Timers (clearTimeout/clearInterval)
+
+- clearTimeout(id) cancels a pending setTimeout. clearInterval(id) stops a setInterval. Always clear intervals when you are done (e.g. when leaving a component or when a condition is met) to avoid leaks and unexpected callbacks.
+
+\`\`\`javascript
+const id = setInterval(() => { /* ... */ }, 1000)
+clearInterval(id)
+\`\`\`
+
+## 6. Callback Pattern: Passing logic to the future
+
+- A callback is a function you pass to async code; it is called when the work is done (e.g. when the timer fires or the request completes). Callback(err, result) is a common signature; Promises replace this with .then/.catch.
+
+\`\`\`javascript
+setTimeout(() => console.log("Hello"), 100)
+\`\`\`
+
+## 7. Control Flow: Understanding Non-blocking Execution Order
+
+- Async calls return immediately; the callback runs later. So code after an async call runs before the callback. To sequence steps, put the next step inside the previous callback (or use Promises/async-await).
+
+\`\`\`javascript
+setTimeout(() => {
+  console.log("first")
+  setTimeout(() => console.log("second"), 0)
+}, 0)
+\`\`\`
+
+## 8. Callback Hell: The limitation of nested callbacks
+
+- Chaining many async steps with callbacks leads to deep nesting (callback inside callback). It is hard to read, error-prone, and difficult to handle errors. Promises and async/await flatten the flow.
+
+\`\`\`javascript
+getData((err, a) => {
+  if (err) return
+  getMore(a, (err, b) => {
+    if (err) return
+    getMore(b, (err, c) => { /* ... */ })
+  })
+})
+\`\`\`
+
+## 9. Evolution: Why we need Promises
+
+- Promises represent a future value (or rejection). They can be chained with .then() and .catch(), composed with Promise.all/race, and consumed with async/await. They avoid deep callback nesting and standardize async flow and error handling.
+
+\`\`\`javascript
+fetch(url).then(r => r.json()).then(data => console.log(data)).catch(e => console.error(e))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that simulates setTimeout behavior.\n  Return the message that would be printed after the delay.\n  Examples:\n    simulateTimeout(\"Hello\", 1000) => \"Hello\"\n    simulateTimeout(\"World\", 1000) => \"World\"\n    simulateTimeout(\"Test\", 500) => \"Test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateTimeout(message, delay) {\n  // Implementation here\n}",
@@ -10258,6 +13115,72 @@ export const courses = [
           "Static Methods: Promise.all() and allSettled() for concurrency",
           "Optimization: Using Promise.race() for speed-based logic"
         ],
+        "topic_notes": `## 1. Promise States: Pending, Fulfilled, and Rejected
+
+- A Promise is pending until it is settled. It becomes fulfilled with a value or rejected with a reason. Once settled, it cannot change. Use .then() for fulfillment and .catch() (or .then(_, onRejected)) for rejection.
+
+\`\`\`javascript
+const p = new Promise((resolve) => setTimeout(() => resolve("done"), 100))
+\`\`\`
+
+## 2. Constructor Logic: Using resolve and reject
+
+- new Promise((resolve, reject) => { ... }) receives two functions. Call resolve(value) to fulfill the promise, reject(reason) to reject it. Typically you call one of them from inside async work (e.g. after a timeout or request).
+
+\`\`\`javascript
+const p = new Promise((resolve, reject) => {
+  if (ok) resolve(42)
+  else reject(new Error("failed"))
+})
+\`\`\`
+
+## 3. Consumption: Handling values with .then() and .catch()
+
+- promise.then(onFulfilled, onRejected) runs onFulfilled when the promise fulfills, onRejected when it rejects. promise.catch(onRejected) is the same as .then(null, onRejected). Both return a new promise for chaining.
+
+\`\`\`javascript
+fetch(url).then(r => r.json()).then(data => console.log(data)).catch(e => console.error(e))
+\`\`\`
+
+## 4. The finally Handler: Closing the loop
+
+- promise.finally(callback) runs callback when the promise settles (fulfilled or rejected). It does not receive a value. Use it for cleanup (e.g. hiding a loader). The returned promise keeps the same state and value/reason.
+
+\`\`\`javascript
+loadData().then(useData).catch(handleError).finally(() => setLoading(false))
+\`\`\`
+
+## 5. Promise Chaining: Sequential Async Execution
+
+- Returning a value from .then() creates a promise resolved with that value. Returning a promise from .then() makes the chain wait for that promise. So you can chain .then().then().then() for sequential async steps.
+
+\`\`\`javascript
+fetchUser(id).then(u => fetchOrders(u.id)).then(orders => process(orders))
+\`\`\`
+
+## 6. Value Passing: Why returning from .then() creates a new Promise
+
+- .then() returns a new promise. If the handler returns a plain value, that promise is fulfilled with it. If it returns a promise, the new promise follows that one. So you can transform values and pass them to the next .then().
+
+\`\`\`javascript
+Promise.resolve(5).then(x => x * 2).then(y => console.log(y))
+\`\`\`
+
+## 7. Static Methods: Promise.all() and allSettled() for concurrency
+
+- Promise.all(promises) returns a promise that fulfills with an array of results when all promises fulfill, or rejects when the first rejects. Promise.allSettled(promises) waits for all and returns status and value/reason for each; it never rejects.
+
+\`\`\`javascript
+Promise.all([fetch(a), fetch(b)]).then(([r1, r2]) => console.log(r1, r2))
+\`\`\`
+
+## 8. Optimization: Using Promise.race() for speed-based logic
+
+- Promise.race(promises) resolves or rejects as soon as one of the promises settles. Use it for timeouts (race(fetch(url), timeout(5000))) or to take the first of several sources. The rest keep running but their result is ignored.
+
+\`\`\`javascript
+Promise.race([slowRequest(), timeout(3000)]).then(handle).catch(handleTimeout)
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that simulates Promise resolution.\n  Return the resolved value that would be printed.\n  Examples:\n    simulatePromiseResolve(\"Success\") => \"Success\"\n    simulatePromiseResolve(\"Done\") => \"Done\"\n    simulatePromiseResolve(\"Complete\") => \"Complete\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseResolve(value) {\n  // Implementation here\n}",
@@ -10526,6 +13449,94 @@ export const courses = [
           "Modern Syntax: Async with Arrow Functions",
           "Propagation: How errors bubble through async chains"
         ],
+        "topic_notes": `## 1. async Keyword: Automatically Wrapping Functions in Promises
+
+- Declaring a function with async makes it return a Promise. If the function returns a value, that value becomes the fulfilled value; if it throws, the promise is rejected. You can await other promises inside it.
+
+\`\`\`javascript
+async function greet() { return "Hello" }
+greet().then(console.log)
+\`\`\`
+
+## 2. await Keyword: Pausing Execution for Asynchronous Values
+
+- await promise pauses the async function until the promise settles. If it fulfills, the expression evaluates to the value. If it rejects, the rejection is thrown and can be caught with try/catch. await can only be used inside an async function.
+
+\`\`\`javascript
+async function getData() {
+  const res = await fetch(url)
+  const data = await res.json()
+  return data
+}
+\`\`\`
+
+## 3. Context Rules: Why await requires an async environment
+
+- await is only valid inside an async function (or top-level await in modules). This is because await suspends the function and the runtime needs an async context to resume it when the promise settles. Using await in a normal function is a SyntaxError.
+
+\`\`\`javascript
+async function run() {
+  const x = await Promise.resolve(1)
+  return x
+}
+\`\`\`
+
+## 4. Return Logic: Understanding the Implicit Promise wrapper
+
+- In an async function, return value is equivalent to return Promise.resolve(value). So the caller always gets a promise. Returning a promise just passes it through; the async function's promise follows that one.
+
+\`\`\`javascript
+async function one() { return 1 }
+async function two() { return await one() }
+\`\`\`
+
+## 5. Error Handling: Integrating try...catch with Async flows
+
+- Use try/catch inside async functions to handle rejections: await inside try, and catch (e) for errors. Rejected promises become thrown values, so you can use the same patterns as synchronous code. Add .catch() on the returned promise for unhandled errors.
+
+\`\`\`javascript
+async function safe() {
+  try {
+    const data = await fetchData()
+    return data
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}
+\`\`\`
+
+## 6. Performance: Sequential vs. Parallel Await execution
+
+- await p1; await p2; runs p1 then p2 in sequence. To run in parallel, start both without awaiting, then await: const [a, b] = await Promise.all([p1, p2]). Use parallel when the calls are independent to reduce total time.
+
+\`\`\`javascript
+async function parallel() {
+  const [a, b] = await Promise.all([fetch(url1), fetch(url2)])
+  return [a, b]
+}
+\`\`\`
+
+## 7. Modern Syntax: Async with Arrow Functions
+
+- You can declare async arrow functions: const f = async () => { await something() }. Same rules: they return a promise and can use await. Handy for callbacks or short async helpers.
+
+\`\`\`javascript
+const fetchUser = async (id) => {
+  const res = await fetch("/users/" + id)
+  return res.json()
+}
+\`\`\`
+
+## 8. Propagation: How errors bubble through async chains
+
+- If an async function does not catch a rejection (from await or throw), the returned promise rejects. The caller can catch it with try/catch (if they await) or .catch(). So errors propagate up until handled, like synchronous throws.
+
+\`\`\`javascript
+async function a() { await b() }
+async function b() { throw new Error("fail") }
+a().catch(e => console.error(e))
+\`\`\``,
         "tasks": [
           {
             "description": "/*\n  Implement the below function that simulates async function behavior.\n  Return the value that would be resolved by the async function.\n  Examples:\n    simulateAsyncFunction(\"Hello\") => \"Hello\"\n    simulateAsyncFunction(\"World\") => \"World\"\n    simulateAsyncFunction(\"Test\") => \"Test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateAsyncFunction(value) {\n  // Implementation here\n}",

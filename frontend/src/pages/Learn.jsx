@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import ReactMarkdown from 'react-markdown'
 import { learning, chat } from '../config/api'
 import EditorToggle from '../components/EditorToggle'
 import SessionPlayground from '../components/SessionPlayground'
@@ -406,6 +407,12 @@ const Learn = () => {
           setSessionComplete(true)
         }
 
+        const viewIsNotes = searchParams.get('view') === 'notes'
+        if (viewIsNotes) {
+          setLoading(false)
+          return
+        }
+
         if (phase === 'session') {
           // Load chat history (use requestedTopicId for the topic we're showing)
           try {
@@ -543,7 +550,7 @@ const Learn = () => {
     if (topicId) {
       loadTopic()
     }
-  }, [topicId, phase, startFromFirst])
+  }, [topicId, phase, startFromFirst, searchParams])
 
   // When user returns to the tab, refetch chat history so we show DB truth (not stale in-memory state from another tab)
   useEffect(() => {
@@ -1267,6 +1274,82 @@ const Learn = () => {
           >
             Back to Dashboard
           </button>
+        </div>
+      </div>
+    )
+  }
+
+  // Topic notes view: clean document (no session chat)
+  if (searchParams.get('view') === 'notes') {
+    const notesContent = topic.topic_notes && typeof topic.topic_notes === 'string' && topic.topic_notes.trim()
+    return (
+      <div className="learn-container topic-notes-view" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <header className="learn-header" style={{ flexShrink: 0 }}>
+          <button
+            type="button"
+            className="back-btn learn-sara-brand"
+            onClick={() => navigate('/dashboard')}
+            title="Back to Dashboard"
+            aria-label="Back to Dashboard"
+          >
+            Sara
+          </button>
+          <div className="header-center">
+            <span className="header-title">{topic.title}</span>
+            <div className="phase-text">Topic notes</div>
+          </div>
+          <div style={{ width: 80 }} />
+        </header>
+        <div
+          className="topic-notes-scroll"
+          style={{
+            flex: 1,
+            overflow: 'auto',
+            padding: '28px 24px 48px',
+            maxWidth: 720,
+            margin: '0 auto',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}
+        >
+          {notesContent ? (
+            <div className="message-text topic-notes-doc">
+              <ReactMarkdown
+                components={{
+                  code: ({ node, inline, className, children, ...props }) =>
+                    inline ? (
+                      <code {...props}>{children}</code>
+                    ) : (
+                      <pre className="notes-code-block" style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'Monaco, Consolas, monospace' }}>{children}</pre>
+                    ),
+                  pre: ({ children }) => {
+                    const child = React.Children.only(children)
+                    if (child?.type === 'pre') return <>{child}</>
+                    return children
+                  },
+                  p: ({ children }) => <p>{children}</p>,
+                  h2: ({ children }) => <h2>{children}</h2>,
+                  h3: ({ children }) => <h3>{children}</h3>,
+                  ul: ({ children }) => <ul>{children}</ul>,
+                  li: ({ children }) => <li>{children}</li>
+                }}
+              >
+                {notesContent}
+              </ReactMarkdown>
+            </div>
+          ) : (
+            <div className="topic-notes-doc">
+              <h2>Outcomes</h2>
+              <ul>
+                {(topic.outcomes || []).map((o, i) => (
+                  <li key={i}>{o}</li>
+                ))}
+              </ul>
+              {(!topic.outcomes || topic.outcomes.length === 0) && (
+                <p style={{ color: '#64748b' }}>Notes for this topic are being prepared.</p>
+              )}
+            </div>
+          )}
         </div>
       </div>
     )

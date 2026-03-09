@@ -279,7 +279,7 @@ router.get('/history/:topicId', authenticateToken, async (req, res) => {
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     const messages = await getChatHistory(userId, topicId)
     const duration = Date.now() - startTime
@@ -325,7 +325,7 @@ router.delete('/history/:topicId', authenticateToken, async (req, res) => {
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     await clearChatHistory(userId, topicId)
 
