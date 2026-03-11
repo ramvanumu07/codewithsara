@@ -3,13 +3,22 @@ export default {
   "id": "spread-rest",
   "title": "Spread and Rest Operators",
   "outcomes": [
-    "Spread Syntax: Unpacking Elements and Properties",
-    "Shallow Copying: Creating Independent Arrays and Objects",
-    "Merging Collections: Combining Multiple Data Sources",
-    "Property Overriding: Updating State with Spread",
-    "Rest Syntax: Gathering Remaining Values into an Array",
-    "Constraint Logic: Why Rest must be the Final Parameter",
-    "Structural Comparison: Spread vs. Rest Identification"
+    "What Spread Does: Expand an Array or Object",
+    "Copying Arrays and Objects: Shallow Copy",
+    "Merging Arrays or Objects: Combine with Spread",
+    "Updating Without Mutating: Override with Spread",
+    "Rest in Destructuring: Gather the Rest",
+    "Rest Must Be Last",
+    "Spread vs Rest: Same ..., Different Place"
+  ],
+  "outcome_messages": [
+    "**When to use spread**\n\n**Spread** (`...`) **expands** an array or object into a new array or object. In an **array**: `[...arr]` puts each element of `arr` into the new array. In an **object**: `{ ...obj }` copies each property into the new object. The original is unchanged. Use it when you want a **new** array or object built from an existing one.\n\n**Example**\n\n```javascript\nconst a = [1, 2, 3];\nconst b = [...a, 4];\nconsole.log(b);    // [ 1, 2, 3, 4 ]\n```\n\n**Practice**\n\nIf `arr = [10, 20, 30]`, write one expression that produces a new array with `0` at the start, then all elements of `arr`. What is the first element of that array?",
+    "**Shallow copy**\n\n**`[...array]`** creates a **new array** with the same elements; **`{ ...object }`** creates a **new object** with the same properties. Changing the copy (e.g. `copy[0] = 99`) does **not** change the original. Top level is independent; nested objects or arrays inside are still shared (same reference).\n\n**Example**\n\n```javascript\nconst orig = [1, 2, 3];\nconst copy = [...orig];\ncopy[0] = 99;\nconsole.log(orig[0], copy[0]);    // 1 99\n```\n\n**Practice**\n\nIf `data = [5, 10, 15]`, create a shallow copy, then set the first element of the copy to `0`. What is `data[0]` after that?",
+    "**Merging with spread**\n\nPut multiple spreads in one literal to **combine** arrays or objects. **Arrays:** `[...arr1, ...arr2]` — one new array with all elements. **Objects:** `{ ...obj1, ...obj2 }` — one new object; if both have the same key, the **later** one wins. Order matters.\n\n**Example**\n\n```javascript\nconst u = [1, 2];\nconst v = [3, 4];\nconst merged = [...u, ...v];\nconsole.log(merged);    // [ 1, 2, 3, 4 ]\n```\n\n**Practice**\n\nIf `arr1 = [1, 2, 3]` and `arr2 = [4, 5]`, write one expression that combines them into one new array. What is the length of that array?",
+    "**Updating without mutating**\n\nTo get a **new** object that is like the old one but with one (or more) properties changed, **spread first, then override**: `{ ...obj, key: newValue }`. The new value replaces the old for that key. The original object is unchanged. Same idea for adding a new property.\n\n**Example**\n\n```javascript\nconst state = { count: 0, name: \"App\" };\nconst next = { ...state, count: 1 };\nconsole.log(next);    // { count: 1, name: 'App' }\n```\n\n**Practice**\n\nIf `obj = { a: 1, b: 2 }`, write one expression for a new object like `obj` but with `b` set to `20`. What is the new object's `b`?",
+    "**Rest in destructuring**\n\n**Rest** (`...variable`) **gathers** the remaining elements or properties into one variable. In **array destructuring**: `[first, ...rest] = arr` — `rest` is an array of all elements after the first. In **object destructuring**: `const { a, ...rest } = obj` — `rest` is an object with all other properties. Rest is always last in the pattern.\n\n**Example**\n\n```javascript\nconst [first, ...rest] = [10, 20, 30];\nconsole.log(first, rest);    // 10 [ 20, 30 ]\n```\n\n**Practice**\n\nIf `arr = [5, 10, 15, 20]`, write destructuring that assigns the first element to `head` and the rest to `rest`. What is `rest`?",
+    "**Rest must be last**\n\n**...rest** means \"all remaining,\" so it only makes sense at the **end**. In array destructuring you can't write `[a, ...rest, b]` — the parser wouldn't know where \"remaining\" stops. Rule: **one rest per pattern, and it must come last.** Same for object destructuring: `const { a, ...rest } = obj` — rest is last.\n\n**Example**\n\n```javascript\nconst [x, ...tail] = [1, 2, 3, 4];\nconsole.log(x, tail);    // 1 [ 2, 3, 4 ]\n```\n\n**Practice**\n\nIf `arr = [1, 2, 3, 4, 5]` and you write `const [a, b, ...c] = arr`, what is `c`?",
+    "**Spread vs rest**\n\nSame **`...`** syntax, different **place**. **Spread** appears where you're **giving** values: inside array literals `[...arr]`, object literals `{ ...obj }`. It **expands** one value into many. **Rest** appears where you're **receiving** values: in destructuring `[x, ...y] = arr` or `{ a, ...rest } = obj`. It **gathers** the rest into one variable. Rule: **spread expands out; rest gathers in.**\n\n**Example**\n\n```javascript\nconst [a, ...r] = [1, 2, 3];   // rest: r = [2, 3]\nconst b = [...r, 4];            // spread: r expands into new array\nconsole.log(b);    // [ 2, 3, 4 ]\n```\n\n**Practice**\n\nIn the expression `[...arr]`, is `...` spread or rest? In `[x, ...y] = arr`, is `...` spread or rest?"
   ],
   "tasks": [
     {

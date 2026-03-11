@@ -3,10 +3,14 @@ export default {
   "id": "operators-comparison-and-logical",
   "title": "Operators (Comparison & Logical)",
   "outcomes": [
-    "Abstract vs. Strict Equality: == vs ===",
     "Relational Operators: >, <, >=, <=",
     "Logical Gates: AND (&&), OR (||), and NOT (!)",
     "Short-circuiting: How JS optimizes logical checks"
+  ],
+  "outcome_messages": [
+    "Let's use relational operators.\n\n`>` (greater than), `<` (less than), `>=` (greater or equal), `<=` (less or equal) compare two values and return true or false. If types differ, coercion can happen (e.g. \"5\" < 10).\n\n**Example**\n\n```javascript\nconsole.log(10 > 5);     // true (10 is greater than 5)\nconsole.log(10 <= 10);   // true (10 is less than or equal to 10)\nconsole.log(3 < 3);      // false (3 is not less than 3)\nconsole.log(7 >= 7);     // true (7 is greater than or equal to 7)\n```\n\nUse them to check ranges or order. The result is always a boolean.\n\n**Practice**\n\nWhat does 15 > 10 evaluate to?",
+    "Let's use logical operators: AND, OR, and NOT.\n\n`&&` (AND) is true only when both sides are truthy. `||` (OR) is true when at least one side is truthy. `!` (NOT) flips truthy to false and falsy to true.\n\n**Example**\n\n```javascript\nconsole.log(true && true);    // true\nconsole.log(true && false);   // false\nconsole.log(true || false);   // true\nconsole.log(!true);           // false\nconsole.log(!0);              // true\n```\n\nAND needs both true; OR needs one true; NOT inverts. They work with boolean values and truthy/falsy values.\n\n**Practice**\n\nWhat does (5 > 3) && (10 > 7) evaluate to?",
+    "Let's see how short-circuiting works.\n\nWith `&&`, if the left side is falsy, the right side is not evaluated (result is the left value). With `||`, if the left side is truthy, the right side is not evaluated (result is the left value). That saves work and allows patterns like fallbacks.\n\n**Example**\n\n```javascript\nconsole.log(\"\" || \"Default\");    // Default (empty string is falsy)\nconsole.log(\"Hi\" || \"Default\");   // Hi (truthy, so \"Default\" not used)\nconsole.log(0 && 100);           // 0 (0 is falsy, 100 not evaluated)\nconsole.log(5 && 10);            // 10 (both truthy, result is last)\n```\n\nOR returns the first truthy value (or the last if all falsy). AND returns the first falsy value (or the last if all truthy). Useful for defaults and guards.\n\n**Practice**\n\nWhat is the value of (null || \"fallback\")?"
   ],
   "tasks": [
     {

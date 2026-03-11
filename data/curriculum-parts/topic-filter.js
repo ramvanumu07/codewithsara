@@ -3,10 +3,16 @@ export default {
   "id": "filter",
   "title": "filter for selection",
   "outcomes": [
-    "filter Syntax: Extracting Specific Data",
-    "The Predicate Function: Returning Booleans for Selection",
-    "Subset Generation: Why the Resulting Length May Differ",
-    "Immutability: Filtering without Altering the Source"
+    "What filter Does",
+    "Return true to Keep, false to Skip",
+    "Result Can Be Shorter or Empty",
+    "Original Array Is Not Changed"
+  ],
+  "outcome_messages": [
+    "**What filter does**\n\n**array.filter(callback)** builds a **new array** with only the elements for which the callback returns **true** (or a truthy value). The callback runs once per element: return true → the element is **kept** in the new array; return false (or falsy) → it is **skipped**. Use filter when you want a **subset** of items that match a condition (e.g. only even numbers, only long strings).\n\n**Example**\n\n```javascript\nconst nums = [1, 2, 3, 4, 5];\nconst evens = nums.filter(function(n) { return n % 2 === 0; });\nconsole.log(evens);\n```\n\n**Output**\n\n```\n[ 2, 4 ]\n```\n\n**What happens**\n\n- For 1: return false → skipped.\n- For 2: return true → kept.\n- For 3: return false → skipped.\n- For 4: return true → kept.\n- For 5: return false → skipped.\n- evens is [2, 4]. nums is unchanged.\n\n**Practice**\n\nUse filter on [10, 15, 20, 25, 30] to get only numbers greater than 20. What is the result?",
+    "**Return true to keep, false to skip**\n\nThe callback should return **true** or **false** (or a value that is truthy or falsy) for each element. **true** (or truthy) means \"include this in the new array\"; **false** (or falsy) means \"leave it out.\" Keep the condition simple—one check or a short expression. You can use (element, index, array) if you need the index or the full array.\n\n**Example**\n\n```javascript\nconst words = [\"hi\", \"hello\", \"hey\"];\nconst long = words.filter(function(s) { return s.length > 2; });\nconsole.log(long);\n```\n\n**Output**\n\n```\n[ 'hello', 'hey' ]\n```\n\n**What happens**\n\n- \"hi\" (length 2): 2 > 2 is false → skipped.\n- \"hello\" (length 5): 5 > 2 is true → kept.\n- \"hey\" (length 3): 3 > 2 is true → kept.\n- long is [\"hello\", \"hey\"].\n\n**Practice**\n\nWrite a filter that keeps only positive numbers. For [-1, 0, 1, 2], what array do you get?",
+    "**Result can be shorter or empty**\n\nUnlike map, filter can produce an array with **fewer** elements than the original. Only elements that pass the test (return true) are included. So the result can have 0, 1, or up to the same length as the original—never more. Use filter when you want to **shrink** the list by a condition; use map when you want one new value per element.\n\n**Example**\n\n```javascript\nconst a = [1, 2, 3, 4, 5];\nconst b = a.filter(function(x) { return x > 3; });\nconsole.log(a.length, b.length);\n```\n\n**Output**\n\n```\n5 2\n```\n\n**What happens**\n\n- a has 5 elements. Only 4 and 5 pass the test (x > 3).\n- b has 2 elements: [4, 5]. Result is shorter than the original.\n\n**Practice**\n\nYou filter an array of 10 elements and the callback returns true for exactly 3 of them. How many elements does the result have?",
+    "**Original array is not changed**\n\nfilter does **not** change the array you call it on. It **returns** a new array. The original stays the same—you can use it again or filter it differently. If you need to keep only certain items, assign the result to a variable: filtered = arr.filter(...).\n\n**Example**\n\n```javascript\nconst orig = [5, 10, 15, 20];\nconst subset = orig.filter(function(x) { return x >= 10; });\nconsole.log(orig);\nconsole.log(subset);\n```\n\n**Output**\n\n```\n[ 5, 10, 15, 20 ]\n[ 10, 15, 20 ]\n```\n\n**What happens**\n\n- orig is still [5, 10, 15, 20].\n- subset is a new array [10, 15, 20]. We did not remove anything from orig.\n\n**Practice**\n\nYou have an array items and want only items where item.active is true. Should you use filter and assign to a new variable, or a loop that removes items from the array? Which keeps the original array unchanged?"
   ],
   "tasks": [
     {

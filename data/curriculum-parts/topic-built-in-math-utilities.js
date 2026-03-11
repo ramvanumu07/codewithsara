@@ -14,57 +14,54 @@ export default {
     "Mathematical Constants: Math.PI and Math.E"
   ],
   "outcome_messages": [
-    "Let's use the Math object.\n\n`Math` gives you ready-made maths: rounding, square root, random numbers, and more. You call them as `Math.name(value)` or `Math.name()`.\n\nHere's a simple example:\n\n```javascript\nconsole.log(Math.sqrt(16));    // 4\nconsole.log(Math.abs(-7));     // 7\n```\n\nMath methods are static: you use `Math.` and the method name. They take values and return a result.\n\nNow, let's try a simple practice task: Write code that prints the square root of 25 using Math.",
-    "Let's round numbers with Math.round() and Math.trunc().\n\n`Math.round(x)` rounds to the nearest integer (0.5 goes up). `Math.trunc(x)` drops the decimal part and keeps the integer part.\n\nHere's a simple example:\n\n```javascript\nconsole.log(Math.round(4.7));    // 5\nconsole.log(Math.round(4.3));    // 4\nconsole.log(Math.trunc(4.9));    // 4\nconsole.log(Math.trunc(-4.9));   // -4\n```\n\nRound moves to nearest; trunc always cuts toward zero. For positive numbers, trunc is like \"floor\"; for negatives, they differ.\n\nNow, let's try a simple practice task: Write code that prints Math.trunc of 9.7.",
-    "Let's use Math.floor() and Math.ceil().\n\n`Math.floor(x)` gives the largest integer less than or equal to x (rounds down). `Math.ceil(x)` gives the smallest integer greater than or equal to x (rounds up).\n\nHere's a simple example:\n\n```javascript\nconsole.log(Math.floor(4.7));    // 4\nconsole.log(Math.ceil(4.2));     // 5\nconsole.log(Math.floor(-4.2));   // -5\nconsole.log(Math.ceil(-4.7));    // -4\n```\n\nFloor goes down; ceil goes up. For negative numbers, \"down\" is more negative.\n\nNow, let's try a simple practice task: Write code that prints Math.floor of 12.9 and Math.ceil of 12.1.",
-    "Let's use Math.abs() for absolute value.\n\n`Math.abs(x)` gives the distance of x from zero: the value without its sign. Negative becomes positive; positive stays positive.\n\nHere's a simple example:\n\n```javascript\nconsole.log(Math.abs(5));     // 5\nconsole.log(Math.abs(-5));    // 5\nconsole.log(Math.abs(-3.2));   // 3.2\n```\n\nUse it when you care about size or distance, not direction. Handy for differences and distances.\n\nNow, let's try a simple practice task: Write code that prints the absolute value of -15.",
-    "Let's use Math.pow() and Math.sqrt().\n\n`Math.pow(base, exponent)` raises base to the power exponent. `Math.sqrt(x)` returns the square root of x (same as pow(x, 0.5)).\n\nHere's a simple example:\n\n```javascript\nconsole.log(Math.pow(2, 3));     // 8\nconsole.log(Math.sqrt(16));      // 4\nconsole.log(Math.pow(5, 2));     // 25\n```\n\nYou can also use the `**` operator (e.g. 2 ** 3). sqrt is for the positive square root only.\n\nNow, let's try a simple practice task: Write code that prints 3 to the power of 4.",
-    "Let's find the smallest and largest with Math.min() and Math.max().\n\n`Math.min(a, b, ...)` returns the smallest of the arguments. `Math.max(a, b, ...)` returns the largest. You can pass two or more numbers.\n\nHere's a simple example:\n\n```javascript\nconsole.log(Math.min(10, 3, 7));    // 3\nconsole.log(Math.max(10, 3, 7));    // 10\nconsole.log(Math.min(-1, -5));      // -5\n```\n\nUse them to clamp values or pick the lowest or highest from a list of numbers.\n\nNow, let's try a simple practice task: Write code that prints the smaller of 20 and 35, then the larger.",
-    "Let's generate random numbers with Math.random().\n\n`Math.random()` returns a decimal from 0 (inclusive) up to 1 (exclusive). Each call gives a new value. You don't pass any arguments.\n\nHere's a simple example:\n\n```javascript\nconsole.log(Math.random());    // e.g. 0.731234\nconsole.log(Math.random());    // e.g. 0.092341\n```\n\nThe result is different every time. To get integers in a range, you scale and round (next outcome).\n\nNow, let's try a simple practice task: Write code that prints two random numbers (call Math.random() twice).",
-    "Let's scale Math.random() to a range.\n\nTo get a random integer from min to max (inclusive): multiply random by the range size, add min, then use Math.floor. Formula: `Math.floor(Math.random() * (max - min + 1)) + min`.\n\nHere's a simple example:\n\n```javascript\n// Random integer from 1 to 6 (dice)\nconsole.log(Math.floor(Math.random() * 6) + 1);    // e.g. 4\n// Random integer from 10 to 20\nconsole.log(Math.floor(Math.random() * 11) + 10); // e.g. 15\n```\n\nRandom gives 0 to 1; multiply by how many values you want, then shift by the minimum.\n\nNow, let's try a simple practice task: Write code that prints a random integer from 1 to 10.",
-    "Let's use Math constants: Math.PI and Math.E.\n\n`Math.PI` is the number π (about 3.14159). `Math.E` is the number e (about 2.718). They are read-only constants—use them in formulas, don't assign to them.\n\nHere's a simple example:\n\n```javascript\nconsole.log(Math.PI);                    // 3.141592653589793\nconsole.log(Math.E);                     // 2.718281828459045\nconsole.log(2 * Math.PI * 5);           // 31.41592653589793 (circumference r=5)\n```\n\nUse PI for circles and angles; E appears in growth and log formulas. Names are in uppercase by convention.\n\nNow, let's try a simple practice task: Write code that prints the area of a circle with radius 7 (area = π * r * r)."
+    "Let's use the Math object.\n\n`Math` gives you ready-made maths: rounding, square root, random numbers, and more. You call them as `Math.name(value)` or `Math.name()`.\n\n**Example**\n\n```javascript\nconsole.log(Math.sqrt(16));    // 4\nconsole.log(Math.abs(-7));     // 7\n```\n\nMath methods are static: you use `Math.` and the method name. They take values and return a result.\n\n**Practice**\n\nWrite code that prints the square root of 25 using Math.",
+    "Let's round numbers with Math.round() and Math.trunc().\n\n`Math.round(x)` rounds to the nearest integer (0.5 goes up). `Math.trunc(x)` drops the decimal part and keeps the integer part.\n\n**Example**\n\n```javascript\nconsole.log(Math.round(4.7));    // 5\nconsole.log(Math.round(4.3));    // 4\nconsole.log(Math.trunc(4.9));    // 4\nconsole.log(Math.trunc(-4.9));   // -4\n```\n\nRound moves to nearest; trunc always cuts toward zero. For positive numbers, trunc is like \"floor\"; for negatives, they differ.\n\n**Practice**\n\nWrite code that prints Math.trunc of 9.7.",
+    "Let's use Math.floor() and Math.ceil().\n\n`Math.floor(x)` gives the largest integer less than or equal to x (rounds down). `Math.ceil(x)` gives the smallest integer greater than or equal to x (rounds up).\n\n**Example**\n\n```javascript\nconsole.log(Math.floor(4.7));    // 4\nconsole.log(Math.ceil(4.2));     // 5\nconsole.log(Math.floor(-4.2));   // -5\nconsole.log(Math.ceil(-4.7));    // -4\n```\n\nFloor goes down; ceil goes up. For negative numbers, \"down\" is more negative.\n\n**Practice**\n\nWrite code that prints Math.floor of 12.9 and Math.ceil of 12.1.",
+    "Let's use Math.abs() for absolute value.\n\n`Math.abs(x)` gives the distance of x from zero: the value without its sign. Negative becomes positive; positive stays positive.\n\n**Example**\n\n```javascript\nconsole.log(Math.abs(5));     // 5\nconsole.log(Math.abs(-5));    // 5\nconsole.log(Math.abs(-3.2));   // 3.2\n```\n\nUse it when you care about size or distance, not direction. Handy for differences and distances.\n\n**Practice**\n\nWrite code that prints the absolute value of -15.",
+    "Let's use Math.pow() and Math.sqrt().\n\n`Math.pow(base, exponent)` raises base to the power exponent. `Math.sqrt(x)` returns the square root of x (same as pow(x, 0.5)).\n\n**Example**\n\n```javascript\nconsole.log(Math.pow(2, 3));     // 8\nconsole.log(Math.sqrt(16));      // 4\nconsole.log(Math.pow(5, 2));     // 25\n```\n\nYou can also use the `**` operator (e.g. 2 ** 3). sqrt is for the positive square root only.\n\n**Practice**\n\nWrite code that prints 3 to the power of 4.",
+    "Let's find the smallest and largest with Math.min() and Math.max().\n\n`Math.min(a, b, ...)` returns the smallest of the arguments. `Math.max(a, b, ...)` returns the largest. You can pass two or more numbers.\n\n**Example**\n\n```javascript\nconsole.log(Math.min(10, 3, 7));    // 3\nconsole.log(Math.max(10, 3, 7));    // 10\nconsole.log(Math.min(-1, -5));      // -5\n```\n\nUse them to clamp values or pick the lowest or highest from a list of numbers.\n\n**Practice**\n\nWrite code that prints the smaller of 20 and 35, then the larger.",
+    "Let's generate random numbers with Math.random().\n\n`Math.random()` returns a decimal from 0 (inclusive) up to 1 (exclusive). Each call gives a new value. You don't pass any arguments.\n\n**Example**\n\n```javascript\nconsole.log(Math.random());    // e.g. 0.731234\nconsole.log(Math.random());    // e.g. 0.092341\n```\n\nThe result is different every time. To get integers in a range, you scale and round (next outcome).\n\n**Practice**\n\nWrite code that prints two random numbers (call Math.random() twice).",
+    "Let's scale Math.random() to a range.\n\nTo get a random integer from min to max (inclusive): multiply random by the range size, add min, then use Math.floor. Formula: `Math.floor(Math.random() * (max - min + 1)) + min`.\n\n**Example**\n\n```javascript\n// Random integer from 1 to 6 (dice)\nconsole.log(Math.floor(Math.random() * 6) + 1);    // e.g. 4\n// Random integer from 10 to 20\nconsole.log(Math.floor(Math.random() * 11) + 10); // e.g. 15\n```\n\nRandom gives 0 to 1; multiply by how many values you want, then shift by the minimum.\n\n**Practice**\n\nWrite code that prints a random integer from 1 to 10.",
+    "Let's use Math constants: Math.PI and Math.E.\n\n`Math.PI` is the number π (about 3.14159). `Math.E` is the number e (about 2.718). They are read-only constants—use them in formulas, don't assign to them.\n\n**Example**\n\n```javascript\nconsole.log(Math.PI);                    // 3.141592653589793\nconsole.log(Math.E);                     // 2.718281828459045\nconsole.log(2 * Math.PI * 5);           // 31.41592653589793 (circumference r=5)\n```\n\nUse PI for circles and angles; E appears in growth and log formulas. Names are in uppercase by convention.\n\n**Practice**\n\nWrite code that prints the area of a circle with radius 7 (area = π * r * r)."
   ],
   "tasks": [
     {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 47.6;\n\n// Apply different rounding methods and print the results\n// Print round, floor, ceil, trunc of num in order\n// For example, if num = 47.6, your output should be:\n// 48\n// 47\n// 48\n// 47",
+      "description": "// Do not rename num, neg, a, b, c, radius; we will change their values when testing.\n//\n// Line 1-4: Math.round(num), Math.floor(num), Math.ceil(num), Math.trunc(num)\n// Line 5: Math.abs(neg)\n// Line 6: Math.sqrt(16)\n// Line 7: Math.pow(2, 3)\n// Line 8: Math.min(a, b, c)\n// Line 9: Math.max(a, b, c)\n// Line 10: 2 * Math.PI * radius (circumference for given radius)\n// Line 11: Math.E\n//\n// For num=47.6, neg=-8, a=10, b=25, c=15, radius=5 your output should be:\n// 48\n// 47\n// 48\n// 47\n// 8\n// 4\n// 8\n// 10\n// 25\n// 31.41592653589793\n// 2.718281828459045",
       "solution_type": "script",
-      "reference_solution": "const num = 47.6;\nconsole.log(Math.round(num));\nconsole.log(Math.floor(num));\nconsole.log(Math.ceil(num));\nconsole.log(Math.trunc(num));",
+      "reference_solution": "const num = 47.6;\nconst neg = -8;\nconst a = 10;\nconst b = 25;\nconst c = 15;\nconst radius = 5;\nconsole.log(Math.round(num));\nconsole.log(Math.floor(num));\nconsole.log(Math.ceil(num));\nconsole.log(Math.trunc(num));\nconsole.log(Math.abs(neg));\nconsole.log(Math.sqrt(16));\nconsole.log(Math.pow(2, 3));\nconsole.log(Math.min(a, b, c));\nconsole.log(Math.max(a, b, c));\nconsole.log(2 * Math.PI * radius);\nconsole.log(Math.E);",
       "testCases": [
         {
           "input": {
-            "num": 47.6
+            "num": 47.6,
+            "neg": -8,
+            "a": 10,
+            "b": 25,
+            "c": 15,
+            "radius": 5
           },
-          "expectedOutput": "48\n47\n48\n47"
+          "expectedOutput": "48\n47\n48\n47\n8\n4\n8\n10\n25\n31.41592653589793\n2.718281828459045"
         },
         {
           "input": {
-            "num": -47.6
+            "num": 12.3,
+            "neg": -5,
+            "a": 7,
+            "b": 3,
+            "c": 9,
+            "radius": 10
           },
-          "expectedOutput": "-48\n-48\n-47\n-47"
+          "expectedOutput": "12\n12\n13\n12\n5\n4\n8\n3\n9\n62.83185307179586\n2.718281828459045"
         },
         {
           "input": {
-            "num": 12.3
+            "num": -3.7,
+            "neg": 4,
+            "a": 20,
+            "b": 15,
+            "c": 25,
+            "radius": 1
           },
-          "expectedOutput": "12\n12\n13\n12"
-        },
-        {
-          "input": {
-            "num": 99.9
-          },
-          "expectedOutput": "100\n99\n100\n99"
-        },
-        {
-          "input": {
-            "num": 0.5
-          },
-          "expectedOutput": "1\n0\n1\n0"
-        },
-        {
-          "input": {
-            "num": -0.5
-          },
-          "expectedOutput": "-0\n-1\n-0\n-0"
+          "expectedOutput": "-4\n-4\n-3\n-3\n4\n4\n8\n15\n25\n6.283185307179586\n2.718281828459045"
         }
       ]
     },
@@ -126,116 +123,6 @@ export default {
             "y2": 10
           },
           "expectedOutput": "5"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename num, use it as input for your program.\n// num will be a positive integer.\n// While testing we will change its value.\nconst num = 144;\n\n// Find the square root of num\n// Verify by squaring the result\n// Print the square root, then the squared verification\n// For example, if num = 144, your output should be:\n// 12\n// 144",
-      "solution_type": "script",
-      "reference_solution": "const num = 144;\nconst sqrt = Math.sqrt(num);\nconst verification = sqrt * sqrt;\nconsole.log(sqrt);\nconsole.log(verification);",
-      "testCases": [
-        {
-          "input": {
-            "num": 144
-          },
-          "expectedOutput": "12\n144"
-        },
-        {
-          "input": {
-            "num": 64
-          },
-          "expectedOutput": "8\n64"
-        },
-        {
-          "input": {
-            "num": 1
-          },
-          "expectedOutput": "1\n1"
-        },
-        {
-          "input": {
-            "num": 100
-          },
-          "expectedOutput": "10\n100"
-        },
-        {
-          "input": {
-            "num": 625
-          },
-          "expectedOutput": "25\n625"
-        },
-        {
-          "input": {
-            "num": 10000
-          },
-          "expectedOutput": "100\n10000"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename a, b, c, d, e, use them as input for your program.\n// While testing we will change their values.\nconst a = 45;\nconst b = 23;\nconst c = 89;\nconst d = 12;\nconst e = 67;\n\n// Find minimum, maximum, and range (max - min)\n// Print min, max, range in order\n// For example, if numbers are 45, 23, 89, 12, 67, your output should be:\n// 12\n// 89\n// 77",
-      "solution_type": "script",
-      "reference_solution": "const a = 45;\nconst b = 23;\nconst c = 89;\nconst d = 12;\nconst e = 67;\nconst minVal = Math.min(a, b, c, d, e);\nconst maxVal = Math.max(a, b, c, d, e);\nconst range = maxVal - minVal;\nconsole.log(minVal);\nconsole.log(maxVal);\nconsole.log(range);",
-      "testCases": [
-        {
-          "input": {
-            "a": 45,
-            "b": 23,
-            "c": 89,
-            "d": 12,
-            "e": 67
-          },
-          "expectedOutput": "12\n89\n77"
-        },
-        {
-          "input": {
-            "a": 10,
-            "b": 20,
-            "c": 30,
-            "d": 40,
-            "e": 50
-          },
-          "expectedOutput": "10\n50\n40"
-        },
-        {
-          "input": {
-            "a": 100,
-            "b": 100,
-            "c": 100,
-            "d": 100,
-            "e": 100
-          },
-          "expectedOutput": "100\n100\n0"
-        },
-        {
-          "input": {
-            "a": -10,
-            "b": -5,
-            "c": 0,
-            "d": 5,
-            "e": 10
-          },
-          "expectedOutput": "-10\n10\n20"
-        },
-        {
-          "input": {
-            "a": 1,
-            "b": 2,
-            "c": 3,
-            "d": 4,
-            "e": 5
-          },
-          "expectedOutput": "1\n5\n4"
-        },
-        {
-          "input": {
-            "a": 999,
-            "b": 1,
-            "c": 500,
-            "d": 250,
-            "e": 750
-          },
-          "expectedOutput": "1\n999\n998"
         }
       ]
     },
@@ -509,55 +396,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dividend, divisor, use them as input for your program.\n// While testing we will change their values.\nconst dividend = 47;\nconst divisor = 6;\n\n// Divide dividend by divisor\n// Print the result rounded down, then rounded up\n// For example, if dividend = 47 and divisor = 6, your output should be:\n// 7\n// 8",
-      "solution_type": "script",
-      "reference_solution": "const dividend = 47;\nconst divisor = 6;\nconst quotient = dividend / divisor;\nconsole.log(Math.floor(quotient));\nconsole.log(Math.ceil(quotient));",
-      "testCases": [
-        {
-          "input": {
-            "dividend": 47,
-            "divisor": 6
-          },
-          "expectedOutput": "7\n8"
-        },
-        {
-          "input": {
-            "dividend": 100,
-            "divisor": 3
-          },
-          "expectedOutput": "33\n34"
-        },
-        {
-          "input": {
-            "dividend": 50,
-            "divisor": 5
-          },
-          "expectedOutput": "10\n10"
-        },
-        {
-          "input": {
-            "dividend": 7,
-            "divisor": 2
-          },
-          "expectedOutput": "3\n4"
-        },
-        {
-          "input": {
-            "dividend": 1,
-            "divisor": 10
-          },
-          "expectedOutput": "0\n1"
-        },
-        {
-          "input": {
-            "dividend": 999,
-            "divisor": 100
-          },
-          "expectedOutput": "9\n10"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename radius, use it as input for your program.\n// While testing we will change its value.\nconst radius = 5;\n\n// Calculate the volume of a sphere\n// Volume = (4/3) × π × radius³\n// Print the volume\n// For example, if radius = 5, your output should be:\n// 523.5987755982989",
       "solution_type": "script",
       "reference_solution": "const radius = 5;\nconst volume = (4 / 3) * Math.PI * Math.pow(radius, 3);\nconsole.log(volume);",
@@ -646,159 +484,6 @@ export default {
             "exponent": 3
           },
           "expectedOutput": "64\n4"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 27;\n\n// Calculate the cube root of num\n// Cube root is the same as raising to power (1/3)\n// Print the cube root\n// For example, if num = 27, your output should be:\n// 3",
-      "solution_type": "script",
-      "reference_solution": "const num = 27;\nconst cubeRoot = Math.pow(num, 1 / 3);\nconsole.log(cubeRoot);",
-      "testCases": [
-        {
-          "input": {
-            "num": 27
-          },
-          "expectedOutput": "3"
-        },
-        {
-          "input": {
-            "num": 64
-          },
-          "expectedOutput": "4"
-        },
-        {
-          "input": {
-            "num": 125
-          },
-          "expectedOutput": "5"
-        },
-        {
-          "input": {
-            "num": 1
-          },
-          "expectedOutput": "1"
-        },
-        {
-          "input": {
-            "num": 8
-          },
-          "expectedOutput": "2"
-        },
-        {
-          "input": {
-            "num": 1000
-          },
-          "expectedOutput": "10"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename initial, growthRate, periods, use them as input for your program.\n// While testing we will change their values.\nconst initial = 100;\nconst growthRate = 1.5;\nconst periods = 4;\n\n// Calculate value after exponential growth\n// Final = initial × (growthRate)^periods\n// Print the final value\n// For example, if initial = 100, growthRate = 1.5, periods = 4, your output should be:\n// 506.25",
-      "solution_type": "script",
-      "reference_solution": "const initial = 100;\nconst growthRate = 1.5;\nconst periods = 4;\nconst final = initial * Math.pow(growthRate, periods);\nconsole.log(final);",
-      "testCases": [
-        {
-          "input": {
-            "initial": 100,
-            "growthRate": 1.5,
-            "periods": 4
-          },
-          "expectedOutput": "506.25"
-        },
-        {
-          "input": {
-            "initial": 200,
-            "growthRate": 2,
-            "periods": 3
-          },
-          "expectedOutput": "1600"
-        },
-        {
-          "input": {
-            "initial": 50,
-            "growthRate": 1.1,
-            "periods": 5
-          },
-          "expectedOutput": "80.52550000000001"
-        },
-        {
-          "input": {
-            "initial": 1000,
-            "growthRate": 1,
-            "periods": 10
-          },
-          "expectedOutput": "1000"
-        },
-        {
-          "input": {
-            "initial": 150,
-            "growthRate": 1.25,
-            "periods": 6
-          },
-          "expectedOutput": "572.204589843750"
-        },
-        {
-          "input": {
-            "initial": 500,
-            "growthRate": 0.5,
-            "periods": 2
-          },
-          "expectedOutput": "125"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename a, b, c, use them as input for your program.\n// a, b, c are the three sides of a triangle.\n// While testing we will change their values.\nconst a = 5;\nconst b = 6;\nconst c = 7;\n\n// Calculate the area using Heron's formula\n// s = (a + b + c) / 2\n// Area = √[s(s-a)(s-b)(s-c)]\n// Print the area\n// For example, if sides are 5, 6, 7, your output should be:\n// 14.696938456699069",
-      "solution_type": "script",
-      "reference_solution": "const a = 5;\nconst b = 6;\nconst c = 7;\nconst s = (a + b + c) / 2;\nconst area = Math.sqrt(s * (s - a) * (s - b) * (s - c));\nconsole.log(area);",
-      "testCases": [
-        {
-          "input": {
-            "a": 5,
-            "b": 6,
-            "c": 7
-          },
-          "expectedOutput": "14.696938456699069"
-        },
-        {
-          "input": {
-            "a": 3,
-            "b": 4,
-            "c": 5
-          },
-          "expectedOutput": "6"
-        },
-        {
-          "input": {
-            "a": 13,
-            "b": 14,
-            "c": 15
-          },
-          "expectedOutput": "84"
-        },
-        {
-          "input": {
-            "a": 7,
-            "b": 8,
-            "c": 9
-          },
-          "expectedOutput": "26.832815729997478"
-        },
-        {
-          "input": {
-            "a": 10,
-            "b": 10,
-            "c": 10
-          },
-          "expectedOutput": "43.30127018922193"
-        },
-        {
-          "input": {
-            "a": 6,
-            "b": 8,
-            "c": 10
-          },
-          "expectedOutput": "24"
         }
       ]
     }

@@ -3,15 +3,24 @@ export default {
   "id": "json",
   "title": "Data Serialization",
   "outcomes": [
-    "JSON Fundamentals: The Universal Data Interchange Format",
-    "JSON Syntax Rules: Why it is stricter than JS Objects",
-    "JSON.stringify(): Converting Objects to Strings",
-    "JSON.parse(): Reconstructing Objects from Strings",
-    "Formatting: Using Spacing and Replacers in stringify",
-    "The Reviver: Transforming Data during Parsing",
-    "Serialization Limits: Handling Functions and undefined",
-    "The Deep Clone Trick: Creating Independent Object Copies",
-    "Architectural Distinction: JSON vs. JavaScript Object Literals"
+    "What JSON Is: Data as Text",
+    "JSON Syntax: Stricter Than JavaScript",
+    "JSON.stringify: Object to String",
+    "JSON.parse: String to Object",
+    "Formatting and Selecting Keys",
+    "What JSON Cannot Store: undefined and Functions",
+    "Deep Clone: Copy with JSON",
+    "JSON String vs JavaScript Object"
+  ],
+  "outcome_messages": [
+    "**When to use JSON**\n\n**JSON** (JavaScript Object Notation) is a **text format** for data. APIs, config files, and storage often use it. Valid JSON is objects (with **double-quoted** keys), arrays, strings (double-quoted), numbers, `true`, `false`, and `null`. Use JSON when you need to **send or store** structured data as text and read it back later.\n\n**Example**\n\n```javascript\nconst text = '{\"name\":\"Ali\",\"age\":25}';\nconsole.log(text);    // {\"name\":\"Ali\",\"age\":25}\n```\n\nThat string is valid JSON. Parsing it gives a JavaScript object.\n\n**Practice**\n\nIs `'{\"x\":1,\"y\":2}'` valid JSON? Is `'{x:1,y:2}'` valid JSON? Which one and why?",
+    "**JSON syntax rules**\n\nIn JSON, **all keys must be double-quoted**. No unquoted keys, no single quotes for keys. String values use double quotes. No trailing commas, no comments. No `undefined`, no functions. JavaScript object literals are looser; JSON is strict so any system can parse it safely.\n\n**Example**\n\n```javascript\nconst js = { name: \"Ali\" };   // valid JS\nJSON.stringify(js);            // \"{\\\"name\\\":\\\"Ali\\\"}\" — valid JSON\n```\n\n**Practice**\n\nIf you stringify an object that has a property with value `undefined`, does that property appear in the JSON string? Why?",
+    "**JSON.stringify**\n\n**JSON.stringify(value)** turns a JavaScript value (object, array, number, etc.) into a **JSON string**. Keys become double-quoted; structure is preserved. Use it when you need to send or save data as text. Nested objects and arrays are included.\n\n**Example**\n\n```javascript\nconst obj = { a: 1, b: [2, 3] };\nconst str = JSON.stringify(obj);\nconsole.log(str);    // {\"a\":1,\"b\":[2,3]}\n```\n\n**Practice**\n\nIf `user = { name: \"Alice\", age: 25 }`, write one line that assigns the JSON string for `user` to a variable `jsonStr`. What does `jsonStr` look like?",
+    "**JSON.parse**\n\n**JSON.parse(string)** takes a **JSON string** and returns the corresponding JavaScript value (object or array). The string must be valid JSON; otherwise `parse` throws. Use it when you receive JSON from an API or storage. If a value was stored as a string in JSON (e.g. `\"25\"`) and you need a number, convert after parsing with `Number()`.\n\n**Example**\n\n```javascript\nconst str = '{\"x\":10,\"y\":20}';\nconst obj = JSON.parse(str);\nconsole.log(obj.x + obj.y);    // 30\n```\n\n**Practice**\n\nIf `jsonStr = '{\"product\":\"Laptop\",\"price\":999}'`, write code that parses it and prints the value of `product`. What is printed?",
+    "**Formatting and selecting keys**\n\n**JSON.stringify(value, replacer, space):** The **third argument** is a number — how many spaces to indent each level (e.g. `2` for readable output). The **second argument** can be an **array of property names** to include only those keys; others are omitted. Use `null` as the second argument if you don't want to filter.\n\n**Example**\n\n```javascript\nconst data = { a: 1, b: 2, c: 3 };\nconsole.log(JSON.stringify(data, null, 2));\n// {\n//   \"a\": 1,\n//   \"b\": 2,\n//   \"c\": 3\n// }\n```\n\n**Practice**\n\nIf `obj = { name: \"Ali\", age: 30, password: \"secret\" }`, use `JSON.stringify(obj, [\"name\", \"age\"], null)` so only `name` and `age` appear. What keys are in the output?",
+    "**What JSON cannot store**\n\nJSON has no type for **undefined** or **functions**. **JSON.stringify** omits properties whose value is `undefined`. If a value is a function, stringify throws. So you can't round-trip undefined or functions through JSON. Use only JSON-safe values: objects, arrays, strings, numbers, booleans, null.\n\n**Example**\n\n```javascript\nconst o = { a: 1, b: undefined };\nconsole.log(JSON.stringify(o));    // {\"a\":1}\n```\n\n**Practice**\n\nWhat does `JSON.stringify({ x: undefined, y: null })` produce? Why?",
+    "**Deep clone with JSON**\n\n**JSON.parse(JSON.stringify(obj))** creates a **full copy** of an object: serialize to a string, then parse back. The result has no shared references with the original — change the clone, the original is unchanged. Limits: no functions or undefined (they're lost); special objects (e.g. Date) become plain objects. Use it for **data-only** objects when you need a full copy.\n\n**Example**\n\n```javascript\nconst orig = { a: 1, b: { c: 2 } };\nconst clone = JSON.parse(JSON.stringify(orig));\nclone.b.c = 99;\nconsole.log(orig.b.c);    // 2\n```\n\n**Practice**\n\nIf `obj = { x: [1, 2] }`, write one expression that gives a deep clone of `obj`. If you change the clone's array, does the original change?",
+    "**JSON string vs object**\n\n**JSON** is **text** (a string). A **JavaScript object** is a value in memory. You convert between them: **stringify** turns an object into a JSON string; **parse** turns a JSON string into an object. APIs usually return JSON strings; you **parse** them before you can use `.property` or `[key]` in code.\n\n**Example**\n\n```javascript\nconst literal = { name: \"Ali\" };\nconst json = JSON.stringify(literal);   // string\nconst back = JSON.parse(json);          // object again\n```\n\n**Practice**\n\nIf an API returns the string `'{\"id\":1}'`, what do you do in JavaScript before you can access `.id`? What type is the value of `.id` after that?"
   ],
   "tasks": [
     {

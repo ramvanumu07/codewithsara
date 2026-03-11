@@ -3,10 +3,16 @@ export default {
   "id": "foreach",
   "title": "forEach for iteration",
   "outcomes": [
-    "forEach Syntax: Functional List Traversal",
-    "Callback Parameters: Accessing Element, Index, and Array",
-    "The Void Return: Understanding why forEach returns undefined",
-    "Side Effects: Performing Actions per Iteration"
+    "What forEach Does",
+    "Callback Parameters: Element, Index, Array",
+    "forEach Returns undefined",
+    "Doing Something for Each Item"
+  ],
+  "outcome_messages": [
+    "**What forEach does**\n\n**array.forEach(callback)** runs your callback function **once for each element** in the array, in order. You pass a function; forEach calls it with each element (and optionally the index and the array). You use forEach when you want to **do something** for each item—like log it or update a variable—not when you need a new array or a single value.\n\n**Example**\n\n```javascript\nconst nums = [1, 2, 3];\nnums.forEach(function(n) { console.log(n); });\n```\n\n**Output**\n\n```\n1\n2\n3\n```\n\n**What happens**\n\n- forEach calls the callback with 1, then 2, then 3.\n- Each time the callback runs, it receives one element (n) and logs it.\n\n**Practice**\n\nWith arr = [\"hi\", \"bye\"], write a forEach call that prints each string. (You can use a function or an arrow.)",
+    "**Callback parameters: element, index, array**\n\nThe function you pass to forEach can take up to **three parameters**: (element, index, array). The first is the current element; the second is its **index** (0, 1, 2, …); the third is the **whole array**. Use only the ones you need.\n\n**Example**\n\n```javascript\n[\"a\", \"b\", \"c\"].forEach(function(item, i, arr) {\n  console.log(i, item, arr.length);\n});\n```\n\n**Output**\n\n```\n0 a 3\n1 b 3\n2 c 3\n```\n\n**What happens**\n\n- First call: item is \"a\", i is 0, arr.length is 3.\n- Second call: item is \"b\", i is 1, arr.length is 3.\n- Third call: item is \"c\", i is 2, arr.length is 3.\n\n**Practice**\n\nUsing forEach with the index parameter, log each element as \"index: value\" (e.g. \"0: 10\", \"1: 20\") for the array [10, 20, 30].",
+    "**forEach returns undefined**\n\nforEach is for **doing an action** for each element. It does **not** return a new array or a single value. If you assign the result of forEach to a variable, you get **undefined**. So don't use forEach when you need to build a new array from the elements—use a different method for that.\n\n**Example**\n\n```javascript\nconst a = [1, 2, 3];\nconst b = a.forEach(function(x) { return x * 2; });\nconsole.log(b);\n```\n\n**Output**\n\n```\nundefined\n```\n\n**What happens**\n\n- forEach runs the callback for each element, but it ignores the callback's return value.\n- forEach itself returns undefined, so b is undefined.\n\n**Practice**\n\nYou want a new array with each number doubled. Is forEach the right choice? Why or why not?",
+    "**Doing something for each item**\n\nUse forEach when you want to **do something** with each element: log it, push it into another array, or update a variable. Declare the variable (or array) **outside** the callback, then use it **inside** the callback. After forEach finishes, that variable holds the result of your actions.\n\n**Example**\n\n```javascript\nconst items = [10, 20, 30];\nlet sum = 0;\nitems.forEach(function(n) { sum += n; });\nconsole.log(sum);\n```\n\n**Output**\n\n```\n60\n```\n\n**What happens**\n\n- sum starts at 0.\n- forEach runs the callback for 10, 20, 30. Each time we add the element to sum.\n- After the loop, sum is 10 + 20 + 30 = 60.\n\n**Practice**\n\nUse forEach to build an array of uppercase strings from [\"apple\", \"banana\"]. What array do you get?"
   ],
   "tasks": [
     {

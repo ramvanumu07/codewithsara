@@ -3,14 +3,16 @@ export default {
   "id": "arrow-functions",
   "title": "Arrow Functions",
   "outcomes": [
-    "Arrow Syntax: The Modern Function Expression",
-    "Concise vs. Full Body: Knowing when to use { }",
-    "Parameter Formatting: Rules for () and single inputs",
-    "Implicit Return: Returning values without the keyword",
-    "The Object Trap: Returning Object Literals safely",
-    "Functional Synergy: Arrow Functions with Array Methods",
-    "Lexical this: How arrows inherit context",
-    "Architectural Constraints: When to stick to regular functions"
+    "What an Arrow Function Is",
+    "Parameters, Body, and Implicit Return",
+    "Returning an Object: Wrap in ( )",
+    "One Rule: Arrows and this"
+  ],
+  "outcome_messages": [
+    "**What an arrow function is**\n\nAn **arrow function** is a shorter way to write a function: **(params) => { body }** or **(params) => expression**. No `function` keyword. You assign it to a variable or pass it somewhere. If the body is **one expression**, you can omit braces and **return**—the value is returned automatically.\n\n**Example**\n\n```javascript\nconst add = (a, b) => { return a + b; };\nconst double = (n) => n * 2;\nconsole.log(add(2, 3), double(5));\n```\n\n**Output**\n\n```\n5 10\n```\n\n**Practice**\n\nWrite an arrow that takes no parameters and returns `\"Hello!\"`. Assign it to `greet`. What does `greet()` return?",
+    "**Parameters and body**\n\n**No parameters:** **() =>** . **One parameter:** **x =>** or **(x) =>**. **Two or more:** **(a, b) =>** (parentheses required). Body: one expression without braces = **implicit return**; with braces you must write **return**.\n\n**Example**\n\n```javascript\nconst zero = () => 0;\nconst id = x => x;\nconst sum = (a, b) => a + b;\nconsole.log(zero(), id(5), sum(1, 2));\n```\n\n**Output**\n\n```\n0 5 3\n```\n\n**Practice**\n\nIs `n => n * 2` valid? Is `a, b => a + b` valid? Which is invalid and why?",
+    "**Returning an object**\n\nTo return an **object** with the short form, **wrap it in parentheses**: **() => ({ name: \"Ali\" })**. Without `( )`, the `{ }` is read as the function body, not the object. So use **() => ({ ... })** when you want to return an object in one expression.\n\n**Example**\n\n```javascript\nconst point = () => ({ x: 0, y: 0 });\nconsole.log(point());\n```\n\n**Output**\n\n```\n{ x: 0, y: 0 }\n```\n\n**Practice**\n\nWrite an arrow that returns `{ value: 42 }`. What is the correct form?",
+    "**Arrows and this**\n\nArrow functions don't have their own `this`—they use the `this` from where they were written; for functions on objects that need to use the object (methods), use a regular function so `this` refers to the object.\n\n**Example**\n\n```javascript\nconst obj = {\n  name: \"Ali\",\n  greet() { console.log(\"Hi, \" + this.name); }\n};\nobj.greet();\n```\n\n**Output**\n\n```\nHi, Ali\n```\n\n**Practice**\n\nAn object has a method that uses `this.name`. Should that method be an arrow or a regular function? Why?"
   ],
   "tasks": [
     {

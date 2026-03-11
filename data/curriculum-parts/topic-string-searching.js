@@ -3,10 +3,16 @@ export default {
   "id": "string-searching",
   "title": "String searching and matching",
   "outcomes": [
-    "indexOf(): Locating the First Occurrence",
-    "lastIndexOf(): Searching from the End",
-    "includes(): Simple Boolean Existence Checks",
-    "startsWith() and endsWith(): Boundary Validation"
+    "indexOf()",
+    "lastIndexOf()",
+    "includes()",
+    "startsWith() and endsWith()"
+  ],
+  "outcome_messages": [
+    "**indexOf()**\n\n**str.indexOf(searchValue)** returns the **index** (0-based) of the **first** occurrence of searchValue in the string, or **-1** if not found. Optional second argument: **indexOf(searchValue, fromIndex)** starts the search from that position. Use indexOf when you need the **position**—e.g. to slice from there or to replace. Checking for -1 tells you whether the substring exists. All of these methods are **case-sensitive**.\n\n**Example**\n\n```javascript\nconst s = \"Hello World\";\nconsole.log(s.indexOf(\"World\"));\nconsole.log(s.indexOf(\"xyz\"));\n```\n\n**Output**\n\n```\n6\n-1\n```\n\n**What happens**\n\n- \"World\" starts at index 6, so indexOf returns 6.\n- \"xyz\" is not in the string, so indexOf returns -1.\n- The original string is unchanged.\n\n**Practice**\n\nWhat does \"banana\".indexOf(\"a\") return? What about \"banana\".indexOf(\"a\", 2)?",
+    "**lastIndexOf()**\n\n**str.lastIndexOf(searchValue)** returns the **index** of the **last** occurrence of searchValue, or **-1** if not found. Optional second argument: **lastIndexOf(searchValue, fromIndex)** searches **backward** from that index (finds the last occurrence at or before that position). Use lastIndexOf when you need the **rightmost** match—e.g. the last \".\" in a filename for the extension, or the final occurrence of a delimiter.\n\n**Example**\n\n```javascript\nconst s = \"banana\";\nconsole.log(s.lastIndexOf(\"a\"));\nconsole.log(s.lastIndexOf(\"na\"));\n```\n\n**Output**\n\n```\n5\n4\n```\n\n**What happens**\n\n- The last \"a\" is at index 5.\n- The last \"na\" starts at index 4.\n- If the substring were not found, lastIndexOf would return -1.\n\n**Practice**\n\nWhat does \"hello world hello\".lastIndexOf(\"hello\") return? How would you get the index of the first \"hello\"?",
+    "**includes()**\n\n**str.includes(searchValue)** returns **true** if the substring exists **anywhere** in the string, **false** otherwise. Optional second argument: **includes(searchValue, fromIndex)** starts the search from that index. Use includes when you only need a **yes/no** answer—\"does this string contain X?\"—without caring about the position. Clearer than writing indexOf(...) !== -1. Case-sensitive.\n\n**Example**\n\n```javascript\nconst s = \"JavaScript\";\nconsole.log(s.includes(\"Script\"));\nconsole.log(s.includes(\"python\"));\n```\n\n**Output**\n\n```\ntrue\nfalse\n```\n\n**What happens**\n\n- \"Script\" appears in the string → true.\n- \"python\" does not → false.\n- Good for conditionals: if (str.includes(\"@\")) { ... }\n\n**Practice**\n\nWrite a condition that is true only when the string email contains \"@\". Use includes. What does \"hello\".includes(\"\") return?",
+    "**startsWith() and endsWith()**\n\n**str.startsWith(searchValue)** returns **true** if the string **begins** with searchValue; **str.endsWith(searchValue)** returns **true** if it **ends** with searchValue. Otherwise **false**. Use them for **prefixes and suffixes**—e.g. \"https://\" for URLs, \".txt\" or \".json\" for file extensions, or simple validation. Case-sensitive. Optional second arguments let you check from a given position or treat the string as a different length.\n\n**Example**\n\n```javascript\nconst s = \"https://example.com\";\nconsole.log(s.startsWith(\"https\"));\nconsole.log(s.endsWith(\".com\"));\n```\n\n**Output**\n\n```\ntrue\ntrue\n```\n\n**What happens**\n\n- The string starts with \"https\" → true.\n- The string ends with \".com\" → true.\n- No need to use slice or indexOf for simple start/end checks.\n\n**Practice**\n\nHow do you check if a variable filename ends with \".txt\"? What does \"abc\".startsWith(\"ab\") return?"
   ],
   "tasks": [
     {

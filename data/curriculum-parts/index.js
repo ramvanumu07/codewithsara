@@ -11,18 +11,13 @@ import topicUndefinedNullBasics from './topic-undefined-null-basics.js'
 import topicStringsAndBasicOperations from './topic-strings-and-basic-operations.js'
 import topicTypeCoercion from './topic-type-coercion.js'
 import topicOperatorsComparisonAndLogical from './topic-operators-comparison-and-logical.js'
-import topicIfStatement from './topic-if-statement.js'
-import topicIfElseStatement from './topic-if-else-statement.js'
-import topicElseIfChains from './topic-else-if-chains.js'
-import topicNestedConditions from './topic-nested-conditions.js'
+import topicConditionals from './topic-conditionals.js'
 import topicDateTime from './topic-date-time.js'
-import topicWhileLoops from './topic-while-loops.js'
-import topicForLoops from './topic-for-loops.js'
+import topicLoops from './topic-loops.js'
 import topicLoopControl from './topic-loop-control.js'
 import topicNestedLoops from './topic-nested-loops.js'
 import topicArrays from './topic-arrays.js'
 import topicObjects from './topic-objects.js'
-import topicMapSet from './topic-map-set.js'
 import topicDestructuring from './topic-destructuring.js'
 import topicSpreadRest from './topic-spread-rest.js'
 import topicJson from './topic-json.js'
@@ -58,18 +53,13 @@ const allTopics = [
   topicStringsAndBasicOperations,
   topicTypeCoercion,
   topicOperatorsComparisonAndLogical,
-  topicIfStatement,
-  topicIfElseStatement,
-  topicElseIfChains,
-  topicNestedConditions,
+  topicConditionals,
   topicDateTime,
-  topicWhileLoops,
-  topicForLoops,
+  topicLoops,
   topicLoopControl,
   topicNestedLoops,
   topicArrays,
   topicObjects,
-  topicMapSet,
   topicDestructuring,
   topicSpreadRest,
   topicJson,

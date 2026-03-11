@@ -10,60 +10,13 @@ export default {
     "Compound Logic"
   ],
   "outcome_messages": [
-    "Let's work with numbers.\n\nJavaScript has one number type: whole numbers (integers) and decimals both use the same type. You can use positive, negative, and decimal values.\n\nHere's a simple example:\n\n```javascript\nconst a = 42;\nconst b = 3.14;\nconsole.log(a);    // 42\nconsole.log(b);    // 3.14\n```\n\nNo quotes around numbers—they are values, not text. Integers and decimals are both numbers.\n\nNow, let's try a simple practice task: Write code that stores two numbers and prints their sum.",
-    "Let's use basic arithmetic.\n\nThe operators are `+` (add), `-` (subtract), `*` (multiply), and `/` (divide). They work on numbers and produce a number.\n\nHere's a simple example:\n\n```javascript\nconsole.log(10 + 3);    // 13\nconsole.log(10 - 3);    // 7\nconsole.log(10 * 3);    // 30\nconsole.log(10 / 3);    // 3.3333333333333335\n```\n\nDivision can produce a decimal. The result is computed and printed.\n\nNow, let's try a simple practice task: Write code that prints the result of 20 minus 7.",
-    "Let's use the modulo operator.\n\n`%` gives the remainder after division. It is useful for checking if a number is even (remainder 0 when divided by 2) or for wrapping values.\n\nHere's a simple example:\n\n```javascript\nconsole.log(10 % 3);    // 1\nconsole.log(8 % 2);     // 0\nconsole.log(17 % 5);    // 2\n```\n\n10 divided by 3 is 3 with remainder 1. 8 divided by 2 has no remainder.\n\nNow, let's try a simple practice task: Write code that prints the remainder when 23 is divided by 4.",
-    "Let's understand operator precedence.\n\nMultiplication and division happen before addition and subtraction. Use parentheses to change the order or make it clear.\n\nHere's a simple example:\n\n```javascript\nconsole.log(2 + 3 * 4);      // 14\nconsole.log((2 + 3) * 4);    // 20\n```\n\nIn the first line, 3 * 4 is done first, then 2 + 12. In the second, the parentheses force 2 + 3 first.\n\nNow, let's try a simple practice task: Write code that prints the result of (10 + 5) * 2.",
-    "Let's use compound assignment.\n\nYou can combine an operator with `=`: `+=`, `-=`, `*=`, `/=`. For example, `x += 5` means \"add 5 to x\" and is the same as `x = x + 5`.\n\nHere's a simple example:\n\n```javascript\nlet n = 10;\nn += 3;\nconsole.log(n);    // 13\nn *= 2;\nconsole.log(n);    // 26\n```\n\nThe variable is updated in place. Shorter and clear when you're changing a value by an amount.\n\nNow, let's try a simple practice task: Write code that uses `+=` to add 5 to a variable and prints it."
+    "Let's work with numbers.\n\nJavaScript has one number type: whole numbers (integers) and decimals both use the same type. You can use positive, negative, and decimal values.\n\n**Example**\n\n```javascript\nconst a = 42;\nconst b = 3.14;\nconsole.log(a);    // 42\nconsole.log(b);    // 3.14\n```\n\nNo quotes around numbers—they are values, not text. Integers and decimals are both numbers.\n\n**Practice**\n\nWrite code that stores two numbers and prints their sum.",
+    "Let's use basic arithmetic.\n\nThe operators are `+` (add), `-` (subtract), `*` (multiply), and `/` (divide). They work on numbers and produce a number.\n\n**Example**\n\n```javascript\nconsole.log(10 + 3);    // 13\nconsole.log(10 - 3);    // 7\nconsole.log(10 * 3);    // 30\nconsole.log(10 / 3);    // 3.3333333333333335\n```\n\nDivision can produce a decimal. The result is computed and printed.\n\n**Practice**\n\nWrite code that prints the result of 20 minus 7.",
+    "Let's use the modulo operator.\n\n`%` gives the remainder after division. It is useful for checking if a number is even (remainder 0 when divided by 2) or for wrapping values.\n\n**Example**\n\n```javascript\nconsole.log(10 % 3);    // 1\nconsole.log(8 % 2);     // 0\nconsole.log(17 % 5);    // 2\n```\n\n10 divided by 3 is 3 with remainder 1. 8 divided by 2 has no remainder.\n\n**Practice**\n\nWrite code that prints the remainder when 23 is divided by 4.",
+    "Let's understand operator precedence.\n\nMultiplication and division happen before addition and subtraction. Use parentheses to change the order or make it clear.\n\n**Example**\n\n```javascript\nconsole.log(2 + 3 * 4);      // 14\nconsole.log((2 + 3) * 4);    // 20\n```\n\nIn the first line, 3 * 4 is done first, then 2 + 12. In the second, the parentheses force 2 + 3 first.\n\n**Practice**\n\nWrite code that prints the result of (10 + 5) * 2.",
+    "Let's use compound assignment.\n\nYou can combine an operator with `=`: `+=`, `-=`, `*=`, `/=`. For example, `x += 5` means \"add 5 to x\" and is the same as `x = x + 5`.\n\n**Example**\n\n```javascript\nlet n = 10;\nn += 3;\nconsole.log(n);    // 13\nn *= 2;\nconsole.log(n);    // 26\n```\n\nThe variable is updated in place. Shorter and clear when you're changing a value by an amount.\n\n**Practice**\n\nWrite code that uses `+=` to add 5 to a variable and prints it."
   ],
   "tasks": [
-    {
-      "description": "// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = 12;\nconst b = 25;\nconst c = 18;\n\n// Calculate and print:\n// 1. Sum of all three numbers\n// 2. Product of all three numbers\n// 3. Average of all three numbers\n// For example, if a = 12, b = 25, c = 18, your output should be:\n// 55\n// 5400\n// 18.333333333333332",
-      "solution_type": "script",
-      "reference_solution": "const a = 12;\nconst b = 25;\nconst c = 18;\nconst sum = a + b + c;\nconst product = a * b * c;\nconst average = sum / 3;\nconsole.log(sum);\nconsole.log(product);\nconsole.log(average);",
-      "testCases": [
-        {
-          "input": {
-            "a": 12,
-            "b": 25,
-            "c": 18
-          },
-          "expectedOutput": "55\n5400\n18.333333333333332"
-        },
-        {
-          "input": {
-            "a": 10,
-            "b": 20,
-            "c": 30
-          },
-          "expectedOutput": "60\n6000\n20"
-        },
-        {
-          "input": {
-            "a": 0,
-            "b": 5,
-            "c": 10
-          },
-          "expectedOutput": "15\n0\n5"
-        },
-        {
-          "input": {
-            "a": -5,
-            "b": 10,
-            "c": 15
-          },
-          "expectedOutput": "20\n-750\n6.666666666666667"
-        },
-        {
-          "input": {
-            "a": 100,
-            "b": 200,
-            "c": 300
-          },
-          "expectedOutput": "600\n6000000\n200"
-        }
-      ]
-    },
     {
       "description": "// Do not rename obtained and total, use them as input for your program.\n// While testing we will change their values.\nconst obtained = 427;\nconst total = 500;\n\n// Calculate the percentage: (obtained / total) * 100\n// Print the percentage value\n// For example, if obtained = 427 and total = 500, your output should be:\n// 85.4",
       "solution_type": "script",
@@ -481,49 +434,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename num, use it as input for your program.\n// num will be a three-digit number.\n// While testing we will change its value.\nconst num = 456;\n\n// Extract all three digits and calculate their sum\n// Use division and modulo operations\n// Print the sum of digits\n// For example, if num = 456, your output should be:\n// 15",
-      "solution_type": "script",
-      "reference_solution": "const num = 456;\nconst digit1 = (num - num % 100) / 100;\nconst digit2 = (num % 100 - num % 10) / 10;\nconst digit3 = num % 10;\nconst sumOfDigits = digit1 + digit2 + digit3;\nconsole.log(sumOfDigits);",
-      "testCases": [
-        {
-          "input": {
-            "num": 456
-          },
-          "expectedOutput": "15"
-        },
-        {
-          "input": {
-            "num": 123
-          },
-          "expectedOutput": "6"
-        },
-        {
-          "input": {
-            "num": 999
-          },
-          "expectedOutput": "27"
-        },
-        {
-          "input": {
-            "num": 100
-          },
-          "expectedOutput": "1"
-        },
-        {
-          "input": {
-            "num": 505
-          },
-          "expectedOutput": "10"
-        },
-        {
-          "input": {
-            "num": 111
-          },
-          "expectedOutput": "3"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename costPrice and sellingPrice, use them as input for your program.\n// While testing we will change their values.\nconst costPrice = 850;\nconst sellingPrice = 1020;\n\n// Calculate the profit or loss amount (sellingPrice - costPrice)\n// Then calculate the profit/loss percentage: (difference / costPrice) * 100\n// Print the amount first, then the percentage\n// For example, if costPrice = 850 and sellingPrice = 1020, your output should be:\n// 170\n// 20",
       "solution_type": "script",
       "reference_solution": "const costPrice = 850;\nconst sellingPrice = 1020;\nconst difference = sellingPrice - costPrice;\nconst percentage = (difference / costPrice) * 100;\nconsole.log(difference);\nconsole.log(percentage);",
@@ -569,73 +479,6 @@ export default {
             "sellingPrice": 1200
           },
           "expectedOutput": "-300\n-20"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename n1, n2, n3, n4, n5, use them as input for your program.\n// While testing we will change their values.\nconst n1 = 23;\nconst n2 = 45;\nconst n3 = 67;\nconst n4 = 12;\nconst n5 = 89;\n\n// Calculate the sum of all five numbers\n// Calculate the average by dividing sum by 5\n// Print the average\n// For example, if numbers are 23, 45, 67, 12, 89, your output should be:\n// 47.2",
-      "solution_type": "script",
-      "reference_solution": "const n1 = 23;\nconst n2 = 45;\nconst n3 = 67;\nconst n4 = 12;\nconst n5 = 89;\nconst sum = n1 + n2 + n3 + n4 + n5;\nconst average = sum / 5;\nconsole.log(average);",
-      "testCases": [
-        {
-          "input": {
-            "n1": 23,
-            "n2": 45,
-            "n3": 67,
-            "n4": 12,
-            "n5": 89
-          },
-          "expectedOutput": "47.2"
-        },
-        {
-          "input": {
-            "n1": 10,
-            "n2": 20,
-            "n3": 30,
-            "n4": 40,
-            "n5": 50
-          },
-          "expectedOutput": "30"
-        },
-        {
-          "input": {
-            "n1": 100,
-            "n2": 200,
-            "n3": 300,
-            "n4": 400,
-            "n5": 500
-          },
-          "expectedOutput": "300"
-        },
-        {
-          "input": {
-            "n1": 0,
-            "n2": 0,
-            "n3": 0,
-            "n4": 0,
-            "n5": 0
-          },
-          "expectedOutput": "0"
-        },
-        {
-          "input": {
-            "n1": 5,
-            "n2": 5,
-            "n3": 5,
-            "n4": 5,
-            "n5": 5
-          },
-          "expectedOutput": "5"
-        },
-        {
-          "input": {
-            "n1": -10,
-            "n2": 10,
-            "n3": 20,
-            "n4": 30,
-            "n5": 50
-          },
-          "expectedOutput": "20"
         }
       ]
     },

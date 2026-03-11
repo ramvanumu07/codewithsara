@@ -3,11 +3,14 @@ export default {
   "id": "find-findindex",
   "title": "find and findIndex",
   "outcomes": [
-    "find Syntax: Retrieving the First Matching Element",
-    "findIndex Syntax: Locating the Position of a Match",
-    "Search Failure (Value): Handling undefined in find",
-    "Search Failure (Index): Handling -1 in findIndex",
-    "Efficiency: Understanding why searching stops at the first match"
+    "What find Does",
+    "What findIndex Does",
+    "When Nothing Matches"
+  ],
+  "outcome_messages": [
+    "**What find does**\n\n**array.find(callback)** returns the **first element** for which the callback returns **true** (or truthy). It **stops** as soon as it finds one—it does not scan the rest. If no element passes the test, find returns **undefined**. Use find when you need **one** matching item (e.g. the first number greater than 10), not all of them—use filter for that.\n\n**Example**\n\n```javascript\nconst nums = [5, 10, 15, 20];\nconst first = nums.find(function(n) { return n > 12; });\nconsole.log(first);\n```\n\n**Output**\n\n```\n15\n```\n\n**What happens**\n\n- 5 > 12? No. 10 > 12? No. 15 > 12? Yes → return 15 and stop.\n- 20 is never checked. find returns only the first match.\n\n**Practice**\n\nUse find on [\"apple\", \"banana\", \"cherry\"] to get the first string longer than 5 characters. What is the result?",
+    "**What findIndex does**\n\n**array.findIndex(callback)** works like find, but it returns the **index** of the first matching element (0-based), not the element itself. It also stops at the first match. If no element passes, findIndex returns **-1**. Use findIndex when you need to know **where** the match is—for example to update or remove that slot. Use arr[i] to get the value at that index.\n\n**Example**\n\n```javascript\nconst arr = [10, 20, 30, 40];\nconst i = arr.findIndex(function(x) { return x > 25; });\nconsole.log(i);\n```\n\n**Output**\n\n```\n2\n```\n\n**What happens**\n\n- 10 > 25? No. 20 > 25? No. 30 > 25? Yes → return the index of 30, which is 2.\n- findIndex returns 2 (the index), not 30. The value at that index is arr[2] = 30.\n\n**Practice**\n\nfindIndex on [\"a\", \"bb\", \"ccc\"] with a callback that returns true when the string length is 2. What index do you get?",
+    "**When nothing matches**\n\nIf **no element** makes the callback return true:\n\n- **find** returns **undefined**.\n- **findIndex** returns **-1**.\n\nAlways **check** before using the result. For find: if (item !== undefined) { ... }. For findIndex: if (i !== -1) { ... arr[i] ... }. Don't use -1 as an array index—it means \"not found.\"\n\n**Example**\n\n```javascript\nconst a = [1, 2, 3];\nconst b = a.find(function(n) { return n > 10; });\nconst c = a.findIndex(function(n) { return n === 99; });\nconsole.log(b, c);\n```\n\n**Output**\n\n```\nundefined -1\n```\n\n**What happens**\n\n- No element is > 10, so find returns undefined.\n- No element equals 99, so findIndex returns -1.\n- Code that uses b or c should handle these \"not found\" cases.\n\n**Practice**\n\nGive two possible reasons why find might return undefined. Write one condition that is true only when findIndex found a match (so it's safe to use the index)."
   ],
   "tasks": [
     {

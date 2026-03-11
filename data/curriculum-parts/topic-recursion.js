@@ -3,15 +3,18 @@ export default {
   "id": "recursion",
   "title": "Functions Calling Themselves",
   "outcomes": [
-    "Recursion: Functions that call themselves",
-    "The Base Case: The Stopping Condition",
-    "The Recursive Case: Moving toward the end",
-    "The Call Stack: Visualizing Function Nesting",
-    "Return Value Propagation: Passing data back up the chain",
-    "Recursive Problem Solving: Breaking big tasks into smaller ones",
-    "Architectural Choice: Recursion vs. Iteration",
-    "Stack Overflow: The risk of infinite recursion",
-    "Tail Recursion: An introduction to optimization"
+    "What Is Recursion?",
+    "Base Case and Recursive Case",
+    "Returning a Value from Recursion",
+    "Recursion on an Array",
+    "When Recursion Goes Wrong"
+  ],
+  "outcome_messages": [
+    "**What is recursion?**\n\nA **recursive function** is a function that **calls itself**. While it is running, it calls the same function again (usually with a smaller or different input). We need a **stop condition** so it doesn't run forever.\n\n**Syntax**\n\n```text\nfunction name(...params) {\n  if (stop condition) return;\n  name(updated params);\n}\n```\n\nYou can have one or more parameters. Each time you call the function again, you pass arguments that move toward the stop condition (e.g. n - 1, n + 1, a smaller array—whatever the problem needs).\n\n**Example**\n\n```javascript\nfunction countdown(n) {\n  if (n <= 0) return;\n  console.log(n);\n  countdown(n - 1);\n}\ncountdown(2);\n```\n\n**Output**\n\n```\n2\n1\n```\n\n**What happens**\n\n- countdown(2) → prints 2, then calls countdown(1)\n- countdown(1) → prints 1, then calls countdown(0)\n- countdown(0) → stops (base case)\n\n**Diagram**\n\n```text\ncountdown(2)\n  ├─ print 2\n  └─ countdown(1)\n       ├─ print 1\n       └─ countdown(0)  →  stop\n```\n\n**Practice**\n\nWhat does countdown(1) print?",
+    "**Base case and recursive case**\n\nEvery recursive function needs two parts:\n\n1. **Base case** — when we **stop** and don't call the function again. (e.g. when n is 0 or the array is empty)\n2. **Recursive case** — when we **call the function again** with a smaller or different input (e.g. n - 1).\n\nIf we never stop, the program crashes. If we don't change the input (e.g. we passed n again), we never reach the base case.\n\n**Example**\n\n```javascript\nfunction sumToN(n) {\n  if (n <= 0) return 0;\n  return n + sumToN(n - 1);\n}\nconsole.log(sumToN(2));\n```\n\n**Output**\n\n```\n3\n```\n\n**What happens**\n\n- sumToN(2) → 2 + sumToN(1)\n- sumToN(1) → 1 + sumToN(0)\n- sumToN(0) → returns 0\n- So: 2 + 1 + 0 = **3**\n\n**Diagram**\n\n```text\nsumToN(2)  →  2 + sumToN(1)  →  1 + sumToN(0)\n                                        └─ base case: return 0\n```\n\n**Practice**\n\nWhat is the base case in sumToN? Why do we pass n - 1 and not n?",
+    "**Returning a value from recursion**\n\nWhen the function **returns** a value, that value goes back to the caller. So the result from the base case \"travels back up.\" Each call uses the returned value and passes it up.\n\n**Example**\n\n```javascript\nfunction sumToN(n) {\n  if (n <= 0) return 0;\n  return n + sumToN(n - 1);\n}\nconsole.log(sumToN(2));\n```\n\n**Output**\n\n```\n3\n```\n\n**What happens (values going back up)**\n\n- sumToN(0) returns **0**\n- sumToN(1) returns 1 + 0 = **1**\n- sumToN(2) returns 2 + 1 = **3**\n\n**Diagram**\n\n```text\nsumToN(2)  →  2 + sumToN(1)  →  1 + sumToN(0)  →  return 0\n                                                      ↑\nResult: 1+0=1, then 2+1=3. Answer 3 comes back up.\n```\n\n**Practice**\n\nIf sumToN(1) returns 1, what does sumToN(2) return?",
+    "**Recursion on an array**\n\nWe can do the same idea with a list: **first element** plus **result for the rest**. Base case: empty array (e.g. return 0 for sum).\n\n**Example**\n\n```javascript\nfunction sumArr(arr) {\n  if (arr.length === 0) return 0;\n  return arr[0] + sumArr(arr.slice(1));\n}\nconsole.log(sumArr([2, 3]));\n```\n\n**Output**\n\n```\n5\n```\n\n**What happens**\n\n- sumArr([2, 3]) → 2 + sumArr([3])\n- sumArr([3]) → 3 + sumArr([])\n- sumArr([]) → returns 0\n- So: 2 + 3 = **5**\n\n**Diagram**\n\n```text\nsumArr([2, 3])  →  2 + sumArr([3])\nsumArr([3])     →  3 + sumArr([])  →  0\nSo: 2 + 3 = 5\n```\n\n**Practice**\n\nWhat is the base case for sumArr? In words, what does sumArr do in one sentence?",
+    "**When recursion goes wrong**\n\nIf we **never reach the base case**, the function keeps calling itself. Each call uses memory. Soon the program runs out of memory and crashes (a **stack overflow** error). So we must have a stop condition and we must pass a value that gets us closer to it (e.g. n - 1, not n).\n\n**Example (wrong)**\n\n```javascript\nfunction bad(n) {\n  return bad(n);\n}\n```\n\nCalling bad(1) would call bad(1) again and again until the program crashes.\n\n**Practice**\n\nWhat is wrong with: function f(n) { return f(n + 1); }? Does n get closer to a stop? How would you fix it?"
   ],
   "tasks": [
     {

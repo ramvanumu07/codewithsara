@@ -14,289 +14,124 @@ import './Learn-responsive.css'
 
 const SESSION_COMPLETE_REASON = 'Session completed. You can view the conversation but cannot send new messages.'
 
-// Code block: dark background + light text; horizontal scroll for long lines (inline so Vercel applies)
-const codeBlockWrapperStyle = {
-  position: 'relative',
-  margin: '4px 0 0 0',
-  width: '100%',
-  maxWidth: '100%',
-  minWidth: 0,
-  overflow: 'hidden',
-  boxSizing: 'border-box'
-}
-const fencedBlockStyle = {
-  width: '100%',
-  maxWidth: '100%',
-  minWidth: 0,
-  backgroundColor: '#1a202c',
-  color: '#e2e8f0',
-  padding: '8px 12px',
-  borderRadius: '6px',
-  margin: 0,
-  overflowX: 'auto',
-  overflowY: 'hidden',
-  WebkitOverflowScrolling: 'touch',
-  fontFamily: 'Monaco, Consolas, monospace',
-  fontSize: '0.8125rem',
-  lineHeight: '1.4',
-  boxSizing: 'border-box'
-}
-const preScrollStyle = {
-  margin: 0,
-  fontFamily: 'inherit',
-  fontSize: 'inherit',
-  color: '#e2e8f0',
-  whiteSpace: 'pre',
-  wordBreak: 'normal',
-  minWidth: 'min-content'
-}
+/** Copy button SVG icons */
+const CopyIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+  </svg>
+)
+const CheckIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+)
 
-// One-line code snippets in the flow of text: subtle chip (ChatGPT-like)
-const inlineStatementStyle = {
-  display: 'inline',
-  backgroundColor: '#f1f5f9',
-  color: '#334155',
-  padding: '1px 4px',
-  borderRadius: '3px',
-  fontFamily: 'Monaco, Consolas, monospace',
-  fontSize: '0.85em',
-  border: '1px solid #e2e8f0'
-}
-const inlineCodeStyle = {
-  backgroundColor: '#f1f5f9',
-  color: '#334155',
-  padding: '1px 4px',
-  borderRadius: '3px',
-  fontSize: '0.85em',
-  fontFamily: 'Monaco, Consolas, monospace',
-  border: '1px solid #e2e8f0'
-}
-
-function looksLikeCodeStatement(str) {
-  const s = (str || '').trim()
-  if (s.length < 3) return false
-  return (
-    /console\.\s*log|;\s*$|function\s*\(|=>|\.log\s*\(|\.log\(/.test(s) ||
-    (s.includes('(') && s.includes(')') && s.length > 15)
-  )
-}
-
-// Renders text with markdown-style **bold** and ### headings parsed
-function renderTextWithBold(text, keyPrefix) {
-  if (!text || typeof text !== 'string') return null
-  // Collapse multiple newlines to single to reduce paragraph gaps
-  let processed = text.replace(/\n{2,}/g, '\n')
-  // Convert ### Heading to **Heading** so it renders bold
-  processed = processed.replace(/^#{1,6}\s+(.+)$/gm, '**$1**')
-  const parts = processed.split(/(\*\*.*?\*\*)/g)
-  return parts.map((part, i) => {
-    const match = part.match(/^\*\*(.*?)\*\*$/)
-    if (match) return <strong key={`${keyPrefix}-${i}`}>{match[1]}</strong>
-    return <span key={`${keyPrefix}-${i}`} style={{ whiteSpace: 'pre-wrap' }}>{part}</span>
-  })
-}
-
+/**
+ * Renders chat/outcome message content as Markdown.
+ * One render path, one set of CSS classes (.message-markdown).
+ */
 const MessageContent = ({ content, role }) => {
-  const [copiedBlockId, setCopiedBlockId] = useState(null)
-  const handleCopyCode = (code, blockId) => {
+  const [copiedId, setCopiedId] = useState(null)
+  const blockIdRef = useRef(0)
+  blockIdRef.current = 0
+  const onCopy = (id, code) => {
     copyToClipboard(code).then((ok) => {
       if (ok) {
-        setCopiedBlockId(blockId)
-        setTimeout(() => setCopiedBlockId(null), 2000)
+        setCopiedId(id)
+        setTimeout(() => setCopiedId(null), 2000)
       }
     })
   }
 
-  const renderContent = (text) => {
-    if (!text || typeof text !== 'string') return null
-    // First handle fenced code blocks (```javascript ... ```)
-    const codeBlockParts = text.split(/(```[\s\S]*?```)/g)
-
-    return codeBlockParts.map((part, blockIndex) => {
-      if (part.startsWith('```') && part.endsWith('```')) {
-        const raw = part.slice(3, -3).trim()
-        const firstLineEnd = raw.indexOf('\n')
-        const looksLikeLang = (s) => /^[a-z0-9+#-]+$/i.test((s || '').trim()) && (s || '').trim().length < 20
-        const firstLine = firstLineEnd === -1 ? raw : raw.slice(0, firstLineEnd).trim()
-        const rest = firstLineEnd === -1 ? '' : raw.slice(firstLineEnd + 1).trim()
-        const code = looksLikeLang(firstLine) ? rest : raw
-        const blockId = `b-${blockIndex}`
-
-        return (
-          <div key={blockId} className="code-block-wrapper" style={codeBlockWrapperStyle}>
-            <button
-              type="button"
-              onClick={() => handleCopyCode(code, blockId)}
-              className="code-block-copy-btn"
-              style={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                zIndex: 1,
-                width: 28,
-                height: 28,
-                padding: 0,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: copiedBlockId === blockId ? '#059669' : '#374151',
-                color: '#e2e8f0',
-                border: '1px solid #4a5568',
-                borderRadius: 6,
-                cursor: 'pointer'
-              }}
-              title={copiedBlockId === blockId ? 'Copied' : 'Copy code'}
-            >
-              {copiedBlockId === blockId ? (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-              ) : (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-              )}
-            </button>
-            <div className="code-block" style={fencedBlockStyle}>
-              <pre style={preScrollStyle}>{code}</pre>
-            </div>
-          </div>
-        )
+  const mdComponents = {
+    p: ({ children }) => <p>{children}</p>,
+    strong: ({ children }) => <strong>{children}</strong>,
+    em: ({ children }) => <em>{children}</em>,
+    ul: ({ children }) => <ul>{children}</ul>,
+    ol: ({ children }) => <ol>{children}</ol>,
+    li: ({ children }) => <li>{children}</li>,
+    h1: ({ children }) => <h1>{children}</h1>,
+    h2: ({ children }) => <h2>{children}</h2>,
+    h3: ({ children }) => <h3>{children}</h3>,
+    code: ({ node, inline, className, children, ...props }) => {
+      if (inline) return <code className="message-markdown__inline-code" {...props}>{children}</code>
+      return <code {...props}>{children}</code>
+    },
+    pre: ({ node, children }) => {
+      // Extract code string for copy button; support mdast (node.children[0].value) or children props
+      let code = ''
+      const first = node?.children?.[0]
+      if (first && typeof first.value === 'string') code = first.value
+      else if (first?.children?.[0]?.value) code = first.children[0].value
+      else {
+        const codeEl = React.Children.toArray(children)?.[0]
+        const raw = codeEl?.props?.children
+        if (Array.isArray(raw)) code = raw.map(c => (typeof c === 'string' ? c : c?.props?.children ?? '')).join('')
+        else if (typeof raw === 'string') code = raw
+        else if (raw != null) code = String(raw)
       }
-
-      // Handle inline code and regular text; statement-like code: multi-line → block, one-line → chip
-      const inlineCodeParts = part.split(/(`[^`]+`)/g)
+      const id = `cb-${(blockIdRef.current++).toString(36)}`
       return (
-        <React.Fragment key={`f-${blockIndex}`}>
-          {inlineCodeParts.map((inlinePart, inlineIndex) => {
-            if (inlinePart.startsWith('`') && inlinePart.endsWith('`')) {
-              const inlineCode = inlinePart.slice(1, -1)
-              if (looksLikeCodeStatement(inlineCode)) {
-                const isMultiline = inlineCode.includes('\n')
-                if (isMultiline) {
-                  const blockId = `ib-${blockIndex}-${inlineIndex}`
-                  return (
-                    <div key={blockId} className="code-block-wrapper" style={codeBlockWrapperStyle}>
-                      <button
-                        type="button"
-                        onClick={() => handleCopyCode(inlineCode, blockId)}
-                        className="code-block-copy-btn"
-                        style={{
-                          position: 'absolute',
-                          top: 8,
-                          right: 8,
-                          zIndex: 1,
-                          width: 28,
-                          height: 28,
-                          padding: 0,
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          background: copiedBlockId === blockId ? '#059669' : '#374151',
-                          color: '#e2e8f0',
-                          border: '1px solid #4a5568',
-                          borderRadius: 6,
-                          cursor: 'pointer'
-                        }}
-                        title={copiedBlockId === blockId ? 'Copied' : 'Copy code'}
-                      >
-                        {copiedBlockId === blockId ? (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                        ) : (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-                        )}
-                      </button>
-                      <div className="code-block" style={fencedBlockStyle}>
-                        <pre style={preScrollStyle}>{inlineCode}</pre>
-                      </div>
-                    </div>
-                  )
-                }
-                return (
-                  <span key={`${blockIndex}-${inlineIndex}`} style={inlineStatementStyle}>
-                    {inlineCode}
-                  </span>
-                )
-              }
-              return (
-                <code key={`${blockIndex}-${inlineIndex}`} style={inlineCodeStyle}>
-                  {inlineCode}
-                </code>
-              )
-            }
-            return (
-              <React.Fragment key={`${blockIndex}-${inlineIndex}`}>
-                {renderTextWithBold(inlinePart, `t-${blockIndex}-${inlineIndex}`)}
-              </React.Fragment>
-            )
-          })}
-        </React.Fragment>
+        <div className="message-markdown__code-wrapper">
+          <button
+            type="button"
+            className={`message-markdown__code-copy${copiedId === id ? ' message-markdown__code-copy--copied' : ''}`}
+            onClick={() => onCopy(id, code)}
+            title={copiedId === id ? 'Copied' : 'Copy code'}
+            aria-label={copiedId === id ? 'Copied' : 'Copy code'}
+          >
+            {copiedId === id ? <CheckIcon /> : <CopyIcon />}
+          </button>
+          <pre className="message-markdown__code-block">{children}</pre>
+        </div>
       )
-    })
+    }
   }
 
   const isUser = role === 'user'
+  if (!content || typeof content !== 'string') {
+    return (
+      <div className={isUser ? 'message-content message-content--bubble' : 'message-content message-content--plain'}>
+        <div className="message-text">
+          <div className="message-markdown" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div
       className={isUser ? 'message-content message-content--bubble' : 'message-content message-content--plain'}
-      style={{
-        minWidth: 0,
-        maxWidth: isUser ? '85%' : '100%',
-        ...(isUser ? {
-          background: '#d1f0e8',
-          borderRadius: '16px',
-          padding: '12px 16px',
-          boxShadow: '0 1px 2px rgba(16,163,127,0.15)'
-        } : {})
-      }}
+      style={{ minWidth: 0, maxWidth: isUser ? '85%' : '100%' }}
     >
-      <div className="message-text" style={{ minWidth: 0, maxWidth: '100%', overflowX: 'hidden' }}>
-        {renderContent(content)}
+      <div className="message-text">
+        <div className="message-markdown">
+          <ReactMarkdown components={mdComponents}>{content.trim()}</ReactMarkdown>
+        </div>
       </div>
     </div>
   )
 }
 
-// Same formatting as MessageContent (bold, fenced and inline code) for assignment AI review
+/** Assignment AI review: same Markdown rendering as MessageContent, no copy button */
 function renderFormattedReview(text) {
   if (!text || typeof text !== 'string') return null
-  const codeBlockParts = text.split(/(```[\s\S]*?```)/g)
-  return codeBlockParts.map((part, blockIndex) => {
-    if (part.startsWith('```') && part.endsWith('```')) {
-      const raw = part.slice(3, -3).trim()
-      const firstLineEnd = raw.indexOf('\n')
-      const looksLikeLang = (s) => /^[a-z0-9+#-]+$/i.test((s || '').trim()) && (s || '').trim().length < 20
-      const firstLine = firstLineEnd === -1 ? raw : raw.slice(0, firstLineEnd).trim()
-      const rest = firstLineEnd === -1 ? '' : raw.slice(firstLineEnd + 1).trim()
-      const code = looksLikeLang(firstLine) ? rest : raw
-      return (
-        <div key={`rb-${blockIndex}`} style={fencedBlockStyle}>
-          <pre style={preScrollStyle}>{code}</pre>
-        </div>
-      )
+  const components = {
+    code: ({ node, inline, children, ...props }) =>
+      inline ? <code className="message-markdown__inline-code" {...props}>{children}</code> : <code {...props}>{children}</code>,
+    pre: ({ children }) => {
+      const codeEl = React.Children.toArray(children)?.[0]
+      const raw = codeEl?.props?.children
+      const code = Array.isArray(raw) ? raw.join('') : (typeof raw === 'string' ? raw : String(children ?? ''))
+      return <pre className="message-markdown__code-block"><code>{code}</code></pre>
     }
-    const inlineCodeParts = part.split(/(`[^`]+`)/g)
-    return (
-      <React.Fragment key={`rf-${blockIndex}`}>
-        {inlineCodeParts.map((inlinePart, inlineIndex) => {
-          if (inlinePart.startsWith('`') && inlinePart.endsWith('`')) {
-            const inlineCode = inlinePart.slice(1, -1)
-            if (looksLikeCodeStatement(inlineCode)) {
-              const isMultiline = inlineCode.includes('\n')
-              if (isMultiline) {
-                return (
-                  <div key={`r-${blockIndex}-${inlineIndex}`} style={fencedBlockStyle}>
-                    <pre style={preScrollStyle}>{inlineCode}</pre>
-                  </div>
-                )
-              }
-              return <span key={`r-${blockIndex}-${inlineIndex}`} style={inlineStatementStyle}>{inlineCode}</span>
-            }
-            return (
-              <code key={`r-${blockIndex}-${inlineIndex}`} style={inlineCodeStyle}>{inlineCode}</code>
-            )
-          }
-          return <React.Fragment key={`r-${blockIndex}-${inlineIndex}`}>{renderTextWithBold(inlinePart, `r-${blockIndex}-${inlineIndex}`)}</React.Fragment>
-        })}
-      </React.Fragment>
-    )
-  })
+  }
+  return (
+    <div className="message-markdown">
+      <ReactMarkdown components={components}>{text}</ReactMarkdown>
+    </div>
+  )
 }
 
 const Learn = () => {

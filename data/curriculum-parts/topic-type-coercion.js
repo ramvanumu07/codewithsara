@@ -12,102 +12,71 @@ export default {
     "Equality Logic: Type coercion in == vs. ===",
     "Safe Coding: Strategies to avoid implicit bugs"
   ],
+  "outcome_messages": [
+    "Let's understand type coercion.\n\nWhen you use values of different types together (e.g. number and string), JavaScript may convert one type to another automatically so the operation can run. That automatic conversion is called coercion.\n\n**Example**\n\n```javascript\nconsole.log(5 + \"3\");    // 53 (string)\nconsole.log(5 - \"3\");    // 2 (number)\n```\n\nWith `+`, the number is turned into a string and the result is string concatenation. With `-`, the string is turned into a number and the result is subtraction. The operator and context decide how types are converted.\n\n**Practice**\n\nWrite code that prints the result of 10 + \"5\" and the result of 10 - \"5\".",
+    "Let's compare explicit and implicit conversion.\n\nExplicit conversion is when you convert on purpose (e.g. `Number(\"42\")`, `String(42)`). Implicit conversion is when JavaScript does it for you during an operation (e.g. `5 - \"3\"` turns \"3\" into 3). Both change the type; explicit is clear in code, implicit can be surprising.\n\n**Example**\n\n```javascript\nconsole.log(Number(\"10\") + 5);    // 15 (explicit: string → number)\nconsole.log(\"10\" + 5);             // 105 (implicit: number → string for +)\nconsole.log(String(7) + \" apples\"); // 7 apples (explicit: number → string)\n```\n\nUse explicit conversion when you want to be clear and avoid surprises. Implicit happens when you mix types with operators.\n\n**Practice**\n\nWrite code that uses Number() to convert \"100\" to a number and prints it plus 50.",
+    "Let's see how + favors strings.\n\nWith the `+` operator, if either side is a string, the other is converted to a string and the result is string concatenation. So number + string gives a string, not a number.\n\n**Example**\n\n```javascript\nconsole.log(42 + \"10\");    // 4210\nconsole.log(\"10\" + 42);    // 1042\nconsole.log(7 + \"\");       // 7 (number becomes string \"7\")\n```\n\nEven when one operand is a number, + with a string produces a string. For numeric addition with string input, convert first: Number(str) + num.\n\n**Practice**\n\nWrite code that prints the result of 20 + \"4\" (observe the string result).",
+    "Let's see how -, *, and / favor numbers.\n\nWith `-`, `*`, and `/`, JavaScript converts both sides to numbers. A numeric string like \"10\" becomes 10, so the result is a number. Non-numeric strings become NaN.\n\n**Example**\n\n```javascript\nconsole.log(42 - \"10\");    // 32\nconsole.log(42 * \"10\");    // 420\nconsole.log(\"100\" / 5);    // 20\n```\n\nOnly + has string bias. Minus, times, and divide try to work with numbers, so strings are coerced to numbers.\n\n**Practice**\n\nWrite code that prints the result of \"50\" - 10 and \"50\" * 2.",
+    "Let's understand truthy and falsy.\n\nIn conditions, values are treated as true or false. Falsy values (treated as false) are: false, 0, \"\" (empty string), null, undefined, NaN. Everything else is truthy (treated as true).\n\n**Example**\n\n```javascript\nconsole.log(Boolean(\"\"));      // false\nconsole.log(Boolean(0));       // false\nconsole.log(Boolean(\"hi\"));    // true\nconsole.log(Boolean(1));       // true\n```\n\nBoolean() converts a value to true or false using these rules.\n\n**Practice**\n\nWrite code that prints Boolean(0) and Boolean(\"hello\").",
+    "Let's understand NaN.\n\nNaN means \"Not a Number.\" It appears when a math operation has no sensible number result (e.g. 0/0, Number(\"abc\")). NaN is not equal to itself: NaN === NaN is false. Use Number.isNaN(x) to check for NaN.\n\n**Example**\n\n```javascript\nconsole.log(0 / 0);           // NaN\nconsole.log(Number(\"abc\"));   // NaN\nconsole.log(NaN === NaN);     // false\nconsole.log(Number.isNaN(NaN));  // true\n```\n\nOnce NaN appears in a calculation, it tends to spread. Check inputs or use Number.isNaN() when you might get invalid numbers.\n\n**Practice**\n\nWrite code that prints the result of Number(\"xyz\") and whether it is NaN using Number.isNaN().",
+    "Let's compare == and ===.\n\n`==` (loose equality) coerces types before comparing: \"5\" == 5 is true. `===` (strict equality) does not coerce: \"5\" === 5 is false. Same value and same type are required for ===.\n\n**Example**\n\n```javascript\nconsole.log(\"5\" == 5);     // true\nconsole.log(\"5\" === 5);    // false\nconsole.log(0 == false);   // true (both falsy, coerced)\nconsole.log(0 === false);  // false\n```\n\nPrefer === to avoid surprise coercions. Use == only when you intentionally want type coercion.\n\n**Practice**\n\nWrite code that prints whether \"10\" and 10 are strictly equal (===).",
+    "Let's write safer code around coercion.\n\nTo avoid bugs:\n\n1. Prefer === over ==.\n2. Convert explicitly with Number() or String() when mixing types.\n3. Check for NaN with Number.isNaN() after operations that can fail.\n4. Be aware that + with a string concatenates; use Number() first when you want numeric addition.\n\n**Example**\n\n```javascript\nconst input = \"42\";\nconst num = Number(input);\nconsole.log(num + 10);    // 52 (not \"4210\")\n```\n\nConverting with Number(input) first makes it clear we want a number. Without it, input + 10 would be \"4210\". Explicit conversion and strict equality reduce surprises from implicit coercion.\n\n**Practice**\n\nWrite code that converts a string \"7\" to a number, adds 3, and prints the result."
+  ],
   "tasks": [
     {
-      "description": "// Do not rename num and str, use them as input for your program.\n// While testing we will change their values.\nconst num = 42;\nconst str = \"10\";\n\n// Calculate num + str, num - str, num * str\n// Print all three results\n// For example, if num = 42 and str = \"10\", your output should be:\n// 4210\n// 32\n// 420",
+      "description": "// Coercion lab: one script that shows how +, -, *, / behave with mixed types.\n// Do not rename num, str, flag1, flag2, val1, val2, text; we will change their values when testing.\n//\n// Print in order:\n// 1. num + str\n// 2. num - str\n// 3. num * str\n// 4. flag1 + 5\n// 5. flag2 * 10\n// 6. val1 + val2\n// 7. val1 - val2\n// 8. val1 / val2\n// 9. text * 1\n//\n// For num=42, str=\"10\", flag1=true, flag2=false, val1=\"7\", val2=\"3\", text=\"hello\" your output should be:\n// 4210\n// 32\n// 420\n// 6\n// 0\n// 73\n// 4\n// 2.3333333333333335\n// NaN",
       "solution_type": "script",
-      "reference_solution": "const num = 42;\nconst str = \"10\";\nconsole.log(num + str);\nconsole.log(num - str);\nconsole.log(num * str);",
+      "reference_solution": "const num = 42;\nconst str = \"10\";\nconst flag1 = true;\nconst flag2 = false;\nconst val1 = \"7\";\nconst val2 = \"3\";\nconst text = \"hello\";\nconsole.log(num + str);\nconsole.log(num - str);\nconsole.log(num * str);\nconsole.log(flag1 + 5);\nconsole.log(flag2 * 10);\nconsole.log(val1 + val2);\nconsole.log(val1 - val2);\nconsole.log(val1 / val2);\nconsole.log(text * 1);",
       "testCases": [
         {
           "input": {
             "num": 42,
-            "str": "10"
+            "str": "10",
+            "flag1": true,
+            "flag2": false,
+            "val1": "7",
+            "val2": "3",
+            "text": "hello"
           },
-          "expectedOutput": "4210\n32\n420"
+          "expectedOutput": "4210\n32\n420\n6\n0\n73\n4\n2.3333333333333335\nNaN"
         },
         {
           "input": {
             "num": 15,
-            "str": "5"
+            "str": "5",
+            "flag1": false,
+            "flag2": true,
+            "val1": "12",
+            "val2": "4",
+            "text": "abc"
           },
-          "expectedOutput": "155\n10\n75"
-        },
-        {
-          "input": {
-            "num": 100,
-            "str": "20"
-          },
-          "expectedOutput": "10020\n80\n2000"
-        },
-        {
-          "input": {
-            "num": 7,
-            "str": "3"
-          },
-          "expectedOutput": "73\n4\n21"
+          "expectedOutput": "155\n10\n75\n5\n10\n124\n8\n3\nNaN"
         },
         {
           "input": {
             "num": 0,
-            "str": "8"
+            "str": "8",
+            "flag1": true,
+            "flag2": true,
+            "val1": "8",
+            "val2": "0",
+            "text": "xyz"
           },
-          "expectedOutput": "08\n-8\n0"
-        },
-        {
-          "input": {
-            "num": 25,
-            "str": "0"
-          },
-          "expectedOutput": "250\n25\n0"
+          "expectedOutput": "08\n-8\n0\n6\n10\n80\n8\nInfinity\nNaN"
         }
       ]
     },
     {
-      "description": "// Do not rename flag1 and flag2, use them as input for your program.\n// While testing we will change their values.\nconst flag1 = true;\nconst flag2 = false;\n\n// Calculate flag1 + 5, flag2 + 5, flag1 * 10, flag2 * 10\n// Print all four results\n// For example, if flag1 = true and flag2 = false, your output should be:\n// 6\n// 5\n// 10\n// 0",
-      "solution_type": "script",
-      "reference_solution": "const flag1 = true;\nconst flag2 = false;\nconsole.log(flag1 + 5);\nconsole.log(flag2 + 5);\nconsole.log(flag1 * 10);\nconsole.log(flag2 * 10);",
-      "testCases": [
-        {
-          "input": {
-            "flag1": true,
-            "flag2": false
-          },
-          "expectedOutput": "6\n5\n10\n0"
-        },
-        {
-          "input": {
-            "flag1": false,
-            "flag2": true
-          },
-          "expectedOutput": "5\n6\n0\n10"
-        },
-        {
-          "input": {
-            "flag1": true,
-            "flag2": true
-          },
-          "expectedOutput": "6\n6\n10\n10"
-        },
-        {
-          "input": {
-            "flag1": false,
-            "flag2": false
-          },
-          "expectedOutput": "5\n5\n0\n0"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename x and y, use them as input for your program.\n// While testing we will change their values.\nconst x = null;\nconst y = undefined;\n\n// Calculate x + 10, y + 10, x * 2, y * 2\n// Print all four results\n// For example, if x = null and y = undefined, your output should be:\n// 10\n// NaN\n// 0\n// NaN",
+      "description": "// Do not rename x and y, use them as input for your program.\n// x and y may be null or undefined; we will change their values when testing.\n//\n// Print in order: x + 10, y + 10, x * 2, y * 2\n// For example, if x = null and y = undefined, your output should be:\n// 10\n// NaN\n// 0\n// NaN",
       "solution_type": "script",
       "reference_solution": "const x = null;\nconst y = undefined;\nconsole.log(x + 10);\nconsole.log(y + 10);\nconsole.log(x * 2);\nconsole.log(y * 2);",
       "testCases": [
         {
           "input": {
             "x": null,
-            "y": null
+            "y": undefined
           },
-          "expectedOutput": "10\n10\n0\n0"
+          "expectedOutput": "10\nNaN\n0\nNaN"
         },
         {
           "input": {
@@ -118,66 +87,17 @@ export default {
         },
         {
           "input": {
-            "x": null,
+            "x": undefined,
+            "y": undefined
+          },
+          "expectedOutput": "NaN\nNaN\nNaN\nNaN"
+        },
+        {
+          "input": {
+            "x": undefined,
             "y": null
           },
-          "expectedOutput": "10\n10\n0\n0"
-        },
-        {
-          "input": {
-            "x": null,
-            "y": null
-          },
-          "expectedOutput": "10\n10\n0\n0"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename val1 and val2, use them as input for your program.\n// While testing we will change their values.\nconst val1 = \"7\";\nconst val2 = \"3\";\n\n// Calculate val1 + val2, val1 - val2, val1 / val2\n// Print all three results\n// For example, if val1 = \"7\" and val2 = \"3\", your output should be:\n// 73\n// 4\n// 2.3333333333333335",
-      "solution_type": "script",
-      "reference_solution": "const val1 = \"7\";\nconst val2 = \"3\";\nconsole.log(val1 + val2);\nconsole.log(val1 - val2);\nconsole.log(val1 / val2);",
-      "testCases": [
-        {
-          "input": {
-            "val1": "7",
-            "val2": "3"
-          },
-          "expectedOutput": "73\n4\n2.3333333333333335"
-        },
-        {
-          "input": {
-            "val1": "12",
-            "val2": "4"
-          },
-          "expectedOutput": "124\n8\n3"
-        },
-        {
-          "input": {
-            "val1": "20",
-            "val2": "5"
-          },
-          "expectedOutput": "205\n15\n4"
-        },
-        {
-          "input": {
-            "val1": "15",
-            "val2": "2"
-          },
-          "expectedOutput": "152\n13\n7.5"
-        },
-        {
-          "input": {
-            "val1": "100",
-            "val2": "10"
-          },
-          "expectedOutput": "10010\n90\n10"
-        },
-        {
-          "input": {
-            "val1": "8",
-            "val2": "0"
-          },
-          "expectedOutput": "80\n8\nInfinity"
+          "expectedOutput": "NaN\n10\nNaN\n0"
         }
       ]
     },
@@ -233,49 +153,6 @@ export default {
             "c": 1
           },
           "expectedOutput": "true\nfalse\nfalse\nfalse"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename text, use it as input for your program.\n// While testing we will change its value.\nconst text = \"hello\";\n\n// Calculate text * 1, text - 0, text / 2\n// Print all three results\n// For example, if text = \"hello\", your output should be:\n// NaN\n// NaN\n// NaN",
-      "solution_type": "script",
-      "reference_solution": "const text = \"hello\";\nconsole.log(text * 1);\nconsole.log(text - 0);\nconsole.log(text / 2);",
-      "testCases": [
-        {
-          "input": {
-            "text": "hello"
-          },
-          "expectedOutput": "NaN\nNaN\nNaN"
-        },
-        {
-          "input": {
-            "text": "world"
-          },
-          "expectedOutput": "NaN\nNaN\nNaN"
-        },
-        {
-          "input": {
-            "text": "abc"
-          },
-          "expectedOutput": "NaN\nNaN\nNaN"
-        },
-        {
-          "input": {
-            "text": "test"
-          },
-          "expectedOutput": "NaN\nNaN\nNaN"
-        },
-        {
-          "input": {
-            "text": "javascript"
-          },
-          "expectedOutput": "NaN\nNaN\nNaN"
-        },
-        {
-          "input": {
-            "text": "code"
-          },
-          "expectedOutput": "NaN\nNaN\nNaN"
         }
       ]
     }
