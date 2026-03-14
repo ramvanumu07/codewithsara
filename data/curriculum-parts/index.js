@@ -38,7 +38,8 @@ import topicStringSearching from './topic-string-searching.js'
 import topicRegex from './topic-regex.js'
 import topicArrayAdvancedPatterns from './topic-array-advanced-patterns.js'
 import topicErrorHandling from './topic-error-handling.js'
-import topicClasses from './topic-classes.js'
+import topicClassesBasics from './topic-classes-basics.js'
+import topicClassesInheritance from './topic-classes-inheritance.js'
 import topicModules from './topic-modules.js'
 import topicAsyncBasics from './topic-async-basics.js'
 import topicPromises from './topic-promises.js'
@@ -80,7 +81,8 @@ const allTopics = [
   topicRegex,
   topicArrayAdvancedPatterns,
   topicErrorHandling,
-  topicClasses,
+  topicClassesBasics,
+  topicClassesInheritance,
   topicModules,
   topicAsyncBasics,
   topicPromises,

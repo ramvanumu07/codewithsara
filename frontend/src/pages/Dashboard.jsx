@@ -838,14 +838,12 @@ const Dashboard = () => {
                 )
               })()}
 
-              {/* All topics under Continue – notes icon for all; assignment icon when session completed */}
+              {/* All topics under Continue – notes and assignment icons for all */}
               {allTopicsForCourse.length > 0 && (
                 <div className="session-completed-section">
                   <h4 className="session-completed-heading">All topics</h4>
                   <ul className="session-completed-list">
-                    {allTopicsForCourse.map((topic) => {
-                      const sessionDone = hasSessionCompleted(topic.id)
-                      return (
+                    {allTopicsForCourse.map((topic) => (
                         <li key={topic.id} className="session-completed-row">
                           <span className="session-completed-title">
                             {formatTopicTitle(topic.title)}
@@ -866,24 +864,21 @@ const Dashboard = () => {
                                 <polyline points="10,9 9,9 8,9" />
                               </svg>
                             </button>
-                            {sessionDone && (
-                              <button
-                                type="button"
-                                className="session-completed-icon-btn"
-                                onClick={() => navigate(`/learn/${topic.id}?phase=assignment&start=1`)}
-                                title="Try assignments (from task 1)"
-                                aria-label={`Assignments for ${formatTopicTitle(topic.title)}`}
-                              >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <polyline points="9,11 12,14 22,4" />
-                                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                                </svg>
-                              </button>
-                            )}
+                            <button
+                              type="button"
+                              className="session-completed-icon-btn"
+                              onClick={() => navigate(`/learn/${topic.id}?phase=assignment&start=1`)}
+                              title="Try assignments (from task 1)"
+                              aria-label={`Assignments for ${formatTopicTitle(topic.title)}`}
+                            >
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <polyline points="9,11 12,14 22,4" />
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                              </svg>
+                            </button>
                           </div>
                         </li>
-                      )
-                    })}
+                      ))}
                   </ul>
                 </div>
               )}
