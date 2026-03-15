@@ -1114,13 +1114,14 @@ const Learn = () => {
     )
   }
 
-  // Topic notes view: Q&A layout (outcome = user question, outcome_message = assistant answer).
-  // Prefer this whenever we have both outcomes and outcome_messages; only fall back to topic_notes when we don't.
+  // Topic notes view: same message UI as session so outcome_messages match session display
   if (searchParams.get('view') === 'notes') {
     const notesContent = topic.topic_notes && typeof topic.topic_notes === 'string' && topic.topic_notes.trim()
-    const outcomes = topic.outcomes && Array.isArray(topic.outcomes) ? topic.outcomes : []
-    const outcomeMessages = topic.outcome_messages && Array.isArray(topic.outcome_messages) ? topic.outcome_messages : []
-    const showQALayout = outcomes.length > 0 && outcomeMessages.length > 0
+    const hasOutcomeMessages =
+      topic.outcome_messages &&
+      Array.isArray(topic.outcome_messages) &&
+      topic.outcomes &&
+      topic.outcome_messages.length === topic.outcomes.length
     const notesMarkdownComponents = {
       code: ({ node, inline, className, children, ...props }) =>
         inline ? (
@@ -1157,13 +1158,13 @@ const Learn = () => {
           </div>
           <div style={{ width: 80 }} />
         </header>
-        {showQALayout ? (
+        {hasOutcomeMessages ? (
           <div className="session-container" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
             <div className="messages-area" style={{ flex: 1, minHeight: 0, padding: '12px 16px' }}>
-              {Array.from({ length: Math.max(outcomes.length, outcomeMessages.length) }, (_, i) => {
-                const outcomeTitle = outcomes[i] ?? `Outcome ${i + 1}`
-                const msg = outcomeMessages[i]
-                const messageText = typeof msg === 'string' && msg.trim() ? msg : 'No content for this outcome yet.'
+              {topic.outcome_messages.map((content, i) => {
+                const outcomeTitle = (topic.outcomes && topic.outcomes[i]) ? topic.outcomes[i] : `Outcome ${i + 1}`
+                const msg = typeof content === 'string' && content.trim() ? content : null
+                // TODO: After all topics have outcome_messages, hide task in notes again (strip from "Now, let's try a simple practice task:" to end)
                 return (
                   <React.Fragment key={i}>
                     <div
@@ -1176,7 +1177,7 @@ const Learn = () => {
                       className="message-row message-row--assistant"
                       style={{ justifyContent: 'flex-start' }}
                     >
-                      <MessageContent content={messageText} role="assistant" />
+                      <MessageContent content={msg || 'No content for this outcome yet.'} role="assistant" />
                     </div>
                   </React.Fragment>
                 )
