@@ -52,22 +52,22 @@ export default function SessionPlayground({
       } catch (parseErr) {
         if (parseErr instanceof SyntaxError) {
           const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
-          if (lineNumDiv) lineNumDiv.innerHTML = '<div style="line-height: 1.4; color: #6b7280; text-align: right; padding-right: 8px; font-size: 0.875rem;">1</div>'
-          outputDiv.innerHTML = `<div style="font-family: Monaco, Consolas, monospace; line-height: 1.4;"><div style="color: #ef4444; white-space: pre; padding-left: 2px; font-size: 0.875rem;">Syntax error: ${escapeHtml(parseErr.message)}</div></div>`
+          if (lineNumDiv) lineNumDiv.innerHTML = '<div style="line-height: 1.4; color: #8b949e; text-align: right; padding-right: 8px; font-size: 0.875rem;">1</div>'
+          outputDiv.innerHTML = `<div style="font-family: Monaco, Consolas, monospace; line-height: 1.4;"><div style="color: #ff7b72; white-space: pre; padding-left: 2px; font-size: 0.875rem;">Syntax error: ${escapeHtml(parseErr.message)}</div></div>`
           if (onRunError) onRunError(parseErr.message)
           return
         }
         throw parseErr
       }
 
-      outputDiv.innerHTML = '<div style="color: #10a37f; font-family: Monaco, Consolas, monospace; padding: 8px;">Executing code securely...</div>'
+      outputDiv.innerHTML = '<div style="color: #7ee787; font-family: Monaco, Consolas, monospace; padding: 8px;">Executing code securely...</div>'
       const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
       if (lineNumDiv) lineNumDiv.innerHTML = ''
 
       const result = await CodeExecutor.executeForTesting(code, [], null, 'script')
 
       let outputText = ''
-      let outputColor = '#10a37f'
+      let outputColor = '#7ee787'
       if (result.success) {
         if (result.results?.length > 0) {
           const outputs = result.results.map(r => (r.error ? `Error: ${r.error}` : (r.output ?? r.result ?? '')))
@@ -77,17 +77,17 @@ export default function SessionPlayground({
         }
       } else {
         outputText = `Error: ${result.error || 'Code execution failed'}`
-        outputColor = '#ef4444'
+        outputColor = '#ff7b72'
       }
 
       const outputLines = outputText.split('\n')
       if (lineNumDiv) {
         lineNumDiv.innerHTML = outputLines.map((_, i) =>
-          `<div style="line-height: 1.4; color: #6b7280; text-align: right; padding-right: 8px; font-size: 0.875rem;">${i + 1}</div>`
+          `<div style="line-height: 1.4; color: #8b949e; text-align: right; padding-right: 8px; font-size: 0.875rem;">${i + 1}</div>`
         ).join('')
       }
       const formatted = outputLines.map(line => {
-        const color = line.includes('Error:') ? '#ef4444' : line.includes('Warning') ? '#f59e0b' : outputColor
+        const color = line.includes('Error:') ? '#ff7b72' : line.includes('Warning') ? '#d29922' : outputColor
         return `<div style="line-height: 1.4; color: ${color}; white-space: pre; padding-left: 2px; font-size: 0.875rem;">${escapeHtml(String(line || ' '))}</div>`
       }).join('')
       outputDiv.innerHTML = `<div style="font-family: Monaco, Consolas, 'SF Mono', 'Courier New', monospace; line-height: 1.4;">${formatted}</div>`
@@ -95,9 +95,9 @@ export default function SessionPlayground({
       if (!result.success && onRunError) onRunError('Code execution failed. Check the output for details.')
     } catch (err) {
       const msg = err?.message || 'Code execution failed'
-      outputDiv.innerHTML = `<div style="color: #ef4444; font-family: Monaco, Consolas, monospace; padding: 16px;">Error: ${escapeHtml(msg)}</div>`
+      outputDiv.innerHTML = `<div style="color: #ff7b72; font-family: Monaco, Consolas, monospace; padding: 16px;">Error: ${escapeHtml(msg)}</div>`
       const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
-      if (lineNumDiv) lineNumDiv.innerHTML = '<div style="line-height: 1.4; color: #6b7280; text-align: right; padding-right: 8px; font-size: 0.875rem;">1</div>'
+      if (lineNumDiv) lineNumDiv.innerHTML = '<div style="line-height: 1.4; color: #8b949e; text-align: right; padding-right: 8px; font-size: 0.875rem;">1</div>'
       if (onRunError) onRunError('Code execution failed. Please check your syntax.')
     }
   }
@@ -459,11 +459,11 @@ export default function SessionPlayground({
             style={{
               width: '32px',
               minWidth: '32px',
-              backgroundColor: '#f9fafb',
-              borderRight: '1px solid #e5e7eb',
+              backgroundColor: '#0d1117',
+              borderRight: '1px solid #30363d',
               padding: '16px 4px',
               fontSize: '0.875rem',
-              color: '#9ca3af',
+              color: '#8b949e',
               fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
               lineHeight: '1.4',
               textAlign: 'right',
@@ -584,17 +584,17 @@ export default function SessionPlayground({
           </div>
         </div>
 
-        <div style={{ flex: 1, backgroundColor: '#1e1e1e', border: '1px solid #333', borderTop: 'none', display: 'flex', minHeight: 0 }}>
+        <div style={{ flex: 1, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none', display: 'flex', minHeight: 0 }}>
           <div
             className="terminal-line-numbers"
             style={{
               width: '32px',
               minWidth: '32px',
-              backgroundColor: '#2d2d2d',
-              borderRight: '1px solid #404040',
+              backgroundColor: '#0d1117',
+              borderRight: '1px solid #30363d',
               padding: '16px 4px',
               fontSize: '0.875rem',
-              color: '#6b7280',
+              color: '#8b949e',
               fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
               lineHeight: '1.4',
               textAlign: 'right',
@@ -613,8 +613,8 @@ export default function SessionPlayground({
             style={{
               flex: 1,
               padding: '16px',
-              backgroundColor: '#1e1e1e',
-              color: '#10a37f',
+              backgroundColor: '#0d1117',
+              color: '#7ee787',
               fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
               fontSize: '0.875rem',
               lineHeight: '1.4',
@@ -623,7 +623,7 @@ export default function SessionPlayground({
               height: '100%'
             }}
           >
-            <div style={{ color: '#6b7280', fontStyle: 'italic' }}>Click "Run" to execute your code. Syntax errors will appear here when you run invalid code.</div>
+            <div style={{ color: '#8b949e', fontStyle: 'italic' }}>Click "Run" to execute your code. Syntax errors will appear here when you run invalid code.</div>
           </div>
         </div>
       </div>

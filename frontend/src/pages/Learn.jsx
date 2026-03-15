@@ -1612,15 +1612,15 @@ const Learn = () => {
               borderRadius: '6px',
               overflow: 'hidden'
             }}>
-              {/* Line Numbers - narrow width for ~4 digits (Vercel + localhost) */}
+              {/* Line Numbers - match code editor black background */}
               <div className="playground-line-numbers" style={{
                 width: '32px',
                 minWidth: '32px',
-                backgroundColor: '#f9fafb',
-                borderRight: '1px solid #e5e7eb',
+                backgroundColor: '#0d1117',
+                borderRight: '1px solid #30363d',
                 padding: '16px 4px',
                 fontSize: '0.875rem',
-                color: '#9ca3af',
+                color: '#8b949e',
                 fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
                 lineHeight: '1.4',
                 textAlign: 'right',
@@ -1968,17 +1968,17 @@ const Learn = () => {
               const padV = 16
               const padH = 12
               return (
-                <div style={{ flex: 1, display: 'flex', minHeight: 0, backgroundColor: '#1e1e1e', border: '1px solid #333', borderTop: 'none' }}>
+                <div style={{ flex: 1, display: 'flex', minHeight: 0, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none' }}>
                   <div
                     className="assignment-terminal-line-numbers"
                     style={{
                       width: '32px',
                       minWidth: '32px',
-                      backgroundColor: '#2d2d2d',
-                      borderRight: '1px solid #404040',
+                      backgroundColor: '#0d1117',
+                      borderRight: '1px solid #30363d',
                       padding: `${padV}px 4px`,
                       fontSize: '0.8125rem',
-                      color: '#6b7280',
+                      color: '#8b949e',
                       fontFamily: 'Monaco, Consolas, monospace',
                       lineHeight: `${lineHeightPx}px`,
                       textAlign: 'right',
@@ -2002,8 +2002,8 @@ const Learn = () => {
                     style={{
                       flex: 1,
                       padding: `${padV}px ${padH}px`,
-                      backgroundColor: '#1e1e1e',
-                      color: isError ? '#ef4444' : '#10a37f',
+                      backgroundColor: '#0d1117',
+                      color: isError ? '#ff7b72' : '#7ee787',
                       fontFamily: 'Monaco, Consolas, monospace',
                       fontSize: '0.875rem',
                       lineHeight: `${lineHeightPx}px`,
@@ -2018,7 +2018,7 @@ const Learn = () => {
                         </div>
                       ))
                     ) : (
-                      <span style={{ fontStyle: 'italic', color: '#6b7280' }}>Click &quot;Run&quot; to test your assignment code</span>
+                      <span style={{ fontStyle: 'italic', color: '#8b949e' }}>Click &quot;Run&quot; to test your assignment code</span>
                     )}
                   </div>
                 </div>
