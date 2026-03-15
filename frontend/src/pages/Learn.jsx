@@ -1117,6 +1117,21 @@ const Learn = () => {
   // Topic notes view: same message UI as session so outcome_messages match session display
   if (searchParams.get('view') === 'notes') {
     const notesContent = topic.topic_notes && typeof topic.topic_notes === 'string' && topic.topic_notes.trim()
+    // Debug: find why notes show content not in project – check Console for this log
+    if (typeof window !== 'undefined' && (import.meta.env?.DEV || searchParams.get('debug') === '1')) {
+      const hasOM = !!(topic.outcome_messages && Array.isArray(topic.outcome_messages))
+      const omLen = topic.outcome_messages?.length ?? 0
+      const outLen = topic.outcomes?.length ?? 0
+      console.debug('[Notes source]', {
+        topicId: topic.id,
+        hasTopicNotes: !!notesContent,
+        topicNotesPreview: notesContent ? notesContent.slice(0, 100) + '...' : null,
+        hasOutcomeMessages: hasOM,
+        outcomeMessagesLength: omLen,
+        outcomesLength: outLen,
+        showing: (hasOM && outLen && omLen === outLen) ? 'Q&A (outcome_messages)' : notesContent ? 'topic_notes (fallback)' : 'outcomes list only'
+      })
+    }
     const hasOutcomeMessages =
       topic.outcome_messages &&
       Array.isArray(topic.outcome_messages) &&

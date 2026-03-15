@@ -1150,4 +1150,38 @@ router.get('/debug/topics', (req, res) => {
   }
 })
 
+// Debug: Raw topic from curriculum (no auth, no progress) – use to compare with GET /topic/:id response
+// If GET /topic/:id returns topic_notes or different outcome_messages, the source is outside this curriculum.
+router.get('/debug/topic/:topicId', (req, res) => {
+  try {
+    const { topicId } = req.params
+    const topic = findTopicById(courses, topicId)
+    if (!topic) {
+      return res.status(404).json(createErrorResponse('Topic not found'))
+    }
+    const summary = {
+      id: topic.id,
+      title: topic.title,
+      hasOutcomes: !!topic.outcomes,
+      outcomesLength: topic.outcomes?.length ?? 0,
+      hasOutcomeMessages: !!topic.outcome_messages,
+      outcomeMessagesLength: topic.outcome_messages?.length ?? 0,
+      hasTopicNotes: !!(topic.topic_notes && String(topic.topic_notes).trim()),
+      topicNotesLength: typeof topic.topic_notes === 'string' ? topic.topic_notes.length : 0
+    }
+    res.json(createSuccessResponse({
+      summary,
+      topic: {
+        id: topic.id,
+        title: topic.title,
+        outcomes: topic.outcomes,
+        outcome_messages: topic.outcome_messages ? topic.outcome_messages.map(m => (typeof m === 'string' ? m.slice(0, 80) + '...' : '(non-string)')) : undefined,
+        topic_notes: topic.topic_notes != null ? (typeof topic.topic_notes === 'string' ? topic.topic_notes.slice(0, 200) + '...' : '(present)') : undefined
+      }
+    }))
+  } catch (error) {
+    handleErrorResponse(res, error, 'Failed to get debug topic')
+  }
+})
+
 export default router
