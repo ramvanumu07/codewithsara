@@ -271,9 +271,10 @@
   margin-bottom: 0;
 }
 
+/* Important terms: light green (no bold) – like code keywords but green */
 .message-markdown strong {
-  font-weight: 600;
-  color: #111827;
+  font-weight: 400;
+  color: #047857;
 }
 
 .message-markdown em {
@@ -1193,8 +1194,8 @@
   }
 
   .notes-panel-content strong {
-    font-weight: 600;
-    color: #1a202c;
+    font-weight: 400;
+    color: #047857;
   }
 
   .notes-panel-content h1,
@@ -1291,8 +1292,8 @@
   }
 
   .playtime-message strong {
-    font-weight: 600;
-    color: #1a202c;
+    font-weight: 400;
+    color: #047857;
   }
 
   .playtime-message em {
