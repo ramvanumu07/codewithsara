@@ -1,4 +1,4 @@
-/** Topic: Working with Dates (date-time) */
+/** Topic: Working with Dates */
 export default {
   "id": "date-time",
   "title": "Working with Dates",
