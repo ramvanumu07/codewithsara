@@ -20,13 +20,46 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Print: He said \"JavaScript is amazing\"\n// Your output should be exactly:\n// He said \"JavaScript is amazing\"",
+      "description": "// Print: He said \"JavaScript is amazing\"\n// Your output should be exactly:\n// He said \"JavaScript is amazing\"\n",
       "solution_type": "script",
       "reference_solution": "console.log('He said \"JavaScript is amazing\"')",
       "testCases": [
         {
           "input": {},
           "expectedOutput": "He said \"JavaScript is amazing\""
+        }
+      ]
+    },
+    {
+      "description": "// Print two lines: first line the number 7, second line the result of 20 minus 3.\n// Use console.log for each line. No quotes around numbers.\n// Your output should be exactly:\n// 7\n// 17\n",
+      "solution_type": "script",
+      "reference_solution": "console.log(7);\nconsole.log(20 - 3);",
+      "testCases": [
+        {
+          "input": {},
+          "expectedOutput": "7\n17"
+        }
+      ]
+    },
+    {
+      "description": "// Print one line: the word Hello, a single space, then the word World.\n// Use string concatenation (+) and include a space between the two words.\n// Your output should be exactly:\n// Hello World\n",
+      "solution_type": "script",
+      "reference_solution": "console.log(\"Hello\" + \" \" + \"World\");",
+      "testCases": [
+        {
+          "input": {},
+          "expectedOutput": "Hello World"
+        }
+      ]
+    },
+    {
+      "description": "// Print one line with three values separated by spaces: the number 10, the word items, and the number 20.\n// Use comma-separated arguments in a single console.log (e.g. console.log(a, b, c)).\n// Your output should be exactly:\n// 10 items 20\n",
+      "solution_type": "script",
+      "reference_solution": "console.log(10, \"items\", 20);",
+      "testCases": [
+        {
+          "input": {},
+          "expectedOutput": "10 items 20"
         }
       ]
     }

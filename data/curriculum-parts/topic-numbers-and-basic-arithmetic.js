@@ -7,7 +7,7 @@ export default {
     "Basic Arithmetic",
     "Modulo Operator",
     "Operator Precedence",
-    "Compound Logic"
+    "Compound assignment"
   ],
   "outcome_messages": [
     "Let's work with numbers.\n\nJavaScript has one number type: whole numbers (integers) and decimals both use the same type. You can use positive, negative, and decimal values.\n\n## Example\n\n```javascript\nconst a = 42;\nconst b = 3.14;\nconsole.log(a);\nconsole.log(b);\n```\n\n## Output\n\n```\n42\n3.14\n```\n\nNo quotes around numbers—they are values, not text. Integers and decimals are both numbers.\n\n## Practice\n\nWrite code that stores 42 and 3.14 and prints both.",

@@ -9,7 +9,7 @@ export default {
     "Absolute Values and Distance: Math.abs()",
     "Powers and Roots: Math.pow() and Math.sqrt()",
     "Boundary Logic: Finding Math.min() and Math.max()",
-    "Stochastic Logic: Generating Math.random()",
+    "Random numbers: Math.random()",
     "Formula Design: Scaling Random Numbers to a Range",
     "Mathematical Constants: Math.PI and Math.E"
   ],
