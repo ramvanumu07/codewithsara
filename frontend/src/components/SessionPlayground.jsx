@@ -8,6 +8,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import CodeExecutor from '../services/CodeExecutor'
 import { copyToClipboard } from '../utils/copyToClipboard'
+import CodeEditorInline from './CodeEditorInline'
 
 const AUTO_CLOSING_PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' }
 
@@ -452,94 +453,13 @@ export default function SessionPlayground({
           </div>
         </div>
 
-        <div style={{ flex: 1, minHeight: '300px', display: 'flex', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '6px', overflow: 'hidden' }}>
-          <div
-            className="playground-line-numbers"
-            style={{
-              width: '32px',
-              minWidth: '32px',
-              backgroundColor: '#f9fafb',
-              borderRight: '1px solid #e5e7eb',
-              padding: '16px 4px',
-              fontSize: '0.875rem',
-              color: '#9ca3af',
-              fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-              lineHeight: '1.4',
-              textAlign: 'right',
-              userSelect: 'none',
-              overflow: 'hidden',
-              flexShrink: 0
-            }}
-          >
-            {(code || '').split('\n').map((_, index) => (
-              <div key={index} style={{ lineHeight: '1.4', fontSize: '0.875rem' }}>{index + 1}</div>
-            ))}
-          </div>
-          <textarea
-            ref={editorTextareaRef}
-            className="playground-textarea"
-            value={code || ''}
-            onBeforeInput={handleBeforeInput}
-            onChange={(e) => {
-              const newVal = e.target.value
-              const oldVal = code || ''
-              // Mobile: soft keyboards often don't fire keydown with e.key, so auto-close in onChange
-              if (newVal.length === oldVal.length + 1) {
-                let insertIndex = -1
-                let insertedChar = ''
-                for (let i = 0; i < newVal.length; i++) {
-                  if (oldVal === newVal.slice(0, i) + newVal.slice(i + 1)) {
-                    insertIndex = i
-                    insertedChar = newVal[i]
-                    break
-                  }
-                }
-                if (insertIndex !== -1 && AUTO_CLOSING_PAIRS[insertedChar]) {
-                  if (['"', "'", '`'].includes(insertedChar) && newVal[insertIndex + 1] === insertedChar) {
-                    onCodeChange(newVal)
-                    requestAnimationFrame(() => {
-                      const ta = editorTextareaRef.current
-                      if (ta) ta.selectionStart = ta.selectionEnd = insertIndex + 1
-                    })
-                    return
-                  }
-                  const closeChar = AUTO_CLOSING_PAIRS[insertedChar]
-                  const finalVal = newVal.slice(0, insertIndex + 1) + closeChar + newVal.slice(insertIndex + 1)
-                  onCodeChange(finalVal)
-                  requestAnimationFrame(() => {
-                    const ta = editorTextareaRef.current
-                    if (ta) {
-                      ta.focus()
-                      ta.selectionStart = ta.selectionEnd = insertIndex + 1
-                    }
-                  })
-                  return
-                }
-              }
-              onCodeChange(newVal)
-            }}
-            onScroll={(e) => {
-              const lineNumbers = e.target.parentElement?.querySelector('.playground-line-numbers')
-              if (lineNumbers) lineNumbers.scrollTop = e.target.scrollTop
-            }}
-            onKeyDown={handleKeyDown}
+        <div style={{ flex: 1, minHeight: '300px', display: 'flex', flexDirection: 'column', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '6px', overflow: 'hidden' }}>
+          <CodeEditorInline
+            value={code ?? ''}
+            onChange={(v) => onCodeChange?.(v)}
+            onRun={runPlayground}
             placeholder={placeholder}
-            style={{
-              flex: 1,
-              border: 'none',
-              outline: 'none',
-              resize: 'none',
-              padding: '16px',
-              fontSize: '0.875rem',
-              fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-              lineHeight: '1.4',
-              backgroundColor: 'transparent',
-              color: '#111827',
-              overflow: 'auto',
-              whiteSpace: 'pre',
-              tabSize: 4
-            }}
-            spellCheck={false}
+            height="100%"
           />
         </div>
       </div>

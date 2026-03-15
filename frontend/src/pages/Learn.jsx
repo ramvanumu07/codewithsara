@@ -9,6 +9,8 @@ import CodeExecutor from '../services/CodeExecutor'
 import { useToast } from '../hooks/useToast'
 import { ToastContainer } from '../components/Toast'
 import { copyToClipboard } from '../utils/copyToClipboard'
+import SyntaxHighlightedCode from '../components/SyntaxHighlightedCode'
+import CodeEditorInline from '../components/CodeEditorInline'
 import './Learn.css'
 import './Learn-responsive.css'
 
@@ -83,7 +85,7 @@ const MessageContent = ({ content, role }) => {
           >
             {copiedId === id ? <CheckIcon /> : <CopyIcon />}
           </button>
-          <pre className="message-markdown__code-block">{children}</pre>
+          <SyntaxHighlightedCode code={code} preClassName="message-markdown__code-block" />
         </div>
       )
     }
@@ -124,7 +126,7 @@ function renderFormattedReview(text) {
       const codeEl = React.Children.toArray(children)?.[0]
       const raw = codeEl?.props?.children
       const code = Array.isArray(raw) ? raw.join('') : (typeof raw === 'string' ? raw : String(children ?? ''))
-      return <pre className="message-markdown__code-block"><code>{code}</code></pre>
+      return <SyntaxHighlightedCode code={code} preClassName="message-markdown__code-block" />
     }
   }
   return (
@@ -1142,7 +1144,10 @@ const Learn = () => {
         inline ? (
           <code {...props}>{children}</code>
         ) : (
-          <pre className="notes-code-block" style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'Monaco, Consolas, monospace' }}>{children}</pre>
+          <SyntaxHighlightedCode
+            code={typeof children === 'string' ? children : String(React.Children.toArray(children).join(''))}
+            preClassName="notes-code-block"
+          />
         ),
       pre: ({ children }) => {
         const child = React.Children.only(children)
@@ -1597,316 +1602,23 @@ const Learn = () => {
               </div>
             </div>
 
-            {/* Editor Content */}
+            {/* Editor Content - CodeMirror with syntax highlighting */}
             <div style={{
               flex: 1,
               minHeight: '300px',
               display: 'flex',
+              flexDirection: 'column',
               backgroundColor: '#ffffff',
               border: '1px solid #e5e7eb',
               borderRadius: '6px',
               overflow: 'hidden'
             }}>
-              {/* Line Numbers - narrow width for ~4 digits (Vercel + localhost) */}
-              <div className="playground-line-numbers" style={{
-                width: '32px',
-                minWidth: '32px',
-                backgroundColor: '#f9fafb',
-                borderRight: '1px solid #e5e7eb',
-                padding: '16px 4px',
-                fontSize: '0.875rem',
-                color: '#9ca3af',
-                fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-                lineHeight: '1.4',
-                textAlign: 'right',
-                userSelect: 'none',
-                overflow: 'hidden',
-                flexShrink: 0,
-                position: 'relative'
-              }}>
-                {assignmentCode.split('\n').map((_, index) => (
-                  <div key={index} style={{
-                    lineHeight: '1.4',
-                    fontSize: '0.875rem'
-                  }}>
-                    {index + 1}
-                  </div>
-                ))}
-              </div>
-
-              {/* Code Textarea */}
-              <textarea
-                ref={assignmentTextareaRef}
-                className="playground-textarea"
+              <CodeEditorInline
                 value={assignmentCode}
-                onBeforeInput={handleAssignmentBeforeInput}
-                onChange={(e) => {
-                  const newVal = e.target.value
-                  const oldVal = assignmentCode
-                  // Mobile fallback: soft keyboards often don't fire keydown with e.key, so auto-close in onChange
-                  if (newVal.length === oldVal.length + 1) {
-                    const AUTO_CLOSE_PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' }
-                    let insertIndex = -1
-                    let insertedChar = ''
-                    for (let i = 0; i < newVal.length; i++) {
-                      if (oldVal === newVal.slice(0, i) + newVal.slice(i + 1)) {
-                        insertIndex = i
-                        insertedChar = newVal[i]
-                        break
-                      }
-                    }
-                    if (insertIndex !== -1 && AUTO_CLOSE_PAIRS[insertedChar]) {
-                      // For quotes: don't insert closing quote if next char is already that quote (skip-over case)
-                      if (['"', "'", '`'].includes(insertedChar) && newVal[insertIndex + 1] === insertedChar) {
-                        setAssignmentCode(newVal)
-                        requestAnimationFrame(() => {
-                          const ta = assignmentTextareaRef.current
-                          if (ta) {
-                            ta.selectionStart = ta.selectionEnd = insertIndex + 1
-                          }
-                        })
-                        return
-                      }
-                      const closeChar = AUTO_CLOSE_PAIRS[insertedChar]
-                      const finalVal = newVal.slice(0, insertIndex + 1) + closeChar + newVal.slice(insertIndex + 1)
-                      setAssignmentCode(finalVal)
-                      const cursorPos = insertIndex + 1
-                      requestAnimationFrame(() => {
-                        const ta = assignmentTextareaRef.current
-                        if (ta) {
-                          ta.focus()
-                          ta.selectionStart = ta.selectionEnd = cursorPos
-                        }
-                      })
-                      return
-                    }
-                  }
-                  setAssignmentCode(newVal)
-                }}
-                onScroll={(e) => {
-                  // Sync line numbers with textarea scroll
-                  const lineNumbers = e.target.parentElement.querySelector('.playground-line-numbers')
-                  if (lineNumbers) {
-                    lineNumbers.scrollTop = e.target.scrollTop
-                  }
-                }}
-                onKeyDown={(e) => {
-                  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    handleRunAssignment()
-                    return
-                  }
-
-                  // Handle Tab key for indentation
-                  if (e.key === 'Tab') {
-                    e.preventDefault()
-                    const textarea = e.target
-                    const start = textarea.selectionStart
-                    const end = textarea.selectionEnd
-                    const value = textarea.value
-
-                    // Insert 4 spaces at cursor position
-                    const newValue = value.substring(0, start) + '    ' + value.substring(end)
-                    setAssignmentCode(newValue)
-
-                    // Move cursor after the inserted spaces
-                    setTimeout(() => {
-                      textarea.selectionStart = textarea.selectionEnd = start + 4
-                    }, 0)
-                  }
-
-                  // Handle auto-closing brackets, braces, parentheses, and quotes
-                  const autoClosingPairs = {
-                    '(': ')',
-                    '[': ']',
-                    '{': '}',
-                    '"': '"',
-                    "'": "'",
-                    '`': '`'
-                  }
-
-                  if (autoClosingPairs[e.key]) {
-                    const textarea = e.target
-                    const start = textarea.selectionStart
-                    const end = textarea.selectionEnd
-                    const value = textarea.value
-                    const selectedText = value.substring(start, end)
-
-                    // Get the character after cursor
-                    const nextChar = value.charAt(start)
-
-                    // For quotes, check if we should close or just move cursor
-                    if (['"', "'", '`'].includes(e.key)) {
-                      // If next character is the same quote, just move cursor (don't add another)
-                      if (nextChar === e.key) {
-                        e.preventDefault()
-                        setTimeout(() => {
-                          textarea.selectionStart = textarea.selectionEnd = start + 1
-                        }, 0)
-                        return
-                      }
-
-                      // Check if we're inside a string (basic check)
-                      const beforeCursor = value.substring(0, start)
-                      const quoteCount = (beforeCursor.match(new RegExp('\\' + e.key, 'g')) || []).length
-
-                      // If odd number of quotes before cursor, we're closing a string
-                      if (quoteCount % 2 === 1) {
-                        // Let the default behavior happen (just add the closing quote)
-                        return
-                      }
-                    }
-
-                    e.preventDefault()
-
-                    const openChar = e.key
-                    const closeChar = autoClosingPairs[e.key]
-
-                    if (selectedText) {
-                      // If text is selected, wrap it with the pair
-                      const newValue = value.substring(0, start) + openChar + selectedText + closeChar + value.substring(end)
-                      setAssignmentCode(newValue)
-
-                      // Select the wrapped text
-                      setTimeout(() => {
-                        textarea.selectionStart = start + 1
-                        textarea.selectionEnd = start + 1 + selectedText.length
-                      }, 0)
-                    } else {
-                      // Insert the pair and position cursor between them
-                      const newValue = value.substring(0, start) + openChar + closeChar + value.substring(start)
-                      setAssignmentCode(newValue)
-
-                      // Position cursor between the pair
-                      setTimeout(() => {
-                        textarea.selectionStart = textarea.selectionEnd = start + 1
-                      }, 0)
-                    }
-                  }
-
-                  // Handle closing bracket navigation (skip over closing bracket if it's already there)
-                  if ([')', ']', '}'].includes(e.key)) {
-                    const textarea = e.target
-                    const start = textarea.selectionStart
-                    const value = textarea.value
-                    const nextChar = value.charAt(start)
-
-                    // If the next character is the same closing bracket, just move cursor
-                    if (nextChar === e.key) {
-                      e.preventDefault()
-                      setTimeout(() => {
-                        textarea.selectionStart = textarea.selectionEnd = start + 1
-                      }, 0)
-                    }
-                  }
-
-                  // Handle Backspace key for smart indentation removal
-                  if (e.key === 'Backspace') {
-                    const textarea = e.target
-                    const start = textarea.selectionStart
-                    const end = textarea.selectionEnd
-                    const value = textarea.value
-
-                    // Only handle smart backspace if no text is selected
-                    if (start === end) {
-                      // Get the current line
-                      const beforeCursor = value.substring(0, start)
-                      const currentLineStart = beforeCursor.lastIndexOf('\n') + 1
-                      const currentLine = beforeCursor.substring(currentLineStart)
-
-                      // Check if cursor is at the end of indentation (only spaces before cursor on current line)
-                      const isAtIndentEnd = /^\s+$/.test(currentLine) && currentLine.length > 0
-
-                      // Check if we have at least 4 spaces to remove
-                      const hasEnoughSpaces = currentLine.length >= 4 && currentLine.endsWith('    ')
-
-                      if (isAtIndentEnd && hasEnoughSpaces) {
-                        e.preventDefault()
-
-                        // Remove 4 spaces
-                        const newValue = value.substring(0, start - 4) + value.substring(start)
-                        setAssignmentCode(newValue)
-
-                        // Position cursor
-                        setTimeout(() => {
-                          textarea.selectionStart = textarea.selectionEnd = start - 4
-                        }, 0)
-                      }
-                      // If not at indent end or not enough spaces, let default backspace behavior happen
-                    }
-                  }
-
-                  // Handle Enter key for smart auto-indentation
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    const textarea = e.target
-                    const start = textarea.selectionStart
-                    const value = textarea.value
-
-                    // Get the current line
-                    const beforeCursor = value.substring(0, start)
-                    const currentLineStart = beforeCursor.lastIndexOf('\n') + 1
-                    const currentLine = beforeCursor.substring(currentLineStart)
-
-                    // Calculate current indentation
-                    const currentIndent = currentLine.match(/^(\s*)/)[1]
-
-                    // Check if we need to increase indentation
-                    let newIndent = currentIndent
-
-                    // Increase indentation after opening braces or certain keywords
-                    if (currentLine.trim().endsWith('{') ||
-                      currentLine.trim().match(/\b(if|else|for|while|do|switch|case|function|try|catch|finally)\s*\([^)]*\)\s*$/) ||
-                      currentLine.trim().match(/\b(else|try|finally)\s*$/) ||
-                      currentLine.trim().match(/\bcase\s+.+:\s*$/) ||
-                      currentLine.trim().match(/\bdefault\s*:\s*$/)) {
-                      newIndent += '    ' // Add 4 spaces
-                    }
-
-                    // Check if the next character is a closing brace
-                    const afterCursor = value.substring(start)
-                    const nextChar = afterCursor.charAt(0)
-
-                    if (nextChar === '}') {
-                      // If next char is closing brace, add extra line with reduced indent
-                      const reducedIndent = newIndent.length >= 4 ? newIndent.substring(4) : ''
-                      const newValue = value.substring(0, start) + '\n' + newIndent + '\n' + reducedIndent + value.substring(start)
-                      setAssignmentCode(newValue)
-
-                      // Position cursor on the middle line
-                      setTimeout(() => {
-                        textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length
-                      }, 0)
-                    } else {
-                      // Normal case - just add new line with proper indentation
-                      const newValue = value.substring(0, start) + '\n' + newIndent + value.substring(start)
-                      setAssignmentCode(newValue)
-
-                      // Position cursor after the indentation
-                      setTimeout(() => {
-                        textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length
-                      }, 0)
-                    }
-                  }
-                }}
+                onChange={setAssignmentCode}
+                onRun={handleRunAssignment}
                 placeholder="// Write your assignment code here..."
-                style={{
-                  flex: 1,
-                  border: 'none',
-                  outline: 'none',
-                  resize: 'none',
-                  padding: '16px',
-                  fontSize: '0.875rem',
-                  fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-                  lineHeight: '1.4',
-                  backgroundColor: 'transparent',
-                  color: '#111827',
-                  overflow: 'auto',
-                  whiteSpace: 'pre',
-                  tabSize: 4
-                }}
-                spellCheck={false}
+                height="100%"
               />
             </div>
           </div>

@@ -1,0 +1,65 @@
+/* Match existing code block container; Prism token colors come from theme, we can override for consistency */
+.syntax-highlight-pre {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  background: #1e293b !important;
+  padding: 14px 18px !important;
+  border-radius: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  white-space: pre;
+  word-break: normal;
+  box-sizing: border-box;
+}
+
+.syntax-highlight-pre code {
+  background: none !important;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* Optional: tune token colors to match common editor look (keywords, strings, etc.) */
+.syntax-highlight-pre .token.comment,
+.syntax-highlight-pre .token.prolog,
+.syntax-highlight-pre .token.doctype,
+.syntax-highlight-pre .token.cdata {
+  color: #6b7280;
+}
+
+.syntax-highlight-pre .token.keyword {
+  color: #c084fc;
+}
+
+.syntax-highlight-pre .token.string {
+  color: #86efac;
+}
+
+.syntax-highlight-pre .token.number {
+  color: #fbbf24;
+}
+
+.syntax-highlight-pre .token.function {
+  color: #38bdf8;
+}
+
+.syntax-highlight-pre .token.operator {
+  color: #e2e8f0;
+}
+
+.syntax-highlight-pre .token.punctuation {
+  color: #e2e8f0;
+}
+
+.syntax-highlight-pre .token.boolean {
+  color: #c084fc;
+}
+
+.syntax-highlight-pre .token.regex {
+  color: #f472b6;
+}
