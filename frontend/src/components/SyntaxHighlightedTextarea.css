@@ -1,0 +1,76 @@
+/* Editor overlay: same metrics as textarea, transparent background, token colors for light background */
+.syntax-highlight-textarea-wrapper {
+  /* wrapper already has position relative, flex from inline style */
+}
+
+.syntax-highlight-textarea-layer {
+  /* scroll layer */
+}
+
+.syntax-highlight-editor-pre {
+  margin: 0;
+  padding: 16px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  font-family: 'Monaco', 'Consolas', 'SF Mono', 'Courier New', monospace;
+  white-space: pre;
+  word-break: normal;
+  min-height: 100%;
+  box-sizing: border-box;
+  background: transparent !important;
+}
+
+.syntax-highlight-editor-pre code {
+  background: none !important;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* Token colors readable on light background (assignment/playground panel) */
+.syntax-highlight-editor-pre .token.comment,
+.syntax-highlight-editor-pre .token.prolog,
+.syntax-highlight-editor-pre .token.doctype,
+.syntax-highlight-editor-pre .token.cdata {
+  color: #6b7280;
+}
+
+.syntax-highlight-editor-pre .token.keyword {
+  color: #7c3aed;
+}
+
+.syntax-highlight-editor-pre .token.string {
+  color: #059669;
+}
+
+.syntax-highlight-editor-pre .token.number {
+  color: #b45309;
+}
+
+.syntax-highlight-editor-pre .token.function {
+  color: #0284c7;
+}
+
+.syntax-highlight-editor-pre .token.operator {
+  color: #374151;
+}
+
+.syntax-highlight-editor-pre .token.punctuation {
+  color: #374151;
+}
+
+.syntax-highlight-editor-pre .token.boolean {
+  color: #7c3aed;
+}
+
+.syntax-highlight-editor-pre .token.regex {
+  color: #be185d;
+}
+
+.syntax-highlight-editor-pre .token.property {
+  color: #0369a1;
+}
+
+.syntax-highlight-editor-pre .token.variable {
+  color: #111827;
+}

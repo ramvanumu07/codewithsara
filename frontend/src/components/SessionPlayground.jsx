@@ -8,6 +8,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import CodeExecutor from '../services/CodeExecutor'
 import { copyToClipboard } from '../utils/copyToClipboard'
+import SyntaxHighlightedTextarea from './SyntaxHighlightedTextarea'
 
 const AUTO_CLOSING_PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' }
 
@@ -475,7 +476,7 @@ export default function SessionPlayground({
               <div key={index} style={{ lineHeight: '1.4', fontSize: '0.875rem' }}>{index + 1}</div>
             ))}
           </div>
-          <textarea
+          <SyntaxHighlightedTextarea
             ref={editorTextareaRef}
             className="playground-textarea"
             value={code || ''}
@@ -520,21 +521,6 @@ export default function SessionPlayground({
             }}
             onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            style={{
-              flex: 1,
-              border: 'none',
-              outline: 'none',
-              resize: 'none',
-              padding: '16px',
-              fontSize: '0.875rem',
-              fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-              lineHeight: '1.4',
-              backgroundColor: 'transparent',
-              color: '#111827',
-              overflow: 'auto',
-              whiteSpace: 'pre',
-              tabSize: 4
-            }}
             spellCheck={false}
           />
         </div>

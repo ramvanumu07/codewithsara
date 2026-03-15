@@ -10,6 +10,7 @@ import { useToast } from '../hooks/useToast'
 import { ToastContainer } from '../components/Toast'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import SyntaxHighlightedCode from '../components/SyntaxHighlightedCode'
+import SyntaxHighlightedTextarea from '../components/SyntaxHighlightedTextarea'
 import './Learn.css'
 import './Learn-responsive.css'
 
@@ -1638,8 +1639,8 @@ const Learn = () => {
                 ))}
               </div>
 
-              {/* Code Textarea */}
-              <textarea
+              {/* Code Textarea with syntax highlight overlay (colors only, same layout) */}
+              <SyntaxHighlightedTextarea
                 ref={assignmentTextareaRef}
                 className="playground-textarea"
                 value={assignmentCode}
@@ -1790,21 +1791,6 @@ const Learn = () => {
                   }
                 }}
                 placeholder="// Write your assignment code here..."
-                style={{
-                  flex: 1,
-                  border: 'none',
-                  outline: 'none',
-                  resize: 'none',
-                  padding: '16px',
-                  fontSize: '0.875rem',
-                  fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-                  lineHeight: '1.4',
-                  backgroundColor: 'transparent',
-                  color: '#111827',
-                  overflow: 'auto',
-                  whiteSpace: 'pre',
-                  tabSize: 4
-                }}
                 spellCheck={false}
               />
             </div>
