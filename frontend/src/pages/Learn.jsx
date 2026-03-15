@@ -10,7 +10,6 @@ import { useToast } from '../hooks/useToast'
 import { ToastContainer } from '../components/Toast'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import SyntaxHighlightedCode from '../components/SyntaxHighlightedCode'
-import CodeEditorInline from '../components/CodeEditorInline'
 import './Learn.css'
 import './Learn-responsive.css'
 
@@ -1602,23 +1601,211 @@ const Learn = () => {
               </div>
             </div>
 
-            {/* Editor Content - CodeMirror with syntax highlighting */}
+            {/* Editor Content */}
             <div style={{
               flex: 1,
               minHeight: '300px',
               display: 'flex',
-              flexDirection: 'column',
               backgroundColor: '#ffffff',
               border: '1px solid #e5e7eb',
               borderRadius: '6px',
               overflow: 'hidden'
             }}>
-              <CodeEditorInline
+              {/* Line Numbers - narrow width for ~4 digits (Vercel + localhost) */}
+              <div className="playground-line-numbers" style={{
+                width: '32px',
+                minWidth: '32px',
+                backgroundColor: '#f9fafb',
+                borderRight: '1px solid #e5e7eb',
+                padding: '16px 4px',
+                fontSize: '0.875rem',
+                color: '#9ca3af',
+                fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
+                lineHeight: '1.4',
+                textAlign: 'right',
+                userSelect: 'none',
+                overflow: 'hidden',
+                flexShrink: 0,
+                position: 'relative'
+              }}>
+                {assignmentCode.split('\n').map((_, index) => (
+                  <div key={index} style={{
+                    lineHeight: '1.4',
+                    fontSize: '0.875rem'
+                  }}>
+                    {index + 1}
+                  </div>
+                ))}
+              </div>
+
+              {/* Code Textarea */}
+              <textarea
+                ref={assignmentTextareaRef}
+                className="playground-textarea"
                 value={assignmentCode}
-                onChange={setAssignmentCode}
-                onRun={handleRunAssignment}
+                onBeforeInput={handleAssignmentBeforeInput}
+                onChange={(e) => {
+                  const newVal = e.target.value
+                  const oldVal = assignmentCode
+                  if (newVal.length === oldVal.length + 1) {
+                    const AUTO_CLOSE_PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' }
+                    let insertIndex = -1
+                    let insertedChar = ''
+                    for (let i = 0; i < newVal.length; i++) {
+                      if (oldVal === newVal.slice(0, i) + newVal.slice(i + 1)) {
+                        insertIndex = i
+                        insertedChar = newVal[i]
+                        break
+                      }
+                    }
+                    if (insertIndex !== -1 && AUTO_CLOSE_PAIRS[insertedChar]) {
+                      if (['"', "'", '`'].includes(insertedChar) && newVal[insertIndex + 1] === insertedChar) {
+                        setAssignmentCode(newVal)
+                        requestAnimationFrame(() => {
+                          const ta = assignmentTextareaRef.current
+                          if (ta) { ta.selectionStart = ta.selectionEnd = insertIndex + 1 }
+                        })
+                        return
+                      }
+                      const closeChar = AUTO_CLOSE_PAIRS[insertedChar]
+                      const finalVal = newVal.slice(0, insertIndex + 1) + closeChar + newVal.slice(insertIndex + 1)
+                      setAssignmentCode(finalVal)
+                      requestAnimationFrame(() => {
+                        const ta = assignmentTextareaRef.current
+                        if (ta) { ta.focus(); ta.selectionStart = ta.selectionEnd = insertIndex + 1 }
+                      })
+                      return
+                    }
+                  }
+                  setAssignmentCode(newVal)
+                }}
+                onScroll={(e) => {
+                  const lineNumbers = e.target.parentElement?.querySelector('.playground-line-numbers')
+                  if (lineNumbers) lineNumbers.scrollTop = e.target.scrollTop
+                }}
+                onKeyDown={(e) => {
+                  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    handleRunAssignment()
+                    return
+                  }
+                  if (e.key === 'Tab') {
+                    e.preventDefault()
+                    const textarea = e.target
+                    const start = textarea.selectionStart
+                    const end = textarea.selectionEnd
+                    const value = textarea.value
+                    const newValue = value.substring(0, start) + '    ' + value.substring(end)
+                    setAssignmentCode(newValue)
+                    setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 4 }, 0)
+                  }
+                  const autoClosingPairs = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' }
+                  if (autoClosingPairs[e.key]) {
+                    const textarea = e.target
+                    const start = textarea.selectionStart
+                    const end = textarea.selectionEnd
+                    const value = textarea.value
+                    const selectedText = value.substring(start, end)
+                    const nextChar = value.charAt(start)
+                    if (['"', "'", '`'].includes(e.key)) {
+                      if (nextChar === e.key) {
+                        e.preventDefault()
+                        setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 }, 0)
+                        return
+                      }
+                      const beforeCursor = value.substring(0, start)
+                      const quoteCount = (beforeCursor.match(new RegExp('\\' + e.key, 'g')) || []).length
+                      if (quoteCount % 2 === 1) return
+                    }
+                    e.preventDefault()
+                    const openChar = e.key
+                    const closeChar = autoClosingPairs[e.key]
+                    if (selectedText) {
+                      const newValue = value.substring(0, start) + openChar + selectedText + closeChar + value.substring(end)
+                      setAssignmentCode(newValue)
+                      setTimeout(() => { textarea.selectionStart = start + 1; textarea.selectionEnd = start + 1 + selectedText.length }, 0)
+                    } else {
+                      const newValue = value.substring(0, start) + openChar + closeChar + value.substring(start)
+                      setAssignmentCode(newValue)
+                      setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 }, 0)
+                    }
+                  }
+                  if ([')', ']', '}'].includes(e.key)) {
+                    const textarea = e.target
+                    const start = textarea.selectionStart
+                    const value = textarea.value
+                    if (value.charAt(start) === e.key) {
+                      e.preventDefault()
+                      setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 }, 0)
+                    }
+                  }
+                  if (e.key === 'Backspace') {
+                    const textarea = e.target
+                    const start = textarea.selectionStart
+                    const end = textarea.selectionEnd
+                    const value = textarea.value
+                    if (start === end) {
+                      const beforeCursor = value.substring(0, start)
+                      const currentLineStart = beforeCursor.lastIndexOf('\n') + 1
+                      const currentLine = beforeCursor.substring(currentLineStart)
+                      const isAtIndentEnd = /^\s+$/.test(currentLine) && currentLine.length > 0
+                      const hasEnoughSpaces = currentLine.length >= 4 && currentLine.endsWith('    ')
+                      if (isAtIndentEnd && hasEnoughSpaces) {
+                        e.preventDefault()
+                        setAssignmentCode(value.substring(0, start - 4) + value.substring(start))
+                        setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start - 4 }, 0)
+                      }
+                    }
+                  }
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    const textarea = e.target
+                    const start = textarea.selectionStart
+                    const value = textarea.value
+                    const beforeCursor = value.substring(0, start)
+                    const currentLineStart = beforeCursor.lastIndexOf('\n') + 1
+                    const currentLine = beforeCursor.substring(currentLineStart)
+                    const currentIndent = currentLine.match(/^(\s*)/)[1]
+                    let newIndent = currentIndent
+                    if (currentLine.trim().endsWith('{') ||
+                      currentLine.trim().match(/\b(if|else|for|while|do|switch|case|function|try|catch|finally)\s*\([^)]*\)\s*$/) ||
+                      currentLine.trim().match(/\b(else|try|finally)\s*$/) ||
+                      currentLine.trim().match(/\bcase\s+.+:\s*$/) ||
+                      currentLine.trim().match(/\bdefault\s*:\s*$/)) {
+                      newIndent += '    '
+                    }
+                    const afterCursor = value.substring(start)
+                    const nextChar = afterCursor.charAt(0)
+                    if (nextChar === '}') {
+                      const reducedIndent = newIndent.length >= 4 ? newIndent.substring(4) : ''
+                      const newValue = value.substring(0, start) + '\n' + newIndent + '\n' + reducedIndent + value.substring(start)
+                      setAssignmentCode(newValue)
+                      setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length }, 0)
+                    } else {
+                      const newValue = value.substring(0, start) + '\n' + newIndent + value.substring(start)
+                      setAssignmentCode(newValue)
+                      setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length }, 0)
+                    }
+                  }
+                }}
                 placeholder="// Write your assignment code here..."
-                height="100%"
+                style={{
+                  flex: 1,
+                  border: 'none',
+                  outline: 'none',
+                  resize: 'none',
+                  padding: '16px',
+                  fontSize: '0.875rem',
+                  fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
+                  lineHeight: '1.4',
+                  backgroundColor: 'transparent',
+                  color: '#111827',
+                  overflow: 'auto',
+                  whiteSpace: 'pre',
+                  tabSize: 4
+                }}
+                spellCheck={false}
               />
             </div>
           </div>
