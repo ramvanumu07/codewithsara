@@ -1,10 +1,10 @@
-/* Editor overlay: same metrics as textarea, transparent background, token colors for light background */
+/* Editor overlay: black background, light token colors */
 .syntax-highlight-textarea-wrapper {
-  /* wrapper already has position relative, flex from inline style */
+  background: #0d1117;
 }
 
 .syntax-highlight-textarea-layer {
-  /* scroll layer */
+  background: #0d1117;
 }
 
 .syntax-highlight-editor-pre {
@@ -17,7 +17,7 @@
   word-break: normal;
   min-height: 100%;
   box-sizing: border-box;
-  background: transparent !important;
+  background: #0d1117 !important;
 }
 
 .syntax-highlight-editor-pre code {
@@ -27,50 +27,50 @@
   font-family: inherit;
 }
 
-/* Token colors readable on light background (assignment/playground panel) */
+/* Token colors for black background */
 .syntax-highlight-editor-pre .token.comment,
 .syntax-highlight-editor-pre .token.prolog,
 .syntax-highlight-editor-pre .token.doctype,
 .syntax-highlight-editor-pre .token.cdata {
-  color: #6b7280;
+  color: #8b949e;
 }
 
 .syntax-highlight-editor-pre .token.keyword {
-  color: #7c3aed;
+  color: #ff7b72;
 }
 
 .syntax-highlight-editor-pre .token.string {
-  color: #059669;
+  color: #a5d6ff;
 }
 
 .syntax-highlight-editor-pre .token.number {
-  color: #b45309;
+  color: #79c0ff;
 }
 
 .syntax-highlight-editor-pre .token.function {
-  color: #0284c7;
+  color: #d2a8ff;
 }
 
 .syntax-highlight-editor-pre .token.operator {
-  color: #374151;
+  color: #e2e8f0;
 }
 
 .syntax-highlight-editor-pre .token.punctuation {
-  color: #374151;
+  color: #e2e8f0;
 }
 
 .syntax-highlight-editor-pre .token.boolean {
-  color: #7c3aed;
+  color: #ff7b72;
 }
 
 .syntax-highlight-editor-pre .token.regex {
-  color: #be185d;
+  color: #a5d6ff;
 }
 
 .syntax-highlight-editor-pre .token.property {
-  color: #0369a1;
+  color: #79c0ff;
 }
 
 .syntax-highlight-editor-pre .token.variable {
-  color: #111827;
+  color: #e2e8f0;
 }

@@ -35,7 +35,7 @@ const SyntaxHighlightedTextarea = React.forwardRef(function SyntaxHighlightedTex
     tabSize: 4,
     backgroundColor: 'transparent',
     color: 'transparent',
-    caretColor: '#111827',
+    caretColor: '#e2e8f0',
     ...style
   }
 
