@@ -20,18 +20,7 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Print: He said \"JavaScript is amazing\"\n// Your output should be exactly:\n// He said \"JavaScript is amazing\"\n",
-      "solution_type": "script",
-      "reference_solution": "console.log('He said \"JavaScript is amazing\"')",
-      "testCases": [
-        {
-          "input": {},
-          "expectedOutput": "He said \"JavaScript is amazing\""
-        }
-      ]
-    },
-    {
-      "description": "// Print two lines: first line the number 7, second line the result of 20 minus 3.\n// Use console.log for each line. No quotes around numbers.\n// Your output should be exactly:\n// 7\n// 17\n",
+      "description": "// Print two lines: first line the number 7, second line the result of 20 minus 3.\n// Use console.log for each line.\n// Your output should be exactly:\n// 7\n// 17\n",
       "solution_type": "script",
       "reference_solution": "console.log(7);\nconsole.log(20 - 3);",
       "testCases": [
@@ -53,13 +42,24 @@ export default {
       ]
     },
     {
-      "description": "// Print one line with three values separated by spaces: the number 10, the word items, and the number 20.\n// Use comma-separated arguments in a single console.log (e.g. console.log(a, b, c)).\n// Your output should be exactly:\n// 10 items 20\n",
+      "description": "// Print one line with three values separated by spaces: the number 10, the word items, and the expression 50 * 2.\n// Use comma-separated arguments in a single console.log (e.g. console.log(a, b, c)).\n// Your output should be exactly:\n// 10 items 100\n",
       "solution_type": "script",
-      "reference_solution": "console.log(10, \"items\", 20);",
+      "reference_solution": "console.log(10, \"items\", 50 * 2);",
       "testCases": [
         {
           "input": {},
           "expectedOutput": "10 items 20"
+        }
+      ]
+    },
+    {
+      "description": "// Print: He said \"JavaScript is amazing\"\n// Your output should be exactly:\n// He said \"JavaScript is amazing\"\n",
+      "solution_type": "script",
+      "reference_solution": "console.log('He said \"JavaScript is amazing\"')",
+      "testCases": [
+        {
+          "input": {},
+          "expectedOutput": "He said \"JavaScript is amazing\""
         }
       ]
     }
