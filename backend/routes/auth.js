@@ -21,7 +21,7 @@ import {
   initializeDatabase
 } from '../services/database.js'
 import { getAllTopics } from '../utils/curriculum.js'
-import { courses } from '../../data/curriculum.js'
+import { courses } from '../data/curriculum.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { logError } from '../services/logger.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'

@@ -22,7 +22,7 @@ import {
 import { generateCertificatePDF, CERTIFICATE_TOPICS } from '../services/certificate.js'
 import { saveInitialMessage, getChatHistoryString, getChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
 import { invalidateChatHistoryCache } from '../services/chatCache.js'
-import { courses } from '../../data/curriculum.js'
+import { courses } from '../data/curriculum.js'
 import { formatLearningObjectives, findTopicById, getAllTopics } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'

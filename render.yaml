@@ -1,5 +1,4 @@
-# Deploy from repo root so backend can load ../../data/curriculum.js (topics + assignments).
-# With rootDir: backend, Render may not include repo-root data/ at runtime.
+# Backend runs from repo root; prestart copies data/ -> backend/data so curriculum loads at runtime.
 services:
   - type: web
     name: sara-api
