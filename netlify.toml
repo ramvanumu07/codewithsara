@@ -1,5 +1,7 @@
 # Sara – frontend on Netlify; API on Render (avoids __dirname bundling issues)
 # Set VITE_API_BASE_URL in Netlify env to your Render API URL (e.g. https://sara-api.onrender.com)
+# Note: Topic content (notes, assignments/tasks) is loaded by the API at startup. After changing
+# data/curriculum-parts/* or data/curriculum.js, redeploy the backend on Render so the API serves the new content.
 
 [build]
   base    = ""
