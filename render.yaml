@@ -1,10 +1,11 @@
+# Deploy from repo root so backend can load ../../data/curriculum.js (topics + assignments).
+# With rootDir: backend, Render may not include repo-root data/ at runtime.
 services:
   - type: web
     name: sara-api
     runtime: node
-    rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
         value: production
