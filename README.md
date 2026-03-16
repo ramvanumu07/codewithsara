@@ -5,7 +5,7 @@ AI-powered JavaScript learning platform — React + Vite frontend, Node/Express 
 ## Repo layout
 
 - **`/frontend`** — React + Vite app (deploy to **Netlify**)
-- **`/backend`** — Express API (deploy to **Render** or any Node host)
+- **`/backend`** — Express API + curriculum in `backend/data/` (deploy to **Render** with rootDir: backend)
 - **Root** — Workspace scripts (`dev`, `build`, `install:all`)
 
 ## Run locally
@@ -43,7 +43,7 @@ AI-powered JavaScript learning platform — React + Vite frontend, Node/Express 
 
 - **Frontend** — Netlify: connect repo, build command `npm run build`, publish directory `frontend/dist`. Root `netlify.toml` is already configured.
 - **Backend** — Netlify Functions (see `netlify.toml`) or Render/any Node host. **Important:** Set env vars in your hosting dashboard:
-  - **Curriculum / assignments:** Topic data (notes, tasks) is loaded by the API at startup from `data/curriculum.js` and `data/curriculum-parts/*`. After adding or editing topics or assignments, **redeploy the backend** (e.g. on Render); deploying only the frontend to Netlify will not update what the API serves.
+  - **Curriculum / assignments:** Topic data lives in `backend/data/` (`curriculum.js`, `curriculum-parts/*`). The API loads it at startup. Edit topics/assignments there and redeploy the backend so the live site updates.
   - `DATABASE_URL` — Neon Postgres connection string
   - `JWT_SECRET` — random secret for auth
   - `GROQ_API_KEY` — for AI chat

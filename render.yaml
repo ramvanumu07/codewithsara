@@ -1,10 +1,11 @@
-# Backend runs from repo root; prestart copies data/ -> backend/data so curriculum loads at runtime.
+# Curriculum lives in backend/data/ so deploying backend (rootDir: backend) includes all topics/tasks.
 services:
   - type: web
     name: sara-api
     runtime: node
-    buildCommand: cd backend && npm install
-    startCommand: cd backend && npm start
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
