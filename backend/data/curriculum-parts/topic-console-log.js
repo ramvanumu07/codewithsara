@@ -42,7 +42,7 @@ export default {
       ]
     },
     {
-      "description": "// Print one line with three values separated by spaces: the number 10, the word items, and the expression 50 * 2.\n// Use comma-separated arguments in a single console.log (e.g. console.log(a, b, c)).\n// Your output should be exactly:\n// 10 items 100",
+      "description": "// Print one line with three values separated by spaces: the number 10, the word items, and the expression 50 * 2.\n// Use comma-separated arguments in a single console log.\n// Your output should be exactly:\n// 10 items 100",
       "solution_type": "script",
       "reference_solution": "console.log(10, \"items\", 50 * 2);",
       "testCases": [
