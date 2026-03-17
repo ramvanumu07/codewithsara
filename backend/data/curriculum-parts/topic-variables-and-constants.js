@@ -44,37 +44,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename num1, num2, num3, use them as input for your program.\n// While testing we will change their values.\nconst num1 = 5;\nconst num2 = 12;\nconst num3 = 8;\n// Calculate a running sum: start with num1, add num2, then add num3\n// Print the sum after each addition\n// For example, if num1 = 5, num2 = 12, num3 = 8, your output should be:\n// 5\n// 17\n// 25",
-      "solution_type": "script",
-      "reference_solution": "const num1 = 5;\nconst num2 = 12;\nconst num3 = 8;\nlet sum = num1;\nconsole.log(sum);\nsum = sum + num2;\nconsole.log(sum);\nsum = sum + num3;\nconsole.log(sum);",
-      "testCases": [
-        {
-          "input": {
-            "num1": 5,
-            "num2": 12,
-            "num3": 8
-          },
-          "expectedOutput": "5\n17\n25"
-        },
-        {
-          "input": {
-            "num1": 10,
-            "num2": 20,
-            "num3": 30
-          },
-          "expectedOutput": "10\n30\n60"
-        },
-        {
-          "input": {
-            "num1": 1,
-            "num2": 2,
-            "num3": 3
-          },
-          "expectedOutput": "1\n3\n6"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename start and increment, use them as input for your program.\n// While testing we will change their values.\nconst start = 10;\nconst increment = 3;\n// Create a counter starting at 'start' and increment it 4 times by 'increment'\n// Print the counter value after each increment\n// For example, if start = 10 and increment = 3, your output should be:\n// 13\n// 16\n// 19\n// 22",
       "solution_type": "script",
       "reference_solution": "const start = 10;\nconst increment = 3;\nlet counter = start;\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);",
@@ -214,65 +183,6 @@ export default {
             "score3": 100
           },
           "expectedOutput": "250\n83.33333333333333"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename distance and time, use them as input for your program.\n// While testing we will change their values.\nconst distance = 150;\nconst time = 3;\n// Calculate speed: distance / time\n// Calculate double the speed\n// Print original speed and then doubled speed\n// For example, if distance = 150 and time = 3, your output should be:\n// 50\n// 100",
-      "solution_type": "script",
-      "reference_solution": "const distance = 150;\nconst time = 3;\nconst speed = distance / time;\nconst doubledSpeed = speed * 2;\nconsole.log(speed);\nconsole.log(doubledSpeed);",
-      "testCases": [
-        {
-          "input": {
-            "distance": 150,
-            "time": 3
-          },
-          "expectedOutput": "50\n100"
-        },
-        {
-          "input": {
-            "distance": 200,
-            "time": 4
-          },
-          "expectedOutput": "50\n100"
-        },
-        {
-          "input": {
-            "distance": 360,
-            "time": 6
-          },
-          "expectedOutput": "60\n120"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename x, y, z, use them as input for your program.\n// While testing we will change their values.\nconst x = 6;\nconst y = 4;\nconst z = 2;\n// Calculate: (x + y) * z\n// Store the result and then calculate: result - x\n// Print both values\n// For example, if x = 6, y = 4, z = 2, your output should be:\n// 20\n// 14",
-      "solution_type": "script",
-      "reference_solution": "const x = 6;\nconst y = 4;\nconst z = 2;\nconst product = (x + y) * z;\nconst productMinusX = product - x;\nconsole.log(product);\nconsole.log(productMinusX);",
-      "testCases": [
-        {
-          "input": {
-            "x": 6,
-            "y": 4,
-            "z": 2
-          },
-          "expectedOutput": "20\n14"
-        },
-        {
-          "input": {
-            "x": 10,
-            "y": 5,
-            "z": 3
-          },
-          "expectedOutput": "45\n35"
-        },
-        {
-          "input": {
-            "x": 8,
-            "y": 2,
-            "z": 5
-          },
-          "expectedOutput": "50\n42"
         }
       ]
     }
