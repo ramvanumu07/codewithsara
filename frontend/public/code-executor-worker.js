@@ -90,12 +90,40 @@ class CodeExecutor {
     };
   }
 
+  /**
+   * Run code and return the value of an expression (e.g. the function reference).
+   * Code runs in a function scope so we must explicitly return the value to get it out.
+   */
+  executeCodeAndReturn(code, returnExpression) {
+    const protectedCode = this.addProtections(code);
+    // Only allow safe identifier for return (e.g. function name)
+    const safeId = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(returnExpression)
+      ? returnExpression
+      : null;
+    if (!safeId) {
+      throw new Error('Invalid function name for return');
+    }
+    const codeWithReturn = protectedCode + '; return (typeof ' + safeId + ' !== "undefined" ? ' + safeId + ' : undefined);';
+    const fn = new Function(codeWithReturn);
+    return fn.call(null);
+  }
+
+  stripLeadingSingleLineComments(code) {
+    const lines = code.split('\n');
+    let i = 0;
+    while (i < lines.length && /^\s*\/\//.test(lines[i])) {
+      i++;
+    }
+    return lines.slice(i).join('\n').trimStart();
+  }
+
   executeFunction(code, testCases, functionName) {
     const results = [];
+    const codeToRun = this.stripLeadingSingleLineComments(code);
 
-    // First, execute the code to define functions
+    let userFn;
     try {
-      this.executeCodeSafely(code);
+      userFn = this.executeCodeAndReturn(codeToRun, functionName);
     } catch (error) {
       return {
         success: false,
@@ -104,8 +132,7 @@ class CodeExecutor {
       };
     }
 
-    // Check if function exists
-    if (typeof self[functionName] !== 'function') {
+    if (typeof userFn !== 'function') {
       return {
         success: false,
         error: `Function '${functionName}' not found or not a function`,
@@ -113,16 +140,56 @@ class CodeExecutor {
       };
     }
 
+    // No test cases (e.g. Run without Submit): call once and show return value
+    if (!testCases || testCases.length === 0) {
+      try {
+        const result = userFn();
+        const value = result && typeof result.then === 'function' ? undefined : result;
+        results.push({
+          passed: true,
+          result: value,
+          output: value !== undefined ? String(value) : '',
+          input: {},
+          expected: null
+        });
+      } catch (error) {
+        results.push({
+          passed: false,
+          error: error.message,
+          result: undefined,
+          output: '',
+          input: {},
+          expected: null
+        });
+        return {
+          success: false,
+          error: error.message,
+          results,
+          allPassed: false
+        };
+      }
+      return {
+        success: true,
+        results,
+        allPassed: true
+      };
+    }
+
     // Test each case
     for (const testCase of testCases) {
       try {
         const args = Object.values(testCase.input);
-        const result = self[functionName](...args);
-        const passed = this.compareOutput(result.toString(), testCase.expectedOutput);
+        let result = userFn(...args);
+        if (result && typeof result.then === 'function') {
+          result = undefined;
+        }
+        const resultStr = result !== undefined && result !== null ? String(result) : '';
+        const passed = this.compareOutput(resultStr, testCase.expectedOutput);
 
         results.push({
           passed,
           result: result,
+          output: resultStr,
           expected: testCase.expectedOutput,
           input: testCase.input
         });
