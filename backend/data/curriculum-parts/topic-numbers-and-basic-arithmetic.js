@@ -106,7 +106,7 @@ export default {
     {
       "description": "// Do not rename amount, use it as input for your program.\n// amount will be a positive integer representing total rupees.\n// While testing we will change its value.\nconst amount = 1847;\n\n// Break down the amount into 500, 100, 50, and remaining rupees\n// Calculate how many 500 notes, then from remainder how many 100 notes,\n// then from that remainder how many 50 notes, and finally the remaining amount\n// Print all four values in order\n// For example, if amount = 1847, your output should be:\n// 3\n// 3\n// 0\n// 47",
       "solution_type": "script",
-      "reference_solution": "const amount = 1847;\nconst notes500 = (amount - amount % 500) / 500;\nlet remainder = amount % 500;\nconst notes100 = (remainder - remainder % 100) / 100;\nremainder = remainder % 100;\nconst notes50 = (remainder - remainder % 50) / 50;\nremainder = remainder % 50;\nconsole.log(notes500);\nconsole.log(notes100);\nconsole.log(notes50);\nconsole.log(remainder);",
+      "reference_solution": "const amount = 1847;\nconst notes500 = Math.floor(amount / 500);\nlet remainder = amount % 500;\nconst notes100 = Math.floor(remainder / 100);\nremainder = remainder % 100;\nconst notes50 = Math.floor(remainder / 50);\nremainder = remainder % 50;\nconsole.log(notes500);\nconsole.log(notes100);\nconsole.log(notes50);\nconsole.log(remainder);",
       "testCases": [
         {
           "input": {
