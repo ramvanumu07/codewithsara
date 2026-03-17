@@ -107,17 +107,33 @@ class SecureCodeExecutor {
   }
 
   /**
+   * Strip leading lines that are only single-line (//) comments so the function body is executed.
+   * Avoids "Function not found" when the editor sends description as //-prefixed lines.
+   */
+  stripLeadingSingleLineComments(code) {
+    const lines = code.split('\n');
+    let i = 0;
+    while (i < lines.length && /^\s*\/\//.test(lines[i])) {
+      i++;
+    }
+    return lines.slice(i).join('\n').trimStart();
+  }
+
+  /**
    * Execute function-type code
    */
   async executeFunction(code, testCases, functionName) {
     const results = [];
+    
+    // Strip leading // comment lines so function declarations in the code are actually run
+    const codeToRun = this.stripLeadingSingleLineComments(code);
     
     // Create secure context
     const context = this.createSecureContext();
     
     try {
       // Execute user code to define functions
-      await this.executeInContext(code, context);
+      await this.executeInContext(codeToRun, context);
       
       // Check if function exists
       if (typeof context[functionName] !== 'function') {

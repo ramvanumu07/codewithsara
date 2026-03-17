@@ -351,7 +351,10 @@ const Learn = () => {
           if (assignmentsList.length > 0) {
             const assignment = assignmentsList[startIndex]
             const description = assignment.description || 'Complete the assignment below'
-            let codeWithComments = description.startsWith('//') ? `${description}\n` : `// ${description}\n`
+            // Use as-is if already a comment (// or /*) so function-type task descriptions display correctly
+            let codeWithComments = (description.startsWith('//') || description.startsWith('/*'))
+              ? `${description}\n`
+              : `// ${description}\n`
             if (assignment.requirements && assignment.requirements.length > 0) {
               assignment.requirements.forEach(req => {
                 codeWithComments += req.startsWith('//') ? `${req}\n` : `// ${req}\n`
@@ -871,7 +874,9 @@ const Learn = () => {
       setCurrentAssignment(nextAssignmentIndex)
       const nextAssignment = assignments[nextAssignmentIndex]
       const description = nextAssignment.description || 'Complete the assignment below'
-      let codeWithComments = description.startsWith('//') ? `${description}\n` : `// ${description}\n`
+      let codeWithComments = (description.startsWith('//') || description.startsWith('/*'))
+        ? `${description}\n`
+        : `// ${description}\n`
       if (nextAssignment.requirements && nextAssignment.requirements.length > 0) {
         nextAssignment.requirements.forEach(req => {
           codeWithComments += req.startsWith('//') ? `${req}\n` : `// ${req}\n`
@@ -927,7 +932,9 @@ const Learn = () => {
       setCurrentAssignment(prevIndex)
       const prevAssignment = assignments[prevIndex]
       const description = prevAssignment.description || 'Complete the assignment below'
-      let codeWithComments = description.startsWith('//') ? `${description}\n` : `// ${description}\n`
+      let codeWithComments = (description.startsWith('//') || description.startsWith('/*'))
+        ? `${description}\n`
+        : `// ${description}\n`
       if (prevAssignment.requirements && prevAssignment.requirements.length > 0) {
         prevAssignment.requirements.forEach(req => {
           codeWithComments += req.startsWith('//') ? `${req}\n` : `// ${req}\n`
