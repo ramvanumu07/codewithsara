@@ -48,7 +48,7 @@ export default {
       "testCases": [
         {
           "input": {},
-          "expectedOutput": "10 items 20"
+          "expectedOutput": "10 items 100"
         }
       ]
     },

@@ -46,26 +46,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 7;\n\n// Print the multiplication table for num from 1 to 10\n// Format: num x i = result\n// For num = 7, your output should be:\n// 7 x 1 = 7\n// 7 x 2 = 14\n// ... up to 7 x 10 = 70",
-      "solution_type": "script",
-      "reference_solution": "const num = 7;\nlet i = 1;\nwhile (i <= 10) {\n  console.log(num + \" x \" + i + \" = \" + (num * i));\n  i++;\n}",
-      "testCases": [
-        { "input": { "num": 7 }, "expectedOutput": "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70" },
-        { "input": { "num": 3 }, "expectedOutput": "3 x 1 = 3\n3 x 2 = 6\n3 x 3 = 9\n3 x 4 = 12\n3 x 5 = 15\n3 x 6 = 18\n3 x 7 = 21\n3 x 8 = 24\n3 x 9 = 27\n3 x 10 = 30" }
-      ]
-    },
-    {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 5;\n\n// Calculate the factorial of num\n// Factorial of n = n × (n-1) × (n-2) × ... × 1\n// Print only the final result\n// For num = 5, your output should be: 120",
-      "solution_type": "script",
-      "reference_solution": "const num = 5;\nlet result = 1;\nlet i = 1;\nwhile (i <= num) {\n  result *= i;\n  i++;\n}\nconsole.log(result);",
-      "testCases": [
-        { "input": { "num": 5 }, "expectedOutput": "120" },
-        { "input": { "num": 3 }, "expectedOutput": "6" },
-        { "input": { "num": 1 }, "expectedOutput": "1" },
-        { "input": { "num": 7 }, "expectedOutput": "5040" }
-      ]
-    },
-    {
       "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 12345;\n\n// Count the number of digits in num\n// Use a while loop to repeatedly divide by 10\n// Print only the count\n// For num = 12345, your output should be: 5",
       "solution_type": "script",
       "reference_solution": "const num = 12345;\nlet count = 0;\nlet n = num;\nif (n === 0) {\n  count = 1;\n} else {\n  if (n < 0) n = -n;\n  while (n > 0) {\n    count++;\n    n = Math.floor(n / 10);\n  }\n}\nconsole.log(count);",
@@ -74,28 +54,6 @@ export default {
         { "input": { "num": 7 }, "expectedOutput": "1" },
         { "input": { "num": 1000 }, "expectedOutput": "4" },
         { "input": { "num": 999999 }, "expectedOutput": "6" }
-      ]
-    },
-    {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 12321;\n\n// Reverse the digits of num\n// For num = 12321, your output should be: 12321\n// For num = 1234, output should be: 4321\n// Hint: Use modulo (%) to extract last digit, then divide by 10",
-      "solution_type": "script",
-      "reference_solution": "const num = 12321;\nlet n = num;\nif (n < 0) n = -n;\nlet reversed = 0;\nwhile (n > 0) {\n  reversed = reversed * 10 + (n % 10);\n  n = Math.floor(n / 10);\n}\nconsole.log(reversed);",
-      "testCases": [
-        { "input": { "num": 12321 }, "expectedOutput": "12321" },
-        { "input": { "num": 1234 }, "expectedOutput": "4321" },
-        { "input": { "num": 500 }, "expectedOutput": "5" },
-        { "input": { "num": 9876 }, "expectedOutput": "6789" }
-      ]
-    },
-    {
-      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 7;\n\n// Print the first n numbers in the Fibonacci sequence\n// Fibonacci: 0, 1, 1, 2, 3, 5, 8, 13, ...\n// Each number is the sum of the previous two\n// Print each number on a new line\n// For n = 7, your output should be:\n// 0\n// 1\n// 1\n// 2\n// 3\n// 5\n// 8",
-      "solution_type": "script",
-      "reference_solution": "const n = 7;\nlet a = 0;\nlet b = 1;\nlet i = 0;\nwhile (i < n) {\n  console.log(a);\n  const next = a + b;\n  a = b;\n  b = next;\n  i++;\n}",
-      "testCases": [
-        { "input": { "n": 7 }, "expectedOutput": "0\n1\n1\n2\n3\n5\n8" },
-        { "input": { "n": 5 }, "expectedOutput": "0\n1\n1\n2\n3" },
-        { "input": { "n": 1 }, "expectedOutput": "0" },
-        { "input": { "n": 10 }, "expectedOutput": "0\n1\n1\n2\n3\n5\n8\n13\n21\n34" }
       ]
     },
     {
@@ -108,17 +66,6 @@ export default {
         { "input": { "num": 2 }, "expectedOutput": "Prime" },
         { "input": { "num": 1 }, "expectedOutput": "Not prime" },
         { "input": { "num": 17 }, "expectedOutput": "Prime" }
-      ]
-    },
-    {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 28;\n\n// Check if num is a perfect number\n// A perfect number equals the sum of its proper divisors (excluding itself)\n// Example: 28 = 1 + 2 + 4 + 7 + 14\n// Print: \"Perfect number\" if true, otherwise print: \"Not perfect\"",
-      "solution_type": "script",
-      "reference_solution": "const num = 28;\nlet sum = 0;\nlet i = 1;\nwhile (i < num) {\n  if (num % i === 0) {\n    sum += i;\n  }\n  i++;\n}\nif (sum === num) {\n  console.log(\"Perfect number\");\n} else {\n  console.log(\"Not perfect\");\n}",
-      "testCases": [
-        { "input": { "num": 28 }, "expectedOutput": "Perfect number" },
-        { "input": { "num": 6 }, "expectedOutput": "Perfect number" },
-        { "input": { "num": 12 }, "expectedOutput": "Not perfect" },
-        { "input": { "num": 496 }, "expectedOutput": "Perfect number" }
       ]
     },
     {
@@ -149,17 +96,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 20;\n\n// Calculate the sum of all numbers from 1 to n that are divisible by 3\n// Print only the final sum\n// For n = 20, the numbers are: 3, 6, 9, 12, 15, 18\n// Your output should be: 63",
-      "solution_type": "script",
-      "reference_solution": "const n = 20;\nlet sum = 0;\nfor (let i = 1; i <= n; i++) {\n  if (i % 3 === 0) {\n    sum += i;\n  }\n}\nconsole.log(sum);",
-      "testCases": [
-        { "input": { "n": 20 }, "expectedOutput": "63" },
-        { "input": { "n": 10 }, "expectedOutput": "18" },
-        { "input": { "n": 30 }, "expectedOutput": "165" },
-        { "input": { "n": 5 }, "expectedOutput": "3" }
-      ]
-    },
-    {
       "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Hello\";\n\n// Print each character of the string on a new line\n// Use str.length to get the length and str[i] to access characters\n// For str = \"Hello\", your output should be:\n// H\n// e\n// l\n// l\n// o",
       "solution_type": "script",
       "reference_solution": "const str = \"Hello\";\nfor (let i = 0; i < str.length; i++) {\n  console.log(str[i]);\n}",
@@ -167,39 +103,6 @@ export default {
         { "input": { "str": "Hello" }, "expectedOutput": "H\ne\nl\nl\no" },
         { "input": { "str": "JS" }, "expectedOutput": "J\nS" },
         { "input": { "str": "Code" }, "expectedOutput": "C\no\nd\ne" }
-      ]
-    },
-    {
-      "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"JavaScript\";\n\n// Count the number of vowels (a, e, i, o, u) in the string\n// Case-insensitive: treat 'A' and 'a' as the same\n// Print only the count\n// For str = \"JavaScript\", your output should be: 3",
-      "solution_type": "script",
-      "reference_solution": "const str = \"JavaScript\";\nlet count = 0;\nfor (let i = 0; i < str.length; i++) {\n  const c = str[i];\n  if (c === 'a' || c === 'e' || c === 'i' || c === 'o' || c === 'u' || c === 'A' || c === 'E' || c === 'I' || c === 'O' || c === 'U') {\n    count++;\n  }\n}\nconsole.log(count);",
-      "testCases": [
-        { "input": { "str": "JavaScript" }, "expectedOutput": "3" },
-        { "input": { "str": "Hello World" }, "expectedOutput": "3" },
-        { "input": { "str": "AEIOU" }, "expectedOutput": "5" },
-        { "input": { "str": "xyz" }, "expectedOutput": "0" }
-      ]
-    },
-    {
-      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 5;\n\n// Print a pattern of stars forming a right triangle\n// For n = 5, your output should be:\n// *\n// **\n// ***\n// ****\n// *****",
-      "solution_type": "script",
-      "reference_solution": "const n = 5;\nlet line = \"\";\nfor (let i = 0; i < n; i++) {\n  line += \"*\";\n  console.log(line);\n}",
-      "testCases": [
-        { "input": { "n": 5 }, "expectedOutput": "*\n**\n***\n****\n*****" },
-        { "input": { "n": 3 }, "expectedOutput": "*\n**\n***" },
-        { "input": { "n": 1 }, "expectedOutput": "*" },
-        { "input": { "n": 7 }, "expectedOutput": "*\n**\n***\n****\n*****\n******\n*******" }
-      ]
-    },
-    {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 12345;\n\n// Calculate the sum of all digits in num\n// Convert num to a string to iterate through digits\n// Print only the final sum\n// For num = 12345, your output should be: 15\n// (Because 1 + 2 + 3 + 4 + 5 = 15)",
-      "solution_type": "script",
-      "reference_solution": "const num = 12345;\nconst str = String(num);\nlet sum = 0;\nfor (let i = 0; i < str.length; i++) {\n  sum += Number(str[i]);\n}\nconsole.log(sum);",
-      "testCases": [
-        { "input": { "num": 12345 }, "expectedOutput": "15" },
-        { "input": { "num": 999 }, "expectedOutput": "27" },
-        { "input": { "num": 1000 }, "expectedOutput": "1" },
-        { "input": { "num": 246 }, "expectedOutput": "12" }
       ]
     },
     {
@@ -212,16 +115,6 @@ export default {
         { "input": { "str": "madam" }, "expectedOutput": "Palindrome" },
         { "input": { "str": "a" }, "expectedOutput": "Palindrome" },
         { "input": { "str": "noon" }, "expectedOutput": "Palindrome" }
-      ]
-    },
-    {
-      "description": "// Do not rename limit, use it as input for your program.\n// While testing we will change its value.\nconst limit = 50;\n\n// Print all prime numbers from 2 to limit\n// A prime number is only divisible by 1 and itself\n// Each prime should be on a new line\n// For limit = 50, your output should be:\n// 2\n// 3\n// 5\n// 7\n// ... up to 47",
-      "solution_type": "script",
-      "reference_solution": "const limit = 50;\nfor (let num = 2; num <= limit; num++) {\n  let isPrime = true;\n  for (let i = 2; i < num; i++) {\n    if (num % i === 0) {\n      isPrime = false;\n      break;\n    }\n  }\n  if (isPrime) {\n    console.log(num);\n  }\n}",
-      "testCases": [
-        { "input": { "limit": 20 }, "expectedOutput": "2\n3\n5\n7\n11\n13\n17\n19" },
-        { "input": { "limit": 10 }, "expectedOutput": "2\n3\n5\n7" },
-        { "input": { "limit": 30 }, "expectedOutput": "2\n3\n5\n7\n11\n13\n17\n19\n23\n29" }
       ]
     }
   ]

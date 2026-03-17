@@ -24,13 +24,13 @@ export default {
     {
       "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Function\";\n\n// Print characters at positions 0, 2, 4, and 6\n// For example, if str = \"Function\", your output should be:\n// F\n// n\n// t\n// o",
       "solution_type": "script",
-      "reference_solution": "const str = \"Function\";\nconsole.log(str[0]);\nconsole.log(str[2]);\nconsole.log(str[4]);\nconsole.log(str[6]);",
+      "reference_solution": "const str = \"Water Melon\";\nconsole.log(str[0]);\nconsole.log(str[2]);\nconsole.log(str[4]);\nconsole.log(str[6]);",
       "testCases": [
         {
           "input": {
-            "str": "Function"
+            "str": "Water Melon"
           },
-          "expectedOutput": "F\nn\nt\no"
+          "expectedOutput": "W\nt\nr\nM"
         },
         {
           "input": {
@@ -49,12 +49,6 @@ export default {
             "str": "Algorithm"
           },
           "expectedOutput": "A\ng\nr\nt"
-        },
-        {
-          "input": {
-            "str": "Development"
-          },
-          "expectedOutput": "D\nv\nl\nm"
         },
         {
           "input": {
@@ -134,13 +128,13 @@ export default {
           "input": {
             "text": "JavaScript"
           },
-          "expectedOutput": "Jav\nasc"
+          "expectedOutput": "Jav\naSc"
         },
         {
           "input": {
             "text": "Function"
           },
-          "expectedOutput": "Fun\nct"
+          "expectedOutput": "Fun\ncti"
         },
         {
           "input": {
