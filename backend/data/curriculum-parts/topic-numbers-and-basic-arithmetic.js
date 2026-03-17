@@ -18,175 +18,266 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Do not rename num, use it as input for your program.\n// num will be a positive integer.\n// While testing we will change its value.\nconst num = 5847;\n\n// Extract and print the last digit of num\n// Hint: Use the modulo operator\n// For example, if num = 5847, your output should be:\n// 7",
+      "description": "// Do not rename obtained and total, use them as input for your program.\n// While testing we will change their values.\nconst obtained = 427;\nconst total = 500;\n\n// Calculate the percentage: (obtained / total) * 100\n// Print the percentage value\n// For example, if obtained = 427 and total = 500, your output should be:\n// Percentage: 85.4",
       "solution_type": "script",
-      "reference_solution": "const num = 5847;\nconst lastDigit = num % 10;\nconsole.log(lastDigit);",
+      "reference_solution": "const obtained = 427;\nconst total = 500;\nconst percentage = (obtained / total) * 100;\nconsole.log(\"Percentage:\", percentage);",
+      "testCases": [
+        {
+          "input": {
+            "obtained": 427,
+            "total": 500
+          },
+          "expectedOutput": "Percentage: 85.4"
+        },
+        {
+          "input": {
+            "obtained": 360,
+            "total": 400
+          },
+          "expectedOutput": "Percentage: 90"
+        },
+        {
+          "input": {
+            "obtained": 75,
+            "total": 150
+          },
+          "expectedOutput": "Percentage: 50"
+        },
+        {
+          "input": {
+            "obtained": 500,
+            "total": 500
+          },
+          "expectedOutput": "Percentage: 100"
+        },
+        {
+          "input": {
+            "obtained": 0,
+            "total": 100
+          },
+          "expectedOutput": "Percentage: 0"
+        },
+        {
+          "input": {
+            "obtained": 33,
+            "total": 100
+          },
+          "expectedOutput": "Percentage: 33"
+        }
+      ]
+    },
+    {
+      "description": "// Do not rename num, use it as input for your program.\n// num will be a positive integer.\n// While testing we will change its value.\nconst num = 5847;\n\n// Extract and print the last digit of num\n// Hint: Use the modulo operator\n// For example, if num = 5847, your output should be:\n// Last digit of 5847 is 7",
+      "solution_type": "script",
+      "reference_solution": "const num = 5847;\nconst lastDigit = num % 10;\nconsole.log(\"Last digit of\", num, \"is\", lastDigit);",
       "testCases": [
         {
           "input": {
             "num": 5847
           },
-          "expectedOutput": "7"
+          "expectedOutput": "Last digit of 5847 is 7"
         },
         {
           "input": {
             "num": 1234
           },
-          "expectedOutput": "4"
+          "expectedOutput": "Last digit of 1234 is 4"
         },
         {
           "input": {
             "num": 9990
           },
-          "expectedOutput": "0"
+          "expectedOutput": "Last digit of 9990 is 0"
         },
         {
           "input": {
             "num": 5
           },
-          "expectedOutput": "5"
+          "expectedOutput": "Last digit of 5 is 5"
         },
         {
           "input": {
             "num": 10000
           },
-          "expectedOutput": "0"
+          "expectedOutput": "Last digit of 10000 is 0"
         }
       ]
     },
     {
-      "description": "// Do not rename amount, use it as input for your program.\n// amount will be a positive integer representing total rupees.\n// While testing we will change its value.\nconst amount = 1847;\n\n// Break down the amount into 500, 100, 50, and remaining rupees\n// Calculate how many 500 notes, then from remainder how many 100 notes,\n// then from that remainder how many 50 notes, and finally the remaining amount\n// Print all four values in order\n// For example, if amount = 1847, your output should be:\n// 3\n// 3\n// 0\n// 47",
+      "description": "// Do not rename amount, use it as input for your program.\n// amount will be a positive integer representing total rupees.\n// While testing we will change its value.\nconst amount = 1847;\n\n// Break down the amount into 500, 100, 50, and remaining rupees\n// Calculate how many 500 notes, then from remainder how many 100 notes,\n// then from that remainder how many 50 notes, and finally the remaining amount\n// Print all four values in order\n// For example, if amount = 1847, your output should be:\n// 500 notes: 3\n// 100 notes: 3\n// 50 notes: 0\n// Remaining amount: 47",
       "solution_type": "script",
-      "reference_solution": "const amount = 1847;\nconst notes500 = (amount - amount % 500) / 500;\nlet remainder = amount % 500;\nconst notes100 = (remainder - remainder % 100) / 100;\nremainder = remainder % 100;\nconst notes50 = (remainder - remainder % 50) / 50;\nremainder = remainder % 50;\nconsole.log(notes500);\nconsole.log(notes100);\nconsole.log(notes50);\nconsole.log(remainder);",
+      "reference_solution": "const amount = 1847;\nconst notes500 = (amount - amount % 500) / 500;\nlet remainder = amount % 500;\nconst notes100 = (remainder - remainder % 100) / 100;\nremainder = remainder % 100;\nconst notes50 = (remainder - remainder % 50) / 50;\nremainder = remainder % 50;\nconsole.log(\"500 notes:\", notes500);\nconsole.log(\"100 notes:\", notes100);\nconsole.log(\"50 notes:\", notes50);\nconsole.log(\"Remaining amount:\", remainder);",
       "testCases": [
         {
           "input": {
             "amount": 1847
           },
-          "expectedOutput": "3\n3\n0\n47"
+          "expectedOutput": "500 notes: 3\n100 notes: 3\n50 notes: 0\nRemaining amount: 47"
         },
         {
           "input": {
             "amount": 2750
           },
-          "expectedOutput": "5\n2\n1\n0"
+          "expectedOutput": "500 notes: 5\n100 notes: 2\n50 notes: 1\nRemaining amount: 0"
         },
         {
           "input": {
             "amount": 649
           },
-          "expectedOutput": "1\n1\n0\n49"
+          "expectedOutput": "500 notes: 1\n100 notes: 1\n50 notes: 0\nRemaining amount: 49"
         },
         {
           "input": {
             "amount": 25
           },
-          "expectedOutput": "0\n0\n0\n25"
+          "expectedOutput": "500 notes: 0\n100 notes: 0\n50 notes: 0\nRemaining amount: 25"
         },
         {
           "input": {
             "amount": 500
           },
-          "expectedOutput": "1\n0\n0\n0"
+          "expectedOutput": "500 notes: 1\n100 notes: 0\n50 notes: 0\nRemaining amount: 0"
         },
         {
           "input": {
             "amount": 3999
           },
-          "expectedOutput": "7\n4\n1\n49"
+          "expectedOutput": "500 notes: 7\n100 notes: 4\n50 notes: 1\nRemaining amount: 49"
         }
       ]
     },
     {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 47;\n\n// Calculate the remainder when num is divided by 2\n// Print the remainder (0 for even, 1 for odd)\n// For example, if num = 47, your output should be:\n// 1",
+      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 47;\n\n// Calculate the remainder when num is divided by 2\n// Print the remainder (0 for even, 1 for odd)\n// For example, if num = 47, your output should be:\n// Remainder: 1",
       "solution_type": "script",
-      "reference_solution": "const num = 47;\nconst remainder = num % 2;\nconsole.log(remainder);",
+      "reference_solution": "const num = 47;\nconst remainder = num % 2;\nconsole.log(\"Remainder:\", remainder);",
       "testCases": [
         {
           "input": {
             "num": 47
           },
-          "expectedOutput": "1"
+          "expectedOutput": "Remainder: 1"
         },
         {
           "input": {
             "num": 100
           },
-          "expectedOutput": "0"
+          "expectedOutput": "Remainder: 0"
         },
         {
           "input": {
             "num": 89
           },
-          "expectedOutput": "1"
+          "expectedOutput": "Remainder: 1"
         },
         {
           "input": {
             "num": 0
           },
-          "expectedOutput": "0"
+          "expectedOutput": "Remainder: 0"
         },
         {
           "input": {
             "num": 1
           },
-          "expectedOutput": "1"
+          "expectedOutput": "Remainder: 1"
         },
         {
           "input": {
             "num": 1000
           },
-          "expectedOutput": "0"
+          "expectedOutput": "Remainder: 0"
         }
       ]
     },
     {
-      "description": "// Do not rename num, use it as input for your program.\n// num will be a two-digit number.\n// While testing we will change its value.\nconst num = 73;\n\n// Reverse the digits and print the reversed number\n// Extract tens and units digits, then form reversed number\n// For example, if num = 73, your output should be:\n// 37",
+      "description": "// Do not rename num, use it as input for your program.\n// num will be a two-digit number.\n// While testing we will change its value.\nconst num = 73;\n\n// Reverse the digits and print the reversed number\n// Extract tens and units digits, then form reversed number\n// For example, if num = 73, your output should be:\n// Reversed number: 37",
       "solution_type": "script",
-      "reference_solution": "const num = 73;\nconst tens = (num - num % 10) / 10;\nconst units = num % 10;\nconst reversed = units * 10 + tens;\nconsole.log(reversed);",
+      "reference_solution": "const num = 73;\nconst tens = (num - num % 10) / 10;\nconst units = num % 10;\nconst reversed = units * 10 + tens;\nconsole.log(\"Reversed number:\", reversed);",
       "testCases": [
         {
           "input": {
             "num": 73
           },
-          "expectedOutput": "37"
+          "expectedOutput": "Reversed number: 37"
         },
         {
           "input": {
             "num": 45
           },
-          "expectedOutput": "54"
+          "expectedOutput": "Reversed number: 54"
         },
         {
           "input": {
             "num": 91
           },
-          "expectedOutput": "19"
+          "expectedOutput": "Reversed number: 19"
         },
         {
           "input": {
             "num": 10
           },
-          "expectedOutput": "1"
+          "expectedOutput": "Reversed number: 1"
         },
         {
           "input": {
             "num": 99
           },
-          "expectedOutput": "99"
+          "expectedOutput": "Reversed number: 99"
         },
         {
           "input": {
             "num": 20
           },
-          "expectedOutput": "2"
+          "expectedOutput": "Reversed number: 2"
         }
       ]
     },
     {
-      "description": "// Do not rename a, b, c, d, use them as input for your program.\n// While testing we will change their values.\nconst a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\n\n// Calculate: a + b * c - d\n// Then calculate: (a + b) * (c - d)\n// Print both results\n// For example, if a = 10, b = 5, c = 3, d = 2, your output should be:\n// 23\n// 15",
+      "description": "// Do not rename principal and rate, use them as input for your program.\n// While testing we will change their values.\nconst principal = 10000;\nconst rate = 8;\n\n// Calculate the amount after 1 year with compound interest\n// Formula: principal * (1 + rate/100)\n// Print the final amount\n// For example, if principal = 10000 and rate = 8, your output should be:\n// Final amount: 10800",
       "solution_type": "script",
-      "reference_solution": "const a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\nconst withoutParentheses = a + b * c - d;\nconst withParentheses = (a + b) * (c - d);\nconsole.log(withoutParentheses);\nconsole.log(withParentheses);",
+      "reference_solution": "const principal = 10000;\nconst rate = 8;\nconst amount = principal * (1 + rate / 100);\nconsole.log(\"Final amount:\", amount);",
+      "testCases": [
+        {
+          "input": {
+            "principal": 10000,
+            "rate": 8
+          },
+          "expectedOutput": "Final amount: 10800"
+        },
+        {
+          "input": {
+            "principal": 5000,
+            "rate": 10
+          },
+          "expectedOutput": "Final amount: 5500"
+        },
+        {
+          "input": {
+            "principal": 20000,
+            "rate": 5
+          },
+          "expectedOutput": "Final amount: 21000"
+        },
+        {
+          "input": {
+            "principal": 1000,
+            "rate": 0
+          },
+          "expectedOutput": "Final amount: 1000"
+        },
+        {
+          "input": {
+            "principal": 15000,
+            "rate": 12
+          },
+          "expectedOutput": "Final amount: 16800"
+        }
+      ]
+    },
+    {
+      "description": "// Do not rename a, b, c, d, use them as input for your program.\n// While testing we will change their values.\nconst a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\n\n// Calculate: a + b * c - d\n// Then calculate: (a + b) * (c - d)\n// Print both results\n// For example, if a = 10, b = 5, c = 3, d = 2, your output should be:\n// Without parentheses: 23\n// With parentheses: 15",
+      "solution_type": "script",
+      "reference_solution": "const a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\nconst withoutParentheses = a + b * c - d;\nconst withParentheses = (a + b) * (c - d);\nconsole.log(\"Without parentheses:\", withoutParentheses);\nconsole.log(\"With parentheses:\", withParentheses);",
       "testCases": [
         {
           "input": {
@@ -195,7 +286,7 @@ export default {
             "c": 3,
             "d": 2
           },
-          "expectedOutput": "23\n15"
+          "expectedOutput": "Without parentheses: 23\nWith parentheses: 15"
         },
         {
           "input": {
@@ -204,7 +295,7 @@ export default {
             "c": 5,
             "d": 3
           },
-          "expectedOutput": "37\n48"
+          "expectedOutput": "Without parentheses: 37\nWith parentheses: 48"
         },
         {
           "input": {
@@ -213,7 +304,7 @@ export default {
             "c": 2,
             "d": 1
           },
-          "expectedOutput": "19\n14"
+          "expectedOutput": "Without parentheses: 19\nWith parentheses: 14"
         },
         {
           "input": {
@@ -222,7 +313,7 @@ export default {
             "c": 0,
             "d": 0
           },
-          "expectedOutput": "0\n0"
+          "expectedOutput": "Without parentheses: 0\nWith parentheses: 0"
         },
         {
           "input": {
@@ -231,7 +322,7 @@ export default {
             "c": 2,
             "d": 1
           },
-          "expectedOutput": "119\n110"
+          "expectedOutput": "Without parentheses: 119\nWith parentheses: 110"
         },
         {
           "input": {
@@ -240,14 +331,14 @@ export default {
             "c": 3,
             "d": 3
           },
-          "expectedOutput": "11\n0"
+          "expectedOutput": "Without parentheses: 11\nWith parentheses: 0"
         }
       ]
     },
     {
-      "description": "// Do not rename hours, minutes, seconds, use them as input for your program.\n// While testing we will change their values.\nconst hours = 2;\nconst minutes = 15;\nconst seconds = 30;\n\n// Convert the total time to seconds\n// 1 hour = 3600 seconds, 1 minute = 60 seconds\n// Print total seconds\n// For example, if hours = 2, minutes = 15, seconds = 30, your output should be:\n// 8130",
+      "description": "// Do not rename hours, minutes, seconds, use them as input for your program.\n// While testing we will change their values.\nconst hours = 2;\nconst minutes = 15;\nconst seconds = 30;\n\n// Convert the total time to seconds\n// 1 hour = 3600 seconds, 1 minute = 60 seconds\n// Print total seconds\n// For example, if hours = 2, minutes = 15, seconds = 30, your output should be:\n// Total seconds: 8130",
       "solution_type": "script",
-      "reference_solution": "const hours = 2;\nconst minutes = 15;\nconst seconds = 30;\nconst totalSeconds = hours * 3600 + minutes * 60 + seconds;\nconsole.log(totalSeconds);",
+      "reference_solution": "const hours = 2;\nconst minutes = 15;\nconst seconds = 30;\nconst totalSeconds = hours * 3600 + minutes * 60 + seconds;\nconsole.log(\"Total seconds:\", totalSeconds);",
       "testCases": [
         {
           "input": {
@@ -255,7 +346,7 @@ export default {
             "minutes": 15,
             "seconds": 30
           },
-          "expectedOutput": "8130"
+          "expectedOutput": "Total seconds: 8130"
         },
         {
           "input": {
@@ -263,7 +354,7 @@ export default {
             "minutes": 0,
             "seconds": 0
           },
-          "expectedOutput": "3600"
+          "expectedOutput": "Total seconds: 3600"
         },
         {
           "input": {
@@ -271,7 +362,7 @@ export default {
             "minutes": 45,
             "seconds": 20
           },
-          "expectedOutput": "2720"
+          "expectedOutput": "Total seconds: 2720"
         },
         {
           "input": {
@@ -279,7 +370,7 @@ export default {
             "minutes": 0,
             "seconds": 0
           },
-          "expectedOutput": "0"
+          "expectedOutput": "Total seconds: 0"
         },
         {
           "input": {
@@ -287,7 +378,7 @@ export default {
             "minutes": 0,
             "seconds": 0
           },
-          "expectedOutput": "86400"
+          "expectedOutput": "Total seconds: 86400"
         },
         {
           "input": {
@@ -295,89 +386,101 @@ export default {
             "minutes": 1,
             "seconds": 1
           },
-          "expectedOutput": "61"
+          "expectedOutput": "Total seconds: 61"
         }
       ]
     },
     {
       "description": "// Do not rename radius, use it as input for your program.\n// While testing we will change its value.\nconst radius = 7;\n\n// Calculate the area of a circle: π * radius * radius\n// Use 3.14159 as the value of π\n// Print the area\n// For example, if radius = 7, your output should be:\n// 153.93804",
       "solution_type": "script",
-      "reference_solution": "const radius = 7;\nconst pi = 3.14159;\nconst area = pi * radius * radius;\nconsole.log(area);",
+      "reference_solution": "const radius = 7;\nconst pi = 3.14159;\nconst area = pi * radius * radius;\nconsole.log(\"Area:\", area);",
       "testCases": [
+        {
+          "input": {
+            "radius": 7
+          },
+          "expectedOutput": "Area: 153.93804"
+        },
         {
           "input": {
             "radius": 10
           },
-          "expectedOutput": "314.159"
+          "expectedOutput": "Area: 314.159"
         },
         {
           "input": {
             "radius": 5
           },
-          "expectedOutput": "78.53975"
+          "expectedOutput": "Area: 78.53975"
         },
         {
           "input": {
             "radius": 1
           },
-          "expectedOutput": "3.14159"
+          "expectedOutput": "Area: 3.14159"
         },
         {
           "input": {
             "radius": 0
           },
-          "expectedOutput": "0"
+          "expectedOutput": "Area: 0"
+        },
+        {
+          "input": {
+            "radius": 100
+          },
+          "expectedOutput": "Area: 31415.9"
         }
       ]
     },
     {
-      "description": "// Do not rename costPrice and sellingPrice, use them as input for your program.\n// While testing we will change their values.\nconst costPrice = 850;\nconst sellingPrice = 1020;\n\n// Calculate the profit or loss amount (sellingPrice - costPrice)\n// Then calculate the profit/loss percentage: (difference / costPrice) * 100\n// Print the amount first, then the percentage\n// For example, if costPrice = 850 and sellingPrice = 1020, your output should be:\n// 170\n// 20",
+      "description": "// Do not rename costPrice and sellingPrice, use them as input for your program.\n// While testing we will change their values.\nconst costPrice = 850;\nconst sellingPrice = 1020;\n\n// Calculate the profit or loss amount (sellingPrice - costPrice)\n// Then calculate the profit/loss percentage: (difference / costPrice) * 100\n// Print the amount first, then the percentage\n// For example, if costPrice = 850 and sellingPrice = 1020, your output should be:\n// Profit/Loss amount: 170\n// Profit/Loss percentage: 20",
       "solution_type": "script",
-      "reference_solution": "const costPrice = 850;\nconst sellingPrice = 1020;\nconst difference = sellingPrice - costPrice;\nconst percentage = (difference / costPrice) * 100;\nconsole.log(difference);\nconsole.log(percentage);",
+      "reference_solution": "const costPrice = 850;\nconst sellingPrice = 1020;\nconst difference = sellingPrice - costPrice;\nconst percentage = (difference / costPrice) * 100;\nconsole.log(\"Profit/Loss amount:\", difference);\nconsole.log(\"Profit/Loss percentage:\", percentage);",
       "testCases": [
         {
           "input": {
             "costPrice": 850,
             "sellingPrice": 1020
           },
-          "expectedOutput": "170\n20"
+          "expectedOutput": "Profit/Loss amount: 170\nProfit/Loss percentage: 20"
         },
         {
           "input": {
             "costPrice": 1000,
             "sellingPrice": 1200
           },
-          "expectedOutput": "200\n20"
+          "expectedOutput": "Profit/Loss amount: 200\nProfit/Loss percentage: 20"
         },
         {
           "input": {
             "costPrice": 500,
             "sellingPrice": 400
           },
-          "expectedOutput": "-100\n-20"
+          "expectedOutput": "Profit/Loss amount: -100\nProfit/Loss percentage: -20"
         },
         {
           "input": {
             "costPrice": 1000,
             "sellingPrice": 1000
           },
-          "expectedOutput": "0\n0"
+          "expectedOutput": "Profit/Loss amount: 0\nProfit/Loss percentage: 0"
         },
         {
           "input": {
             "costPrice": 200,
             "sellingPrice": 300
           },
-          "expectedOutput": "100\n50"
+          "expectedOutput": "Profit/Loss amount: 100\nProfit/Loss percentage: 50"
         },
         {
           "input": {
             "costPrice": 1500,
             "sellingPrice": 1200
           },
-          "expectedOutput": "-300\n-20"
+          "expectedOutput": "Profit/Loss amount: -300\nProfit/Loss percentage: -20"
         }
       ]
-    }
+    },
   ]
 };

@@ -130,53 +130,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename principal, rate, time, use them as input for your program.\n// While testing we will change their values.\nconst principal = 1000;\nconst rate = 5;\nconst time = 3;\n\n// Calculate final amount with compound interest\n// Amount = principal × (1 + rate/100)^time\n// Print the final amount\n// For example, if principal = 1000, rate = 5, time = 3, your output should be:\n// 1157.625",
-      "solution_type": "script",
-      "reference_solution": "const principal = 1000;\nconst rate = 5;\nconst time = 3;\nconst amount = principal * Math.pow(1 + rate / 100, time);\nconsole.log(amount);",
-      "testCases": [
-        {
-          "input": {
-            "principal": 1000,
-            "rate": 5,
-            "time": 3
-          },
-          "expectedOutput": "1157.625"
-        },
-        {
-          "input": {
-            "principal": 5000,
-            "rate": 10,
-            "time": 2
-          },
-          "expectedOutput": "6050"
-        },
-        {
-          "input": {
-            "principal": 2000,
-            "rate": 8,
-            "time": 5
-          },
-          "expectedOutput": "2938.6561536"
-        },
-        {
-          "input": {
-            "principal": 10000,
-            "rate": 0,
-            "time": 10
-          },
-          "expectedOutput": "10000"
-        },
-        {
-          "input": {
-            "principal": 1500,
-            "rate": 6,
-            "time": 1
-          },
-          "expectedOutput": "1590"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename temp1, temp2, temp3, temp4, temp5, use them as input for your program.\n// While testing we will change their values.\nconst temp1 = 23.5;\nconst temp2 = 19.8;\nconst temp3 = 27.3;\nconst temp4 = 15.2;\nconst temp5 = 21.9;\n\n// Find minimum temperature, maximum temperature, and average\n// Round the average to 2 decimal places\n// Print min, max, rounded average in order\n// For example, if temps are 23.5, 19.8, 27.3, 15.2, 21.9, your output should be:\n// 15.2\n// 27.3\n// 21.54",
       "solution_type": "script",
       "reference_solution": "const temp1 = 23.5;\nconst temp2 = 19.8;\nconst temp3 = 27.3;\nconst temp4 = 15.2;\nconst temp5 = 21.9;\nconst minTemp = Math.min(temp1, temp2, temp3, temp4, temp5);\nconst maxTemp = Math.max(temp1, temp2, temp3, temp4, temp5);\nconst average = (temp1 + temp2 + temp3 + temp4 + temp5) / 5;\nconst roundedAvg = Math.round(average * 100) / 100;\nconsole.log(minTemp);\nconsole.log(maxTemp);\nconsole.log(roundedAvg);",

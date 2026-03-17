@@ -1885,6 +1885,7 @@ const Learn = () => {
               const isDocumentMode = hasTestResults || showReviewOnly
 
               if (isDocumentMode) {
+                const isTestResultsView = !showReviewOnly
                 return (
                   <div
                     id="assignment-output"
@@ -1893,13 +1894,13 @@ const Learn = () => {
                       flex: 1,
                       overflow: 'auto',
                       minHeight: 0,
-                      backgroundColor: '#fafafa',
-                      border: '1px solid #e5e7eb',
+                      backgroundColor: isTestResultsView ? '#0d1117' : '#fafafa',
+                      border: isTestResultsView ? '1px solid #30363d' : '1px solid #e5e7eb',
                       borderTop: 'none',
                       padding: '20px 24px',
                       fontSize: '0.9375rem',
                       lineHeight: 1.6,
-                      color: '#374151',
+                      color: isTestResultsView ? '#e2e8f0' : '#374151',
                       fontFamily: 'var(--sara-font)'
                     }}
                   >
@@ -1910,39 +1911,47 @@ const Learn = () => {
                         </div>
                       ) : (
                         <>
-                          <div style={{ color: '#6b7280', marginBottom: '16px', fontSize: '0.8125rem' }}>
+                          <div style={{ color: '#8b949e', marginBottom: '16px', fontSize: '0.8125rem' }}>
                             {testResults.filter(r => r.passed).length}/{testResults.length} passed
                           </div>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                             {testResults.map((t, i) => {
                               const inputEntries = formatTestInput(t.input)
+                              const expectedStr = String(t.expected ?? '')
+                              const actualStr = String(t.actual ?? '')
                               return (
                                 <div key={i} style={{
                                   display: 'grid',
                                   gridTemplateColumns: '24px 1fr',
                                   gap: '8px 12px',
                                   alignItems: 'start',
-                                  padding: '10px 12px',
-                                  backgroundColor: '#fff',
-                                  border: '1px solid #e5e7eb',
+                                  padding: '12px 14px',
+                                  backgroundColor: '#161b22',
+                                  border: '1px solid #30363d',
                                   borderRadius: '6px',
                                   fontSize: '0.8125rem'
                                 }}>
-                                  <span style={{ color: t.passed ? '#10a37f' : '#ef4444', fontWeight: 600 }}>{t.passed ? '✅' : '❌'}</span>
+                                  <span style={{ color: t.passed ? '#3fb950' : '#f85149', fontWeight: 600 }}>{t.passed ? '✅' : '❌'}</span>
                                   <div style={{ minWidth: 0 }}>
                                     {inputEntries && inputEntries.length > 0 && (
-                                      <div style={{ color: '#6b7280', marginBottom: '6px' }}>
-                                        <div style={{ marginBottom: '2px' }}>Input:</div>
-                                        <div style={{ marginLeft: '8px', fontFamily: 'Monaco, Consolas, monospace', color: '#111827' }}>
+                                      <div style={{ color: '#8b949e', marginBottom: '8px' }}>
+                                        <div style={{ marginBottom: '4px', fontWeight: 600, color: '#c9d1d9' }}>Input</div>
+                                        <div style={{ marginLeft: '8px', fontFamily: 'Monaco, Consolas, monospace', color: '#e2e8f0', whiteSpace: 'pre-wrap' }}>
                                           {inputEntries.map(({ key, value }, j) => (
                                             <div key={j}>{key ? `${key}: ${value}` : value}</div>
                                           ))}
                                         </div>
                                       </div>
                                     )}
-                                    <div style={{ color: '#6b7280', marginBottom: '2px' }}>Expected: <span style={{ color: '#111827', fontFamily: 'Monaco, Consolas, monospace' }}>{String(t.expected ?? '')}</span></div>
-                                    <div style={{ color: '#6b7280' }}>Actual: <span style={{ color: t.passed ? '#10a37f' : '#dc2626', fontFamily: 'Monaco, Consolas, monospace' }}>{String(t.actual ?? '')}</span></div>
-                                    {!t.passed && t.error && <div style={{ color: '#dc2626', marginTop: '4px' }}>{t.error}</div>}
+                                    <div style={{ marginBottom: '6px' }}>
+                                      <div style={{ fontWeight: 600, color: '#8b949e', marginBottom: '2px' }}>Expected</div>
+                                      <div style={{ color: '#e2e8f0', fontFamily: 'Monaco, Consolas, monospace', whiteSpace: 'pre-wrap' }}>{expectedStr || '\u00A0'}</div>
+                                    </div>
+                                    <div>
+                                      <div style={{ fontWeight: 600, color: '#8b949e', marginBottom: '2px' }}>Actual</div>
+                                      <div style={{ color: t.passed ? '#3fb950' : '#f85149', fontFamily: 'Monaco, Consolas, monospace', whiteSpace: 'pre-wrap' }}>{actualStr || '\u00A0'}</div>
+                                    </div>
+                                    {!t.passed && t.error && <div style={{ color: '#f85149', marginTop: '8px', fontSize: '0.8125rem' }}>{t.error}</div>}
                                   </div>
                                 </div>
                               )
