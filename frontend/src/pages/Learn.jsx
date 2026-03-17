@@ -864,15 +864,8 @@ const Learn = () => {
     }
   }
 
-  // Next: go to next assignment only when user has passed all tests for current (via Submit). Review is not required.
-  const canGoToNextAssignment = assignmentComplete || (currentAssignment < assignmentsCompletedCount)
   const handleNext = async () => {
     if (currentAssignment < assignments.length - 1) {
-      if (!canGoToNextAssignment) {
-        setIncompleteModalMessage('You need to pass all tests for the current assignment before you can go to the next one.')
-        setShowIncompleteModal(true)
-        return
-      }
       // More assignments in this topic — load next assignment
       const nextAssignmentIndex = currentAssignment + 1
       setCurrentAssignment(nextAssignmentIndex)
