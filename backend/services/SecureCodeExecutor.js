@@ -121,6 +121,8 @@ class SecureCodeExecutor {
 
   /**
    * Execute function-type code
+   * Node's vm does not add function declarations to the context object, so we run the code
+   * and then evaluate the function name to get a reference to it (script completion value).
    */
   async executeFunction(code, testCases, functionName) {
     const results = [];
@@ -132,20 +134,23 @@ class SecureCodeExecutor {
     const context = this.createSecureContext();
     
     try {
-      // Execute user code to define functions
-      await this.executeInContext(codeToRun, context);
+      // Run user code and get the function by evaluating its name (vm doesn't attach function declarations to context)
+      const codeWithReturn = `${codeToRun}\n${functionName}`;
+      const fn = await this.runInContextAndReturn(codeWithReturn, context);
       
-      // Check if function exists
-      if (typeof context[functionName] !== 'function') {
+      if (typeof fn !== 'function') {
         throw new Error(`Function '${functionName}' not found or not a function`);
       }
       
-      // Test each case
+      // Test each case by calling the function directly (await if it returns a Promise)
       for (const testCase of testCases) {
         try {
           const args = Object.values(testCase.input);
-          const result = await this.callFunctionInContext(context, functionName, args);
-          const passed = this.compareOutput(result.toString(), testCase.expectedOutput);
+          let result = fn.apply(null, args);
+          if (result && typeof result.then === 'function') {
+            result = await result;
+          }
+          const passed = this.compareOutput(String(result ?? ''), testCase.expectedOutput);
           
           results.push({
             passed,
@@ -282,6 +287,28 @@ class SecureCodeExecutor {
         
         clearTimeout(timeoutId);
         resolve();
+      } catch (error) {
+        clearTimeout(timeoutId);
+        reject(error);
+      }
+    });
+  }
+
+  /**
+   * Run code in context and return the script's completion value (last expression).
+   * Used to obtain a function reference, since vm does not add function declarations to the context object.
+   */
+  async runInContextAndReturn(code, context) {
+    const protectedCode = this.addBasicProtections(code);
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => reject(new Error('Execution timeout')), this.executionTimeout);
+      try {
+        const result = vm.runInContext(protectedCode, context, {
+          timeout: this.executionTimeout,
+          breakOnSigint: true
+        });
+        clearTimeout(timeoutId);
+        resolve(result);
       } catch (error) {
         clearTimeout(timeoutId);
         reject(error);
