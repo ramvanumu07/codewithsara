@@ -26,46 +26,6 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Do not rename num, neg, a, b, c, radius; we will change their values when testing.\n//\n// Line 1-4: Math.round(num), Math.floor(num), Math.ceil(num), Math.trunc(num)\n// Line 5: Math.abs(neg)\n// Line 6: Math.sqrt(16)\n// Line 7: Math.pow(2, 3)\n// Line 8: Math.min(a, b, c)\n// Line 9: Math.max(a, b, c)\n// Line 10: 2 * Math.PI * radius (circumference for given radius)\n// Line 11: Math.E\n//\n// For num=47.6, neg=-8, a=10, b=25, c=15, radius=5 your output should be:\n// 48\n// 47\n// 48\n// 47\n// 8\n// 4\n// 8\n// 10\n// 25\n// 31.41592653589793\n// 2.718281828459045",
-      "solution_type": "script",
-      "reference_solution": "const num = 47.6;\nconst neg = -8;\nconst a = 10;\nconst b = 25;\nconst c = 15;\nconst radius = 5;\nconsole.log(Math.round(num));\nconsole.log(Math.floor(num));\nconsole.log(Math.ceil(num));\nconsole.log(Math.trunc(num));\nconsole.log(Math.abs(neg));\nconsole.log(Math.sqrt(16));\nconsole.log(Math.pow(2, 3));\nconsole.log(Math.min(a, b, c));\nconsole.log(Math.max(a, b, c));\nconsole.log(2 * Math.PI * radius);\nconsole.log(Math.E);",
-      "testCases": [
-        {
-          "input": {
-            "num": 47.6,
-            "neg": -8,
-            "a": 10,
-            "b": 25,
-            "c": 15,
-            "radius": 5
-          },
-          "expectedOutput": "48\n47\n48\n47\n8\n4\n8\n10\n25\n31.41592653589793\n2.718281828459045"
-        },
-        {
-          "input": {
-            "num": 12.3,
-            "neg": -5,
-            "a": 7,
-            "b": 3,
-            "c": 9,
-            "radius": 10
-          },
-          "expectedOutput": "12\n12\n13\n12\n5\n4\n8\n3\n9\n62.83185307179586\n2.718281828459045"
-        },
-        {
-          "input": {
-            "num": -3.7,
-            "neg": 4,
-            "a": 20,
-            "b": 15,
-            "c": 25,
-            "radius": 1
-          },
-          "expectedOutput": "-4\n-4\n-3\n-3\n4\n4\n8\n15\n25\n6.283185307179586\n2.718281828459045"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename x1, y1, x2, y2, use them as input for your program.\n// While testing we will change their values.\nconst x1 = 3;\nconst y1 = 4;\nconst x2 = 7;\nconst y2 = 1;\n\n// Calculate the distance between points (x1, y1) and (x2, y2)\n// Distance formula: √[(x2-x1)² + (y2-y1)²]\n// Print the distance\n// For example, if points are (3,4) and (7,1), your output should be:\n// 5",
       "solution_type": "script",
       "reference_solution": "const x1 = 3;\nconst y1 = 4;\nconst x2 = 7;\nconst y2 = 1;\nconst distance = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);\nconsole.log(distance);",
@@ -170,61 +130,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = 15;\nconst b = 25;\nconst c = 10;\n\n// Calculate absolute difference between a and b\n// Then calculate absolute difference between that result and c\n// Print both absolute differences\n// For example, if a = 15, b = 25, c = 10, your output should be:\n// 10\n// 0",
-      "solution_type": "script",
-      "reference_solution": "const a = 15;\nconst b = 25;\nconst c = 10;\nconst absDiffAB = Math.abs(a - b);\nconst absDiffFromC = Math.abs(absDiffAB - c);\nconsole.log(absDiffAB);\nconsole.log(absDiffFromC);",
-      "testCases": [
-        {
-          "input": {
-            "a": 15,
-            "b": 25,
-            "c": 10
-          },
-          "expectedOutput": "10\n0"
-        },
-        {
-          "input": {
-            "a": 50,
-            "b": 20,
-            "c": 15
-          },
-          "expectedOutput": "30\n15"
-        },
-        {
-          "input": {
-            "a": 100,
-            "b": 100,
-            "c": 0
-          },
-          "expectedOutput": "0\n0"
-        },
-        {
-          "input": {
-            "a": -10,
-            "b": 10,
-            "c": 20
-          },
-          "expectedOutput": "20\n0"
-        },
-        {
-          "input": {
-            "a": 7,
-            "b": 3,
-            "c": 2
-          },
-          "expectedOutput": "4\n2"
-        },
-        {
-          "input": {
-            "a": 0,
-            "b": 0,
-            "c": 0
-          },
-          "expectedOutput": "0\n0"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename principal, rate, time, use them as input for your program.\n// While testing we will change their values.\nconst principal = 1000;\nconst rate = 5;\nconst time = 3;\n\n// Calculate final amount with compound interest\n// Amount = principal × (1 + rate/100)^time\n// Print the final amount\n// For example, if principal = 1000, rate = 5, time = 3, your output should be:\n// 1157.625",
       "solution_type": "script",
       "reference_solution": "const principal = 1000;\nconst rate = 5;\nconst time = 3;\nconst amount = principal * Math.pow(1 + rate / 100, time);\nconsole.log(amount);",
@@ -268,14 +173,6 @@ export default {
             "time": 1
           },
           "expectedOutput": "1590"
-        },
-        {
-          "input": {
-            "principal": 3000,
-            "rate": 12,
-            "time": 4
-          },
-          "expectedOutput": "4722.04364800000"
         }
       ]
     },
@@ -420,21 +317,9 @@ export default {
         },
         {
           "input": {
-            "radius": 3
-          },
-          "expectedOutput": "113.09733552923255"
-        },
-        {
-          "input": {
             "radius": 0
           },
           "expectedOutput": "0"
-        },
-        {
-          "input": {
-            "radius": 7
-          },
-          "expectedOutput": "1436.755040241732"
         }
       ]
     },
@@ -459,13 +344,6 @@ export default {
         },
         {
           "input": {
-            "base": 5,
-            "exponent": 3
-          },
-          "expectedOutput": "125\n5"
-        },
-        {
-          "input": {
             "base": 10,
             "exponent": 2
           },
@@ -477,13 +355,6 @@ export default {
             "exponent": 5
           },
           "expectedOutput": "32\n2"
-        },
-        {
-          "input": {
-            "base": 4,
-            "exponent": 3
-          },
-          "expectedOutput": "64\n4"
         }
       ]
     }

@@ -22,41 +22,6 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Name report: given firstName and lastName, produce a short report using length, indexing, concatenation, and case.\n// Do not rename firstName or lastName; we will change their values when testing.\n//\n// Print in order:\n// 1. Length of firstName\n// 2. First character of firstName\n// 3. Last character of firstName\n// 4. Full name as \"firstName lastName\" (one space between)\n// 5. Full name as \"lastName, firstName\" (comma and space)\n// 6. Full name in UPPERCASE\n// 7. Full name in lowercase\n// 8. Length of the full name (the \"firstName lastName\" version)\n//\n// For firstName = \"John\", lastName = \"Smith\", your output should be:\n// 4\n// J\n// n\n// John Smith\n// Smith, John\n// JOHN SMITH\n// john smith\n// 10",
-      "solution_type": "script",
-      "reference_solution": "const firstName = \"John\";\nconst lastName = \"Smith\";\nconsole.log(firstName.length);\nconsole.log(firstName[0]);\nconsole.log(firstName[firstName.length - 1]);\nconst fullName = firstName + \" \" + lastName;\nconsole.log(fullName);\nconsole.log(lastName + \", \" + firstName);\nconsole.log(fullName.toUpperCase());\nconsole.log(fullName.toLowerCase());\nconsole.log(fullName.length);",
-      "testCases": [
-        {
-          "input": {
-            "firstName": "John",
-            "lastName": "Smith"
-          },
-          "expectedOutput": "4\nJ\nn\nJohn Smith\nSmith, John\nJOHN SMITH\njohn smith\n10"
-        },
-        {
-          "input": {
-            "firstName": "Jane",
-            "lastName": "Doe"
-          },
-          "expectedOutput": "4\nJ\ne\nJane Doe\nDoe, Jane\nJANE DOE\njane doe\n8"
-        },
-        {
-          "input": {
-            "firstName": "Bob",
-            "lastName": "Brown"
-          },
-          "expectedOutput": "3\nB\nb\nBob Brown\nBrown, Bob\nBOB BROWN\nbob brown\n9"
-        },
-        {
-          "input": {
-            "firstName": "A",
-            "lastName": "B"
-          },
-          "expectedOutput": "1\nA\nA\nA B\nB, A\nA B\na b\n3"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Function\";\n\n// Print characters at positions 0, 2, 4, and 6\n// For example, if str = \"Function\", your output should be:\n// F\n// n\n// t\n// o",
       "solution_type": "script",
       "reference_solution": "const str = \"Function\";\nconsole.log(str[0]);\nconsole.log(str[2]);\nconsole.log(str[4]);\nconsole.log(str[6]);",

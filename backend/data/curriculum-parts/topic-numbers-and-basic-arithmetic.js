@@ -18,55 +18,6 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Do not rename obtained and total, use them as input for your program.\n// While testing we will change their values.\nconst obtained = 427;\nconst total = 500;\n\n// Calculate the percentage: (obtained / total) * 100\n// Print the percentage value\n// For example, if obtained = 427 and total = 500, your output should be:\n// 85.4",
-      "solution_type": "script",
-      "reference_solution": "const obtained = 427;\nconst total = 500;\nconst percentage = (obtained / total) * 100;\nconsole.log(percentage);",
-      "testCases": [
-        {
-          "input": {
-            "obtained": 427,
-            "total": 500
-          },
-          "expectedOutput": "85.4"
-        },
-        {
-          "input": {
-            "obtained": 360,
-            "total": 400
-          },
-          "expectedOutput": "90"
-        },
-        {
-          "input": {
-            "obtained": 75,
-            "total": 150
-          },
-          "expectedOutput": "50"
-        },
-        {
-          "input": {
-            "obtained": 500,
-            "total": 500
-          },
-          "expectedOutput": "100"
-        },
-        {
-          "input": {
-            "obtained": 0,
-            "total": 100
-          },
-          "expectedOutput": "0"
-        },
-        {
-          "input": {
-            "obtained": 33,
-            "total": 100
-          },
-          "expectedOutput": "33"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename num, use it as input for your program.\n// num will be a positive integer.\n// While testing we will change its value.\nconst num = 5847;\n\n// Extract and print the last digit of num\n// Hint: Use the modulo operator\n// For example, if num = 5847, your output should be:\n// 7",
       "solution_type": "script",
       "reference_solution": "const num = 5847;\nconst lastDigit = num % 10;\nconsole.log(lastDigit);",
@@ -233,48 +184,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename principal and rate, use them as input for your program.\n// While testing we will change their values.\nconst principal = 10000;\nconst rate = 8;\n\n// Calculate the amount after 1 year with compound interest\n// Formula: principal * (1 + rate/100)\n// Print the final amount\n// For example, if principal = 10000 and rate = 8, your output should be:\n// 10800",
-      "solution_type": "script",
-      "reference_solution": "const principal = 10000;\nconst rate = 8;\nconst amount = principal * (1 + rate / 100);\nconsole.log(amount);",
-      "testCases": [
-        {
-          "input": {
-            "principal": 10000,
-            "rate": 8
-          },
-          "expectedOutput": "10800"
-        },
-        {
-          "input": {
-            "principal": 5000,
-            "rate": 10
-          },
-          "expectedOutput": "5500"
-        },
-        {
-          "input": {
-            "principal": 20000,
-            "rate": 5
-          },
-          "expectedOutput": "21000"
-        },
-        {
-          "input": {
-            "principal": 1000,
-            "rate": 0
-          },
-          "expectedOutput": "1000"
-        },
-        {
-          "input": {
-            "principal": 15000,
-            "rate": 12
-          },
-          "expectedOutput": "16800"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename a, b, c, d, use them as input for your program.\n// While testing we will change their values.\nconst a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\n\n// Calculate: a + b * c - d\n// Then calculate: (a + b) * (c - d)\n// Print both results\n// For example, if a = 10, b = 5, c = 3, d = 2, your output should be:\n// 23\n// 15",
       "solution_type": "script",
       "reference_solution": "const a = 10;\nconst b = 5;\nconst c = 3;\nconst d = 2;\nconst withoutParentheses = a + b * c - d;\nconst withParentheses = (a + b) * (c - d);\nconsole.log(withoutParentheses);\nconsole.log(withParentheses);",
@@ -397,12 +306,6 @@ export default {
       "testCases": [
         {
           "input": {
-            "radius": 7
-          },
-          "expectedOutput": "153.93804"
-        },
-        {
-          "input": {
             "radius": 10
           },
           "expectedOutput": "314.159"
@@ -424,12 +327,6 @@ export default {
             "radius": 0
           },
           "expectedOutput": "0"
-        },
-        {
-          "input": {
-            "radius": 100
-          },
-          "expectedOutput": "31415.9"
         }
       ]
     },
@@ -479,55 +376,6 @@ export default {
             "sellingPrice": 1200
           },
           "expectedOutput": "-300\n-20"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename weight and height, use them as input for your program.\n// weight is in kilograms, height is in meters.\n// While testing we will change their values.\nconst weight = 70;\nconst height = 1.75;\n\n// Calculate BMI: weight / (height * height)\n// Print the BMI value\n// For example, if weight = 70 and height = 1.75, your output should be:\n// 22.857142857142858",
-      "solution_type": "script",
-      "reference_solution": "const weight = 70;\nconst height = 1.75;\nconst bmi = weight / (height * height);\nconsole.log(bmi);",
-      "testCases": [
-        {
-          "input": {
-            "weight": 70,
-            "height": 1.75
-          },
-          "expectedOutput": "22.857142857142858"
-        },
-        {
-          "input": {
-            "weight": 80,
-            "height": 1.8
-          },
-          "expectedOutput": "24.691358024691358"
-        },
-        {
-          "input": {
-            "weight": 60,
-            "height": 1.65
-          },
-          "expectedOutput": "22.038567493112947"
-        },
-        {
-          "input": {
-            "weight": 100,
-            "height": 2
-          },
-          "expectedOutput": "25"
-        },
-        {
-          "input": {
-            "weight": 50,
-            "height": 1.5
-          },
-          "expectedOutput": "22.22222222222222"
-        },
-        {
-          "input": {
-            "weight": 90,
-            "height": 1.9
-          },
-          "expectedOutput": "24.930747922437675"
         }
       ]
     }

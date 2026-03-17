@@ -225,6 +225,16 @@ class CodeExecutor {
     return code.replace(re, '$1// [test input] $2 $3 = ... ;');
   }
 
+  /**
+   * Remove string literal contents so blocked-word checks don't match text inside strings
+   * (e.g. const str = "Function" should not trigger the Function keyword block).
+   */
+  stripStringLiteralsForCheck(code) {
+    return code
+      .replace(/"([^"\\]|\\.)*"/g, '""')
+      .replace(/'([^'\\]|\\.)*'/g, "''");
+  }
+
   executeCodeSafely(code) {
     // Add protection against infinite loops and resource abuse
     const protectedCode = this.addProtections(code);
@@ -276,7 +286,8 @@ class CodeExecutor {
       }
     );
 
-    // Block dangerous operations
+    // Block dangerous operations (check only code, not string literal content)
+    const codeWithoutStringLiterals = this.stripStringLiteralsForCheck(protectedCode);
     const blockedPatterns = [
       /\bimportScripts\b/g,
       /\bpostMessage\b/g,
@@ -292,7 +303,7 @@ class CodeExecutor {
     ];
 
     blockedPatterns.forEach(pattern => {
-      if (pattern.test(protectedCode)) {
+      if (pattern.test(codeWithoutStringLiterals)) {
         throw new Error('Blocked operation detected in code');
       }
     });

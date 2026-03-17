@@ -44,34 +44,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename start and increment, use them as input for your program.\n// While testing we will change their values.\nconst start = 10;\nconst increment = 3;\n// Create a counter starting at 'start' and increment it 4 times by 'increment'\n// Print the counter value after each increment\n// For example, if start = 10 and increment = 3, your output should be:\n// 13\n// 16\n// 19\n// 22",
-      "solution_type": "script",
-      "reference_solution": "const start = 10;\nconst increment = 3;\nlet counter = start;\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);\ncounter = counter + increment;\nconsole.log(counter);",
-      "testCases": [
-        {
-          "input": {
-            "start": 10,
-            "increment": 3
-          },
-          "expectedOutput": "13\n16\n19\n22"
-        },
-        {
-          "input": {
-            "start": 0,
-            "increment": 5
-          },
-          "expectedOutput": "5\n10\n15\n20"
-        },
-        {
-          "input": {
-            "start": 100,
-            "increment": 10
-          },
-          "expectedOutput": "110\n120\n130\n140"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename celsius, use it as input for your program.\n// While testing we will change its value.\nconst celsius = 100;\n// Convert celsius to Fahrenheit using: (celsius * 9/5) + 32, then store that result\n// Convert the Fahrenheit value to Kelvin using: (F - 32) * 5/9 + 273.15\n// Print both converted values (Fahrenheit first, then Kelvin)\n// For example, if celsius = 100, your output should be:\n// 212\n// 373.15",
       "solution_type": "script",
       "reference_solution": "const celsius = 100;\nconst fahrenheit = (celsius * 9 / 5) + 32;\nconst kelvin = (fahrenheit - 32) * 5 / 9 + 273.15;\nconsole.log(fahrenheit);\nconsole.log(kelvin);",
