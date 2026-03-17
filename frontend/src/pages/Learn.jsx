@@ -695,7 +695,10 @@ const Learn = () => {
         if (first && !first.passed && first.error) {
           outputText = `Error: ${first.error}`
         } else if (result.results && result.results.length > 0) {
-          outputText = result.results.map(r => r.output ?? r.result ?? '').join('\n')
+          outputText = result.results.map(r => r.output ?? r.result ?? '').join('\n').trim()
+          if (outputText === '') {
+            outputText = 'Code executed (no output)'
+          }
         } else {
           outputText = 'Code executed (no output)'
         }
