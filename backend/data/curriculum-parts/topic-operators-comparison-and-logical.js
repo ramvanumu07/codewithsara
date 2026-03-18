@@ -142,34 +142,6 @@ export default {
       ]
     },
     {
-      "description": "// Relational Strings\n// Print the result of (str1 > str2).\n// This checks alphabetical (Unicode) priority.\nconst str1 = \"apple\";\nconst str2 = \"banana\";\n// For \"apple\" > \"banana\", output: false",
-      "solution_type": "script",
-      "reference_solution": "const str1 = \"apple\";\nconst str2 = \"banana\";\nconsole.log(str1 > str2);",
-      "testCases": [
-        {
-          "input": {
-            "str1": "apple",
-            "str2": "banana"
-          },
-          "expectedOutput": "false"
-        },
-        {
-          "input": {
-            "str1": "cat",
-            "str2": "can"
-          },
-          "expectedOutput": "true"
-        },
-        {
-          "input": {
-            "str1": "Alpha",
-            "str2": "alpha"
-          },
-          "expectedOutput": "false"
-        }
-      ]
-    },
-    {
       "description": "// Multiple Logic Gates\n// Check if (a is even) AND (b is even).\n// Print the boolean result.\nconst a = 4;\nconst b = 8;\n// For 4 and 8, output: true",
       "solution_type": "script",
       "reference_solution": "const a = 4;\nconst b = 8;\nconsole.log(a % 2 === 0 && b % 2 === 0);",

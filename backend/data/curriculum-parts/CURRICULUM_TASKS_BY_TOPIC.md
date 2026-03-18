@@ -1,14 +1,3 @@
-
-## Type Coercion
-
-**Topic ID:** `type-coercion` · **Task count:** 3
-
-| # | Description | Solution type | Function name | Tests |
-|:-:|-------------|---------------|---------------|:-----:|
-| 1 | // Coercion lab: one script that shows how +, -, *, / behave with mixed types.<br>// Do not rename num, str, flag1, flag2, val1, val2, text; we will change their values when testing.<br>//<br>// Print in order:<br>// 1. num + str<br>// 2. num - str<br>// 3. num * str<br>// 4. flag1 + 5<br>// 5. flag2 * 10<br>// 6. val1 + val2<br>// 7. val1 - val2<br>// 8. val1 / val2<br>// 9. text * 1<br>//<br>// For num=42, str="10", flag1=true, flag2=false, val1="7", val2="3", text="hello" your output should be:<br>// 4210<br>// 32<br>// 420<br>// 6<br>// 0<br>// 73<br>// 4<br>// 2.3333333333333335<br>// NaN | script | — | 3 |
-| 2 | // Do not rename x and y, use them as input for your program.<br>// x and y may be null or undefined; we will change their values when testing.<br>//<br>// Print in order: x + 10, y + 10, x * 2, y * 2<br>// For example, if x = null and y = undefined, your output should be:<br>// 10<br>// NaN<br>// 0<br>// NaN | script | — | 4 |
-| 3 | // Do not rename a, b, c, use them as input for your program.<br>// While testing we will change their values.<br>const a = "5";<br>const b = 5;<br>const c = 0;<br>// Calculate a == b, a === b, c == false, c === false<br>// Print all four boolean results<br>// For example, if a = "5", b = 5, c = 0, your output should be:<br>// true<br>// false<br>// true<br>// false | script | — | 6 |
-
 ## Operators (Comparison & Logical)
 
 **Topic ID:** `operators-comparison-and-logical` · **Task count:** 7
