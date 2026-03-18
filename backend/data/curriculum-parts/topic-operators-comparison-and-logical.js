@@ -14,7 +14,7 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Use a and b as input.\n// Print the result of (a == b) followed by (a === b).\nconst a = 10;\nconst b = \"10\";\n\n// For a = 10, b = \"10\", output:\n// true\n// false",
+      "description": "// Use a and b as input.\n// Print the result of (a == b) followed by (a === b).\nconst a = 10;\nconst b = \"10\";\n// For a = 10, b = \"10\", output:\n// true\n// false",
       "solution_type": "script",
       "reference_solution": "const a = 10;\nconst b = \"10\";\nconsole.log(a == b);\nconsole.log(a === b);",
       "testCases": [
@@ -42,7 +42,7 @@ export default {
       ]
     },
     {
-      "description": "// Use x as input.\n// Use comparison and logical operators to check if x is between 50 and 100 (inclusive).\n// Print the boolean result.\nconst x = 75;\n\n// For x = 75, output: true",
+      "description": "// Use x as input.\n// Use comparison and logical operators to check if x is between 50 and 100 (inclusive).\n// Print the boolean result.\nconst x = 75;\n// For x = 75, output: true",
       "solution_type": "script",
       "reference_solution": "const x = 75;\nconsole.log(x >= 50 && x <= 100);",
       "testCases": [
@@ -73,7 +73,7 @@ export default {
       ]
     },
     {
-      "description": "// Use val as input.\n// Use the NOT (!) operator to print the opposite of the value's truthiness.\n// Then print the 'double NOT' (!!) to show its actual boolean value.\nconst val = \"Hello\";\n\n// For val = \"Hello\", output:\n// false\n// true",
+      "description": "// Use val as input.\n// Use the NOT (!) operator to print the opposite of the value's truthiness.\n// Then print the 'double NOT' (!!) to show its actual boolean value.\nconst val = \"Hello\";\n// For val = \"Hello\", output:\n// false\n// true",
       "solution_type": "script",
       "reference_solution": "const val = \"Hello\";\nconsole.log(!val);\nconsole.log(!!val);",
       "testCases": [
@@ -98,7 +98,7 @@ export default {
       ]
     },
     {
-      "description": "// Short-circuiting OR (||)\n// Print the value of (input || \"Default\").\n// This mimics assigning a fallback value without an if-statement.\nconst input = \"\";\n\n// For input = \"\", output: Default",
+      "description": "// Short-circuiting OR (||)\n// Print the value of (input || \"Default\").\n// This mimics assigning a fallback value without an if-statement.\nconst input = \"\";\n// For input = \"\", output: Default",
       "solution_type": "script",
       "reference_solution": "const input = \"\";\nconsole.log(input || \"Default\");",
       "testCases": [
@@ -123,7 +123,7 @@ export default {
       ]
     },
     {
-      "description": "// Short-circuiting AND (&&)\n// Print the value of (isValid && \"Success\").\n// If isValid is false, it should print false. If true, it should print \"Success\".\nconst isValid = true;\n\n// For isValid = true, output: Success",
+      "description": "// Short-circuiting AND (&&)\n// Print the value of (isValid && \"Success\").\n// If isValid is false, it should print false. If true, it should print \"Success\".\nconst isValid = true;\n// For isValid = true, output: Success",
       "solution_type": "script",
       "reference_solution": "const isValid = true;\nconsole.log(isValid && \"Success\");",
       "testCases": [
@@ -142,7 +142,7 @@ export default {
       ]
     },
     {
-      "description": "// Relational Strings\n// Print the result of (str1 > str2).\n// This checks alphabetical (Unicode) priority.\nconst str1 = \"apple\";\nconst str2 = \"banana\";\n\n// For \"apple\" > \"banana\", output: false",
+      "description": "// Relational Strings\n// Print the result of (str1 > str2).\n// This checks alphabetical (Unicode) priority.\nconst str1 = \"apple\";\nconst str2 = \"banana\";\n// For \"apple\" > \"banana\", output: false",
       "solution_type": "script",
       "reference_solution": "const str1 = \"apple\";\nconst str2 = \"banana\";\nconsole.log(str1 > str2);",
       "testCases": [
@@ -170,7 +170,7 @@ export default {
       ]
     },
     {
-      "description": "// Multiple Logic Gates\n// Check if (a is even) AND (b is even).\n// Print the boolean result.\nconst a = 4;\nconst b = 8;\n\n// For 4 and 8, output: true",
+      "description": "// Multiple Logic Gates\n// Check if (a is even) AND (b is even).\n// Print the boolean result.\nconst a = 4;\nconst b = 8;\n// For 4 and 8, output: true",
       "solution_type": "script",
       "reference_solution": "const a = 4;\nconst b = 8;\nconsole.log(a % 2 === 0 && b % 2 === 0);",
       "testCases": [

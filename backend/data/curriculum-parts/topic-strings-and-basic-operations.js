@@ -22,7 +22,7 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Function\";\n\n// Print characters at positions 0, 2, 4, and 6\n// For example, if str = \"Function\", your output should be:\n// F\n// n\n// t\n// o",
+      "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Function\";\n// Print characters at positions 0, 2, 4, and 6\n// For example, if str = \"Function\", your output should be:\n// F\n// n\n// t\n// o",
       "solution_type": "script",
       "reference_solution": "const str = \"Water Melon\";\nconsole.log(str[0]);\nconsole.log(str[2]);\nconsole.log(str[4]);\nconsole.log(str[6]);",
       "testCases": [
@@ -59,7 +59,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename str1 and str2, use them as input for your program.\n// While testing we will change their values.\nconst str1 = \"Computer\";\nconst str2 = \"Science\";\n\n// Calculate: length of str1, length of str2, sum of both lengths, difference of lengths\n// Print all four values\n// For example, if str1 = \"Computer\" and str2 = \"Science\", your output should be:\n// 8\n// 7\n// 15\n// 1",
+      "description": "// Do not rename str1 and str2, use them as input for your program.\n// While testing we will change their values.\nconst str1 = \"Computer\";\nconst str2 = \"Science\";\n// Calculate: length of str1, length of str2, sum of both lengths, difference of lengths\n// Print all four values\n// For example, if str1 = \"Computer\" and str2 = \"Science\", your output should be:\n// 8\n// 7\n// 15\n// 1",
       "solution_type": "script",
       "reference_solution": "const str1 = \"Computer\";\nconst str2 = \"Science\";\nconst len1 = str1.length;\nconst len2 = str2.length;\nconsole.log(len1);\nconsole.log(len2);\nconsole.log(len1 + len2);\nconsole.log(Math.abs(len1 - len2));",
       "testCases": [
@@ -108,7 +108,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename text, use it as input for your program.\n// While testing we will change its value.\nconst text = \"Algorithm\";\n\n// Extract characters at positions 0, 1, 2 and concatenate them\n// Then extract characters at positions 3, 4, 5 and concatenate them\n// Print both results\n// For example, if text = \"Algorithm\", your output should be:\n// Alg\n// ori",
+      "description": "// Do not rename text, use it as input for your program.\n// While testing we will change its value.\nconst text = \"Algorithm\";\n// Extract characters at positions 0, 1, 2 and concatenate them\n// Then extract characters at positions 3, 4, 5 and concatenate them\n// Print both results\n// For example, if text = \"Algorithm\", your output should be:\n// Alg\n// ori",
       "solution_type": "script",
       "reference_solution": "const text = \"Algorithm\";\nconst part1 = text[0] + text[1] + text[2];\nconst part2 = text[3] + text[4] + text[5];\nconsole.log(part1);\nconsole.log(part2);",
       "testCases": [
@@ -151,7 +151,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename input, use it as input for your program.\n// While testing we will change its value.\nconst input = \"programming\";\n\n// Convert to uppercase, then concatenate with original lowercase version\n// Print the combined result and its total length\n// For example, if input = \"programming\", your output should be:\n// PROGRAMMINGprogramming\n// 22",
+      "description": "// Do not rename input, use it as input for your program.\n// While testing we will change its value.\nconst input = \"programming\";\n// Convert to uppercase, then concatenate with original lowercase version\n// Print the combined result and its total length\n// For example, if input = \"programming\", your output should be:\n// PROGRAMMINGprogramming\n// 22",
       "solution_type": "script",
       "reference_solution": "const input = \"programming\";\nconst upper = input.toUpperCase();\nconst combined = upper + input;\nconsole.log(combined);\nconsole.log(combined.length);",
       "testCases": [

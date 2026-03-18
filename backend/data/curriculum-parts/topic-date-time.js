@@ -41,7 +41,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-06-15\";\n\n// Step 1: Create a Date from the string: new Date(dateStr)\n// Step 2: Get the year with getFullYear()\n// Step 3: Print only that number (e.g. 2024 for \"2024-06-15\")",
+      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-06-15\";\n// Step 1: Create a Date from the string: new Date(dateStr)\n// Step 2: Get the year with getFullYear()\n// Step 3: Print only that number (e.g. 2024 for \"2024-06-15\")",
       "solution_type": "script",
       "reference_solution": "const dateStr = \"2024-06-15\";\nconst d = new Date(dateStr);\nconsole.log(d.getFullYear());",
       "testCases": [
@@ -66,7 +66,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-03-15\";\n\n// Create a Date from dateStr. Use getMonth() (returns 0-11). Add 1 to get calendar month 1-12.\n// Print that single number (e.g. 3 for March, 12 for December).\n// For \"2024-03-15\" output should be: 3",
+      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-03-15\";\n// Create a Date from dateStr. Use getMonth() (returns 0-11). Add 1 to get calendar month 1-12.\n// Print that single number (e.g. 3 for March, 12 for December).\n// For \"2024-03-15\" output should be: 3",
       "solution_type": "script",
       "reference_solution": "const dateStr = \"2024-03-15\";\nconst d = new Date(dateStr);\nconsole.log(d.getMonth() + 1);",
       "testCases": [
@@ -97,7 +97,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-08-25\";\n\n// Create a Date from dateStr. Use getDay() (0=Sunday, 1=Monday, ..., 6=Saturday).\n// Print the weekday number only. For \"2024-08-25\" output should be: 0",
+      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-08-25\";\n// Create a Date from dateStr. Use getDay() (0=Sunday, 1=Monday, ..., 6=Saturday).\n// Print the weekday number only. For \"2024-08-25\" output should be: 0",
       "solution_type": "script",
       "reference_solution": "const dateStr = \"2024-08-25\";\nconst d = new Date(dateStr);\nconsole.log(d.getDay());",
       "testCases": [
@@ -139,7 +139,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dateStr1 or dateStr2; they are inputs. We may change them when testing.\nconst dateStr1 = \"2024-06-15\";\nconst dateStr2 = \"2024-08-20\";\n\n// Parse both strings into Date objects. Compare them (e.g. d1.getTime() < d2.getTime() or d1 < d2).\n// Print exactly one of: \"First date is earlier\" | \"Second date is earlier\" | \"Same date\"",
+      "description": "// Do not rename dateStr1 or dateStr2; they are inputs. We may change them when testing.\nconst dateStr1 = \"2024-06-15\";\nconst dateStr2 = \"2024-08-20\";\n// Parse both strings into Date objects. Compare them (e.g. d1.getTime() < d2.getTime() or d1 < d2).\n// Print exactly one of: \"First date is earlier\" | \"Second date is earlier\" | \"Same date\"",
       "solution_type": "script",
       "reference_solution": "const dateStr1 = \"2024-06-15\";\nconst dateStr2 = \"2024-08-20\";\nconst d1 = new Date(dateStr1);\nconst d2 = new Date(dateStr2);\nif (d1 < d2) {\n  console.log(\"First date is earlier\");\n} else if (d2 < d1) {\n  console.log(\"Second date is earlier\");\n} else {\n  console.log(\"Same date\");\n}",
       "testCases": [
@@ -174,7 +174,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-03-10\";\n\n// Create a Date from dateStr. Add 7 days: setDate(getDate() + 7).\n// Print the new date as YYYY-MM-DD using toISOString().split('T')[0].\n// For \"2024-03-10\" expected output: 2024-03-17",
+      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-03-10\";\n// Create a Date from dateStr. Add 7 days: setDate(getDate() + 7).\n// Print the new date as YYYY-MM-DD using toISOString().split('T')[0].\n// For \"2024-03-10\" expected output: 2024-03-17",
       "solution_type": "script",
       "reference_solution": "const dateStr = \"2024-03-10\";\nconst d = new Date(dateStr);\nd.setDate(d.getDate() + 7);\nconsole.log(d.toISOString().split('T')[0]);",
       "testCases": [
@@ -205,7 +205,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dateStr1 or dateStr2; they are inputs. We may change them when testing.\nconst dateStr1 = \"2024-01-01\";\nconst dateStr2 = \"2024-01-15\";\n\n// Parse both into Dates. Get milliseconds with getTime(). Subtract, then convert to days (1 day = 24*60*60*1000 ms).\n// Print the absolute number of days between the two dates (e.g. 14 for Jan 1 and Jan 15).",
+      "description": "// Do not rename dateStr1 or dateStr2; they are inputs. We may change them when testing.\nconst dateStr1 = \"2024-01-01\";\nconst dateStr2 = \"2024-01-15\";\n// Parse both into Dates. Get milliseconds with getTime(). Subtract, then convert to days (1 day = 24*60*60*1000 ms).\n// Print the absolute number of days between the two dates (e.g. 14 for Jan 1 and Jan 15).",
       "solution_type": "script",
       "reference_solution": "const dateStr1 = \"2024-01-01\";\nconst dateStr2 = \"2024-01-15\";\nconst d1 = new Date(dateStr1);\nconst d2 = new Date(dateStr2);\nconst msPerDay = 24 * 60 * 60 * 1000;\nconst diff = d2.getTime() - d1.getTime();\nconst days = diff > 0 ? diff : -diff;\nconsole.log(Math.floor(days / msPerDay));",
       "testCases": [
@@ -251,7 +251,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-07-04\";\n\n// Create a Date from dateStr. getDay() returns 0 (Sunday) or 6 (Saturday) for weekends.\n// If the day is Saturday or Sunday print \"Weekend\", otherwise print \"Weekday\".",
+      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-07-04\";\n// Create a Date from dateStr. getDay() returns 0 (Sunday) or 6 (Saturday) for weekends.\n// If the day is Saturday or Sunday print \"Weekend\", otherwise print \"Weekday\".",
       "solution_type": "script",
       "reference_solution": "const dateStr = \"2024-07-04\";\nconst d = new Date(dateStr);\nconst day = d.getDay();\nif (day === 0 || day === 6) {\n  console.log(\"Weekend\");\n} else {\n  console.log(\"Weekday\");\n}",
       "testCases": [
@@ -282,7 +282,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename year, month, or day; they are inputs (month is 1-12). We may change them when testing.\nconst year = 2024;\nconst month = 2;  // 1 = January, 12 = December\nconst day = 29;\n\n// Create a Date with new Date(year, month - 1, day) so the constructor gets 0-11 for month.\n// If the date is valid, the Date will have the same getDate(), getMonth()+1, and getFullYear() as the inputs.\n// If invalid (e.g. Feb 30), the Date rolls over so they won't match. Print \"Valid date\" or \"Invalid date\".",
+      "description": "// Do not rename year, month, or day; they are inputs (month is 1-12). We may change them when testing.\nconst year = 2024;\nconst month = 2;  // 1 = January, 12 = December\nconst day = 29;\n// Create a Date with new Date(year, month - 1, day) so the constructor gets 0-11 for month.\n// If the date is valid, the Date will have the same getDate(), getMonth()+1, and getFullYear() as the inputs.\n// If invalid (e.g. Feb 30), the Date rolls over so they won't match. Print \"Valid date\" or \"Invalid date\".",
       "solution_type": "script",
       "reference_solution": "const year = 2024;\nconst month = 2;\nconst day = 29;\nconst d = new Date(year, month - 1, day);\nif (d.getDate() === day && d.getMonth() === month - 1 && d.getFullYear() === year) {\n  console.log(\"Valid date\");\n} else {\n  console.log(\"Invalid date\");\n}",
       "testCases": [
@@ -321,7 +321,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-08-15\";\n\n// Create a Date from dateStr. Build a string with month (getMonth()+1), day (getDate()), year (getFullYear()).\n// Format: month day, year (e.g. 8 15, 2024 for August 15, 2024).\n// For \"2024-08-15\" expected output: 8 15, 2024",
+      "description": "// Do not rename dateStr; it is the input. We may change it when testing.\nconst dateStr = \"2024-08-15\";\n// Create a Date from dateStr. Build a string with month (getMonth()+1), day (getDate()), year (getFullYear()).\n// Format: month day, year (e.g. 8 15, 2024 for August 15, 2024).\n// For \"2024-08-15\" expected output: 8 15, 2024",
       "solution_type": "script",
       "reference_solution": "const dateStr = \"2024-08-15\";\nconst d = new Date(dateStr);\nconsole.log((d.getMonth() + 1) + \" \" + d.getDate() + \", \" + d.getFullYear());",
       "testCases": [
