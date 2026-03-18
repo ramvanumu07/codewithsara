@@ -208,38 +208,6 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Implement the below function that uses regex with $ anchor to test string end.\n  Create a regex to test if the string ends with \"ing\".\n  Use test() method with $ anchor.\n  Examples:\n    endsWithIng(\"testing\") => true\n    endsWithIng(\"running\") => true\n    endsWithIng(\"test\") => false\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction endsWithIng(str) {\n  // Implementation here\n}",
-      "solution_type": "function",
-      "function_name": "endsWithIng",
-      "reference_solution": "function endsWithIng(str) {\n  return /ing$/.test(str);\n}",
-      "testCases": [
-        {
-          "input": {
-            "str": "testing"
-          },
-          "expectedOutput": "true"
-        },
-        {
-          "input": {
-            "str": "running"
-          },
-          "expectedOutput": "true"
-        },
-        {
-          "input": {
-            "str": "test"
-          },
-          "expectedOutput": "false"
-        },
-        {
-          "input": {
-            "str": "singer"
-          },
-          "expectedOutput": "false"
-        }
-      ]
-    },
-    {
       "description": "/*\n  Implement the below function that uses regex to match words ending with \"at\".\n  Create a regex to match all three-letter words ending with \"at\".\n  Use match() with global flag.\n  Examples:\n    matchWordsEndingWithAt(\"cat bat rat mat\") => [\"cat\",\"bat\",\"rat\",\"mat\"]\n    matchWordsEndingWithAt(\"sat fat\") => [\"sat\",\"fat\"]\n    matchWordsEndingWithAt(\"dog log\") => null\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction matchWordsEndingWithAt(str) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "matchWordsEndingWithAt",
@@ -262,38 +230,6 @@ export default {
             "str": "dog log"
           },
           "expectedOutput": "null"
-        }
-      ]
-    },
-    {
-      "description": "/*\n  Implement the below function that uses regex to normalize spaces.\n  Create a regex to replace multiple consecutive spaces with a single space.\n  Use replace() with regex and global flag.\n  Examples:\n    normalizeSpaces(\"hello   world  test\") => \"hello world test\"\n    normalizeSpaces(\"one    two\") => \"one two\"\n    normalizeSpaces(\"a  b  c\") => \"a b c\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction normalizeSpaces(str) {\n  // Implementation here\n}",
-      "solution_type": "function",
-      "function_name": "normalizeSpaces",
-      "reference_solution": "function normalizeSpaces(str) {\n  return str.replace(/  +/g, ' ');\n}",
-      "testCases": [
-        {
-          "input": {
-            "str": "hello   world  test"
-          },
-          "expectedOutput": "hello world test"
-        },
-        {
-          "input": {
-            "str": "one    two"
-          },
-          "expectedOutput": "one two"
-        },
-        {
-          "input": {
-            "str": "a  b  c"
-          },
-          "expectedOutput": "a b c"
-        },
-        {
-          "input": {
-            "str": "test"
-          },
-          "expectedOutput": "test"
         }
       ]
     },
