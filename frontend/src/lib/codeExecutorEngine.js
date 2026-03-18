@@ -12,13 +12,17 @@ export class CodeExecutor {
     this.maxOutputLines = 1000;
   }
 
-  execute(code, testCases, functionName, solutionType) {
+  /**
+   * Run function-type assignments. Awaits Promises (timers, async I/O patterns).
+   * Script-type stays synchronous.
+   */
+  async execute(code, testCases, functionName, solutionType) {
     try {
       if (solutionType === 'script') {
         return this.executeScript(code, testCases);
       }
       if (solutionType === 'function') {
-        return this.executeFunction(code, testCases, functionName);
+        return await this.executeFunctionAsync(code, testCases, functionName);
       }
       throw new Error('Invalid solution type');
     } catch (error) {
@@ -113,7 +117,19 @@ export class CodeExecutor {
     return lines.slice(i).join('\n').trimStart();
   }
 
-  executeFunction(code, testCases, functionName) {
+  async _settlePromise(val, timeoutMs = 15000) {
+    if (val && typeof val.then === 'function') {
+      return Promise.race([
+        val,
+        new Promise((_, rej) =>
+          setTimeout(() => rej(new Error(`Async step timed out (${timeoutMs / 1000}s)`)), timeoutMs)
+        )
+      ]);
+    }
+    return val;
+  }
+
+  async executeFunctionAsync(code, testCases, functionName) {
     const results = [];
     const codeToRun = this.stripLeadingSingleLineComments(code);
 
@@ -165,7 +181,7 @@ export class CodeExecutor {
 
     for (const testCase of testCases) {
       try {
-        const { value, error } = this.runFunctionTestCase(userFn, testCase);
+        const { value, error } = await this.runFunctionTestCaseAsync(userFn, testCase);
         const resultStr = error
           ? ''
           : value !== undefined && value !== null
@@ -196,11 +212,21 @@ export class CodeExecutor {
     };
   }
 
-  runFunctionTestCase(fn, testCase) {
+  async runFunctionTestCaseAsync(fn, testCase) {
     const args = Object.values(testCase.input);
     let result = fn.apply(null, args);
-    if (result && typeof result.then === 'function') {
-      result = undefined;
+    if (testCase.requirePromise === true) {
+      if (!result || typeof result.then !== 'function') {
+        return {
+          error:
+            'This task requires your function to return a Promise (use return new Promise(...) or an async function).'
+        };
+      }
+    }
+    try {
+      result = await this._settlePromise(result);
+    } catch (e) {
+      return { error: e.message || String(e) };
     }
     try {
       if (testCase.thenCallArgs !== undefined && testCase.thenCallArgs !== null) {
@@ -211,8 +237,10 @@ export class CodeExecutor {
           return { error: `Expected a function, got ${typeof result}` };
         }
         result = result.apply(null, innerArgs);
-        if (result && typeof result.then === 'function') {
-          result = undefined;
+        try {
+          result = await this._settlePromise(result);
+        } catch (e) {
+          return { error: e.message || String(e) };
         }
       }
       if (Array.isArray(testCase.repeatCalls) && testCase.repeatCalls.length > 0) {
@@ -223,8 +251,10 @@ export class CodeExecutor {
         for (const callArgs of testCase.repeatCalls) {
           const ca = Array.isArray(callArgs) ? callArgs : Object.values(callArgs || {});
           let out = result.apply(null, ca);
-          if (out && typeof out.then === 'function') {
-            out = undefined;
+          try {
+            out = await this._settlePromise(out);
+          } catch (e) {
+            return { error: e.message || String(e) };
           }
           parts.push(String(out ?? ''));
         }
@@ -239,8 +269,10 @@ export class CodeExecutor {
             return { error: `Missing or non-function method: ${step.method}` };
           }
           last = m.apply(obj, step.args || []);
-          if (last && typeof last.then === 'function') {
-            last = undefined;
+          try {
+            last = await this._settlePromise(last);
+          } catch (e) {
+            return { error: e.message || String(e) };
           }
         }
         result = last;
@@ -370,10 +402,7 @@ export class CodeExecutor {
       /\bimportScripts\b/g,
       /\bpostMessage\b/g,
       /\bclose\b/g,
-      /\bsetTimeout\b/g,
-      /\bsetInterval\b/g,
       /\beval\b/g,
-      /\bFunction\b/g,
       /\bnew\s+Function/g,
       /\bWebSocket\b/g,
       /\bfetch\b/g,

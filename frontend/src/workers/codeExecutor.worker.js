@@ -2,12 +2,12 @@ import { CodeExecutor, sanitizeExecutePayloadForTransfer } from '../lib/codeExec
 
 let currentTaskId = null;
 
-self.onmessage = function (event) {
+self.onmessage = async function (event) {
   const { code, testCases, functionName, solutionType, taskId } = event.data;
   currentTaskId = taskId;
   try {
     const executor = new CodeExecutor();
-    const result = executor.execute(code, testCases, functionName, solutionType);
+    const result = await executor.execute(code, testCases, functionName, solutionType);
     self.postMessage({
       taskId,
       ...sanitizeExecutePayloadForTransfer(result)

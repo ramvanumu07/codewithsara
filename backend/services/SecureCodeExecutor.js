@@ -128,8 +128,21 @@ class SecureCodeExecutor {
   async runFunctionTestCase(fn, testCase) {
     const args = Object.values(testCase.input);
     let result = fn.apply(null, args);
+    if (testCase.requirePromise === true) {
+      if (!result || typeof result.then !== 'function') {
+        return {
+          error:
+            'This task requires your function to return a Promise (use return new Promise(...) or an async function).'
+        };
+      }
+    }
     if (result && typeof result.then === 'function') {
-      result = await result;
+      result = await Promise.race([
+        result,
+        new Promise((_, rej) =>
+          setTimeout(() => rej(new Error('Async step timed out (15s)')), 15000)
+        )
+      ]);
     }
 
     try {
@@ -314,10 +327,13 @@ class SecureCodeExecutor {
       isFinite,
       
       // Safe methods
-      setTimeout: undefined, // Blocked
-      setInterval: undefined, // Blocked
-      clearTimeout: undefined, // Blocked
-      clearInterval: undefined, // Blocked
+      Promise,
+      setTimeout: (cb, ms) =>
+        globalThis.setTimeout(cb, Math.min(Math.max(0, Number(ms) || 0), 10000)),
+      setInterval: (cb, ms) =>
+        globalThis.setInterval(cb, Math.min(Math.max(1, Number(ms) || 1), 10000)),
+      clearTimeout: globalThis.clearTimeout.bind(globalThis),
+      clearInterval: globalThis.clearInterval.bind(globalThis),
       
       // Loop protection
       __loopCount: 0,

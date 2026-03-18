@@ -7,9 +7,9 @@ const N = '\x1b[0m';
 const tick = `${G}\u2713${N}`;
 const cross = `${R}\u2717${N}`;
 
-export function runPlaygroundCase(c) {
+export async function runPlaygroundCase(c) {
   const ex = new CodeExecutor();
-  const r = ex.execute(c.code, [], null, 'script');
+  const r = await ex.execute(c.code, [], null, 'script');
   const first = r.results?.[0];
   const out = first?.output ?? first?.result ?? '';
   const err = r.success ? '' : r.error || first?.error || '';
@@ -34,15 +34,15 @@ export function runPlaygroundCase(c) {
   };
 }
 
-export function runAssignmentCase(c) {
+export async function runAssignmentCase(c) {
   const ex = new CodeExecutor();
   let r;
   if (c.mode === 'run') {
-    r = ex.execute(c.code, [], null, 'script');
+    r = await ex.execute(c.code, [], null, 'script');
   } else if (c.mode === 'script_test') {
-    r = ex.execute(c.code, c.testCases, null, 'script');
+    r = await ex.execute(c.code, c.testCases, null, 'script');
   } else if (c.mode === 'function_test') {
-    r = ex.execute(c.code, c.testCases, c.functionName, 'function');
+    r = await ex.execute(c.code, c.testCases, c.functionName, 'function');
   }
   const first = r.results?.[0];
   let pass = false;

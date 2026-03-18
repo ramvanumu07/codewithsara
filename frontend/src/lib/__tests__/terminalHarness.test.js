@@ -4,8 +4,8 @@ import { runPlaygroundCase, runAssignmentCase } from '../terminalHarness/runHarn
 describe('Playground terminal harness', () => {
   test.each(PLAYGROUND_TERMINAL_CASES.map((c) => [c.id, c]))(
     '%s',
-    (_, c) => {
-      const row = runPlaygroundCase(c);
+    async (_, c) => {
+      const row = await runPlaygroundCase(c);
       if (!row.pass) {
         throw new Error(`[${c.id}] expected: ${row.expected}\nactual: ${row.actual}`);
       }
@@ -16,8 +16,8 @@ describe('Playground terminal harness', () => {
 describe('Assignment terminal harness', () => {
   test.each(ASSIGNMENT_TERMINAL_CASES.map((c) => [c.id, c]))(
     '%s',
-    (_, c) => {
-      const row = runAssignmentCase(c);
+    async (_, c) => {
+      const row = await runAssignmentCase(c);
       if (!row.pass) {
         throw new Error(`[${c.id}] expected: ${row.expected}\nactual: ${row.actual}`);
       }
