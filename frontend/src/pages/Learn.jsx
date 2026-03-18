@@ -858,6 +858,34 @@ const Learn = () => {
     }
   }
 
+  /** Next topic learning session (/learn/:id), or dashboard if none / error */
+  const goToNextTopicSession = async () => {
+    try {
+      const coursesRes = await learning.getCourses()
+      if (!coursesRes.data?.success || !coursesRes.data?.data?.courses?.length) {
+        navigate('/dashboard')
+        return
+      }
+      const courses = coursesRes.data.data.courses
+      let nextTopicId = null
+      for (const course of courses) {
+        const topics = course.topics || []
+        const idx = topics.findIndex((t) => String(t.id) === String(topicId))
+        if (idx !== -1 && idx < topics.length - 1) {
+          nextTopicId = topics[idx + 1].id
+          break
+        }
+      }
+      if (nextTopicId) {
+        navigate(`/learn/${nextTopicId}`)
+      } else {
+        navigate('/dashboard')
+      }
+    } catch {
+      navigate('/dashboard')
+    }
+  }
+
   // Show dev style solution (reference_solution from curriculum)
   const handleReviewAssignment = () => {
     const currentTask = assignments[currentAssignment]
@@ -871,6 +899,10 @@ const Learn = () => {
   }
 
   const handleNext = async () => {
+    if (assignments.length === 0) {
+      await goToNextTopicSession()
+      return
+    }
     if (currentAssignment < assignments.length - 1) {
       // More assignments in this topic — load next assignment
       const nextAssignmentIndex = currentAssignment + 1
@@ -930,6 +962,10 @@ const Learn = () => {
 
   // Back in assignment: previous assignment or session phase if on 1st
   const handleAssignmentBack = () => {
+    if (assignments.length === 0) {
+      navigate(`/learn/${topicId}`)
+      return
+    }
     if (currentAssignment > 0) {
       const prevIndex = currentAssignment - 1
       setCurrentAssignment(prevIndex)
@@ -1317,7 +1353,10 @@ const Learn = () => {
             <span className="header-title">{topic.title}</span>
             <div className="phase-text">
               {phase === 'session' && 'Learning Session'}
-              {phase === 'assignment' && `Assignment ${currentAssignment + 1} of ${assignments.length}`}
+              {phase === 'assignment' &&
+                (assignments.length === 0
+                  ? 'No practice tasks'
+                  : `Assignment ${currentAssignment + 1} of ${assignments.length}`)}
             </div>
           </div>
 
@@ -1367,18 +1406,18 @@ const Learn = () => {
                   className="assignment-nav-btn assignment-next-btn"
                   onClick={handleNext}
                   title={
-                    currentAssignment < assignments.length - 1
-                      ? 'Next assignment'
-                      : assignments.length > 0
-                        ? 'Next topic'
-                        : 'Next'
+                    assignments.length === 0
+                      ? 'Next topic session'
+                      : currentAssignment < assignments.length - 1
+                        ? 'Next assignment'
+                        : 'Next topic'
                   }
                   aria-label={
-                    currentAssignment < assignments.length - 1
-                      ? 'Next assignment'
-                      : assignments.length > 0
-                        ? 'Next topic'
-                        : 'Next'
+                    assignments.length === 0
+                      ? 'Next topic session'
+                      : currentAssignment < assignments.length - 1
+                        ? 'Next assignment'
+                        : 'Next topic'
                   }
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1465,6 +1504,82 @@ const Learn = () => {
           onCopySuccess={() => { }}
           onRunError={() => { }}
         />
+      )}
+
+      {phase === 'assignment' && assignments.length === 0 && (
+        <div
+          className="assignment-empty-tasks"
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 24px',
+            minHeight: 0,
+            textAlign: 'center',
+            backgroundColor: '#fafafa',
+            fontFamily: 'var(--sara-font)'
+          }}
+        >
+          <div
+            style={{
+              maxWidth: 440,
+              backgroundColor: '#fff',
+              border: '1px solid #e5e7eb',
+              borderRadius: 12,
+              padding: '32px 28px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.06)'
+            }}
+          >
+            <h2 style={{ margin: '0 0 12px', fontSize: '1.25rem', fontWeight: 600, color: '#111827' }}>
+              No tasks to practice
+            </h2>
+            <p style={{ margin: '0 0 8px', fontSize: '0.9375rem', color: '#4b5563', lineHeight: 1.6 }}>
+              This topic doesn&apos;t include any coding assignments yet. You can move on to the next topic and
+              start its learning session.
+            </p>
+            <p style={{ margin: '0 0 24px', fontSize: '0.8125rem', color: '#9ca3af' }}>
+              If you&apos;re already on the last topic in your course, you&apos;ll return to the dashboard.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+              <button
+                type="button"
+                onClick={() => goToNextTopicSession()}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#10a37f',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 8,
+                  fontSize: '0.9375rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: 'var(--sara-font)'
+                }}
+              >
+                Continue to next topic
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate(`/learn/${topicId}`)}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#fff',
+                  color: '#374151',
+                  border: '1px solid #d1d5db',
+                  borderRadius: 8,
+                  fontSize: '0.9375rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  fontFamily: 'var(--sara-font)'
+                }}
+              >
+                Back to session
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Assignment Phase - Same Structure as Playground */}

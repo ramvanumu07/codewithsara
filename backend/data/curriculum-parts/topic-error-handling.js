@@ -52,18 +52,6 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Implement the below function that demonstrates try-catch-finally.\n  Create a try-catch-finally block.\n  In try: collect \"Trying\", in catch: collect \"Error occurred\", in finally: collect \"Cleanup\".\n  Test with code that throws an error and return the collected messages joined by newlines.\n  Examples:\n    tryCatchFinally() => \"Trying\\nError occurred\\nCleanup\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction tryCatchFinally() {\n  // Implementation here\n}",
-      "solution_type": "function",
-      "function_name": "tryCatchFinally",
-      "reference_solution": "function tryCatchFinally() {\n  const parts = [];\n  try {\n    parts.push('Trying');\n    throw new Error();\n  } catch (e) {\n    parts.push('Error occurred');\n  } finally {\n    parts.push('Cleanup');\n  }\n  return parts.join('\\n');\n}",
-      "testCases": [
-        {
-          "input": {},
-          "expectedOutput": "Trying\nError occurred\nCleanup"
-        }
-      ]
-    },
-    {
       "description": "/*\n  Implement the below function that throws custom error for negative numbers.\n  Create a function that throws a custom error if a number is negative.\n  Use throw new Error() with message \"Number must be positive\".\n  Wrap the function call in try-catch and return the error message.\n  Examples:\n    validatePositiveNumber(-5) => \"Number must be positive\"\n    validatePositiveNumber(-10) => \"Number must be positive\"\n    validatePositiveNumber(-1) => \"Number must be positive\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction validatePositiveNumber(num) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "validatePositiveNumber",
@@ -225,18 +213,6 @@ export default {
             "index": 10
           },
           "expectedOutput": "Index out of bounds"
-        }
-      ]
-    },
-    {
-      "description": "/*\n  Implement the below function that demonstrates nested try-catch blocks.\n  Outer try: contains inner try-catch.\n  Inner try: throw error with message \"Inner error\".\n  Inner catch: collect the error message and re-throw the error.\n  Outer catch: collect \"Caught in outer: \" + error message.\n  Return collected messages joined by newlines.\n  Examples:\n    nestedTryCatch() => \"Inner error\\nCaught in outer: Inner error\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction nestedTryCatch() {\n  // Implementation here\n}",
-      "solution_type": "function",
-      "function_name": "nestedTryCatch",
-      "reference_solution": "function nestedTryCatch() {\n  const parts = [];\n  try {\n    try {\n      throw new Error('Inner error');\n    } catch (e) {\n      parts.push(e.message);\n      throw e;\n    }\n  } catch (e) {\n    parts.push('Caught in outer: ' + e.message);\n  }\n  return parts.join('\\n');\n}",
-      "testCases": [
-        {
-          "input": {},
-          "expectedOutput": "Inner error\nCaught in outer: Inner error"
         }
       ]
     },

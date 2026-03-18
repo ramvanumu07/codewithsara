@@ -114,54 +114,6 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Implement the below function that chains map, filter, and reduce.\n  Chain map, filter, and reduce to: double each, filter even results, then sum them.\n  Examples:\n    mapFilterReduce([1, 2, 3, 4, 5]) => 30\n    mapFilterReduce([2, 4, 6]) => 24\n    mapFilterReduce([1, 3, 5]) => 0\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction mapFilterReduce(arr) {\n  // Implementation here\n}",
-      "solution_type": "function",
-      "function_name": "mapFilterReduce",
-      "reference_solution": "function mapFilterReduce(arr) {\n  return arr.map(n => n * 2).filter(n => n % 2 === 0).reduce((sum, n) => sum + n, 0);\n}",
-      "testCases": [
-        {
-          "input": {
-            "arr": [
-              1,
-              2,
-              3,
-              4,
-              5
-            ]
-          },
-          "expectedOutput": "30"
-        },
-        {
-          "input": {
-            "arr": [
-              2,
-              4,
-              6
-            ]
-          },
-          "expectedOutput": "24"
-        },
-        {
-          "input": {
-            "arr": [
-              1,
-              3,
-              5
-            ]
-          },
-          "expectedOutput": "0"
-        },
-        {
-          "input": {
-            "arr": [
-              10
-            ]
-          },
-          "expectedOutput": "20"
-        }
-      ]
-    },
-    {
       "description": "/*\n  Implement the below function that accesses 2D array element.\n  Access the element at the specified row and column.\n  Examples:\n    access2DElement([[1, 2, 3], [4, 5, 6], [7, 8, 9]], 1, 2) => 6\n    access2DElement([[10, 20], [30, 40]], 0, 1) => 20\n    access2DElement([[5, 10, 15], [20, 25, 30]], 1, 0) => 20\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction access2DElement(arr, row, col) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "access2DElement",

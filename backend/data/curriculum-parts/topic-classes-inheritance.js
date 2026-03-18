@@ -94,16 +94,6 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Implement the below function that creates User class with password encapsulation.\n  Create a class User with constructor taking username.\n  Add private property _password and getter/setter for password.\n  Getter always returns \"*****\" to hide actual password.\n  Examples:\n    createUserAndGetPassword(\"alice\", \"secret123\") => \"*****\"\n    createUserAndGetPassword(\"bob\", \"pass456\") => \"*****\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createUserAndGetPassword(username, password) {\n  // Implementation here\n}",
-      "solution_type": "function",
-      "function_name": "createUserAndGetPassword",
-      "reference_solution": "function createUserAndGetPassword(username, password) {\n  class User {\n    constructor(u, p) {\n      this.username = u;\n      this._password = p;\n    }\n    get password() {\n      return '*****';\n    }\n    set password(p) {\n      this._password = p;\n    }\n  }\n  const u = new User(username, password);\n  return u.password;\n}",
-      "testCases": [
-        { "input": { "username": "alice", "password": "secret123" }, "expectedOutput": "*****" },
-        { "input": { "username": "bob", "password": "pass456" }, "expectedOutput": "*****" }
-      ]
-    },
-    {
       "description": "/*\n  Implement the below function that creates Book class with static comparison.\n  Create a class Book with constructor taking title, author, pages.\n  Add static method comparePages(book1, book2) that returns the book with more pages.\n  Create two books and use comparePages to find which has more pages.\n  Examples:\n    compareBooksAndGetTitle({\"title\": \"1984\", \"author\": \"Orwell\", \"pages\": 328}, {\"title\": \"Dune\", \"author\": \"Herbert\", \"pages\": 412}) => \"Dune\"\n    compareBooksAndGetTitle({\"title\": \"Hobbit\", \"author\": \"Tolkien\", \"pages\": 500}, {\"title\": \"Harry Potter\", \"author\": \"Rowling\", \"pages\": 300}) => \"Hobbit\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction compareBooksAndGetTitle(book1, book2) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "compareBooksAndGetTitle",

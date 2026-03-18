@@ -159,12 +159,12 @@ async function getCompletedTopicsForUser(userId) {
 // Require course to be unlocked for user (used for topic access)
 async function requireCourseUnlocked(req, res, next) {
   const topicId = req.params.topicId || req.body?.topicId
-  if (!topicId) {return next()}
+  if (!topicId) { return next() }
   const topic = findTopicById(courses, topicId)
-  if (!topic) {return next()}
+  if (!topic) { return next() }
   const courseId = topic.courseId
   const userId = req.user?.userId
-  if (!userId) {return next()}
+  if (!userId) { return next() }
   const unlocked = await isCourseUnlockedForUser(userId, courseId)
   if (!unlocked) {
     return res.status(403).json(createErrorResponse('This course is locked. Unlock it to continue.', 'COURSE_LOCKED', { courseId }))
@@ -208,7 +208,7 @@ router.get('/state/:topicId', authenticateToken, requireCourseUnlocked, async (r
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     // Get progress and chat history in parallel
     const [progress, chatHistory] = await Promise.all([
@@ -268,7 +268,7 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     // Handle empty assignments (reserved for future use)
     const _taskList = assignments && assignments.length > 0
@@ -347,7 +347,7 @@ router.post('/playtime/start', authenticateToken, rateLimitMiddleware, validateB
 
 
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     await upsertProgress(userId, topicId, {
       phase: 'playtime',
@@ -384,7 +384,7 @@ router.post('/playtime/complete', authenticateToken, rateLimitMiddleware, valida
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
 
     // Complete playtime phase - direct database update for compatibility
@@ -425,7 +425,7 @@ router.post('/assignment/start', authenticateToken, rateLimitMiddleware, validat
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     // Get topic tasks
     const tasks = topic.tasks || []
@@ -484,7 +484,7 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
 
     // Validate topic exists
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     const tasks = topic.tasks || []
     if (assignmentIndex >= tasks.length) {
@@ -622,7 +622,7 @@ router.post('/execute', authenticateToken, async (req, res) => {
 
     // Get topic and assignment details
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     let testCases = []
     if (assignmentIndex !== undefined && topic.tasks && topic.tasks[assignmentIndex]) {
@@ -1065,7 +1065,7 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
     const userId = req.user.userId
 
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
-    if (!topic) {return}
+    if (!topic) { return }
 
     let progress = await getProgress(userId, topicId)
     const totalTasks = (topic.tasks || []).length
