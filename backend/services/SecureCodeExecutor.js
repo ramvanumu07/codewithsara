@@ -120,6 +120,71 @@ class SecureCodeExecutor {
   }
 
   /**
+   * Run one function-type test case. Supports closure patterns:
+   * - thenCallArgs: after fn(...input), call returned function with these args
+   * - thenInvoke: [{ method, args }], call methods on returned object; last return is compared
+   * - repeatCalls: [[args], ...] call same returned function multiple times; join with newline
+   */
+  async runFunctionTestCase(fn, testCase) {
+    const args = Object.values(testCase.input);
+    let result = fn.apply(null, args);
+    if (result && typeof result.then === 'function') {
+      result = await result;
+    }
+
+    try {
+      if (testCase.thenCallArgs !== undefined && testCase.thenCallArgs !== null) {
+        const innerArgs = Array.isArray(testCase.thenCallArgs)
+          ? testCase.thenCallArgs
+          : Object.values(testCase.thenCallArgs);
+        if (typeof result !== 'function') {
+          return { error: `Expected a function, got ${typeof result}` };
+        }
+        result = result.apply(null, innerArgs);
+        if (result && typeof result.then === 'function') {
+          result = await result;
+        }
+      }
+
+      if (Array.isArray(testCase.repeatCalls) && testCase.repeatCalls.length > 0) {
+        if (typeof result !== 'function') {
+          return { error: `Expected a function, got ${typeof result}` };
+        }
+        const parts = [];
+        for (const callArgs of testCase.repeatCalls) {
+          const ca = Array.isArray(callArgs) ? callArgs : Object.values(callArgs || {});
+          let out = result.apply(null, ca);
+          if (out && typeof out.then === 'function') {
+            out = await out;
+          }
+          parts.push(String(out ?? ''));
+        }
+        result = parts.join('\n');
+      }
+
+      if (Array.isArray(testCase.thenInvoke) && testCase.thenInvoke.length > 0) {
+        let obj = result;
+        let last;
+        for (const step of testCase.thenInvoke) {
+          const m = obj?.[step.method];
+          if (typeof m !== 'function') {
+            return { error: `Missing or non-function method: ${step.method}` };
+          }
+          last = m.apply(obj, step.args || []);
+          if (last && typeof last.then === 'function') {
+            last = await last;
+          }
+        }
+        result = last;
+      }
+
+      return { value: result };
+    } catch (e) {
+      return { error: e.message || String(e) };
+    }
+  }
+
+  /**
    * Execute function-type code
    * Node's vm does not add function declarations to the context object, so we run the code
    * and then evaluate the function name to get a reference to it (script completion value).
@@ -142,19 +207,18 @@ class SecureCodeExecutor {
         throw new Error(`Function '${functionName}' not found or not a function`);
       }
       
-      // Test each case by calling the function directly (await if it returns a Promise)
+      // Test each case (supports thenCallArgs, thenInvoke, repeatCalls for closures)
       for (const testCase of testCases) {
         try {
-          const args = Object.values(testCase.input);
-          let result = fn.apply(null, args);
-          if (result && typeof result.then === 'function') {
-            result = await result;
-          }
-          const passed = this.compareOutput(String(result ?? ''), testCase.expectedOutput);
-          
+          const { value, error } = await this.runFunctionTestCase(fn, testCase);
+          const passed = error
+            ? false
+            : this.compareOutput(String(value ?? ''), testCase.expectedOutput);
+
           results.push({
             passed,
-            result,
+            result: error ? undefined : value,
+            error: error || undefined,
             expected: testCase.expectedOutput,
             input: testCase.input
           });

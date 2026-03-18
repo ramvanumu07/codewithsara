@@ -33,6 +33,23 @@ async function main() {
         caseResults.push({ input: {}, expected: '', actual: e.message, passed: false });
         allPassed = false;
       }
+    } else if (task.solution_type === 'function' && task.function_name) {
+      const exec = await executor.execute(ref, cases, task.function_name, 'function');
+      if (!exec.success) {
+        allPassed = false;
+        caseResults.push({ input: {}, expected: exec.error, actual: '', passed: false });
+      } else {
+        for (const r of exec.results) {
+          const passed = r.passed;
+          caseResults.push({
+            input: r.input,
+            expected: r.expected,
+            actual: r.error || (r.result != null ? r.result : r.output),
+            passed
+          });
+          if (!passed) allPassed = false;
+        }
+      }
     } else {
       for (const tc of cases) {
         try {
