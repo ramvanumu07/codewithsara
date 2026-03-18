@@ -20,7 +20,7 @@ export default {
   ],
   "tasks": [
     {
-      "description": "/*\n  Return a **Promise** that resolves to `message` after `delay` ms using **setTimeout**.\n  Example: simulateTimeout(\"Hello\", 100) resolves to \"Hello\" after the delay.\n\n  YOUR FUNCTION MUST RETURN A PROMISE (the tests await it).\n*/\n\nfunction simulateTimeout(message, delay) {\n  // Implementation here\n}",
+      "description": "/*\n  ## Delayed result with a Promise\n\n  Real timers don’t return a value immediately—they run a **callback** later. Here you model that: return a **Promise** that **resolves to `message`** after **`delay` milliseconds** using **setTimeout**.\n\n  ## Example (pattern)\n\n  ```javascript\n  function later(msg, ms) {\n    return new Promise((resolve) => {\n      setTimeout(() => resolve(msg), ms);\n    });\n  }\n  // await later(\"Hi\", 500) → eventually \"Hi\"\n  ```\n\n  ## What happens\n\n  - `new Promise` gives the caller something they can **await**.\n  - When the timer fires, `resolve(message)` fulfills the Promise with that string.\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateTimeout(\"Hello\", 0) | \"Hello\" |\n  | simulateTimeout(\"World\", 0) | \"World\" |\n  | simulateTimeout(\"Test\", 0) | \"Test\" |\n\n  **You must return a Promise** (tests await it).\n*/\n\nfunction simulateTimeout(message, delay) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateTimeout",
       "reference_solution": "function simulateTimeout(message, delay) {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve(message), delay);\n  });\n}",
@@ -31,7 +31,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Model the event loop: sync code runs first, then the **setTimeout(..., 0)** callback.\n  Return a Promise that resolves to this string (newlines between lines):\n    Start\n    End\n    Timer\n  (Push \"Start\" and \"End\" synchronously; schedule \"Timer\" with setTimeout(fn, 0);\n  resolve only after all lines are collected in order.)\n*/\n\nfunction simulateEventLoop() {\n  // Implementation here\n}",
+      "description": "/*\n  ## Sync first, timer second\n\n  Synchronous code runs to completion before **macrotasks** (like `setTimeout(..., 0)` callbacks) run. Build a Promise that resolves to a **three-line string** showing that order.\n\n  ## Example (conceptual order)\n\n  ```javascript\n  // Sync: push \"Start\", push \"End\"\n  // Then a timer adds \"Timer\"\n  // Then resolve with lines joined by newline\n  ```\n\n  ## Expected string (exact)\n\n  ```\n  Start\n  End\n  Timer\n  ```\n\n  ## What happens\n\n  - `\"Start\"` and `\"End\"` are recorded **before** the timer callback runs.\n  - The timer callback appends `\"Timer\"`.\n  - A **second** scheduled step can resolve the Promise once the array is complete.\n\n  ## Test cases (grader)\n\n  - simulateEventLoop() → `\"Start\\nEnd\\nTimer\"`\n*/\n\nfunction simulateEventLoop() {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateEventLoop",
       "reference_solution": "function simulateEventLoop() {\n  return new Promise((resolve) => {\n    const lines = [];\n    lines.push('Start');\n    setTimeout(() => lines.push('Timer'), 0);\n    lines.push('End');\n    setTimeout(() => resolve(lines.join('\\n')), 0);\n  });\n}",
@@ -40,7 +40,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise that resolves to a countdown string: n, n-1, ... 1 (each on its own line).\n  Use **setTimeout** (or chained callbacks) so work happens asynchronously step by step.\n  Example: simulateCountdown(3) => \"3\\n2\\n1\"\n*/\n\nfunction simulateCountdown(n) {\n  // Implementation here\n}",
+      "description": "/*\n  ## Countdown, one tick at a time\n\n  Produce the lines `n`, `n-1`, … `1` (newline-separated) using **repeated `setTimeout`** steps—not a single synchronous `for` loop that builds the string instantly.\n\n  ## Example\n\n  - simulateCountdown(3) →\n\n  ```\n  3\n  2\n  1\n  ```\n\n  ## What happens\n\n  - Each number is appended, then the next step is scheduled with `setTimeout(..., 0)`.\n  - When you reach below 1, **resolve** with the joined string.\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateCountdown(3) | \"3\\n2\\n1\" |\n  | simulateCountdown(2) | \"2\\n1\" |\n  | simulateCountdown(5) | \"5\\n4\\n3\\n2\\n1\" |\n*/\n\nfunction simulateCountdown(n) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateCountdown",
       "reference_solution": "function simulateCountdown(n) {\n  return new Promise((resolve) => {\n    const parts = [];\n    function tick(k) {\n      if (k < 1) return resolve(parts.join('\\n'));\n      parts.push(String(k));\n      setTimeout(() => tick(k - 1), 0);\n    }\n    tick(n);\n  });\n}",
@@ -51,7 +51,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise that resolves to `message` repeated `times` times, each line separated by newline.\n  Build the result using repeated **setTimeout** steps (simulating setInterval), not a simple loop that returns immediately.\n*/\n\nfunction simulateInterval(message, times) {\n  // Implementation here\n}",
+      "description": "/*\n  ## Repeating like setInterval\n\n  **setInterval** fires the same callback many times. Here you simulate that: return a Promise that resolves to **`message` repeated `times` times**, each on its own line, using **setTimeout** between repeats (not `Array(times).fill(message).join`).\n\n  ## Example\n\n  - simulateInterval(\"Tick\", 3) →\n\n  ```\n  Tick\n  Tick\n  Tick\n  ```\n\n  ## What happens\n\n  - Each tick pushes one line, increments a counter, schedules the next tick with `setTimeout`.\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateInterval(\"Tick\", 3) | three lines \"Tick\" |\n  | simulateInterval(\"Test\", 2) | two lines \"Test\" |\n  | simulateInterval(\"Count\", 4) | four lines \"Count\" |\n*/\n\nfunction simulateInterval(message, times) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateInterval",
       "reference_solution": "function simulateInterval(message, times) {\n  return new Promise((resolve) => {\n    const parts = [];\n    let c = 0;\n    function tick() {\n      if (c >= times) return resolve(parts.join('\\n'));\n      parts.push(message);\n      c++;\n      setTimeout(tick, 0);\n    }\n    tick();\n  });\n}",
@@ -62,7 +62,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise that resolves to \"Hello, \" + name after a **setTimeout** (delay 0 is fine).\n  Models a delayed callback that passes the greeting.\n*/\n\nfunction simulateDelayedGreeting(name) {\n  // Implementation here\n}",
+      "description": "/*\n  ## Delayed greeting (callback style)\n\n  Many APIs take a callback: “when ready, call this with the result.” Here you return a Promise that resolves to **`\"Hello, \" + name`** after **`setTimeout`** (delay 0 is fine).\n\n  ## Example\n\n  ```javascript\n  // After the timer: result is \"Hello, Alice\"\n  ```\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateDelayedGreeting(\"Alice\") | \"Hello, Alice\" |\n  | simulateDelayedGreeting(\"Bob\") | \"Hello, Bob\" |\n  | simulateDelayedGreeting(\"Charlie\") | \"Hello, Charlie\" |\n*/\n\nfunction simulateDelayedGreeting(name) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateDelayedGreeting",
       "reference_solution": "function simulateDelayedGreeting(name) {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve('Hello, ' + name), 0);\n  });\n}",
@@ -73,7 +73,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise that resolves to each array element as a string line, in order.\n  Process items one per **setTimeout** tick (async iteration with callbacks), not arr.join.\n*/\n\nfunction simulateProcessArray(arr) {\n  // Implementation here\n}",
+      "description": "/*\n  ## Async iteration over an array\n\n  Process **`arr` one element per timer tick**: each value becomes a line in the result. Do **not** use `arr.join('\\n')` alone in one sync step—the grader expects **setTimeout** between steps.\n\n  ## Example\n\n  - simulateProcessArray([1, 2, 3]) →\n\n  ```\n  1\n  2\n  3\n  ```\n\n  ## What happens\n\n  - Index 0: push `\"1\"`, schedule next tick.\n  - Repeat until all elements are consumed, then resolve.\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | [1,2,3] | \"1\\n2\\n3\" |\n  | [5,10] | \"5\\n10\" |\n  | [7] | \"7\" |\n*/\n\nfunction simulateProcessArray(arr) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateProcessArray",
       "reference_solution": "function simulateProcessArray(arr) {\n  return new Promise((resolve) => {\n    const lines = [];\n    let i = 0;\n    function next() {\n      if (i >= arr.length) return resolve(lines.join('\\n'));\n      lines.push(String(arr[i++]));\n      setTimeout(next, 0);\n    }\n    next();\n  });\n}",
@@ -84,7 +84,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise that resolves to \"Step 1\\nStep 2\\nStep 3\" using **nested setTimeout** (callback hell style).\n*/\n\nfunction simulateCallbackHell() {\n  // Implementation here\n}",
+      "description": "/*\n  ## Nested timers (“callback hell”)\n\n  Three async steps in a row are often written as **nested `setTimeout` callbacks**. Return a Promise that resolves to **exactly**:\n\n  ```\n  Step 1\n  Step 2\n  Step 3\n  ```\n\n  ## What happens\n\n  - Outer timer runs → append first line → schedule middle timer → append second → schedule inner → append third → **resolve**.\n\n  ## Test cases (grader)\n\n  - simulateCallbackHell() → the three-line string above\n*/\n\nfunction simulateCallbackHell() {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateCallbackHell",
       "reference_solution": "function simulateCallbackHell() {\n  return new Promise((resolve) => {\n    let s = '';\n    setTimeout(() => {\n      s += 'Step 1\\n';\n      setTimeout(() => {\n        s += 'Step 2\\n';\n        setTimeout(() => {\n          s += 'Step 3';\n          resolve(s);\n        }, 0);\n      }, 0);\n    }, 0);\n  });\n}",
@@ -93,7 +93,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  If shouldCancel is true: schedule a setTimeout that would resolve to \"Executed\", then **clearTimeout** and resolve to \"Cancelled\".\n  If false: let the timeout run and resolve to \"Executed\".\n  Return a Promise in both cases.\n*/\n\nfunction simulateTimeoutCancellation(shouldCancel) {\n  // Implementation here\n}",
+      "description": "/*\n  ## clearTimeout\n\n  **`clearTimeout(id)`** cancels a pending timer. If you cancel before the callback runs, the Promise should fulfill with **`\"Cancelled\"`**. If you don’t cancel, it should fulfill with **`\"Executed\"`** after the timer.\n\n  ## Example (cancel path)\n\n  ```javascript\n  const id = setTimeout(() => resolve(\"Executed\"), 30);\n  clearTimeout(id);\n  resolve(\"Cancelled\");  // user sees Cancelled\n  ```\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateTimeoutCancellation(true) | \"Cancelled\" |\n  | simulateTimeoutCancellation(false) | \"Executed\" |\n*/\n\nfunction simulateTimeoutCancellation(shouldCancel) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateTimeoutCancellation",
       "reference_solution": "function simulateTimeoutCancellation(shouldCancel) {\n  return new Promise((resolve) => {\n    const id = setTimeout(() => resolve('Executed'), 30);\n    if (shouldCancel) {\n      clearTimeout(id);\n      resolve('Cancelled');\n    }\n  });\n}",
@@ -103,7 +103,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise resolving to \"1\\n2\\n3\" using three **nested setTimeout** steps (one number per async step).\n*/\n\nfunction demonstrateExecutionOrder() {\n  // Implementation here\n}",
+      "description": "/*\n  ## Three chained async steps\n\n  Like the callback-hell task, but the payload is the digits **1**, **2**, **3** (each on its own line), built across **three nested `setTimeout` levels**.\n\n  ## Expected output\n\n  ```\n  1\n  2\n  3\n  ```\n\n  ## Test cases (grader)\n\n  - demonstrateExecutionOrder() → `\"1\\n2\\n3\"`\n*/\n\nfunction demonstrateExecutionOrder() {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "demonstrateExecutionOrder",
       "reference_solution": "function demonstrateExecutionOrder() {\n  return new Promise((resolve) => {\n    let s = '';\n    setTimeout(() => {\n      s += '1\\n';\n      setTimeout(() => {\n        s += '2\\n';\n        setTimeout(() => {\n          s += '3';\n          resolve(s);\n        }, 0);\n      }, 0);\n    }, 0);\n  });\n}",
@@ -112,7 +112,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise that resolves to `message` repeated `times` lines.\n  Use **setTimeout** between repeats; use the `interval` argument as the delay in ms (tests use small values).\n*/\n\nfunction simulateRepeat(message, times, interval) {\n  // Implementation here\n}",
+      "description": "/*\n  ## Repeat with a delay argument\n\n  Return **`message` repeated `times` times** (newline-separated). Use **`setTimeout(..., interval)`** between repeats so the **`interval`** argument (milliseconds) is meaningful. Tests use **`interval: 0`** for speed.\n\n  ## Example\n\n  - simulateRepeat(\"Hello\", 3, 0) →\n\n  ```\n  Hello\n  Hello\n  Hello\n  ```\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateRepeat(\"Hello\", 3, 0) | three \"Hello\" lines |\n  | simulateRepeat(\"Test\", 2, 0) | two \"Test\" lines |\n*/\n\nfunction simulateRepeat(message, times, interval) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateRepeat",
       "reference_solution": "function simulateRepeat(message, times, interval) {\n  return new Promise((resolve) => {\n    const parts = [];\n    let c = 0;\n    function tick() {\n      if (c >= times) return resolve(parts.join('\\n'));\n      parts.push(message);\n      c++;\n      setTimeout(tick, interval);\n    }\n    tick();\n  });\n}",
@@ -122,7 +122,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise that resolves to data.name after **setTimeout** (async fetch simulation).\n*/\n\nfunction simulateFetchData(data) {\n  // Implementation here\n}",
+      "description": "/*\n  ## Fake “fetch”\n\n  Network calls return later. Return a Promise that resolves to **`data.name`** after **`setTimeout`** (e.g. 0 ms), as if data arrived asynchronously.\n\n  ## Example\n\n  ```javascript\n  // simulateFetchData({ id: 1, name: \"User\" }) → \"User\"\n  ```\n\n  ## Test cases (grader)\n\n  | Input `data` | Result |\n  |--------------|--------|\n  | { id: 1, name: \"User\" } | \"User\" |\n  | { id: 2, name: \"Alice\" } | \"Alice\" |\n  | { id: 3, name: \"Bob\" } | \"Bob\" |\n*/\n\nfunction simulateFetchData(data) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateFetchData",
       "reference_solution": "function simulateFetchData(data) {\n  return new Promise((resolve) => {\n    setTimeout(() => resolve(data.name), 0);\n  });\n}",
@@ -133,7 +133,7 @@ export default {
       ]
     },
     {
-      "description": "/*\n  Return a Promise that resolves to lines \"1\" through \"maxSeconds\", then \"Stopped\", each step after **setTimeout**.\n*/\n\nfunction simulateStopwatch(maxSeconds) {\n  // Implementation here\n}",
+      "description": "/*\n  ## Stopwatch ticks\n\n  Build lines **`1`** through **`maxSeconds`** (one per async tick), then a final line **`Stopped`**.\n\n  ## Example\n\n  - simulateStopwatch(3) →\n\n  ```\n  1\n  2\n  3\n  Stopped\n  ```\n\n  ## What happens\n\n  - Each `setTimeout` tick appends the next second; after `maxSeconds`, append **Stopped** and resolve.\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateStopwatch(5) | \"1\"..\"5\" then \"Stopped\" |\n  | simulateStopwatch(3) | \"1\"..\"3\" then \"Stopped\" |\n*/\n\nfunction simulateStopwatch(maxSeconds) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateStopwatch",
       "reference_solution": "function simulateStopwatch(maxSeconds) {\n  return new Promise((resolve) => {\n    const parts = [];\n    let n = 0;\n    function tick() {\n      n++;\n      if (n <= maxSeconds) {\n        parts.push(String(n));\n        setTimeout(tick, 0);\n      } else {\n        parts.push('Stopped');\n        resolve(parts.join('\\n'));\n      }\n    }\n    tick();\n  });\n}",
