@@ -57,9 +57,9 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 29;\n// Check if num is a prime number\n// A prime number is only divisible by 1 and itself\n// Print: \"Prime\" if it's prime, otherwise print: \"Not prime\"\n// Hint: Check divisibility from 2 to num-1",
+      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 29;\n// Check if num is a prime number\n// A prime number is only divisible by 1 and itself\n// Print: \"Prime\" if it's prime, otherwise print: \"Not prime\"",
       "solution_type": "script",
-      "reference_solution": "const num = 29;\nif (num < 2) {\n  console.log(\"Not prime\");\n} else {\n  let isPrime = true;\n  let i = 2;\n  while (i < num) {\n    if (num % i === 0) {\n      isPrime = false;\n      break;\n    }\n    i++;\n  }\n  if (isPrime) {\n    console.log(\"Prime\");\n  } else {\n    console.log(\"Not prime\");\n  }\n}",
+      "reference_solution": "const num = 29;\nif (num < 2) {\n  console.log(\"Not prime\");\n} else {\n  let isPrime = true;\n  let i = 2;\n  while (i <= num/2) {\n    if (num % i === 0) {\n      isPrime = false;\n      break;\n    }\n    i++;\n  }\n  if (isPrime) {\n    console.log(\"Prime\");\n  } else {\n    console.log(\"Not prime\");\n  }\n}",
       "testCases": [
         { "input": { "num": 29 }, "expectedOutput": "Prime" },
         { "input": { "num": 15 }, "expectedOutput": "Not prime" },
@@ -69,13 +69,13 @@ export default {
       ]
     },
     {
-      "description": "// Print numbers from 1 to 10 using a for loop\n// Each number should be on a new line\n// Your output should be:\n// 1\n// 2\n// 3\n// ... up to 10",
+      "description": "// Print numbers from 1 to 10 using a for loop\n// Each number should be on a new line\n// Your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5\n// 6\n// 7\n// 8\n// 9\n// 10",
       "solution_type": "script",
       "reference_solution": "for (let i = 1; i <= 10; i++) {\n  console.log(i);\n}",
       "testCases": [{ "input": {}, "expectedOutput": "1\n2\n3\n4\n5\n6\n7\n8\n9\n10" }]
     },
     {
-      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 15;\n// Print all odd numbers from 1 to n (inclusive)\n// Each number should be on a new line\n// For n = 15, your output should be:\n// 1\n// 3\n// 5\n// ... up to 15",
+      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 15;\n// Print all odd numbers from 1 to n (inclusive)\n// Each number should be on a new line\n// For n = 15, your output should be:\n// 1\n// 3\n// 5\n// 7\n// 9\n// 11\n// 13\n// 15",
       "solution_type": "script",
       "reference_solution": "const n = 15;\nfor (let i = 1; i <= n; i += 2) {\n  console.log(i);\n}",
       "testCases": [
