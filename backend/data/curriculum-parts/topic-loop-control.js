@@ -16,7 +16,7 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Print numbers from 1 to 20, but stop when you reach 10\n// Use a for loop with break statement\n// Your output should be:\n// 1\n// 2\n// 3\n// ... up to 10",
+      "description": "// Print numbers from 1 to 20, but stop when you reach 10\n// Use a for loop with break statement\n// Your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5\n// 6\n// 7\n// 8\n// 9\n// 10",
       "solution_type": "script",
       "reference_solution": "for (let i = 1; i <= 20; i++) {\n  console.log(i);\n  if (i === 10) break;\n}",
       "testCases": [
@@ -27,7 +27,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 20;\n// Print numbers from 1 to n, but skip multiples of 3\n// Use continue statement to skip multiples of 3\n// For n = 20, your output should be:\n// 1\n// 2\n// 4\n// 5\n// 7\n// 8\n// ... (skipping 3, 6, 9, 12, 15, 18)",
+      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 20;\n// Print numbers from 1 to n, but skip multiples of 3\n// Use continue statement to skip multiples of 3\n// For n = 20, your output should be:\n// 1\n// 2\n// 4\n// 5\n// 7\n// 8\n// 10\n// 11\n// 13\n// 14\n// 16\n// 17\n// 19\n// 20",
       "solution_type": "script",
       "reference_solution": "const n = 20;\nfor (let i = 1; i <= n; i++) {\n  if (i % 3 === 0) continue;\n  console.log(i);\n}",
       "testCases": [
@@ -83,31 +83,6 @@ export default {
             "target": "g"
           },
           "expectedOutput": "3"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename limit, use it as input for your program.\n// While testing we will change its value.\nconst limit = 30;\n// Print all even numbers from 1 to limit, but stop if you encounter a number greater than 20\n// Use continue for odd numbers and break for numbers > 20\n// For limit = 30, your output should be:\n// 2\n// 4\n// 6\n// ... up to 20",
-      "solution_type": "script",
-      "reference_solution": "const limit = 30;\nfor (let i = 1; i <= limit; i++) {\n  if (i % 2 !== 0) continue;\n  if (i > 20) break;\n  console.log(i);\n}",
-      "testCases": [
-        {
-          "input": {
-            "limit": 30
-          },
-          "expectedOutput": "2\n4\n6\n8\n10\n12\n14\n16\n18\n20"
-        },
-        {
-          "input": {
-            "limit": 15
-          },
-          "expectedOutput": "2\n4\n6\n8\n10\n12\n14"
-        },
-        {
-          "input": {
-            "limit": 25
-          },
-          "expectedOutput": "2\n4\n6\n8\n10\n12\n14\n16\n18\n20"
         }
       ]
     },
@@ -168,7 +143,7 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 50;\n// Print numbers from 1 to n, but:\n// - Skip numbers divisible by 5\n// - Stop completely when you reach a number divisible by 7 and greater than 30\n// Use continue for divisible by 5, break for the stopping condition\n// For n = 50, your output should be numbers 1-34 (excluding 5, 10, 15, 20, 25, 30) and stopping at 35",
+      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 50;\n// Print numbers from 1 to n, but:\n// - Skip numbers divisible by 5\n// - Stop completely when you reach a number divisible by 7 and greater than 30\n// Use continue for divisible by 5, break for the stopping condition\n// For n = 50, your output should be:\n// 1\n// 2\n// 3\n// 4\n// 6\n// 7\n// 8\n// 9\n// 11\n// 12\n// 13\n// 14\n// 16\n// 17\n// 18\n// 19\n// 21\n// 22\n// 23\n// 24\n// 26\n// 27\n// 28\n// 29\n// 31\n// 32\n// 33\n// 34",
       "solution_type": "script",
       "reference_solution": "const n = 50;\nfor (let i = 1; i <= n; i++) {\n  if (i % 5 === 0) continue;\n  if (i % 7 === 0 && i > 30) break;\n  console.log(i);\n}",
       "testCases": [

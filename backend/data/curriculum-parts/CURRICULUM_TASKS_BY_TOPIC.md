@@ -1,20 +1,3 @@
-## Loops
-
-**Topic ID:** `loops` · **Task count:** 10
-
-| # | Description | Solution type | Function name | Tests |
-|:-:|-------------|---------------|---------------|:-----:|
-| 1 | // Print numbers from 1 to 5 using a while loop<br>// Each number should be on a new line<br>// Your output should be:<br>// 1<br>// 2<br>// 3<br>// 4<br>// 5 | script | — | 1 |
-| 2 | // Do not rename n, use it as input for your program.<br>// While testing we will change its value.<br>const n = 10;<br>// Print all even numbers from 2 to n (inclusive)<br>// Each number should be on a new line<br>// For n = 10, your output should be:<br>// 2<br>// 4<br>// 6<br>// 8<br>// 10 | script | — | 4 |
-| 3 | // Do not rename limit, use it as input for your program.<br>// While testing we will change its value.<br>const limit = 5;<br>// Calculate the sum of numbers from 1 to limit<br>// Print only the final sum<br>// For limit = 5, your output should be: 15<br>// (Because 1 + 2 + 3 + 4 + 5 = 15) | script | — | 4 |
-| 4 | // Do not rename num, use it as input for your program.<br>// While testing we will change its value.<br>const num = 12345;<br>// Count the number of digits in num<br>// Use a while loop to repeatedly divide by 10<br>// Print only the count<br>// For num = 12345, your output should be: 5 | script | — | 4 |
-| 5 | // Do not rename num, use it as input for your program.<br>// While testing we will change its value.<br>const num = 29;<br>// Check if num is a prime number<br>// A prime number is only divisible by 1 and itself<br>// Print: "Prime" if it's prime, otherwise print: "Not prime"<br>// Hint: Check divisibility from 2 to num-1 | script | — | 5 |
-| 6 | // Print numbers from 1 to 10 using a for loop<br>// Each number should be on a new line<br>// Your output should be:<br>// 1<br>// 2<br>// 3<br>// ... up to 10 | script | — | 1 |
-| 7 | // Do not rename n, use it as input for your program.<br>// While testing we will change its value.<br>const n = 15;<br>// Print all odd numbers from 1 to n (inclusive)<br>// Each number should be on a new line<br>// For n = 15, your output should be:<br>// 1<br>// 3<br>// 5<br>// ... up to 15 | script | — | 4 |
-| 8 | // Do not rename start and end, use them as input for your program.<br>// While testing we will change their values.<br>const start = 5;<br>const end = 10;<br>// Print numbers from start to end (inclusive) in reverse order<br>// Each number should be on a new line<br>// For start = 5 and end = 10, your output should be:<br>// 10<br>// 9<br>// 8<br>// 7<br>// 6<br>// 5 | script | — | 3 |
-| 9 | // Do not rename str, use it as input for your program.<br>// While testing we will change its value.<br>const str = "Hello";<br>// Print each character of the string on a new line<br>// Use str.length to get the length and str[i] to access characters<br>// For str = "Hello", your output should be:<br>// H<br>// e<br>// l<br>// l<br>// o | script | — | 3 |
-| 10 | // Do not rename str, use it as input for your program.<br>// While testing we will change its value.<br>const str = "racecar";<br>// Check if str is a palindrome (reads the same forwards and backwards)<br>// Compare characters from start and end moving towards center<br>// Print: "Palindrome" if true, otherwise print: "Not palindrome"<br>// Hint: Compare str[i] with str[str.length - 1 - i] | script | — | 5 |
-
 ## Loop Control (break, continue)
 
 **Topic ID:** `loop-control` · **Task count:** 8
