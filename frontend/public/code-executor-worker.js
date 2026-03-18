@@ -121,6 +121,40 @@ class CodeExecutor {
     const results = [];
     const codeToRun = this.stripLeadingSingleLineComments(code);
 
+    // Run (no test cases): same as playground — execute script, only console.log counts.
+    // Do not auto-call the declared function (greet() would show return value; double() → NaN with no args).
+    if (!testCases || testCases.length === 0) {
+      try {
+        const output = this.runScriptWithInputs(code, {});
+        results.push({
+          passed: true,
+          output: output,
+          result: output,
+          input: {},
+          expected: null
+        });
+      } catch (error) {
+        results.push({
+          passed: false,
+          error: error.message,
+          output: '',
+          input: {},
+          expected: null
+        });
+        return {
+          success: false,
+          error: error.message,
+          results,
+          allPassed: false
+        };
+      }
+      return {
+        success: true,
+        results,
+        allPassed: true
+      };
+    }
+
     let userFn;
     try {
       userFn = this.executeCodeAndReturn(codeToRun, functionName);
@@ -137,41 +171,6 @@ class CodeExecutor {
         success: false,
         error: `Function '${functionName}' not found or not a function`,
         results: []
-      };
-    }
-
-    // No test cases (e.g. Run without Submit): call once and show return value
-    if (!testCases || testCases.length === 0) {
-      try {
-        const result = userFn();
-        const value = result && typeof result.then === 'function' ? undefined : result;
-        results.push({
-          passed: true,
-          result: value,
-          output: value !== undefined ? String(value) : '',
-          input: {},
-          expected: null
-        });
-      } catch (error) {
-        results.push({
-          passed: false,
-          error: error.message,
-          result: undefined,
-          output: '',
-          input: {},
-          expected: null
-        });
-        return {
-          success: false,
-          error: error.message,
-          results,
-          allPassed: false
-        };
-      }
-      return {
-        success: true,
-        results,
-        allPassed: true
       };
     }
 
