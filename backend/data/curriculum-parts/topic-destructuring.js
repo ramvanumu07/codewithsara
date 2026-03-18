@@ -20,81 +20,6 @@ export default {
   ],
   "tasks": [
     {
-      "description": "// Do not rename colors, use it as input for your program.\n// While testing we will change its value.\nconst colors = [\"red\", \"green\", \"blue\"];\n// Use array destructuring to extract the first two colors into variables\n// Print them on separate lines\n// For colors = [\"red\", \"green\", \"blue\"], your output should be:\n// red\n// green",
-      "solution_type": "script",
-      "reference_solution": "const colors = [\"red\", \"green\", \"blue\"];\nconst [first, second] = colors;\nconsole.log(first);\nconsole.log(second);",
-      "testCases": [
-        {
-          "input": {
-            "colors": [
-              "red",
-              "green",
-              "blue"
-            ]
-          },
-          "expectedOutput": "red\ngreen"
-        },
-        {
-          "input": {
-            "colors": [
-              "yellow",
-              "purple",
-              "orange"
-            ]
-          },
-          "expectedOutput": "yellow\npurple"
-        },
-        {
-          "input": {
-            "colors": [
-              "black",
-              "white",
-              "gray"
-            ]
-          },
-          "expectedOutput": "black\nwhite"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [10, 20, 30, 40, 50];\n// Use array destructuring to get the first element and the rest of the array\n// Use the rest operator (...)\n// Print the first element on one line, then print the rest array elements each on a new line\n// For numbers = [10, 20, 30, 40, 50], your output should be:\n// 10\n// 20\n// 30\n// 40\n// 50",
-      "solution_type": "script",
-      "reference_solution": "const numbers = [10, 20, 30, 40, 50];\nconst [first, ...rest] = numbers;\nconsole.log(first);\nfor (let i = 0; i < rest.length; i++) {\n  console.log(rest[i]);\n}",
-      "testCases": [
-        {
-          "input": {
-            "numbers": [
-              10,
-              20,
-              30,
-              40,
-              50
-            ]
-          },
-          "expectedOutput": "10\n20\n30\n40\n50"
-        },
-        {
-          "input": {
-            "numbers": [
-              5,
-              15,
-              25
-            ]
-          },
-          "expectedOutput": "5\n15\n25"
-        },
-        {
-          "input": {
-            "numbers": [
-              100,
-              200
-            ]
-          },
-          "expectedOutput": "100\n200"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename person, use it as input for your program.\n// While testing we will change its value.\nconst person = { name: \"Alice\", age: 25, city: \"Paris\" };\n// Use object destructuring to extract name and age\n// Print them on separate lines\n// For the given person object, your output should be:\n// Alice\n// 25",
       "solution_type": "script",
       "reference_solution": "const person = { name: \"Alice\", age: 25, city: \"Paris\" };\nconst { name, age } = person;\nconsole.log(name);\nconsole.log(age);",
@@ -245,47 +170,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename arr, use it as input for your program.\n// While testing we will change its value.\nconst arr = [1, 2, 3, 4, 5, 6];\n// Use array destructuring to skip the first two elements and extract the rest\n// Print the extracted elements, each on a new line\n// For arr = [1, 2, 3, 4, 5, 6], your output should be:\n// 3\n// 4\n// 5\n// 6",
-      "solution_type": "script",
-      "reference_solution": "const arr = [1, 2, 3, 4, 5, 6];\nconst [, , ...rest] = arr;\nfor (let i = 0; i < rest.length; i++) {\n  console.log(rest[i]);\n}",
-      "testCases": [
-        {
-          "input": {
-            "arr": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6
-            ]
-          },
-          "expectedOutput": "3\n4\n5\n6"
-        },
-        {
-          "input": {
-            "arr": [
-              10,
-              20,
-              30,
-              40
-            ]
-          },
-          "expectedOutput": "30\n40"
-        },
-        {
-          "input": {
-            "arr": [
-              5,
-              10,
-              15
-            ]
-          },
-          "expectedOutput": "15"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename config, use it as input for your program.\n// While testing we will change its value.\nconst config = { host: \"localhost\", port: 3000, timeout: 5000 };\n// Use object destructuring with renaming\n// Extract 'host' as 'serverHost' and 'port' as 'serverPort'\n// Print both renamed variables on separate lines\n// For the given config, your output should be:\n// localhost\n// 3000",
       "solution_type": "script",
       "reference_solution": "const config = { host: \"localhost\", port: 3000, timeout: 5000 };\nconst { host: serverHost, port: serverPort } = config;\nconsole.log(serverHost);\nconsole.log(serverPort);",
@@ -319,66 +203,6 @@ export default {
             }
           },
           "expectedOutput": "example.com\n443"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename students, use it as input for your program.\n// While testing we will change its value.\nconst students = [\n  { name: \"Alice\", grade: 85 },\n  { name: \"Bob\", grade: 92 },\n  { name: \"Charlie\", grade: 78 }\n];\n// Use array and object destructuring to extract the name from the first student\n// and the grade from the second student\n// Print both values on separate lines\n// For the given students array, your output should be:\n// Alice\n// 92",
-      "solution_type": "script",
-      "reference_solution": "const students = [{ name: \"Alice\", grade: 85 }, { name: \"Bob\", grade: 92 }, { name: \"Charlie\", grade: 78 }];\nconst [{ name: firstName }, { grade: secondGrade }] = students;\nconsole.log(firstName);\nconsole.log(secondGrade);",
-      "testCases": [
-        {
-          "input": {
-            "students": [
-              {
-                "name": "Alice",
-                "grade": 85
-              },
-              {
-                "name": "Bob",
-                "grade": 92
-              },
-              {
-                "name": "Charlie",
-                "grade": 78
-              }
-            ]
-          },
-          "expectedOutput": "Alice\n92"
-        },
-        {
-          "input": {
-            "students": [
-              {
-                "name": "David",
-                "grade": 90
-              },
-              {
-                "name": "Emma",
-                "grade": 88
-              }
-            ]
-          },
-          "expectedOutput": "David\n88"
-        },
-        {
-          "input": {
-            "students": [
-              {
-                "name": "Frank",
-                "grade": 95
-              },
-              {
-                "name": "Grace",
-                "grade": 100
-              },
-              {
-                "name": "Henry",
-                "grade": 82
-              }
-            ]
-          },
-          "expectedOutput": "Frank\n100"
         }
       ]
     },

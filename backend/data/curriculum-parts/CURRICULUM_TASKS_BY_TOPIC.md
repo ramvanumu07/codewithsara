@@ -1,35 +1,3 @@
-## Loop Control (break, continue)
-
-**Topic ID:** `loop-control` · **Task count:** 8
-
-| # | Description | Solution type | Function name | Tests |
-|:-:|-------------|---------------|---------------|:-----:|
-| 1 | // Print numbers from 1 to 20, but stop when you reach 10<br>// Use a for loop with break statement<br>// Your output should be:<br>// 1<br>// 2<br>// 3<br>// ... up to 10 | script | — | 1 |
-| 2 | // Do not rename n, use it as input for your program.<br>// While testing we will change its value.<br>const n = 20;<br>// Print numbers from 1 to n, but skip multiples of 3<br>// Use continue statement to skip multiples of 3<br>// For n = 20, your output should be:<br>// 1<br>// 2<br>// 4<br>// 5<br>// 7<br>// 8<br>// ... (skipping 3, 6, 9, 12, 15, 18) | script | — | 3 |
-| 3 | // Do not rename str and target, use them as input for your program.<br>// While testing we will change their values.<br>const str = "JavaScript";<br>const target = "S";<br>// Find the first occurrence of target character in str<br>// Print the index (position) where it's found<br>// Use break to stop searching once found<br>// If not found, print: -1<br>// For str = "JavaScript" and target = "S", your output should be: 4 | script | — | 4 |
-| 4 | // Do not rename limit, use it as input for your program.<br>// While testing we will change its value.<br>const limit = 30;<br>// Print all even numbers from 1 to limit, but stop if you encounter a number greater than 20<br>// Use continue for odd numbers and break for numbers &gt; 20<br>// For limit = 30, your output should be:<br>// 2<br>// 4<br>// 6<br>// ... up to 20 | script | — | 3 |
-| 5 | // Do not rename str, use it as input for your program.<br>// While testing we will change its value.<br>const str = "Hello World";<br>// Print all characters except vowels (a, e, i, o, u)<br>// Use continue to skip vowels<br>// Case-insensitive: skip both 'a' and 'A'<br>// For str = "Hello World", your output should be:<br>// H<br>// l<br>// l<br>//  <br>// W<br>// r<br>// l<br>// d | script | — | 3 |
-| 6 | // Do not rename num, use it as input for your program.<br>// While testing we will change its value.<br>const num = 84;<br>// Find the smallest divisor of num (greater than 1)<br>// Use break once you find the first divisor<br>// Print the divisor<br>// For num = 84, your output should be: 2 | script | — | 4 |
-| 7 | // Do not rename n, use it as input for your program.<br>// While testing we will change its value.<br>const n = 50;<br>// Print numbers from 1 to n, but:<br>// - Skip numbers divisible by 5<br>// - Stop completely when you reach a number divisible by 7 and greater than 30<br>// Use continue for divisible by 5, break for the stopping condition<br>// For n = 50, your output should be numbers 1-34 (excluding 5, 10, 15, 20, 25, 30) and stopping at 35 | script | — | 3 |
-| 8 | // Do not rename str, use it as input for your program.<br>// While testing we will change its value.<br>const str = "a1b2c3d4";<br>// Print only the digit characters from the string<br>// Use continue to skip non-digit characters<br>// Hint: A character is a digit if it's between '0' and '9'<br>// For str = "a1b2c3d4", your output should be:<br>// 1<br>// 2<br>// 3<br>// 4 | script | — | 4 |
-
-## Nested Loops
-
-**Topic ID:** `nested-loops` · **Task count:** 10
-
-| # | Description | Solution type | Function name | Tests |
-|:-:|-------------|---------------|---------------|:-----:|
-| 1 | // Do not rename rows and cols, use them as input for your program.<br>// While testing we will change their values.<br>const rows = 3;<br>const cols = 4;<br>// Print a grid of stars (*) with the given dimensions<br>// Each row should be on a new line<br>// For rows = 3 and cols = 4, your output should be:<br>// ****<br>// ****<br>// **** | script | — | 4 |
-| 2 | // Print the multiplication table from 1 to 5<br>// Format each line as: "1 2 3 4 5" (space-separated)<br>// Your output should be:<br>// 1 2 3 4 5<br>// 2 4 6 8 10<br>// 3 6 9 12 15<br>// 4 8 12 16 20<br>// 5 10 15 20 25 | script | — | 1 |
-| 3 | // Do not rename n, use it as input for your program.<br>// While testing we will change its value.<br>const n = 4;<br>// Print a right triangle pattern of numbers<br>// Each row i should have numbers from 1 to i<br>// For n = 4, your output should be:<br>// 1<br>// 1 2<br>// 1 2 3<br>// 1 2 3 4 | script | — | 4 |
-| 4 | // Do not rename n, use it as input for your program.<br>// While testing we will change its value.<br>const n = 5;<br>// Print a pyramid pattern of stars<br>// Row i should have i stars<br>// For n = 5, your output should be:<br>// *<br>// **<br>// ***<br>// ****<br>// *****<br>// ****<br>// ***<br>// **<br>// * | script | — | 3 |
-| 5 | // Do not rename str1 and str2, use them as input for your program.<br>// While testing we will change their values.<br>const str1 = "abc";<br>const str2 = "xy";<br>// Print all possible pairs of characters from str1 and str2<br>// Format: "char1char2" (concatenated, no space)<br>// For str1 = "abc" and str2 = "xy", your output should be:<br>// ax<br>// ay<br>// bx<br>// by<br>// cx<br>// cy | script | — | 3 |
-| 6 | // Do not rename n, use it as input for your program.<br>// While testing we will change its value.<br>const n = 4;<br>// Print a hollow square pattern<br>// Only the border should have stars, inside should be spaces<br>// For n = 4, your output should be:<br>// ****<br>// *  *<br>// *  *<br>// **** | script | — | 4 |
-| 7 | // Do not rename limit, use it as input for your program.<br>// While testing we will change its value.<br>const limit = 20;<br>// Find and print all pairs of numbers (a, b) where:<br>// - Both a and b are between 1 and limit<br>// - a &lt; b<br>// - a + b equals 10<br>// Format: "a + b = 10"<br>// For limit = 20, your output should be:<br>// 1 + 9 = 10<br>// 2 + 8 = 10<br>// 3 + 7 = 10<br>// 4 + 6 = 10 | script | — | 3 |
-| 8 | // Do not rename n, use it as input for your program.<br>// While testing we will change its value.<br>const n = 3;<br>// Print a pattern where each row shows row number repeated row times<br>// For n = 3, your output should be:<br>// 1<br>// 2 2<br>// 3 3 3 | script | — | 4 |
-| 9 | // Do not rename rows and cols, use them as input for your program.<br>// While testing we will change their values.<br>const rows = 3;<br>const cols = 4;<br>// Print a grid showing coordinates (row, col) for each position<br>// Format: "(row,col)" with space between coordinates<br>// For rows = 3 and cols = 4, your output should be:<br>// (0,0) (0,1) (0,2) (0,3)<br>// (1,0) (1,1) (1,2) (1,3)<br>// (2,0) (2,1) (2,2) (2,3) | script | — | 3 |
-| 10 | // Do not rename limit, use it as input for your program.<br>// While testing we will change its value.<br>const limit = 30;<br>// Count and print the total number of prime numbers from 2 to limit<br>// Use nested loops: outer loop for each number, inner loop to check if prime<br>// Print only the final count<br>// For limit = 30, there are 10 primes: 2,3,5,7,11,13,17,19,23,29<br>// Your output should be: 10 | script | — | 4 |
-
 ## Arrays
 
 **Topic ID:** `arrays` · **Task count:** 12
