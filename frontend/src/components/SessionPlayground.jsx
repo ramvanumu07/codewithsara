@@ -8,6 +8,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import CodeExecutor from '../services/CodeExecutor'
 import { copyToClipboard } from '../utils/copyToClipboard'
+import { formatTerminalRunResult } from '../lib/formatTerminalOutput'
 import SyntaxHighlightedTextarea from './SyntaxHighlightedTextarea'
 
 const AUTO_CLOSING_PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' }
@@ -65,20 +66,8 @@ export default function SessionPlayground({
       if (lineNumDiv) lineNumDiv.innerHTML = ''
 
       const result = await CodeExecutor.executeForTesting(code, [], null, 'script')
-
-      let outputText = ''
-      let outputColor = '#7ee787'
-      if (result.success) {
-        if (result.results?.length > 0) {
-          const outputs = result.results.map(r => (r.error ? `Error: ${r.error}` : (r.output ?? r.result ?? '')))
-          outputText = outputs.join('\n')
-        } else {
-          outputText = 'Code executed successfully (no output)'
-        }
-      } else {
-        outputText = `Error: ${result.error || 'Code execution failed'}`
-        outputColor = '#ff7b72'
-      }
+      const { text: outputText, isError } = formatTerminalRunResult(result)
+      const outputColor = isError ? '#ff7b72' : '#7ee787'
 
       const outputLines = outputText.split('\n')
       if (lineNumDiv) {

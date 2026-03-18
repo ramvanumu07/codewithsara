@@ -78,6 +78,15 @@ export const ASSIGNMENT_TERMINAL_CASES = [
     expectSuccess: true,
     expectOutput: ''
   },
+  /** Same shape as array-advanced mapFilterReduce starter (block comment + function, no log) */
+  {
+    id: 'run_function_block_comment_no_log',
+    mode: 'run',
+    code:
+      '/*\n  Examples:\n    mapFilterReduce([1]) => 1\n  YOUR FUNCTION MUST RETURN\n*/\nfunction mapFilterReduce(arr) {\n  return 1;\n}',
+    expectSuccess: true,
+    expectOutput: ''
+  },
   {
     id: 'script_task_with_injected_input',
     mode: 'script_test',

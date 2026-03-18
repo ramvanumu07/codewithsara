@@ -21,9 +21,17 @@ npm run test:terminal-harness:jest
 ### What is covered
 
 - **Playground matrix** (~48 cases): empty code, `console.log`, declarations without calls, closures, syntax/reference/runtime errors, blocked `eval`/`fetch`, string `"Function"`, loops, expression-only fallback, modern syntax, etc.
-- **Assignment matrix** (~16 cases): Run-as-script, script tasks with injected inputs, function tasks, `thenCallArgs` (closures), missing function, wrong outputs, syntax failures.
+- **Assignment matrix** (growing): Run-as-script, block-comment + function starters (e.g. mapFilterReduce template), script tasks with injected inputs, function tasks, `thenCallArgs` (closures), missing function, wrong outputs, syntax failures.
 
 Extend cases in `frontend/src/lib/terminalHarness/sharedCases.js`.
+
+### UI vs engine output
+
+The engine returns an **empty string** when there is no `console.log` output. The Learn + Session playground UIs map that to the same label: **`Code executed (no output)`** (`formatTerminalOutput.js`).
+
+### `Unexpected token '<'`
+
+If the terminal shows this, the browser often tried to run **HTML** as JavaScript (e.g. worker chunk 404 → SPA `index.html`). Try a hard refresh, `npm run build` + redeploy, or run `npm run test:terminal-harness` locally—if CLI passes, the engine is fine and the issue is loading/bundling in the browser.
 
 ---
 

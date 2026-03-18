@@ -11,6 +11,7 @@ import { ToastContainer } from '../components/Toast'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import SyntaxHighlightedCode from '../components/SyntaxHighlightedCode'
 import SyntaxHighlightedTextarea from '../components/SyntaxHighlightedTextarea'
+import { formatTerminalRunResult } from '../lib/formatTerminalOutput'
 import './Learn.css'
 import './Learn-responsive.css'
 
@@ -537,24 +538,8 @@ const Learn = () => {
         'script' // Always script type for playground
       )
 
-      // Process results with enhanced output handling
-      let outputText = ''
-      let outputColor = '#10a37f'
-
-      if (result.success) {
-        if (result.results && result.results.length > 0) {
-          const outputs = result.results.map(r => {
-            if (r.error) return `Error: ${r.error}`
-            return r.output ?? r.result ?? ''
-          })
-          outputText = outputs.join('\n')
-        } else {
-          outputText = 'Code executed successfully (no output)'
-        }
-      } else {
-        outputText = `Error: ${result.error || 'Code execution failed'}`
-        outputColor = '#ef4444'
-      }
+      const { text: outputText, isError } = formatTerminalRunResult(result)
+      const outputColor = isError ? '#ef4444' : '#10a37f'
 
       const outputLines = outputText.split('\n')
 
@@ -720,23 +705,7 @@ const Learn = () => {
         'script'
       )
 
-      let outputText = ''
-      if (result.success) {
-        const first = result.results?.[0]
-        if (first && !first.passed && first.error) {
-          outputText = `Error: ${first.error}`
-        } else if (result.results && result.results.length > 0) {
-          outputText = result.results.map(r => r.output ?? r.result ?? '').join('\n').trim()
-          if (outputText === '') {
-            outputText = 'Code executed (no output)'
-          }
-        } else {
-          outputText = 'Code executed (no output)'
-        }
-      } else {
-        outputText = `Error: ${result.error || 'Code execution failed'}`
-      }
-
+      const { text: outputText } = formatTerminalRunResult(result)
       setAssignmentOutput(outputText)
     } catch (error) {
       setAssignmentOutput(`Error: ${error.message}`)
