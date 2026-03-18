@@ -105,7 +105,8 @@ const AppRoutes = () => {
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-      <Route path="/learn/:topicId" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
+      {/* key=topicId remounts Learn on topic change so assignment/session state never shows the previous topic's tasks */}
+      <Route path="/learn/:topicId" element={<ProtectedRoute><LearnRoute /></ProtectedRoute>} />
       
       {/* Legacy Route Redirects */}
       <Route path="/learn/:topicId/:subtopicId" element={<LegacyRedirect />} />
@@ -147,6 +148,11 @@ const SmartRedirect = () => {
   } else {
     return <Navigate to="/" replace />
   }
+}
+
+function LearnRoute() {
+  const { topicId } = useParams()
+  return <Learn key={topicId} />
 }
 
 // Legacy Route Redirect Component (for backward compatibility)

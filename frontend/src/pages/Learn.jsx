@@ -256,6 +256,10 @@ const Learn = () => {
         setError(null)
         setCourseLocked(false)
         setLockedCourseId(null)
+        // Avoid flashing another topic's assignments before this topic's payload arrives (SPA navigation)
+        if (phase === 'assignment') {
+          setAssignments([])
+        }
 
         const topicResponse = await learning.getTopic(requestedTopicId)
 
