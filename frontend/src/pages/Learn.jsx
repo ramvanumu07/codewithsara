@@ -712,14 +712,12 @@ const Learn = () => {
     setAssignmentOutput('Executing code securely...')
 
     try {
-      const currentTask = assignments[currentAssignment]
-      const solutionType = currentTask?.solution_type || 'script'
-      const functionName = currentTask?.function_name || null
+      // Run = same as playground: always script mode (console.log only). Test still uses function mode when needed.
       const result = await CodeExecutor.executeForTesting(
         assignmentCode,
         [],
-        functionName,
-        solutionType
+        null,
+        'script'
       )
 
       let outputText = ''

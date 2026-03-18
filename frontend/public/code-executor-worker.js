@@ -187,7 +187,7 @@ class CodeExecutor {
 
         results.push({
           passed,
-          result: result,
+          result: resultStr,
           output: resultStr,
           expected: testCase.expectedOutput,
           input: testCase.input
@@ -390,6 +390,36 @@ class CodeExecutor {
 // Store current taskId so onerror can include it (uncaught errors don't have message context)
 let currentTaskId = null;
 
+/** postMessage cannot clone functions, symbols, etc. — only send clone-safe payloads */
+function cloneSafeExecutePayload(payload) {
+  const safe = (v) => {
+    if (v === null || v === undefined) return v;
+    if (typeof v === 'function') return '[Function]';
+    if (typeof v !== 'object') return v;
+    if (Array.isArray(v)) return v.map(safe);
+    try {
+      return JSON.parse(JSON.stringify(v));
+    } catch {
+      return String(v);
+    }
+  };
+  return {
+    success: payload.success,
+    error: typeof payload.error === 'string' ? payload.error : String(payload.error ?? ''),
+    allPassed: payload.allPassed,
+    results: (payload.results || []).map((r) => ({
+      passed: r.passed,
+      output: typeof r.output === 'string' ? r.output : String(r.output ?? ''),
+      result: r.result !== undefined && r.result !== null && typeof r.result !== 'string'
+        ? (typeof r.result === 'function' ? '[Function]' : safe(r.result))
+        : r.result,
+      error: r.error != null ? String(r.error) : undefined,
+      expected: r.expected != null ? String(r.expected) : r.expected,
+      input: safe(r.input)
+    }))
+  };
+}
+
 // Web Worker message handler
 self.onmessage = function (event) {
   const { code, testCases, functionName, solutionType, taskId } = event.data;
@@ -401,7 +431,7 @@ self.onmessage = function (event) {
 
     self.postMessage({
       taskId,
-      ...result
+      ...cloneSafeExecutePayload(result)
     });
   } catch (error) {
     self.postMessage({
