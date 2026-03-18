@@ -10,7 +10,8 @@
     "dev:backend": "cd backend && npm run dev",
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
     "build": "cd frontend && npm run build",
-    "preview": "cd frontend && npm run preview"
+    "preview": "cd frontend && npm run preview",
+    "test:curriculum": "node backend/scripts/verify-curriculum-reference-solutions.mjs"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

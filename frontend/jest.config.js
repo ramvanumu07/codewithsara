@@ -10,9 +10,10 @@ export default {
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
   
   // Module name mapping
-  moduleNameMapping: {
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/__mocks__/fileMock.js'
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
+    '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/__mocks__/fileMock.js',
+    '\\.worker\\.js\\?worker$': '<rootDir>/src/__mocks__/codeExecutorWorkerMock.js'
   },
   
   // Test files

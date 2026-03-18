@@ -53,20 +53,39 @@ const sessionStorageMock = {
 }
 global.sessionStorage = sessionStorageMock
 
-// Suppress console errors in tests
+// Keep test output readable: filter known third-party / env noise (not app bugs)
 const originalError = console.error
+const originalWarn = console.warn
+
+function shouldSuppressError (...args) {
+  const text = args.map((a) => (typeof a === 'string' ? a : String(a))).join('\n')
+  if (text.includes('Warning: ReactDOM.render is no longer supported')) return true
+  // RTL render/renderHook still hit react-dom act-compat; advisory until @testing-library/react upgrades
+  if (text.includes('ReactDOMTestUtils') && text.includes('deprecated')) return true
+  // Dashboard loads data in parallel async effects; intermediate setStates are benign in these tests
+  if (text.includes('not wrapped in act') && text.includes('Dashboard')) return true
+  return false
+}
+
+function shouldSuppressWarn (...args) {
+  const msg = args[0]
+  if (typeof msg !== 'string') return false
+  if (msg.includes('React Router Future Flag Warning')) return true
+  return false
+}
+
 beforeAll(() => {
   console.error = (...args) => {
-    if (
-      typeof args[0] === 'string' &&
-      args[0].includes('Warning: ReactDOM.render is no longer supported')
-    ) {
-      return
-    }
+    if (shouldSuppressError(...args)) return
     originalError.call(console, ...args)
+  }
+  console.warn = (...args) => {
+    if (shouldSuppressWarn(...args)) return
+    originalWarn.call(console, ...args)
   }
 })
 
 afterAll(() => {
   console.error = originalError
+  console.warn = originalWarn
 })

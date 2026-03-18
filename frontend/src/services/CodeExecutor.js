@@ -2,6 +2,7 @@
  * Industry-Level Code Execution Service
  * Manages secure code execution using Web Workers and backend validation
  */
+import CodeExecutorWorker from '../workers/codeExecutor.worker.js?worker'
 
 /**
  * Map raw execution errors to user-friendly messages for all common cases.
@@ -86,10 +87,7 @@ class CodeExecutionService {
       });
 
       try {
-        // Worker at root - use BASE_URL for subpath deployments (e.g. /app/)
-        const base = (typeof import.meta !== 'undefined' && import.meta.env?.BASE_URL) || '/';
-        const workerPath = base.replace(/\/$/, '') + '/code-executor-worker.js';
-        this.worker = new Worker(new URL(workerPath, window.location.origin).href);
+        this.worker = new CodeExecutorWorker();
 
         this.worker.onmessage = (event) => {
           this.handleWorkerMessage(event.data);

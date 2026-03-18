@@ -213,7 +213,7 @@ class SecureCodeExecutor {
           const { value, error } = await this.runFunctionTestCase(fn, testCase);
           const passed = error
             ? false
-            : this.compareOutput(String(value ?? ''), testCase.expectedOutput);
+            : this.compareOutput(this.valueToTestOutputString(value), testCase.expectedOutput);
 
           results.push({
             passed,
@@ -420,6 +420,31 @@ class SecureCodeExecutor {
     });
     
     return code;
+  }
+
+  /**
+   * Turn a function return value into a string comparable to curriculum expectedOutput.
+   * Arrays/objects must use JSON (curriculum uses e.g. ["A","B"]); String([...]) would yield A,B (wrong).
+   */
+  valueToTestOutputString (value) {
+    if (value === null || value === undefined) return ''
+    // Arrays: JSON (curriculum format). Plain objects from VM have context.Object as
+    // constructor !== global Object, so never use constructor === Object — always JSON for objects.
+    if (Array.isArray(value)) {
+      try {
+        return JSON.stringify(value)
+      } catch {
+        return String(value)
+      }
+    }
+    if (typeof value === 'object') {
+      try {
+        return JSON.stringify(value)
+      } catch {
+        return String(value)
+      }
+    }
+    return String(value)
   }
 
   /**
