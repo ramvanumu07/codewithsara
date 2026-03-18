@@ -1,13 +1,3 @@
-## Strings and Basic Operations
-
-**Topic ID:** `strings-and-basic-operations` · **Task count:** 4
-
-| # | Description | Solution type | Function name | Tests |
-|:-:|-------------|---------------|---------------|:-----:|
-| 1 | // Do not rename str, use it as input for your program.<br>// While testing we will change its value.<br>const str = "Function";<br>// Print characters at positions 0, 2, 4, and 6<br>// For example, if str = "Function", your output should be:<br>// F<br>// n<br>// t<br>// o | script | — | 5 |
-| 2 | // Do not rename str1 and str2, use them as input for your program.<br>// While testing we will change their values.<br>const str1 = "Computer";<br>const str2 = "Science";<br>// Calculate: length of str1, length of str2, sum of both lengths, difference of lengths<br>// Print all four values<br>// For example, if str1 = "Computer" and str2 = "Science", your output should be:<br>// 8<br>// 7<br>// 15<br>// 1 | script | — | 6 |
-| 3 | // Do not rename text, use it as input for your program.<br>// While testing we will change its value.<br>const text = "Algorithm";<br>// Extract characters at positions 0, 1, 2 and concatenate them<br>// Then extract characters at positions 3, 4, 5 and concatenate them<br>// Print both results<br>// For example, if text = "Algorithm", your output should be:<br>// Alg<br>// ori | script | — | 6 |
-| 4 | // Do not rename input, use it as input for your program.<br>// While testing we will change its value.<br>const input = "programming";<br>// Convert to uppercase, then concatenate with original lowercase version<br>// Print the combined result and its total length<br>// For example, if input = "programming", your output should be:<br>// PROGRAMMINGprogramming<br>// 22 | script | — | 6 |
 
 ## Type Coercion
 
