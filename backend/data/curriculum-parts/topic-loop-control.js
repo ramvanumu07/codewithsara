@@ -143,31 +143,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 50;\n// Print numbers from 1 to n, but:\n// - Skip numbers divisible by 5\n// - Stop completely when you reach a number divisible by 7 and greater than 30\n// Use continue for divisible by 5, break for the stopping condition\n// For n = 50, your output should be:\n// 1\n// 2\n// 3\n// 4\n// 6\n// 7\n// 8\n// 9\n// 11\n// 12\n// 13\n// 14\n// 16\n// 17\n// 18\n// 19\n// 21\n// 22\n// 23\n// 24\n// 26\n// 27\n// 28\n// 29\n// 31\n// 32\n// 33\n// 34",
-      "solution_type": "script",
-      "reference_solution": "const n = 50;\nfor (let i = 1; i <= n; i++) {\n  if (i % 5 === 0) continue;\n  if (i % 7 === 0 && i > 30) break;\n  console.log(i);\n}",
-      "testCases": [
-        {
-          "input": {
-            "n": 50
-          },
-          "expectedOutput": "1\n2\n3\n4\n6\n7\n8\n9\n11\n12\n13\n14\n16\n17\n18\n19\n21\n22\n23\n24\n26\n27\n28\n29\n31\n32\n33\n34"
-        },
-        {
-          "input": {
-            "n": 40
-          },
-          "expectedOutput": "1\n2\n3\n4\n6\n7\n8\n9\n11\n12\n13\n14\n16\n17\n18\n19\n21\n22\n23\n24\n26\n27\n28\n29\n31\n32\n33\n34"
-        },
-        {
-          "input": {
-            "n": 30
-          },
-          "expectedOutput": "1\n2\n3\n4\n6\n7\n8\n9\n11\n12\n13\n14\n16\n17\n18\n19\n21\n22\n23\n24\n26\n27\n28\n29"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"a1b2c3d4\";\n// Print only the digit characters from the string\n// Use continue to skip non-digit characters\n// Hint: A character is a digit if it's between '0' and '9'\n// For str = \"a1b2c3d4\", your output should be:\n// 1\n// 2\n// 3\n// 4",
       "solution_type": "script",
       "reference_solution": "const str = \"a1b2c3d4\";\nfor (let i = 0; i < str.length; i++) {\n  const c = str[i];\n  if (c < '0' || c > '9') continue;\n  console.log(c);\n}",

@@ -146,62 +146,6 @@ export default {
       ]
     },
     {
-      "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 4;\n// Print a hollow square pattern\n// Only the border should have stars, inside should be spaces\n// For n = 4, your output should be:\n// ****\n// *  *\n// *  *\n// ****",
-      "solution_type": "script",
-      "reference_solution": "const n = 4;\nfor (let r = 0; r < n; r++) {\n  let line = \"\";\n  for (let c = 0; c < n; c++) {\n    if (r === 0 || r === n - 1 || c === 0 || c === n - 1) {\n      line += \"*\";\n    } else {\n      line += \" \";\n    }\n  }\n  console.log(line);\n}",
-      "testCases": [
-        {
-          "input": {
-            "n": 4
-          },
-          "expectedOutput": "****\n*  *\n*  *\n****"
-        },
-        {
-          "input": {
-            "n": 5
-          },
-          "expectedOutput": "*****\n*   *\n*   *\n*   *\n*****"
-        },
-        {
-          "input": {
-            "n": 3
-          },
-          "expectedOutput": "***\n* *\n***"
-        },
-        {
-          "input": {
-            "n": 2
-          },
-          "expectedOutput": "**\n**"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename limit, use it as input for your program.\n// While testing we will change its value.\nconst limit = 20;\n// Find and print all pairs of numbers (a, b) where:\n// - Both a and b are between 1 and limit\n// - a < b\n// - a + b equals 10\n// Format: \"a + b = 10\"\n// For limit = 20, your output should be:\n// 1 + 9 = 10\n// 2 + 8 = 10\n// 3 + 7 = 10\n// 4 + 6 = 10",
-      "solution_type": "script",
-      "reference_solution": "const limit = 20;\nfor (let a = 1; a <= limit; a++) {\n  for (let b = a + 1; b <= limit; b++) {\n    if (a + b === 10) {\n      console.log(a + \" + \" + b + \" = 10\");\n    }\n  }\n}",
-      "testCases": [
-        {
-          "input": {
-            "limit": 20
-          },
-          "expectedOutput": "1 + 9 = 10\n2 + 8 = 10\n3 + 7 = 10\n4 + 6 = 10"
-        },
-        {
-          "input": {
-            "limit": 10
-          },
-          "expectedOutput": "1 + 9 = 10\n2 + 8 = 10\n3 + 7 = 10\n4 + 6 = 10"
-        },
-        {
-          "input": {
-            "limit": 8
-          },
-          "expectedOutput": "2 + 8 = 10\n3 + 7 = 10\n4 + 6 = 10"
-        }
-      ]
-    },
-    {
       "description": "// Do not rename n, use it as input for your program.\n// While testing we will change its value.\nconst n = 3;\n// Print a pattern where each row shows row number repeated row times\n// For n = 3, your output should be:\n// 1\n// 2 2\n// 3 3 3",
       "solution_type": "script",
       "reference_solution": "const n = 3;\nfor (let i = 1; i <= n; i++) {\n  let line = \"\";\n  for (let j = 0; j < i; j++) {\n    if (j > 0) line += \" \";\n    line += i;\n  }\n  console.log(line);\n}",
