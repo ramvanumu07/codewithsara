@@ -24,13 +24,13 @@ export default {
     {
       "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Function\";\n// Print characters at positions 0, 2, 4, and 6\n// For example, if str = \"Function\", your output should be:\n// F\n// n\n// t\n// o",
       "solution_type": "script",
-      "reference_solution": "const str = \"Water Melon\";\nconsole.log(str[0]);\nconsole.log(str[2]);\nconsole.log(str[4]);\nconsole.log(str[6]);",
+      "reference_solution": "const str = \"Function\";\nconsole.log(str[0]);\nconsole.log(str[2]);\nconsole.log(str[4]);\nconsole.log(str[6]);",
       "testCases": [
         {
           "input": {
-            "str": "Water Melon"
+            "str": "Function"
           },
-          "expectedOutput": "W\nt\nr\nM"
+          "expectedOutput": "F\nn\nt\no"
         },
         {
           "input": {
