@@ -116,17 +116,50 @@ const MessageContent = ({ content, role }) => {
   )
 }
 
-/** Assignment AI review: same Markdown rendering as MessageContent, no copy button */
-function renderFormattedReview(text) {
+/** Dev style solution / review panel: Markdown + copy icon on code blocks (same as chat messages). */
+function AssignmentReviewMarkdown({ text }) {
+  const [copiedId, setCopiedId] = useState(null)
+  const blockIdRef = useRef(0)
   if (!text || typeof text !== 'string') return null
+  blockIdRef.current = 0
+  const onCopy = (id, code) => {
+    copyToClipboard(code).then((ok) => {
+      if (ok) {
+        setCopiedId(id)
+        setTimeout(() => setCopiedId(null), 2000)
+      }
+    })
+  }
   const components = {
     code: ({ node, inline, children, ...props }) =>
       inline ? <code className="message-markdown__inline-code" {...props}>{children}</code> : <code {...props}>{children}</code>,
-    pre: ({ children }) => {
-      const codeEl = React.Children.toArray(children)?.[0]
-      const raw = codeEl?.props?.children
-      const code = Array.isArray(raw) ? raw.join('') : (typeof raw === 'string' ? raw : String(children ?? ''))
-      return <SyntaxHighlightedCode code={code} preClassName="message-markdown__code-block" />
+    pre: ({ node, children }) => {
+      let code = ''
+      const first = node?.children?.[0]
+      if (first && typeof first.value === 'string') code = first.value
+      else if (first?.children?.[0]?.value) code = first.children[0].value
+      else {
+        const codeEl = React.Children.toArray(children)?.[0]
+        const raw = codeEl?.props?.children
+        if (Array.isArray(raw)) code = raw.map((c) => (typeof c === 'string' ? c : c?.props?.children ?? '')).join('')
+        else if (typeof raw === 'string') code = raw
+        else if (raw != null) code = String(raw)
+      }
+      const id = `review-cb-${(blockIdRef.current++).toString(36)}`
+      return (
+        <div className="message-markdown__code-wrapper">
+          <button
+            type="button"
+            className={`message-markdown__code-copy${copiedId === id ? ' message-markdown__code-copy--copied' : ''}`}
+            onClick={() => onCopy(id, code)}
+            title={copiedId === id ? 'Copied' : 'Copy entire code'}
+            aria-label={copiedId === id ? 'Copied' : 'Copy entire code'}
+          >
+            {copiedId === id ? <CheckIcon /> : <CopyIcon />}
+          </button>
+          <SyntaxHighlightedCode code={code} preClassName="message-markdown__code-block" />
+        </div>
+      )
     }
   }
   return (
@@ -1917,7 +1950,7 @@ const Learn = () => {
                     <div style={{ maxWidth: '720px', margin: '0 auto' }}>
                       {showReviewOnly ? (
                         <div className="message-text" style={{ color: '#374151', fontSize: '0.9375rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
-                          {renderFormattedReview(assignmentReview)}
+                          <AssignmentReviewMarkdown text={assignmentReview} />
                         </div>
                       ) : (
                         <>
