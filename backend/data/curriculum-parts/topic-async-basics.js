@@ -112,16 +112,6 @@ export default {
       ]
     },
     {
-      "description": "/*\n  ## Repeat with a delay argument\n\n  Return **`message` repeated `times` times** (newline-separated). Use **`setTimeout(..., interval)`** between repeats so the **`interval`** argument (milliseconds) is meaningful. Tests use **`interval: 0`** for speed.\n\n  ## Example\n\n  - simulateRepeat(\"Hello\", 3, 0) →\n\n  ```\n  Hello\n  Hello\n  Hello\n  ```\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateRepeat(\"Hello\", 3, 0) | three \"Hello\" lines |\n  | simulateRepeat(\"Test\", 2, 0) | two \"Test\" lines |\n*/\n\nfunction simulateRepeat(message, times, interval) {\n  // Implementation here\n}",
-      "solution_type": "function",
-      "function_name": "simulateRepeat",
-      "reference_solution": "function simulateRepeat(message, times, interval) {\n  return new Promise((resolve) => {\n    const parts = [];\n    let c = 0;\n    function tick() {\n      if (c >= times) return resolve(parts.join('\\n'));\n      parts.push(message);\n      c++;\n      setTimeout(tick, interval);\n    }\n    tick();\n  });\n}",
-      "testCases": [
-        { "input": { "message": "Hello", "times": 3, "interval": 0 }, "expectedOutput": "Hello\nHello\nHello", "requirePromise": true },
-        { "input": { "message": "Test", "times": 2, "interval": 0 }, "expectedOutput": "Test\nTest", "requirePromise": true }
-      ]
-    },
-    {
       "description": "/*\n  ## Fake “fetch”\n\n  Network calls return later. Return a Promise that resolves to **`data.name`** after **`setTimeout`** (e.g. 0 ms), as if data arrived asynchronously.\n\n  ## Example\n\n  ```javascript\n  // simulateFetchData({ id: 1, name: \"User\" }) → \"User\"\n  ```\n\n  ## Test cases (grader)\n\n  | Input `data` | Result |\n  |--------------|--------|\n  | { id: 1, name: \"User\" } | \"User\" |\n  | { id: 2, name: \"Alice\" } | \"Alice\" |\n  | { id: 3, name: \"Bob\" } | \"Bob\" |\n*/\n\nfunction simulateFetchData(data) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateFetchData",
