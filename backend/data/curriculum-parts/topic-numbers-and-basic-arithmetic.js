@@ -24,13 +24,6 @@ export default {
       "testCases": [
         {
           "input": {
-            "obtained": 427,
-            "total": 500
-          },
-          "expectedOutput": "Percentage: 85.4"
-        },
-        {
-          "input": {
             "obtained": 360,
             "total": 400
           },
@@ -143,49 +136,6 @@ export default {
             "amount": 3999
           },
           "expectedOutput": "500 notes: 7\n100 notes: 4\n50 notes: 1\nRemaining amount: 49"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename num, use it as input for your program.\n// While testing we will change its value.\nconst num = 47;\n// Calculate the remainder when num is divided by 2\n// Print the remainder (0 for even, 1 for odd)\n// For example, if num = 47, your output should be:\n// Remainder: 1",
-      "solution_type": "script",
-      "reference_solution": "const num = 47;\nconst remainder = num % 2;\nconsole.log(\"Remainder:\", remainder);",
-      "testCases": [
-        {
-          "input": {
-            "num": 47
-          },
-          "expectedOutput": "Remainder: 1"
-        },
-        {
-          "input": {
-            "num": 100
-          },
-          "expectedOutput": "Remainder: 0"
-        },
-        {
-          "input": {
-            "num": 89
-          },
-          "expectedOutput": "Remainder: 1"
-        },
-        {
-          "input": {
-            "num": 0
-          },
-          "expectedOutput": "Remainder: 0"
-        },
-        {
-          "input": {
-            "num": 1
-          },
-          "expectedOutput": "Remainder: 1"
-        },
-        {
-          "input": {
-            "num": 1000
-          },
-          "expectedOutput": "Remainder: 0"
         }
       ]
     },
@@ -387,49 +337,6 @@ export default {
             "seconds": 1
           },
           "expectedOutput": "Total seconds: 61"
-        }
-      ]
-    },
-    {
-      "description": "// Do not rename radius, use it as input for your program.\n// While testing we will change its value.\nconst radius = 7;\n// Calculate the area of a circle: π * radius * radius\n// Use 3.14159 as the value of π\n// Print the area\n// For example, if radius = 7, your output should be:\n// 153.93804",
-      "solution_type": "script",
-      "reference_solution": "const radius = 7;\nconst pi = 3.14159;\nconst area = pi * radius * radius;\nconsole.log(\"Area:\", area);",
-      "testCases": [
-        {
-          "input": {
-            "radius": 7
-          },
-          "expectedOutput": "Area: 153.93804"
-        },
-        {
-          "input": {
-            "radius": 10
-          },
-          "expectedOutput": "Area: 314.159"
-        },
-        {
-          "input": {
-            "radius": 5
-          },
-          "expectedOutput": "Area: 78.53975"
-        },
-        {
-          "input": {
-            "radius": 1
-          },
-          "expectedOutput": "Area: 3.14159"
-        },
-        {
-          "input": {
-            "radius": 0
-          },
-          "expectedOutput": "Area: 0"
-        },
-        {
-          "input": {
-            "radius": 100
-          },
-          "expectedOutput": "Area: 31415.9"
         }
       ]
     },

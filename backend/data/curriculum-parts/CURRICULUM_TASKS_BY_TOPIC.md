@@ -1,40 +1,5 @@
 # Curriculum tasks by topic
 
-One table per topic (**41** topics). Each row is one assignment task.
-
-| Column | Meaning |
-|--------|---------|
-| **#** | Task order within the topic (1-based) |
-| **Description** | Full task text (line breaks preserved via `<br>`) |
-| **Solution type** | `script` or `function` |
-| **Function name** | Name tested (function tasks only) |
-| **Tests** | Number of test cases |
-
----
-
-## console.log
-
-**Topic ID:** `console-log` · **Task count:** 4
-
-| # | Description | Solution type | Function name | Tests |
-|:-:|-------------|---------------|---------------|:-----:|
-| 1 | // Print two lines: first line the number 7, second line the result of 20 minus 3.<br>// Use console.log for each line.<br>// Your output should be exactly:<br>// 7<br>// 17 | script | — | 1 |
-| 2 | // Print one line: the word Hello, a single space, then the word World.<br>// Use string concatenation (+) and include a space between the two words.<br>// Your output should be exactly:<br>// Hello World | script | — | 1 |
-| 3 | // Print one line with three values separated by spaces: the number 10, the word items, and the expression 50 * 2.<br>// Use comma-separated arguments in a single console log.<br>// Your output should be exactly:<br>// 10 items 100 | script | — | 1 |
-| 4 | // Print: He said "JavaScript is amazing"<br>// Your output should be exactly:<br>// He said "JavaScript is amazing" | script | — | 1 |
-
-## Variables and Constants
-
-**Topic ID:** `variables-and-constants` · **Task count:** 5
-
-| # | Description | Solution type | Function name | Tests |
-|:-:|-------------|---------------|---------------|:-----:|
-| 1 | // Do not rename a and b, use them as input for your program.<br>// While testing we will change their values.<br>const a = 15;<br>const b = 27;<br>// Create 3 let variables: two for storing a and b, one for swapping<br>// Swap the values using the third variable, then print both values after swapping<br>// For example, if a = 15 and b = 27, your output should be:<br>// 27<br>// 15 | script | — | 3 |
-| 2 | // Do not rename celsius, use it as input for your program.<br>// While testing we will change its value.<br>const celsius = 100;<br>// Convert celsius to Fahrenheit using: (celsius * 9/5) + 32, then store that result<br>// Convert the Fahrenheit value to Kelvin using: (F - 32) * 5/9 + 273.15<br>// Print both converted values (Fahrenheit first, then Kelvin)<br>// For example, if celsius = 100, your output should be:<br>// 212<br>// 373.15 | script | — | 3 |
-| 3 | // Do not rename principal, rate, time, use them as input for your program.<br>// While testing we will change their values.<br>const principal = 1000;<br>const rate = 5;<br>const time = 2;<br>// Calculate simple interest: (principal * rate * time) / 100<br>// Calculate total amount: principal + interest<br>// Print the interest and then the total amount<br>// For example, if principal = 1000, rate = 5, time = 2, your output should be:<br>// 100<br>// 1100 | script | — | 3 |
-| 4 | // Do not rename length and width, use them as input for your program.<br>// While testing we will change their values.<br>const length = 8;<br>const width = 5;<br>// Calculate the area and perimeter of a rectangle<br>// Area = length * width<br>// Perimeter = 2 * (length + width)<br>// Print area first, then perimeter<br>// For example, if length = 8 and width = 5, your output should be:<br>// 40<br>// 26 | script | — | 3 |
-| 5 | // Do not rename score1, score2, score3, use them as input for your program.<br>// While testing we will change their values.<br>const score1 = 85;<br>const score2 = 92;<br>const score3 = 78;<br>// Calculate the sum of all scores<br>// Calculate the average (sum divided by 3)<br>// Print the sum and then the average<br>// For example, if scores are 85, 92, 78, your output should be:<br>// 255<br>// 85 | script | — | 3 |
-
 ## Numbers and Basic Arithmetic
 
 **Topic ID:** `numbers-and-basic-arithmetic` · **Task count:** 10
