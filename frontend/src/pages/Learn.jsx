@@ -1605,14 +1605,10 @@ const Learn = () => {
             }}
           >
             <h2 style={{ margin: '0 0 12px', fontSize: '1.25rem', fontWeight: 600, color: '#111827' }}>
-              No tasks to practice
+              No coding tasks
             </h2>
-            <p style={{ margin: '0 0 8px', fontSize: '0.9375rem', color: '#4b5563', lineHeight: 1.6 }}>
-              This topic doesn&apos;t include any coding assignments yet. You can move on to the next topic and
-              start its learning session.
-            </p>
-            <p style={{ margin: '0 0 24px', fontSize: '0.8125rem', color: '#9ca3af' }}>
-              If you&apos;re already on the last topic in your course, you&apos;ll return to the dashboard.
+            <p style={{ margin: '0 0 24px', fontSize: '0.9375rem', color: '#4b5563', lineHeight: 1.6 }}>
+              This topic doesn&apos;t include coding practice tasks.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
               <button
