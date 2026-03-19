@@ -928,7 +928,7 @@ const Learn = () => {
     // Forward (next assignment or next topic): require current task completed; ref browse does not save so allow free nav
     if (!referenceBrowse && assignmentsCompletedCount <= currentAssignment) {
       setIncompleteModalMessage(
-        'Complete the current assignment first. Click Test after your code passes the tests for this task.'
+        'Finish this task before continuing: use Test until all checks pass for this assignment.'
       )
       setShowIncompleteModal(true)
       return
@@ -1357,7 +1357,7 @@ const Learn = () => {
           >
             <p style={{ margin: '0 0 16px', fontSize: '1rem', color: '#374151' }}>
               {incompleteModalMessage ||
-                'Complete the current assignment first. Click Test after your code passes the tests for this task.'}
+                'Finish this task before continuing: use Test until all checks pass for this assignment.'}
             </p>
             <button
               type="button"
