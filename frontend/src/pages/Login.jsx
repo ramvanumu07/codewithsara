@@ -5,7 +5,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import { useAuth } from '../contexts/AuthContext'
 import './Auth.css'
 
@@ -15,7 +14,7 @@ const RATE_LIMIT_WINDOW = 300000 // 5 minutes
 const SUBMIT_COOLDOWN = 1000 // 1 second
 
 // Ensure we always have a string for error display (backend may return object on 500)
-function toErrorString (value) {
+function toErrorString(value) {
   if (value == null) return ''
   if (typeof value === 'string') return value
   if (typeof value === 'object' && value !== null) {
@@ -60,7 +59,7 @@ const Login = () => {
         [name]: ''
       }))
     }
-    
+
     // Clear general error when user starts typing in any field
     if (errors.general) {
       setErrors(prev => ({
@@ -68,7 +67,7 @@ const Login = () => {
         general: ''
       }))
     }
-    
+
     if (name === 'username' && errors.password) {
       setErrors(prev => ({ ...prev, password: '' }))
     } else if (name === 'password' && errors.username) {
@@ -90,7 +89,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (!validateForm()) {
       return
     }
@@ -110,40 +109,20 @@ const Login = () => {
     setIsLoading(true)
     setLastAttemptTime(now)
 
+    let succeeded = false
     try {
       const result = await login(formData.username.trim(), formData.password)
 
       if (result.success) {
-        // Reset login attempts on success
+        succeeded = true
         setLoginAttempts(0)
-        
-        // Brief success indication
         setErrors({ general: '' })
-        
-        // Navigate to dashboard with slight delay for UX
         setTimeout(() => {
           navigate('/dashboard')
         }, 500)
       } else {
         const errorMessage = toErrorString(result.error) || 'Login failed'
-        if (errorMessage.includes('Username not found') || 
-            errorMessage.includes('not found') || 
-            errorMessage.includes('Please check your credentials or create an account')) {
-          setErrors({ 
-            username: 'Username not found. Please check your input or create an account.',
-            general: ''
-          })
-        } else if (errorMessage.includes('Incorrect password') || 
-                   errorMessage.includes('Please try again or use "Forgot Password"')) {
-          setErrors({ 
-            password: 'Incorrect password. Please try again or use "Forgot Password" if needed.',
-            general: ''
-          })
-        } else if (errorMessage.includes('Invalid credentials')) {
-          setErrors({ general: 'Invalid username or password. Please check your credentials.' })
-        } else {
-          setErrors({ general: typeof errorMessage === 'string' ? errorMessage : toErrorString(errorMessage) || 'Login failed' })
-        }
+        setErrors({ general: errorMessage })
         setLoginAttempts(prev => prev + 1)
       }
     } catch (error) {
@@ -162,16 +141,16 @@ const Login = () => {
       } else if (!navigator.onLine) {
         errorMessage = 'No internet connection. Please check your connection and try again.'
       }
-      
+
       setErrors({ general: errorMessage })
       setLoginAttempts(prev => prev + 1)
     } finally {
       setIsLoading(false)
-      
-      // Reset attempts after timeout
-      setTimeout(() => {
-        setLoginAttempts(0)
-      }, RATE_LIMIT_WINDOW)
+      if (!succeeded) {
+        setTimeout(() => {
+          setLoginAttempts(0)
+        }, RATE_LIMIT_WINDOW)
+      }
     }
   }
 
@@ -228,9 +207,9 @@ const Login = () => {
                 spellCheck="false"
                 required
               />
-              {errors.usernameOrEmail && (
+              {errors.username && (
                 <div className="username-status">
-                  <span className="status-taken">{errors.usernameOrEmail}</span>
+                  <span className="status-taken">{errors.username}</span>
                 </div>
               )}
             </div>
@@ -263,14 +242,14 @@ const Login = () => {
                     {showPassword ? (
                       // Eye slash (hide)
                       <>
-                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                        <line x1="1" y1="1" x2="23" y2="23"/>
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
                       </>
                     ) : (
                       // Eye (show)
                       <>
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
                       </>
                     )}
                   </svg>

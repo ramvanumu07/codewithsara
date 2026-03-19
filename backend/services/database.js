@@ -285,6 +285,7 @@ export async function updateUserPassword(userId, hashedPassword) {
       if (user.id === userId) {
         user.password = hashedPassword
         user.updated_at = new Date().toISOString()
+        await bumpTokenVersion(userId)
         return user
       }
     }
@@ -295,6 +296,7 @@ export async function updateUserPassword(userId, hashedPassword) {
     [hashedPassword, userId]
   )
   if (!rows[0]) throw new Error('Failed to update password')
+  await bumpTokenVersion(userId)
   return rows[0]
 }
 

@@ -29,6 +29,9 @@ import { asyncHandler } from '../middleware/errorHandler.js'
 
 const router = express.Router()
 
+/** Same message for unknown user vs wrong password (reduces account enumeration). */
+const LOGIN_FAILED_MESSAGE = 'Invalid username or password. Please try again or create an account.'
+
 // ============ MIDDLEWARE ============
 
 export function authenticateToken(req, res, next) {
@@ -41,13 +44,13 @@ export function authenticateToken(req, res, next) {
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
     if (err) {
-      return res.status(403).json(createErrorResponse('Invalid or expired token'))
+      return res.status(401).json(createErrorResponse('Invalid or expired token'))
     }
 
     try {
       const currentVersion = await getTokenVersion(decoded.userId)
       if ((decoded.token_version ?? 0) < currentVersion) {
-        return res.status(403).json(createErrorResponse('Session expired. Please log in again.'))
+        return res.status(401).json(createErrorResponse('Session expired. Please log in again.'))
       }
 
       req.user = {
@@ -57,7 +60,7 @@ export function authenticateToken(req, res, next) {
       }
       next()
     } catch (error) {
-      return res.status(403).json(createErrorResponse('Session validation failed'))
+      return res.status(401).json(createErrorResponse('Session validation failed'))
     }
   })
 }
@@ -128,7 +131,7 @@ const JWT_EXPIRY = '30d' // Long-lived so users stay logged in
 
 async function generateTokens(user) {
   if (!process.env.JWT_SECRET || process.env.JWT_SECRET.trim() === '') {
-    throw new Error('Server configuration error: JWT_SECRET is not set. Add it in Vercel (or .env) for auth to work.')
+    throw new Error('Server configuration error: JWT_SECRET is not set. Add it in your environment (e.g. backend/.env or your hosting dashboard).')
   }
   const tokenVersion = user.token_version ?? 0
   const payload = {
@@ -370,13 +373,13 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
     const user = await getUserByUsernameOrEmail(input)
 
     if (!user) {
-      return res.status(401).json(createErrorResponse('Account not found. Please check your credentials or create an account.'))
+      return res.status(401).json(createErrorResponse(LOGIN_FAILED_MESSAGE))
     }
 
     // Check password
     const isValidPassword = await bcrypt.compare(password, user.password)
     if (!isValidPassword) {
-      return res.status(401).json(createErrorResponse('Incorrect password. Please try again or use "Forgot Password" if needed.'))
+      return res.status(401).json(createErrorResponse(LOGIN_FAILED_MESSAGE))
     }
 
     // Access is now per-course (unlock via payment). No account-level access check on login.
@@ -439,6 +442,7 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
 
 router.post('/logout', authenticateToken, async (req, res) => {
   try {
+    await bumpTokenVersion(req.user.userId)
     res.json(createSuccessResponse({ message: 'Logout successful' }))
   } catch (error) {
     handleErrorResponse(res, error, 'logout')
@@ -484,9 +488,13 @@ router.get('/validate', authenticateToken, async (req, res) => {
 })
 
 // ============ LEGACY COMPATIBILITY ============
-// Legacy: student_id login. Remove when no old clients use it.
+// Legacy: student_id login. Disabled in production unless ENABLE_LEGACY_STUDENT_LOGIN=true.
 router.post('/login-legacy', rateLimitMiddleware, async (req, res) => {
   try {
+    if (process.env.NODE_ENV === 'production' && process.env.ENABLE_LEGACY_STUDENT_LOGIN !== 'true') {
+      return res.status(404).json(createErrorResponse('Not found'))
+    }
+
     const { studentId, password } = req.body
 
     if (!studentId || !password) {
@@ -497,13 +505,13 @@ router.post('/login-legacy', rateLimitMiddleware, async (req, res) => {
     const user = await getUserByUsername(studentId)
 
     if (!user) {
-      return res.status(401).json(createErrorResponse('Invalid credentials'))
+      return res.status(401).json(createErrorResponse(LOGIN_FAILED_MESSAGE))
     }
 
     // Check password
     const isValidPassword = await bcrypt.compare(password, user.password)
     if (!isValidPassword) {
-      return res.status(401).json(createErrorResponse('Invalid credentials'))
+      return res.status(401).json(createErrorResponse(LOGIN_FAILED_MESSAGE))
     }
 
     // Generate token and create session
@@ -527,7 +535,7 @@ router.post('/login-legacy', rateLimitMiddleware, async (req, res) => {
 })
 
 // Get Security Question endpoint (forgot password - username or email)
-router.post('/get-security-question', async (req, res) => {
+router.post('/get-security-question', rateLimitMiddleware, async (req, res) => {
   try {
     const { username } = req.body
     const input = (username != null && typeof username === 'string') ? username.trim() : ''
@@ -558,7 +566,7 @@ router.post('/get-security-question', async (req, res) => {
 })
 
 // Verify Security Answer Only endpoint (for step validation)
-router.post('/verify-security-answer-only', async (req, res) => {
+router.post('/verify-security-answer-only', rateLimitMiddleware, async (req, res) => {
   try {
     const { username, securityAnswer } = req.body
     const input = (username != null && typeof username === 'string') ? username.trim() : ''
@@ -596,7 +604,7 @@ router.post('/verify-security-answer-only', async (req, res) => {
 })
 
 // Verify Security Answer and Reset Password endpoint
-router.post('/verify-security-answer', async (req, res) => {
+router.post('/verify-security-answer', rateLimitMiddleware, async (req, res) => {
   try {
     const { username, securityAnswer, newPassword, confirmPassword } = req.body
     const input = (username != null && typeof username === 'string') ? username.trim() : ''

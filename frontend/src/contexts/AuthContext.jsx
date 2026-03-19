@@ -123,9 +123,9 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const signup = async (username, name, password, confirmPassword, securityQuestion, securityAnswer) => {
+  const signup = async (username, name, email, password, confirmPassword, securityQuestion, securityAnswer) => {
     try {
-      const response = await auth.signup(username, name, password, confirmPassword, securityQuestion, securityAnswer)
+      const response = await auth.signup(username, name, email, password, confirmPassword, securityQuestion, securityAnswer)
 
       if (response.data.success) {
         const { user: userData, token } = response.data.data
@@ -135,13 +135,25 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true)
         return { success: true, user: userData }
       } else {
-        return { success: false, error: response.data.message || response.data.error || 'Signup failed' }
+        const err = response.data.message ?? response.data.error ?? 'Signup failed'
+        return { success: false, error: toErrorString(err) || 'Signup failed' }
       }
     } catch (error) {
-      return {
-        success: false,
-        error: error.response?.data?.message || error.response?.data?.error || 'Signup failed. Please try again.'
+      const isLocalhost = typeof window !== 'undefined' && /^localhost$|^127\.0\.0\.1$/i.test(window.location.hostname)
+      let errorMessage = 'Signup failed. Please try again.'
+      if (error.response?.data) {
+        const d = error.response.data
+        errorMessage = toErrorString(d.message ?? d.error ?? d) || errorMessage
       }
+      if (errorMessage === 'Signup failed. Please try again.' && error.response?.status >= 500) {
+        errorMessage = 'Server error. Please try again in a moment.'
+      }
+      if (errorMessage === 'Signup failed. Please try again.' && (error.code === 'ECONNREFUSED' || error.message?.includes('Network Error'))) {
+        errorMessage = isLocalhost
+          ? 'Cannot reach server. Make sure the backend is running (e.g. npm run dev from project root).'
+          : 'Unable to connect. Please check your connection and try again.'
+      }
+      return { success: false, error: errorMessage }
     }
   }
 

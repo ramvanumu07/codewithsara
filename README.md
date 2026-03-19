@@ -1,6 +1,6 @@
 # Sara (EduBridge)
 
-AI-powered JavaScript learning platform — React + Vite frontend, Node/Express API, Supabase, Groq.
+AI-powered JavaScript learning platform — React + Vite frontend, Node/Express API, Neon Postgres, Groq.
 
 ## Repo layout
 

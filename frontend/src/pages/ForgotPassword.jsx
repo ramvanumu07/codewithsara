@@ -52,7 +52,7 @@ const ForgotPassword = () => {
     const newErrors = {}
     const input = formData.username.trim()
     if (!input) {
-      newErrors.username = 'Username is required'
+      newErrors.username = 'Username or email is required'
     }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
