@@ -160,7 +160,7 @@ export const learning = {
   getUnlockedCourses: () => api.get('/learn/unlocked-courses'),
   unlockCourse: (courseId) => api.post('/learn/unlock-course', { courseId }),
 
-  // Certificate (requires 45 completed topics)
+  // Certificate (requires all topics in the course — see backend certificate / TOPIC_ORDER)
   downloadCertificate: async () => {
     const certPath = '/learn/certificate/download'
     const url = baseURL ? `${baseURL.replace(/\/$/, '')}${certPath}` : certPath

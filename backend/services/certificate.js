@@ -8,9 +8,11 @@ import PDFDocument from 'pdfkit'
 import path from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
+import { TOPIC_ORDER } from '../data/curriculum-parts/order.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const CERTIFICATE_TOPICS_REQUIRED = 45
+/** Must match all topics in the JavaScript course (see order.js). */
+const CERTIFICATE_TOPICS_REQUIRED = TOPIC_ORDER.length
 
 export const CERTIFICATE_TOPICS = CERTIFICATE_TOPICS_REQUIRED
 

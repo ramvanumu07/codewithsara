@@ -754,7 +754,7 @@ const Dashboard = () => {
                       </svg>
                     </span>
                     <div className="certificate-text">
-                      <strong>Congratulations! You&apos;ve completed all 45 topics!</strong>
+                      <strong>Congratulations! You&apos;ve completed all {currentProgressSummary.total_topics} topics!</strong>
                       <p>Download your completion certificate anytime.</p>
                     </div>
                     <button

@@ -175,8 +175,8 @@ describe('computeCourseProgressSummary', () => {
     expect(s.completion_percentage).toBe(20)
   })
 
-  test('matches 45-topic course: one topic halfway (assignment) → round(1/90*100)=1%', () => {
-    const t = topics(45)
+  test('matches 41-topic course: one topic halfway (assignment) → round(1/82*100)=1%', () => {
+    const t = topics(41)
     const progress = [
       {
         topic_id: 'topic-1',
@@ -190,8 +190,8 @@ describe('computeCourseProgressSummary', () => {
     expect(s.completion_percentage).toBe(1)
   })
 
-  test('matches 45-topic course: one topic fully done → round(2/90*100)=2%', () => {
-    const t = topics(45)
+  test('matches 41-topic course: one topic fully done → round(2/82*100)=2%', () => {
+    const t = topics(41)
     const progress = [
       {
         topic_id: 'topic-1',

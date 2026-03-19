@@ -795,7 +795,7 @@ router.get('/progress/summary', authenticateToken, async (req, res) => {
   }
 })
 
-// Certificate download - requires 45 completed topics
+// Certificate download — requires completed topics count >= CERTIFICATE_TOPICS (matches curriculum size)
 router.get('/certificate/download', authenticateToken, rateLimitMiddleware, async (req, res) => {
   try {
     const userId = req.user.userId
