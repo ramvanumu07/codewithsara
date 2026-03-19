@@ -884,7 +884,7 @@ const Dashboard = () => {
                             <button
                               type="button"
                               className="session-completed-icon-btn"
-                              onClick={() => navigate(`/learn/${topic.id}?view=notes`)}
+                              onClick={() => navigate(`/learn/${topic.id}?view=notes&ref=1`)}
                               title="Topic notes"
                               aria-label={`View notes for ${formatTopicTitle(topic.title)}`}
                             >
@@ -899,7 +899,7 @@ const Dashboard = () => {
                             <button
                               type="button"
                               className="session-completed-icon-btn"
-                              onClick={() => navigate(`/learn/${topic.id}?phase=assignment&start=1`)}
+                              onClick={() => navigate(`/learn/${topic.id}?phase=assignment&start=1&ref=1`)}
                               title="Try assignments (from task 1)"
                               aria-label={`Assignments for ${formatTopicTitle(topic.title)}`}
                             >

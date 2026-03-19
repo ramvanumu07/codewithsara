@@ -1063,6 +1063,9 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
   try {
     const { topicId } = req.params
     const userId = req.user.userId
+    /** Dashboard "notes" / "code" shortcuts: browse without bumping updated_at (does not steal "continue" / Currently learning). */
+    const referenceOnly = req.query.ref === '1' || req.query.ref === 'true'
+    const phaseHint = req.query.phase === 'assignment' ? 'assignment' : 'session'
 
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
@@ -1070,37 +1073,47 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
     let progress = await getProgress(userId, topicId)
     const totalTasks = (topic.tasks || []).length
 
-    // Ensure progress row exists and refresh updated_at and total_tasks when user opens this topic.
-    const now = new Date().toISOString()
-    if (!progress) {
-      progress = await upsertProgress(userId, topicId, {
-        phase: 'session',
+    if (!referenceOnly) {
+      // Ensure progress row exists and refresh updated_at and total_tasks when user opens this topic for real learning.
+      const now = new Date().toISOString()
+      if (!progress) {
+        progress = await upsertProgress(userId, topicId, {
+          phase: 'session',
+          status: 'in_progress',
+          topic_id: String(topicId),
+          current_task: totalTasks > 0 ? 1 : 0,
+          total_tasks: totalTasks,
+          assignments_completed: 0,
+          updated_at: now
+        })
+      } else {
+        progress = await upsertProgress(userId, topicId, {
+          phase: progress.phase || 'session',
+          status: progress.status || 'in_progress',
+          total_tasks: totalTasks,
+          updated_at: now
+        })
+      }
+
+      // Normalize legacy state: completed + session → assignment + in_progress (2-phase model)
+      if (progress?.phase === 'session' && progress?.status === 'completed') {
+        await upsertProgress(userId, topicId, {
+          phase: 'assignment',
+          status: 'in_progress',
+          total_tasks: totalTasks,
+          updated_at: new Date().toISOString()
+        })
+        progress = { ...progress, phase: 'assignment', status: 'in_progress' }
+      }
+    } else if (!progress) {
+      // Reference browse, no DB row yet: return in-memory defaults only (no INSERT, no updated_at change elsewhere)
+      progress = {
+        phase: phaseHint === 'assignment' ? 'assignment' : 'session',
         status: 'in_progress',
-        topic_id: String(topicId),
         current_task: totalTasks > 0 ? 1 : 0,
         total_tasks: totalTasks,
-        assignments_completed: 0,
-        updated_at: now
-      })
-    } else {
-      // Row exists: refresh updated_at and total_tasks (so 0 never sticks)
-      progress = await upsertProgress(userId, topicId, {
-        phase: progress.phase || 'session',
-        status: progress.status || 'in_progress',
-        total_tasks: totalTasks,
-        updated_at: now
-      })
-    }
-
-    // Normalize legacy state: completed + session → assignment + in_progress (2-phase model)
-    if (progress?.phase === 'session' && progress?.status === 'completed') {
-      await upsertProgress(userId, topicId, {
-        phase: 'assignment',
-        status: 'in_progress',
-        total_tasks: totalTasks,
-        updated_at: new Date().toISOString()
-      })
-      progress = { ...progress, phase: 'assignment', status: 'in_progress' }
+        assignments_completed: 0
+      }
     }
 
     // Get all topics to find next topic

@@ -76,8 +76,15 @@ export const learning = {
   // Get all courses
   getCourses: () => api.get('/learn/courses'),
 
-  // Get specific topic details
-  getTopic: (topicId) => api.get(`/learn/topic/${topicId}`),
+  // Get specific topic details (referenceOnly + phase when browsing notes/code from dashboard without touching resume order)
+  getTopic: (topicId, opts = {}) => {
+    const params = {}
+    if (opts.referenceOnly) {
+      params.ref = '1'
+      if (opts.phase) params.phase = opts.phase
+    }
+    return api.get(`/learn/topic/${topicId}`, { params: Object.keys(params).length ? params : undefined })
+  },
 
   // Start session for a topic
   startSession: (topicId, assignments = []) =>

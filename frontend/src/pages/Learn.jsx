@@ -252,6 +252,8 @@ const Learn = () => {
   // Load topic and initialize based on phase
   useEffect(() => {
     const requestedTopicId = topicId
+    /** Set from dashboard notes/code icons — do not bump server "resume" order (see GET /learn/topic?ref=1). */
+    const referenceBrowse = searchParams.get('ref') === '1'
     const loadTopic = async () => {
       try {
         setLoading(true)
@@ -264,7 +266,10 @@ const Learn = () => {
           setAssignments([])
         }
 
-        const topicResponse = await learning.getTopic(requestedTopicId)
+        const topicResponse = await learning.getTopic(requestedTopicId, {
+          referenceOnly: referenceBrowse,
+          phase
+        })
 
         // Ignore response if user navigated to a different topic (avoid stale UI / wrong topic)
         if (topicIdRef.current !== requestedTopicId) return
