@@ -285,7 +285,8 @@
   .playground-editor-header .playground-header-actions,
   .playground-editor-header .playground-header-actions button,
   .playground-editor-header .playground-run-btn,
-  .playground-editor-header .playground-reset-btn {
+  .playground-editor-header .playground-reset-btn,
+  .playground-editor-header .playground-review-btn {
     height: 32px !important;
     min-height: 32px !important;
     padding: 0 12px !important;

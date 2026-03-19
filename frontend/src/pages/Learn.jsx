@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
@@ -20,6 +20,12 @@ const SESSION_COMPLETE_REASON = 'Session completed. You can view the conversatio
 /** Shown when user tries to skip ahead without finishing the current coding task */
 const ASSIGNMENT_GATE_MODAL_MESSAGE =
   'Complete this assignment first: pass every test case for this task. After that, you can continue to the next practice exercise or the next topic.'
+
+/** Sara UI accent — editor action buttons + tabs */
+const SARA_GREEN = '#10a37f'
+const SARA_GREEN_DISABLED_BG = '#d1d5db'
+const SARA_GREEN_DISABLED_FG = '#9ca3af'
+const SARA_GREEN_MUTED = '#94a3b8'
 
 /** Copy button SVG icons */
 const CopyIcon = () => (
@@ -121,7 +127,7 @@ const MessageContent = ({ content, role }) => {
   )
 }
 
-/** Dev style solution / review panel: Markdown + copy icon on code blocks (same as chat messages). */
+/** Reference solution panel: Markdown + copy icon on code blocks (same as chat messages). */
 function AssignmentReviewMarkdown({ text }) {
   const [copiedId, setCopiedId] = useState(null)
   const blockIdRef = useRef(0)
@@ -233,6 +239,27 @@ const Learn = () => {
   const [incompleteModalMessage, setIncompleteModalMessage] = useState('')
   const [submitLoading, setSubmitLoading] = useState(false)
   const assignmentTextareaRef = useRef(null)
+
+  const assignmentTerminalTitle = useMemo(() => {
+    if (assignmentReview) return 'Reference solution'
+    const tr = assignmentTestResults ?? assignmentTestResultsRef.current
+    if (tr && Array.isArray(tr) && tr.length > 0) return 'Test results'
+    return 'Output'
+  }, [assignmentReview, assignmentTestResults])
+
+  const assignmentActionBtnBase = {
+    height: 32,
+    minHeight: 32,
+    padding: '0 12px',
+    border: 'none',
+    borderRadius: '6px',
+    fontSize: '0.875rem',
+    fontWeight: '500',
+    fontFamily: 'var(--sara-font)',
+    transition: 'all 0.2s ease',
+    boxSizing: 'border-box',
+    boxShadow: '0 1px 3px rgba(16, 163, 127, 0.22)'
+  }
 
   // Scroll so newest message is at top of view (user scrolls up to read previous)
   useEffect(() => {
@@ -947,7 +974,7 @@ const Learn = () => {
     }
   }
 
-  // Show dev style solution (reference_solution from curriculum)
+  // Reference solution from curriculum (reference_solution)
   const handleReviewAssignment = () => {
     const currentTask = assignments[currentAssignment]
     if (!currentTask) return
@@ -955,7 +982,7 @@ const Learn = () => {
     if (refSol && typeof refSol === 'string') {
       setAssignmentReview('```javascript\n' + refSol.trim() + '\n```')
     } else {
-      setAssignmentReview('No dev style solution available for this assignment.')
+      setAssignmentReview('No reference solution is available for this assignment.')
     }
   }
 
@@ -1690,77 +1717,52 @@ const Learn = () => {
                 alignItems: 'center'
               }}>
                 <button
+                  type="button"
                   onClick={handleRunAssignment}
-                  className="playground-run-btn"
+                  className="playground-run-btn assignment-action-btn"
                   style={{
-                    height: 32,
-                    minHeight: 32,
-                    padding: '0 12px',
-                    backgroundColor: assignmentCode.trim() ? '#10a37f' : '#d1d5db',
-                    color: assignmentCode.trim() ? 'white' : '#9ca3af',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontSize: '0.875rem',
-                    fontWeight: '500',
-                    fontFamily: 'var(--sara-font)',
+                    ...assignmentActionBtnBase,
+                    minWidth: 60,
+                    backgroundColor: assignmentCode.trim() ? SARA_GREEN : SARA_GREEN_DISABLED_BG,
+                    color: assignmentCode.trim() ? '#fff' : SARA_GREEN_DISABLED_FG,
                     cursor: assignmentCode.trim() ? 'pointer' : 'not-allowed',
-                    transition: 'all 0.2s ease',
-                    boxShadow: assignmentCode.trim() ? '0 1px 3px rgba(0, 0, 0, 0.1)' : 'none',
-                    minWidth: '60px',
-                    boxSizing: 'border-box'
+                    boxShadow: assignmentCode.trim() ? assignmentActionBtnBase.boxShadow : 'none'
                   }}
-                  title="Run Code (Ctrl+Enter)"
+                  title="Run code (Ctrl+Enter)"
                 >
                   Run
                 </button>
                 <button
+                  type="button"
                   onClick={handleSubmitAssignment}
                   disabled={submitLoading}
-                  className="playground-reset-btn"
+                  className="playground-reset-btn assignment-action-btn"
                   style={{
-                    height: 32,
-                    minHeight: 32,
-                    padding: '0 12px',
-                    backgroundColor: submitLoading ? '#9ca3af' : '#6b7280',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontSize: '0.875rem',
-                    fontWeight: '500',
-                    fontFamily: 'var(--sara-font)',
+                    ...assignmentActionBtnBase,
+                    minWidth: 72,
+                    backgroundColor: submitLoading ? SARA_GREEN_MUTED : SARA_GREEN,
+                    color: '#fff',
                     cursor: submitLoading ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                    minWidth: '72px',
-                    boxSizing: 'border-box'
+                    opacity: submitLoading ? 0.92 : 1
                   }}
                   title="Run tests and save progress when all pass"
                 >
                   Test
                 </button>
                 <button
+                  type="button"
                   onClick={handleReviewAssignment}
-                  className="playground-review-btn"
+                  className="playground-review-btn assignment-action-btn"
                   style={{
-                    height: 32,
-                    minHeight: 32,
-                    padding: '0 12px',
-                    backgroundColor: '#059669',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontSize: '0.875rem',
-                    fontWeight: '500',
-                    fontFamily: 'var(--sara-font)',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                    minWidth: '72px',
-                    boxSizing: 'border-box'
+                    ...assignmentActionBtnBase,
+                    minWidth: 72,
+                    backgroundColor: SARA_GREEN,
+                    color: '#fff',
+                    cursor: 'pointer'
                   }}
-                  title="Show dev style solution"
+                  title="Show reference solution for this task"
                 >
-                  Dev style solution
+                  Solution
                 </button>
               </div>
             </div>
@@ -2043,11 +2045,11 @@ const Learn = () => {
                 fontFamily: 'var(--sara-font)',
                 boxSizing: 'border-box'
               }}>
-                {assignmentReview ? 'Dev style solution' : 'Test Results'}
+                {assignmentTerminalTitle}
               </div>
             </div>
 
-            {/* Run = terminal. Test = document (test results only). Review = document (review only). */}
+            {/* Run = terminal (Output). Test = structured test results. Solution = reference markdown. */}
             {(() => {
               const testResults = assignmentTestResults ?? assignmentTestResultsRef.current
               const hasTestResults = testResults && Array.isArray(testResults) && testResults.length > 0
