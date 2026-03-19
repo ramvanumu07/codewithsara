@@ -2331,25 +2331,11 @@
     scrollbar-width: thin !important;
   }
 
-  /* Universal Line Numbers */
+  /* Universal Line Numbers — same pattern as terminal: hidden overflow + scrollTop sync from main panel */
   .playground-line-numbers,
   .terminal-line-numbers {
     overflow: hidden !important;
     flex-shrink: 0 !important;
-  }
-
-  /* Code editor gutter: scroll in sync with textarea (overflow hidden would block scrollTop) */
-  .playground-line-numbers.playground-line-numbers--scroll-sync {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-  }
-
-  .playground-line-numbers.playground-line-numbers--scroll-sync::-webkit-scrollbar {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
   }
 
   /* Splitter Hover Effects */

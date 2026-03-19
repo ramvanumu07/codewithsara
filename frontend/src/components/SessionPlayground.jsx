@@ -381,7 +381,7 @@ export default function SessionPlayground({
                 borderRadius: '6px',
                 cursor: code?.trim() ? 'pointer' : 'not-allowed',
                 boxSizing: 'border-box',
-                fontSize: '0.8125rem',
+                fontSize: '0.875rem',
                 fontWeight: 600,
                 fontFamily: 'var(--sara-font, system-ui, sans-serif)',
                 whiteSpace: 'nowrap'
@@ -450,7 +450,7 @@ export default function SessionPlayground({
           style={{ flex: 1, minHeight: '300px', display: 'flex', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '6px', overflow: 'hidden' }}
         >
           <div
-            className="playground-line-numbers playground-line-numbers--scroll-sync"
+            className="playground-line-numbers"
             style={{
               width: '32px',
               minWidth: '32px',
@@ -463,10 +463,8 @@ export default function SessionPlayground({
               lineHeight: '1.4',
               textAlign: 'right',
               userSelect: 'none',
-              overflowX: 'hidden',
-              overflowY: 'auto',
-              flexShrink: 0,
-              minHeight: 0
+              overflow: 'hidden',
+              flexShrink: 0
             }}
           >
             {(code || '').split('\n').map((_, index) => (

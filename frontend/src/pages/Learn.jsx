@@ -1781,7 +1781,7 @@ const Learn = () => {
               }}
             >
               {/* Line Numbers - match code editor black background */}
-              <div className="playground-line-numbers playground-line-numbers--scroll-sync" style={{
+              <div className="playground-line-numbers" style={{
                 width: '32px',
                 minWidth: '32px',
                 backgroundColor: '#0d1117',
@@ -1793,11 +1793,9 @@ const Learn = () => {
                 lineHeight: '1.4',
                 textAlign: 'right',
                 userSelect: 'none',
-                overflowX: 'hidden',
-                overflowY: 'auto',
+                overflow: 'hidden',
                 flexShrink: 0,
-                position: 'relative',
-                minHeight: 0
+                position: 'relative'
               }}>
                 {assignmentCode.split('\n').map((_, index) => (
                   <div key={index} style={{
