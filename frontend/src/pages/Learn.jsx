@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
-import { learning, chat } from '../config/api'
+import { learning, chat, handleApiError } from '../config/api'
 import EditorToggle from '../components/EditorToggle'
 import SessionPlayground from '../components/SessionPlayground'
 import CodeExecutor from '../services/CodeExecutor'
@@ -184,6 +184,8 @@ const Learn = () => {
   const [topic, setTopic] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  /** HTTP status from last failed topic load (for copy: 404 vs network vs server) */
+  const [loadErrorStatus, setLoadErrorStatus] = useState(null)
   const [courseLocked, setCourseLocked] = useState(false)
   const [lockedCourseId, setLockedCourseId] = useState(null)
 
@@ -254,6 +256,7 @@ const Learn = () => {
       try {
         setLoading(true)
         setError(null)
+        setLoadErrorStatus(null)
         setCourseLocked(false)
         setLockedCourseId(null)
         // Avoid flashing another topic's assignments before this topic's payload arrives (SPA navigation)
@@ -367,8 +370,7 @@ const Learn = () => {
                 sessionStartInProgressRef.current = null
               }
             } catch (startError) {
-              const msg = startError?.response?.data?.message || startError?.response?.data?.error || startError?.message
-              setError(msg || 'Failed to initialize chat session')
+              setError(handleApiError(startError, 'Failed to initialize chat session. Please try again.'))
               sessionStartInProgressRef.current = null
             }
           }
@@ -417,8 +419,10 @@ const Learn = () => {
           setCourseLocked(true)
           setLockedCourseId(data?.details?.courseId || null)
           setError(null)
+          setLoadErrorStatus(null)
         } else {
-          setError(data?.error || data?.message || 'Failed to load topic')
+          setLoadErrorStatus(typeof status === 'number' ? status : null)
+          setError(handleApiError(err, 'Failed to load topic. Please try again.'))
         }
       } finally {
         setLoading(false)
@@ -1094,30 +1098,54 @@ const Learn = () => {
   }
 
   if (error) {
+    const isNotFound = loadErrorStatus === 404
+    const title = isNotFound ? 'Topic not found' : "Couldn't load this topic"
+    const blurb = isNotFound
+      ? "This topic doesn't exist or may have been removed from the course."
+      : 'Something went wrong while loading. You can retry or go back to your dashboard.'
     return (
-      <div className="error-container">
-        <h2 style={{ color: '#dc2626', marginBottom: '8px' }}>Topic Not Found</h2>
-        <p style={{ color: '#6b7280', marginBottom: '24px' }}>
-          The topic you're looking for doesn't exist or you don't have access to it.
-        </p>
-        {error && error !== 'Topic not found' && (
-          <p style={{ color: '#9ca3af', fontSize: '0.8125rem', marginBottom: '16px' }}>{error}</p>
+      <div className="error-container" style={{ padding: 40, textAlign: 'center', maxWidth: 480, margin: '40px auto' }}>
+        <h2 style={{ color: '#dc2626', marginBottom: '8px' }}>{title}</h2>
+        <p style={{ color: '#6b7280', marginBottom: '16px' }}>{blurb}</p>
+        {error && (
+          <p style={{ color: '#9ca3af', fontSize: '0.8125rem', marginBottom: '20px' }}>{error}</p>
         )}
-        <button
-          onClick={() => navigate('/dashboard')}
-          style={{
-            padding: '12px 24px',
-            backgroundColor: '#10a37f',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '0.95rem',
-            fontWeight: '500',
-            cursor: 'pointer'
-          }}
-        >
-          Back to Dashboard
-        </button>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, justifyContent: 'center' }}>
+          {!isNotFound && (
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              style={{
+                padding: '12px 24px',
+                backgroundColor: '#10a37f',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '0.95rem',
+                fontWeight: '500',
+                cursor: 'pointer'
+              }}
+            >
+              Try again
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => navigate('/dashboard')}
+            style={{
+              padding: '12px 24px',
+              backgroundColor: isNotFound ? '#10a37f' : 'transparent',
+              color: isNotFound ? 'white' : '#059669',
+              border: isNotFound ? 'none' : '1px solid #10a37f',
+              borderRadius: '8px',
+              fontSize: '0.95rem',
+              fontWeight: '500',
+              cursor: 'pointer'
+            }}
+          >
+            Back to Dashboard
+          </button>
+        </div>
       </div>
     )
   }

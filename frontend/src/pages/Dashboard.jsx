@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { learning, progress } from '../config/api'
+import { learning, progress, handleApiError } from '../config/api'
 import EditorToggle from '../components/EditorToggle'
 import SessionPlayground from '../components/SessionPlayground'
 import './Dashboard.css'
@@ -134,10 +134,7 @@ const Dashboard = () => {
       }
 
     } catch (err) {
-      const msg = err.response?.data?.message || err.response?.data?.error || err.message
-      const status = err.response?.status
-      const detail = status ? ` (${status})` : ''
-      setError(msg ? `Failed to load dashboard: ${msg}${detail}. Please refresh or try again.` : 'Failed to load dashboard. Please refresh the page.')
+      setError(handleApiError(err, 'Failed to load dashboard. Please try again.'))
     } finally {
       setLoading(false)
     }
@@ -183,9 +180,24 @@ const Dashboard = () => {
   }
 
   const handleContinueLearning = () => {
-    // Find the most recent topic with progress
-    const recentTopic = userProgress
-      .sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0))[0]
+    // Prefer /learn/continue lastAccessed so navigation matches the API (canonical resume target)
+    let recentTopic = [...userProgress].sort(
+      (a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0)
+    )[0]
+    if (lastAccessed?.topicId) {
+      const match = userProgress.find((p) => p.topic_id === lastAccessed.topicId)
+      if (match) {
+        recentTopic = match
+      } else {
+        recentTopic = {
+          topic_id: lastAccessed.topicId,
+          phase: lastAccessed.phase || 'session',
+          status: lastAccessed.status || 'in_progress',
+          topic_completed: false,
+          updated_at: new Date().toISOString()
+        }
+      }
+    }
 
     if (recentTopic) {
       const topicId = recentTopic.topic_id
@@ -279,6 +291,26 @@ const Dashboard = () => {
   }
 
   const getCurrentActiveTopic = () => {
+    // Align "Currently learning" with GET /learn/continue when we have lastAccessed
+    if (lastAccessed?.topicId) {
+      const progressForLast = userProgress.find((p) => p.topic_id === lastAccessed.topicId)
+      const topic = getTopicById(lastAccessed.topicId)
+      if (topic && progressForLast && progressForLast.topic_completed !== true) {
+        return {
+          ...topic,
+          phase: progressForLast.phase,
+          progress: progressForLast
+        }
+      }
+      if (topic && !progressForLast) {
+        return {
+          ...topic,
+          phase: lastAccessed.phase || 'session',
+          progress: null
+        }
+      }
+    }
+
     // Find current active topic (most recently updated, not completed)
     const activeTopics = userProgress.filter(p => p.topic_completed !== true)
     const currentTopicProgress = activeTopics.sort((a, b) =>
@@ -327,7 +359,7 @@ const Dashboard = () => {
       case 'session':
         return 'Learning Session'
       case 'playtime':
-        return 'Interactive Practice'
+        return 'Learning Session'
       case 'assignment':
         return 'Coding Assignments'
       default:
