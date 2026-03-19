@@ -17,6 +17,10 @@ import './Learn-responsive.css'
 
 const SESSION_COMPLETE_REASON = 'Session completed. You can view the conversation but cannot send new messages.'
 
+/** Shown when user tries to skip ahead without finishing the current coding task */
+const ASSIGNMENT_GATE_MODAL_MESSAGE =
+  'Complete this assignment first: pass every test case for this task. After that, you can continue to the next practice exercise or the next topic.'
+
 /** Copy button SVG icons */
 const CopyIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -805,6 +809,31 @@ const Learn = () => {
     return text
   }
 
+  /** Load task `index` into the editor (shared by Next/Back and save-rollback). */
+  const applyAssignmentIndex = (index) => {
+    if (index < 0 || index >= assignments.length) return
+    const a = assignments[index]
+    setCurrentAssignment(index)
+    const description = a.description || 'Complete the assignment below'
+    let codeWithComments = (description.startsWith('//') || description.startsWith('/*'))
+      ? `${description}\n`
+      : `// ${description}\n`
+    if (a.requirements && a.requirements.length > 0) {
+      a.requirements.forEach(req => {
+        codeWithComments += req.startsWith('//') ? `${req}\n` : `// ${req}\n`
+      })
+    }
+    if (a.solution_type !== 'function') {
+      codeWithComments = codeWithComments.replace(/\n+$/, '').replace(/\n\n+/g, '\n') + `\n// START YOUR CODE AFTER THIS LINE. DO NOT REMOVE THIS LINE\n`
+    }
+    codeWithComments += a.starter_code || ''
+    setAssignmentCode(codeWithComments)
+    setAssignmentOutput('')
+    assignmentTestResultsRef.current = null
+    setAssignmentTestResults(null)
+    setAssignmentReview('')
+  }
+
   // Submit: run tests (show pass/fail), persist progress when all pass. No AI review — use Review button for that.
   const handleSubmitAssignment = async () => {
     const currentTask = assignments[currentAssignment]
@@ -860,13 +889,22 @@ const Learn = () => {
           (prev ? `${prev}\n` : '') + 'Practice mode — progress is not saved (reference from dashboard).'
         )
       } else {
+        const savedIdx = currentAssignment
+        let bumpedProgress = false
         try {
-          await learning.completeAssignment(topicId, currentAssignment, assignmentCode)
-          if (currentAssignment === assignmentsCompletedCountRef.current) {
+          // Bump before await so Next works immediately; saving still runs in the background
+          if (savedIdx === assignmentsCompletedCountRef.current) {
             assignmentsCompletedCountRef.current += 1
             setAssignmentsCompletedCount(assignmentsCompletedCountRef.current)
+            bumpedProgress = true
           }
+          await learning.completeAssignment(topicId, savedIdx, assignmentCode)
         } catch (completeErr) {
+          if (bumpedProgress) {
+            assignmentsCompletedCountRef.current -= 1
+            setAssignmentsCompletedCount(assignmentsCompletedCountRef.current)
+            applyAssignmentIndex(savedIdx)
+          }
           setAssignmentOutput((prev) => (prev ? `${prev}\n(Progress could not be saved: ${completeErr?.response?.data?.message || completeErr.message})` : `Progress could not be saved: ${completeErr?.response?.data?.message || completeErr.message}`))
         }
       }
@@ -928,35 +966,12 @@ const Learn = () => {
     }
     // Forward (next assignment or next topic): require current task completed; use ref so Next works right after Test (state lags one render)
     if (!referenceBrowse && assignmentsCompletedCountRef.current <= currentAssignment) {
-      setIncompleteModalMessage(
-        'Pass all test cases for this task before you continue.'
-      )
+      setIncompleteModalMessage(ASSIGNMENT_GATE_MODAL_MESSAGE)
       setShowIncompleteModal(true)
       return
     }
     if (currentAssignment < assignments.length - 1) {
-      // More assignments in this topic — load next assignment
-      const nextAssignmentIndex = currentAssignment + 1
-      setCurrentAssignment(nextAssignmentIndex)
-      const nextAssignment = assignments[nextAssignmentIndex]
-      const description = nextAssignment.description || 'Complete the assignment below'
-      let codeWithComments = (description.startsWith('//') || description.startsWith('/*'))
-        ? `${description}\n`
-        : `// ${description}\n`
-      if (nextAssignment.requirements && nextAssignment.requirements.length > 0) {
-        nextAssignment.requirements.forEach(req => {
-          codeWithComments += req.startsWith('//') ? `${req}\n` : `// ${req}\n`
-        })
-      }
-      if (nextAssignment.solution_type !== 'function') {
-        codeWithComments = codeWithComments.replace(/\n+$/, '').replace(/\n\n+/g, '\n') + `\n// START YOUR CODE AFTER THIS LINE. DO NOT REMOVE THIS LINE\n`
-      }
-      codeWithComments += nextAssignment.starter_code || ''
-      setAssignmentCode(codeWithComments)
-      setAssignmentOutput('')
-      assignmentTestResultsRef.current = null
-      setAssignmentTestResults(null)
-      setAssignmentReview('')
+      applyAssignmentIndex(currentAssignment + 1)
     } else {
       // Last assignment — next topic
       try {
@@ -993,27 +1008,7 @@ const Learn = () => {
       return
     }
     if (currentAssignment > 0) {
-      const prevIndex = currentAssignment - 1
-      setCurrentAssignment(prevIndex)
-      const prevAssignment = assignments[prevIndex]
-      const description = prevAssignment.description || 'Complete the assignment below'
-      let codeWithComments = (description.startsWith('//') || description.startsWith('/*'))
-        ? `${description}\n`
-        : `// ${description}\n`
-      if (prevAssignment.requirements && prevAssignment.requirements.length > 0) {
-        prevAssignment.requirements.forEach(req => {
-          codeWithComments += req.startsWith('//') ? `${req}\n` : `// ${req}\n`
-        })
-      }
-      if (prevAssignment.solution_type !== 'function') {
-        codeWithComments = codeWithComments.replace(/\n+$/, '').replace(/\n\n+/g, '\n') + `\n// START YOUR CODE AFTER THIS LINE. DO NOT REMOVE THIS LINE\n`
-      }
-      codeWithComments += prevAssignment.starter_code || ''
-      setAssignmentCode(codeWithComments)
-      setAssignmentOutput('')
-      assignmentTestResultsRef.current = null
-      setAssignmentTestResults(null)
-      setAssignmentReview('')
+      applyAssignmentIndex(currentAssignment - 1)
     } else {
       navigate(`/learn/${topicId}`)
     }
@@ -1357,8 +1352,7 @@ const Learn = () => {
             onClick={e => e.stopPropagation()}
           >
             <p style={{ margin: '0 0 16px', fontSize: '1rem', color: '#374151' }}>
-              {incompleteModalMessage ||
-                'Pass all test cases for this task before you continue.'}
+              {incompleteModalMessage || ASSIGNMENT_GATE_MODAL_MESSAGE}
             </p>
             <button
               type="button"
