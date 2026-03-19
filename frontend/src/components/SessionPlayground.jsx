@@ -366,12 +366,12 @@ export default function SessionPlayground({
               onClick={runPlayground}
               className="playground-run-btn"
               disabled={!code?.trim()}
-              title="Run test (Ctrl+Enter)"
+              title="Run (Ctrl+Enter)"
               style={{
                 height: 32,
                 minHeight: 32,
                 padding: '0 12px',
-                minWidth: 72,
+                minWidth: 60,
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -387,7 +387,7 @@ export default function SessionPlayground({
                 whiteSpace: 'nowrap'
               }}
             >
-              Run test
+              Run
             </button>
             <button
               type="button"
@@ -621,7 +621,7 @@ export default function SessionPlayground({
               height: '100%'
             }}
           >
-            <div style={{ color: '#8b949e', fontStyle: 'italic' }}>Click &quot;Run test&quot; to execute your code. Syntax errors will appear here when you run invalid code.</div>
+            <div style={{ color: '#8b949e', fontStyle: 'italic' }}>Click &quot;Run&quot; to execute your code. Syntax errors will appear here when you run invalid code.</div>
           </div>
         </div>
       </div>
