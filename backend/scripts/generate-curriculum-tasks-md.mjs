@@ -1,14 +1,27 @@
 /**
  * Generates CURRICULUM_TASKS_BY_TOPIC.md — one table per topic listing all tasks.
+ * Loads each topic file directly from disk (with cache-bust) so the MD always
+ * reflects the current curriculum, not a cached index.
  * Run from repo root: node backend/scripts/generate-curriculum-tasks-md.mjs
  */
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url'
-import { topics } from '../data/curriculum-parts/index.js'
+import { fileURLToPath, pathToFileURL } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const outPath = path.join(__dirname, '../data/curriculum-parts/CURRICULUM_TASKS_BY_TOPIC.md')
+const curriculumPath = path.join(__dirname, '../data/curriculum-parts')
+const outPath = path.join(curriculumPath, 'CURRICULUM_TASKS_BY_TOPIC.md')
+
+// Load order and then each topic file directly (cache-bust so we get latest from disk)
+const { TOPIC_ORDER } = await import(pathToFileURL(path.join(curriculumPath, 'order.js')).href)
+const topics = []
+for (const topicId of TOPIC_ORDER) {
+  const topicUrl = pathToFileURL(path.join(curriculumPath, `topic-${topicId}.js`)).href + '?t=' + Date.now()
+  const mod = await import(topicUrl)
+  const topic = mod.default
+  if (!topic || !topic.id) throw new Error(`Invalid topic from topic-${topicId}.js`)
+  topics.push(topic)
+}
 
 const NL = '\uE000NEWLINE\uE001' // private-use placeholders (won’t appear in curriculum)
 

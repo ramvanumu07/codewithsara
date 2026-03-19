@@ -105,7 +105,8 @@ let totalPass = 0;
 let totalFail = 0;
 
 for (const topicId of TOPIC_ORDER) {
-  const topicPath = pathToFileURL(path.join(curriculumPath, `topic-${topicId}.js`)).href;
+  // Cache-bust so we always load the latest topic file from disk (avoids stale module cache)
+  const topicPath = pathToFileURL(path.join(curriculumPath, `topic-${topicId}.js`)).href + '?t=' + Date.now();
   let topic;
   try {
     topic = (await import(topicPath)).default;
@@ -125,11 +126,12 @@ for (const topicId of TOPIC_ORDER) {
     const desc = (task.description || '').split('\n')[0].replace(/^\/\/\s*/, '').slice(0, 70);
     const rows = await runTaskCases(topicId, ti, task);
     const allOk = rows.every((r) => r.pass);
+    const taskLabel = `[${topicId}] Task ${ti + 1}/${tasks.length}`;
     if (allOk) {
       totalPass += rows.length;
-      console.log(`  ${tick} Task ${ti + 1}: ${desc || '(no description)'}`);
+      console.log(`  ${tick} ${taskLabel}: ${desc || '(no description)'}`);
     } else {
-      console.log(`  ${cross} Task ${ti + 1}: ${desc || '(no description)'}`);
+      console.log(`  ${cross} ${taskLabel}: ${desc || '(no description)'}`);
       for (const r of rows) {
         if (!r.pass) {
           totalFail++;

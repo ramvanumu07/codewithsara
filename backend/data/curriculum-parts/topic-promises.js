@@ -22,348 +22,287 @@ export default {
   ],
   "tasks": [
     {
-      "description": "/*\n  Implement the below function that simulates Promise resolution.\n  Return the resolved value that would be printed.\n  Examples:\n    simulatePromiseResolve(\"Success\") => \"Success\"\n    simulatePromiseResolve(\"Done\") => \"Done\"\n    simulatePromiseResolve(\"Complete\") => \"Complete\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseResolve(value) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that resolves with the given value.\n  Return that promise so the caller can .then() or await the value.\n  Examples:\n    simulatePromiseResolve(\"Success\") => promise that resolves to \"Success\"\n    simulatePromiseResolve(\"Done\") => promise that resolves to \"Done\"\n    simulatePromiseResolve(\"Complete\") => promise that resolves to \"Complete\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseResolve(value) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseResolve",
-      "reference_solution": "function simulatePromiseResolve(value) {\n  return value;\n}",
+      "reference_solution": "function simulatePromiseResolve(value) {\n  return Promise.resolve(value);\n}",
       "testCases": [
         {
-          "input": {
-            "value": "Success"
-          },
-          "expectedOutput": "Success"
+          "input": { "value": "Success" },
+          "expectedOutput": "Success",
+          "requirePromise": true
         },
         {
-          "input": {
-            "value": "Done"
-          },
-          "expectedOutput": "Done"
+          "input": { "value": "Done" },
+          "expectedOutput": "Done",
+          "requirePromise": true
         },
         {
-          "input": {
-            "value": "Complete"
-          },
-          "expectedOutput": "Complete"
+          "input": { "value": "Complete" },
+          "expectedOutput": "Complete",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise rejection handling.\n  Return the error message that would be caught and printed.\n  Examples:\n    simulatePromiseReject(\"Error occurred\") => \"Error occurred\"\n    simulatePromiseReject(\"Failed\") => \"Failed\"\n    simulatePromiseReject(\"Not found\") => \"Not found\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseReject(error) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that rejects with the given error.\n  The caller will use .catch() to handle the rejection and get the error message.\n  Examples:\n    simulatePromiseReject(\"Error occurred\") => promise that rejects with \"Error occurred\"\n    simulatePromiseReject(\"Failed\") => promise that rejects with \"Failed\"\n    simulatePromiseReject(\"Not found\") => promise that rejects with \"Not found\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseReject(error) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseReject",
-      "reference_solution": "function simulatePromiseReject(error) {\n  return error;\n}",
+      "reference_solution": "function simulatePromiseReject(error) {\n  return Promise.reject(error);\n}",
       "testCases": [
         {
-          "input": {
-            "error": "Error occurred"
-          },
-          "expectedOutput": "Error occurred"
+          "input": { "error": "Error occurred" },
+          "expectedOutput": "Error occurred",
+          "requirePromise": true
         },
         {
-          "input": {
-            "error": "Failed"
-          },
-          "expectedOutput": "Failed"
+          "input": { "error": "Failed" },
+          "expectedOutput": "Failed",
+          "requirePromise": true
         },
         {
-          "input": {
-            "error": "Not found"
-          },
-          "expectedOutput": "Not found"
+          "input": { "error": "Not found" },
+          "expectedOutput": "Not found",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise chaining with value transformation.\n  Return the doubled value that would result from the chain.\n  Examples:\n    simulatePromiseChain(5) => 10\n    simulatePromiseChain(10) => 20\n    simulatePromiseChain(7) => 14\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseChain(value) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that resolves to value doubled.\n  Return the promise so the caller gets the final value.\n  Examples:\n    simulatePromiseChain(5) => promise that resolves to 10\n    simulatePromiseChain(10) => promise that resolves to 20\n    simulatePromiseChain(7) => promise that resolves to 14\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseChain(value) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseChain",
-      "reference_solution": "function simulatePromiseChain(value) {\n  return value * 2;\n}",
+      "reference_solution": "function simulatePromiseChain(value) {\n  return Promise.resolve(value).then(function(v) { return v * 2; });\n}",
       "testCases": [
         {
-          "input": {
-            "value": 5
-          },
-          "expectedOutput": "10"
+          "input": { "value": 5 },
+          "expectedOutput": "10",
+          "requirePromise": true
         },
         {
-          "input": {
-            "value": 10
-          },
-          "expectedOutput": "20"
+          "input": { "value": 10 },
+          "expectedOutput": "20",
+          "requirePromise": true
         },
         {
-          "input": {
-            "value": 7
-          },
-          "expectedOutput": "14"
+          "input": { "value": 7 },
+          "expectedOutput": "14",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise with finally block.\n  Return the output sequence as a string with newlines.\n  Examples:\n    simulatePromiseFinally(\"Data\") => \"Data\\nCleanup\"\n    simulatePromiseFinally(\"Result\") => \"Result\\nCleanup\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseFinally(value) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that resolves to value + \"\\nCleanup\".\n  Return the promise so the caller gets the full string.\n  Examples:\n    simulatePromiseFinally(\"Data\") => \"Data\\nCleanup\"\n    simulatePromiseFinally(\"Result\") => \"Result\\nCleanup\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseFinally(value) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseFinally",
-      "reference_solution": "function simulatePromiseFinally(value) {\n  return value + '\\nCleanup';\n}",
+      "reference_solution": "function simulatePromiseFinally(value) {\n  return Promise.resolve(value).then(function(v) { return v + '\\nCleanup'; }).finally(function() {});\n}",
       "testCases": [
         {
-          "input": {
-            "value": "Data"
-          },
-          "expectedOutput": "Data\nCleanup"
+          "input": { "value": "Data" },
+          "expectedOutput": "Data\nCleanup",
+          "requirePromise": true
         },
         {
-          "input": {
-            "value": "Result"
-          },
-          "expectedOutput": "Result\nCleanup"
+          "input": { "value": "Result" },
+          "expectedOutput": "Result\nCleanup",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates conditional Promise behavior.\n  Return \"Hello\" if condition is true, otherwise \"Error\".\n  Examples:\n    simulateConditionalPromise(true) => \"Hello\"\n    simulateConditionalPromise(false) => \"Error\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateConditionalPromise(condition) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise: resolve with \"Hello\" if condition is true, reject with \"Error\" if false.\n  Return the promise; the caller uses .then() or .catch() to get the result.\n  Examples:\n    simulateConditionalPromise(true) => promise that resolves to \"Hello\"\n    simulateConditionalPromise(false) => promise that rejects with \"Error\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateConditionalPromise(condition) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateConditionalPromise",
-      "reference_solution": "function simulateConditionalPromise(condition) {\n  return condition ? 'Hello' : 'Error';\n}",
+      "reference_solution": "function simulateConditionalPromise(condition) {\n  return condition ? Promise.resolve('Hello') : Promise.reject('Error');\n}",
       "testCases": [
         {
-          "input": {
-            "condition": true
-          },
-          "expectedOutput": "Hello"
+          "input": { "condition": true },
+          "expectedOutput": "Hello",
+          "requirePromise": true
         },
         {
-          "input": {
-            "condition": false
-          },
-          "expectedOutput": "Error"
+          "input": { "condition": false },
+          "expectedOutput": "Error",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise.all() behavior.\n  Return the array of values as a JSON string.\n  Examples:\n    simulatePromiseAll([1, 2, 3]) => \"[1,2,3]\"\n    simulatePromiseAll([5, 10, 15]) => \"[5,10,15]\"\n    simulatePromiseAll([7, 14]) => \"[7,14]\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseAll(values) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that takes an array of values and returns a Promise that resolves to the JSON string of those values in the same order.\n  Examples:\n    simulatePromiseAll([1, 2, 3]) => \"[1,2,3]\"\n    simulatePromiseAll([5, 10, 15]) => \"[5,10,15]\"\n    simulatePromiseAll([7, 14]) => \"[7,14]\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseAll(values) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseAll",
-      "reference_solution": "function simulatePromiseAll(values) {\n  return JSON.stringify(values);\n}",
+      "reference_solution": "function simulatePromiseAll(values) {\n  return Promise.all(values.map(function(v) { return Promise.resolve(v); })).then(function(arr) { return JSON.stringify(arr); });\n}",
       "testCases": [
         {
-          "input": {
-            "values": [
-              1,
-              2,
-              3
-            ]
-          },
-          "expectedOutput": "[1,2,3]"
+          "input": { "values": [1, 2, 3] },
+          "expectedOutput": "[1,2,3]",
+          "requirePromise": true
         },
         {
-          "input": {
-            "values": [
-              5,
-              10,
-              15
-            ]
-          },
-          "expectedOutput": "[5,10,15]"
+          "input": { "values": [5, 10, 15] },
+          "expectedOutput": "[5,10,15]",
+          "requirePromise": true
         },
         {
-          "input": {
-            "values": [
-              7,
-              14
-            ]
-          },
-          "expectedOutput": "[7,14]"
+          "input": { "values": [7, 14] },
+          "expectedOutput": "[7,14]",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise.race() behavior.\n  Return the faster value (first parameter).\n  Examples:\n    simulatePromiseRace(\"Fast\", \"Slow\") => \"Fast\"\n    simulatePromiseRace(\"Quick\", \"Delayed\") => \"Quick\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseRace(fast, slow) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that settles with the \"fast\" value first.\n  Return the promise so the caller gets the winning value.\n  Examples:\n    simulatePromiseRace(\"Fast\", \"Slow\") => \"Fast\"\n    simulatePromiseRace(\"Quick\", \"Delayed\") => \"Quick\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseRace(fast, slow) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseRace",
-      "reference_solution": "function simulatePromiseRace(fast, slow) {\n  return fast;\n}",
+      "reference_solution": "function simulatePromiseRace(fast, slow) {\n  var slowPromise = new Promise(function(r) { setTimeout(function() { r(slow); }, 10); });\n  return Promise.race([Promise.resolve(fast), slowPromise]);\n}",
       "testCases": [
         {
-          "input": {
-            "fast": "Fast",
-            "slow": "Slow"
-          },
-          "expectedOutput": "Fast"
+          "input": { "fast": "Fast", "slow": "Slow" },
+          "expectedOutput": "Fast",
+          "requirePromise": true
         },
         {
-          "input": {
-            "fast": "Quick",
-            "slow": "Delayed"
-          },
-          "expectedOutput": "Quick"
+          "input": { "fast": "Quick", "slow": "Delayed" },
+          "expectedOutput": "Quick",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise chaining with calculations.\n  Perform the chain: add 5, then multiply by 2.\n  Examples:\n    simulatePromiseCalculation(10) => 30\n    simulatePromiseCalculation(5) => 20\n    simulatePromiseCalculation(20) => 50\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseCalculation(initial) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise resolving to (initial + 5) * 2 using a chain of .then() steps.\n  Examples:\n    simulatePromiseCalculation(10) => 30\n    simulatePromiseCalculation(5) => 20\n    simulatePromiseCalculation(20) => 50\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseCalculation(initial) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseCalculation",
-      "reference_solution": "function simulatePromiseCalculation(initial) {\n  return (initial + 5) * 2;\n}",
+      "reference_solution": "function simulatePromiseCalculation(initial) {\n  return Promise.resolve(initial).then(function(v) { return v + 5; }).then(function(v) { return v * 2; });\n}",
       "testCases": [
         {
-          "input": {
-            "initial": 10
-          },
-          "expectedOutput": "30"
+          "input": { "initial": 10 },
+          "expectedOutput": "30",
+          "requirePromise": true
         },
         {
-          "input": {
-            "initial": 5
-          },
-          "expectedOutput": "20"
+          "input": { "initial": 5 },
+          "expectedOutput": "20",
+          "requirePromise": true
         },
         {
-          "input": {
-            "initial": 20
-          },
-          "expectedOutput": "50"
+          "input": { "initial": 20 },
+          "expectedOutput": "50",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates random Promise resolution.\n  Return \"Success\" if shouldResolve is true, otherwise \"Failure\".\n  Examples:\n    simulateRandomPromise(true) => \"Success\"\n    simulateRandomPromise(false) => \"Failure\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateRandomPromise(shouldResolve) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise: resolve with \"Success\" if shouldResolve is true, reject with \"Failure\" if false.\n  Return the promise; the caller uses .then() or .catch() to get the result.\n  Examples:\n    simulateRandomPromise(true) => \"Success\"\n    simulateRandomPromise(false) => \"Failure\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateRandomPromise(shouldResolve) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateRandomPromise",
-      "reference_solution": "function simulateRandomPromise(shouldResolve) {\n  return shouldResolve ? 'Success' : 'Failure';\n}",
+      "reference_solution": "function simulateRandomPromise(shouldResolve) {\n  return shouldResolve ? Promise.resolve('Success') : Promise.reject('Failure');\n}",
       "testCases": [
         {
-          "input": {
-            "shouldResolve": true
-          },
-          "expectedOutput": "Success"
+          "input": { "shouldResolve": true },
+          "expectedOutput": "Success",
+          "requirePromise": true
         },
         {
-          "input": {
-            "shouldResolve": false
-          },
-          "expectedOutput": "Failure"
+          "input": { "shouldResolve": false },
+          "expectedOutput": "Failure",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise.allSettled() behavior.\n  Return the formatted results as a string with newlines.\n  Examples:\n    simulatePromiseAllSettled(\"A\", \"B\") => \"fulfilled: A\\nrejected: B\"\n    simulatePromiseAllSettled(\"Success\", \"Error\") => \"fulfilled: Success\\nrejected: Error\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseAllSettled(resolveValue, rejectValue) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that resolves to a two-line string: \"fulfilled: <resolveValue>\" and \"rejected: <rejectValue>\".\n  Examples:\n    simulatePromiseAllSettled(\"A\", \"B\") => \"fulfilled: A\\nrejected: B\"\n    simulatePromiseAllSettled(\"Success\", \"Error\") => \"fulfilled: Success\\nrejected: Error\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseAllSettled(resolveValue, rejectValue) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseAllSettled",
-      "reference_solution": "function simulatePromiseAllSettled(resolveValue, rejectValue) {\n  return 'fulfilled: ' + resolveValue + '\\nrejected: ' + rejectValue;\n}",
+      "reference_solution": "function simulatePromiseAllSettled(resolveValue, rejectValue) {\n  return Promise.allSettled([Promise.resolve(resolveValue), Promise.reject(rejectValue)]).then(function(results) {\n    return results.map(function(r) { return r.status === 'fulfilled' ? 'fulfilled: ' + r.value : 'rejected: ' + r.reason; }).join('\\n');\n  });\n}",
       "testCases": [
         {
-          "input": {
-            "resolveValue": "A",
-            "rejectValue": "B"
-          },
-          "expectedOutput": "fulfilled: A\nrejected: B"
+          "input": { "resolveValue": "A", "rejectValue": "B" },
+          "expectedOutput": "fulfilled: A\nrejected: B",
+          "requirePromise": true
         },
         {
-          "input": {
-            "resolveValue": "Success",
-            "rejectValue": "Error"
-          },
-          "expectedOutput": "fulfilled: Success\nrejected: Error"
+          "input": { "resolveValue": "Success", "rejectValue": "Error" },
+          "expectedOutput": "fulfilled: Success\nrejected: Error",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates chained data fetching.\n  Return the posts array as a JSON string.\n  Examples:\n    simulateChainedFetch(1, [\"Post1\", \"Post2\"]) => \"[\\\"Post1\\\",\\\"Post2\\\"]\"\n    simulateChainedFetch(2, [\"Article1\", \"Article2\", \"Article3\"]) => \"[\\\"Article1\\\",\\\"Article2\\\",\\\"Article3\\\"]\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateChainedFetch(userId, posts) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that simulates chained async steps: first \"fetch\" the userId, then \"fetch\" the posts; return a Promise that resolves to the posts array as a JSON string.\n  Examples:\n    simulateChainedFetch(1, [\"Post1\", \"Post2\"]) => \"[\\\"Post1\\\",\\\"Post2\\\"]\"\n    simulateChainedFetch(2, [\"Article1\", \"Article2\", \"Article3\"]) => \"[\\\"Article1\\\",\\\"Article2\\\",\\\"Article3\\\"]\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateChainedFetch(userId, posts) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateChainedFetch",
-      "reference_solution": "function simulateChainedFetch(userId, posts) {\n  return JSON.stringify(posts);\n}",
+      "reference_solution": "function simulateChainedFetch(userId, posts) {\n  return Promise.resolve(userId).then(function() { return Promise.resolve(posts); }).then(function(p) { return JSON.stringify(p); });\n}",
       "testCases": [
         {
-          "input": {
-            "userId": 1,
-            "posts": [
-              "Post1",
-              "Post2"
-            ]
-          },
-          "expectedOutput": "[\"Post1\",\"Post2\"]"
+          "input": { "userId": 1, "posts": ["Post1", "Post2"] },
+          "expectedOutput": "[\"Post1\",\"Post2\"]",
+          "requirePromise": true
         },
         {
-          "input": {
-            "userId": 2,
-            "posts": [
-              "Article1",
-              "Article2",
-              "Article3"
-            ]
-          },
-          "expectedOutput": "[\"Article1\",\"Article2\",\"Article3\"]"
+          "input": { "userId": 2, "posts": ["Article1", "Article2", "Article3"] },
+          "expectedOutput": "[\"Article1\",\"Article2\",\"Article3\"]",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates sequential Promise steps.\n  Return the step sequence as a string with newlines.\n  Examples:\n    simulateSequentialSteps() => \"Step 1\\nStep 2\\nStep 3\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateSequentialSteps() {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that resolves to \"Step 1\\nStep 2\\nStep 3\" using a chain of .then() steps (each step returns the next value).\n  Examples:\n    simulateSequentialSteps() => \"Step 1\\nStep 2\\nStep 3\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulateSequentialSteps() {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulateSequentialSteps",
-      "reference_solution": "function simulateSequentialSteps() {\n  return 'Step 1\\nStep 2\\nStep 3';\n}",
+      "reference_solution": "function simulateSequentialSteps() {\n  return Promise.resolve('Step 1').then(function(a) { return a + '\\nStep 2'; }).then(function(b) { return b + '\\nStep 3'; });\n}",
       "testCases": [
         {
           "input": {},
-          "expectedOutput": "Step 1\nStep 2\nStep 3"
+          "expectedOutput": "Step 1\nStep 2\nStep 3",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise.all() with different delays.\n  Return the values in original order as JSON string (not completion order).\n  Examples:\n    simulatePromiseAllOrder([1, 2, 3]) => \"[1,2,3]\"\n    simulatePromiseAllOrder([5, 10, 15]) => \"[5,10,15]\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseAllOrder(values) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that resolves to the array of values as a JSON string, in the same order as the input.\n  Examples:\n    simulatePromiseAllOrder([1, 2, 3]) => \"[1,2,3]\"\n    simulatePromiseAllOrder([5, 10, 15]) => \"[5,10,15]\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseAllOrder(values) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseAllOrder",
-      "reference_solution": "function simulatePromiseAllOrder(values) {\n  return JSON.stringify(values);\n}",
+      "reference_solution": "function simulatePromiseAllOrder(values) {\n  return Promise.all(values.map(function(v) { return Promise.resolve(v); })).then(function(arr) { return JSON.stringify(arr); });\n}",
       "testCases": [
         {
-          "input": {
-            "values": [
-              1,
-              2,
-              3
-            ]
-          },
-          "expectedOutput": "[1,2,3]"
+          "input": { "values": [1, 2, 3] },
+          "expectedOutput": "[1,2,3]",
+          "requirePromise": true
         },
         {
-          "input": {
-            "values": [
-              5,
-              10,
-              15
-            ]
-          },
-          "expectedOutput": "[5,10,15]"
+          "input": { "values": [5, 10, 15] },
+          "expectedOutput": "[5,10,15]",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise error handling.\n  Return the error message that would be caught.\n  Examples:\n    simulatePromiseErrorHandling() => \"Invalid calculation\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseErrorHandling() {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that rejects with the message \"Invalid calculation\".\n  Examples:\n    simulatePromiseErrorHandling() => promise that rejects with \"Invalid calculation\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseErrorHandling() {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseErrorHandling",
-      "reference_solution": "function simulatePromiseErrorHandling() {\n  return 'Invalid calculation';\n}",
+      "reference_solution": "function simulatePromiseErrorHandling() {\n  return Promise.reject('Invalid calculation');\n}",
       "testCases": [
         {
           "input": {},
-          "expectedOutput": "Invalid calculation"
+          "expectedOutput": "Invalid calculation",
+          "requirePromise": true
         }
       ]
     },
     {
-      "description": "/*\n  Implement the below function that simulates Promise.all() with rejection.\n  Return the error message that would cause the rejection.\n  Examples:\n    simulatePromiseAllRejection(\"Error\") => \"Error\"\n    simulatePromiseAllRejection(\"Failed\") => \"Failed\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseAllRejection(error) {\n  // Implementation here\n}",
+      "description": "/*\n  Implement the below function that returns a Promise that rejects with the given error.\n  Examples:\n    simulatePromiseAllRejection(\"Error\") => promise that rejects with \"Error\"\n    simulatePromiseAllRejection(\"Failed\") => promise that rejects with \"Failed\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseAllRejection(error) {\n  // Implementation here\n}",
       "solution_type": "function",
       "function_name": "simulatePromiseAllRejection",
-      "reference_solution": "function simulatePromiseAllRejection(error) {\n  return error;\n}",
+      "reference_solution": "function simulatePromiseAllRejection(error) {\n  return Promise.all([Promise.resolve(1), Promise.reject(error)]);\n}",
       "testCases": [
         {
-          "input": {
-            "error": "Error"
-          },
-          "expectedOutput": "Error"
+          "input": { "error": "Error" },
+          "expectedOutput": "Error",
+          "requirePromise": true
         },
         {
-          "input": {
-            "error": "Failed"
-          },
-          "expectedOutput": "Failed"
+          "input": { "error": "Failed" },
+          "expectedOutput": "Failed",
+          "requirePromise": true
         }
       ]
     }

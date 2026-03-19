@@ -137,12 +137,14 @@ class SecureCodeExecutor {
       }
     }
     if (result && typeof result.then === 'function') {
-      result = await Promise.race([
-        result,
+      const settled = await Promise.race([
+        result.then((v) => ({ value: v })).catch((e) => ({ error: (e && typeof e.message === 'string' ? e.message : undefined) || String(e) })),
         new Promise((_, rej) =>
           setTimeout(() => rej(new Error('Async step timed out (15s)')), 15000)
         )
-      ]);
+      ]).catch((e) => ({ error: (e && typeof e.message === 'string' ? e.message : undefined) || String(e) }));
+      if (settled && settled.error !== undefined) return settled;
+      result = settled.value;
     }
 
     try {
@@ -193,7 +195,8 @@ class SecureCodeExecutor {
 
       return { value: result };
     } catch (e) {
-      return { error: e.message || String(e) };
+      const reason = (e && typeof e.message === 'string') ? e.message : String(e);
+      return { error: reason };
     }
   }
 
@@ -221,17 +224,21 @@ class SecureCodeExecutor {
       }
       
       // Test each case (supports thenCallArgs, thenInvoke, repeatCalls for closures)
+      // When the function returns a rejected promise, runFunctionTestCase returns { error: reason }; treat that as the actual value so "expect rejection with message X" tests can pass.
       for (const testCase of testCases) {
         try {
           const { value, error } = await this.runFunctionTestCase(fn, testCase);
-          const passed = error
-            ? false
-            : this.compareOutput(this.valueToTestOutputString(value), testCase.expectedOutput);
+          const actualOutput = error !== undefined
+            ? this.valueToTestOutputString(error)
+            : this.valueToTestOutputString(value);
+          const expectedStr = testCase.expectedOutput != null ? String(testCase.expectedOutput) : '';
+          const passed = this.compareOutput(actualOutput, expectedStr);
 
           results.push({
             passed,
-            result: error ? undefined : value,
-            error: error || undefined,
+            result: error !== undefined ? error : value,
+            output: actualOutput,
+            error: passed ? undefined : (error || undefined),
             expected: testCase.expectedOutput,
             input: testCase.input
           });
