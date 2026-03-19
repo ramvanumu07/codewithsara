@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { learning, progress, handleApiError } from '../config/api'
+import { computeCourseProgressSummary, isTopicFullyComplete } from '../utils/courseProgress'
 import EditorToggle from '../components/EditorToggle'
 import SessionPlayground from '../components/SessionPlayground'
 import './Dashboard.css'
@@ -143,40 +144,9 @@ const Dashboard = () => {
   const updateProgressForCourse = (courseId) => {
     const courseTopics = courses.find(c => c.id === courseId)?.topics || []
     const courseProgress = userProgress.filter(p =>
-      courseTopics.some(topic => topic.id === p.topic_id)
+      courseTopics.some(topic => String(topic.id) === String(p.topic_id))
     )
-
-    // Step 1: Count fully completed topics (topic_completed = true)
-    const fullyCompleted = courseProgress.filter(p =>
-      p.topic_completed === true
-    ).length
-    const completedPhases = fullyCompleted * 3
-
-    // Step 2: Find current active topic (most recently updated, not completed)
-    const activeTopics = courseProgress.filter(p => p.topic_completed !== true)
-    const currentTopic = activeTopics.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0))[0]
-
-    // Step 3: Calculate current topic phase progress
-    let currentPhaseProgress = 0
-    if (currentTopic) {
-      if (currentTopic.phase === 'playtime') {
-        currentPhaseProgress = 1  // Session completed
-      } else if (currentTopic.phase === 'assignment') {
-        currentPhaseProgress = 2  // Session + PlayTime completed
-      }
-      // If phase === 'session', currentPhaseProgress remains 0 (just started)
-    }
-
-    // Step 4: Calculate final percentage
-    const totalCompletedPhases = completedPhases + currentPhaseProgress
-    const totalPossiblePhases = courseTopics.length * 3
-    const percentage = totalPossiblePhases > 0 ? Math.round((totalCompletedPhases / totalPossiblePhases) * 100) : 0
-
-    return {
-      completed_topics: fullyCompleted,
-      total_topics: courseTopics.length,
-      completion_percentage: percentage
-    }
+    return computeCourseProgressSummary(courseTopics, courseProgress)
   }
 
   const handleContinueLearning = () => {
@@ -204,10 +174,10 @@ const Dashboard = () => {
       const phase = recentTopic.phase
       const status = recentTopic.status
       const currentAssignment = recentTopic.current_assignment || 0
-      const topicCompleted = recentTopic.topic_completed
+      const topicCompleted = isTopicFullyComplete(recentTopic)
 
       // If topic is completed, find next topic
-      if (topicCompleted === true || (status === 'completed' && phase === 'assignment')) {
+      if (topicCompleted) {
         const selectedCourseData = courses.find(c => c.id === selectedCourse)
         const currentTopicIndex = selectedCourseData?.topics?.findIndex(t => t.id === topicId)
 
@@ -270,19 +240,8 @@ const Dashboard = () => {
   const getTopicStatus = (topicId) => {
     const topicProgress = userProgress.find(p => p.topic_id === topicId)
     if (!topicProgress) return 'not_started'
-
-    // Only consider fully completed if topic_completed is true
-    if (topicProgress.status === 'completed' && topicProgress.topic_completed === true) {
-      return 'completed'
-    }
-
-    // If started but not fully completed, show as in_progress
-    if (topicProgress.status === 'in_progress' ||
-      (topicProgress.status === 'completed' && topicProgress.topic_completed !== true)) {
-      return 'in_progress'
-    }
-
-    return topicProgress.status || 'not_started'
+    if (isTopicFullyComplete(topicProgress)) return 'completed'
+    return 'in_progress'
   }
 
   const getTopicPhase = (topicId) => {
@@ -295,7 +254,7 @@ const Dashboard = () => {
     if (lastAccessed?.topicId) {
       const progressForLast = userProgress.find((p) => p.topic_id === lastAccessed.topicId)
       const topic = getTopicById(lastAccessed.topicId)
-      if (topic && progressForLast && progressForLast.topic_completed !== true) {
+      if (topic && progressForLast && !isTopicFullyComplete(progressForLast)) {
         return {
           ...topic,
           phase: progressForLast.phase,
@@ -312,7 +271,7 @@ const Dashboard = () => {
     }
 
     // Find current active topic (most recently updated, not completed)
-    const activeTopics = userProgress.filter(p => p.topic_completed !== true)
+    const activeTopics = userProgress.filter(p => !isTopicFullyComplete(p))
     const currentTopicProgress = activeTopics.sort((a, b) =>
       new Date(b.updated_at || 0) - new Date(a.updated_at || 0)
     )[0]
@@ -519,7 +478,7 @@ const Dashboard = () => {
 
   const hasSessionCompleted = (topicId) => {
     const p = userProgress.find(pr => pr.topic_id === topicId)
-    return !!p && (p.phase === 'assignment' || p.topic_completed === true)
+    return !!p && (p.phase === 'assignment' || p.phase === 'playtime' || isTopicFullyComplete(p))
   }
 
   const formatTopicTitle = (title) => {
