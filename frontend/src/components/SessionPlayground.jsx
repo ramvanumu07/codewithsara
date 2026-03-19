@@ -366,13 +366,12 @@ export default function SessionPlayground({
               onClick={runPlayground}
               className="playground-run-btn"
               disabled={!code?.trim()}
-              title="Run (Ctrl+Enter)"
+              title="Run test (Ctrl+Enter)"
               style={{
-                width: 32,
                 height: 32,
-                minWidth: 32,
                 minHeight: 32,
-                padding: 0,
+                padding: '0 12px',
+                minWidth: 72,
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -381,10 +380,14 @@ export default function SessionPlayground({
                 border: 'none',
                 borderRadius: '6px',
                 cursor: code?.trim() ? 'pointer' : 'not-allowed',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                fontSize: '0.8125rem',
+                fontWeight: 600,
+                fontFamily: 'var(--sara-font, system-ui, sans-serif)',
+                whiteSpace: 'nowrap'
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              Run test
             </button>
             <button
               type="button"
@@ -442,9 +445,12 @@ export default function SessionPlayground({
           </div>
         </div>
 
-        <div style={{ flex: 1, minHeight: '300px', display: 'flex', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '6px', overflow: 'hidden' }}>
+        <div
+          data-playground-editor-row
+          style={{ flex: 1, minHeight: '300px', display: 'flex', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '6px', overflow: 'hidden' }}
+        >
           <div
-            className="playground-line-numbers"
+            className="playground-line-numbers playground-line-numbers--scroll-sync"
             style={{
               width: '32px',
               minWidth: '32px',
@@ -457,8 +463,10 @@ export default function SessionPlayground({
               lineHeight: '1.4',
               textAlign: 'right',
               userSelect: 'none',
-              overflow: 'hidden',
-              flexShrink: 0
+              overflowX: 'hidden',
+              overflowY: 'auto',
+              flexShrink: 0,
+              minHeight: 0
             }}
           >
             {(code || '').split('\n').map((_, index) => (
@@ -505,7 +513,8 @@ export default function SessionPlayground({
               onCodeChange(newVal)
             }}
             onScroll={(e) => {
-              const lineNumbers = e.target.parentElement?.querySelector('.playground-line-numbers')
+              const row = e.target.closest?.('[data-playground-editor-row]')
+              const lineNumbers = row?.querySelector('.playground-line-numbers')
               if (lineNumbers) lineNumbers.scrollTop = e.target.scrollTop
             }}
             onKeyDown={handleKeyDown}
@@ -612,7 +621,7 @@ export default function SessionPlayground({
               height: '100%'
             }}
           >
-            <div style={{ color: '#8b949e', fontStyle: 'italic' }}>Click "Run" to execute your code. Syntax errors will appear here when you run invalid code.</div>
+            <div style={{ color: '#8b949e', fontStyle: 'italic' }}>Click &quot;Run test&quot; to execute your code. Syntax errors will appear here when you run invalid code.</div>
           </div>
         </div>
       </div>

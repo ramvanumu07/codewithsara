@@ -2338,6 +2338,20 @@
     flex-shrink: 0 !important;
   }
 
+  /* Code editor gutter: scroll in sync with textarea (overflow hidden would block scrollTop) */
+  .playground-line-numbers.playground-line-numbers--scroll-sync {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  .playground-line-numbers.playground-line-numbers--scroll-sync::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
   /* Splitter Hover Effects */
   .playground-splitter:hover {
     background-color: #e5e7eb !important;

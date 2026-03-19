@@ -1767,18 +1767,21 @@ const Learn = () => {
               </div>
             </div>
 
-            {/* Editor Content */}
-            <div style={{
-              flex: 1,
-              minHeight: '300px',
-              display: 'flex',
-              backgroundColor: '#ffffff',
-              border: '1px solid #e5e7eb',
-              borderRadius: '6px',
-              overflow: 'hidden'
-            }}>
+            {/* Editor Content — data attr lets scroll handler find line gutter (sibling of textarea wrapper) */}
+            <div
+              data-playground-editor-row
+              style={{
+                flex: 1,
+                minHeight: '300px',
+                display: 'flex',
+                backgroundColor: '#ffffff',
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                overflow: 'hidden'
+              }}
+            >
               {/* Line Numbers - match code editor black background */}
-              <div className="playground-line-numbers" style={{
+              <div className="playground-line-numbers playground-line-numbers--scroll-sync" style={{
                 width: '32px',
                 minWidth: '32px',
                 backgroundColor: '#0d1117',
@@ -1790,9 +1793,11 @@ const Learn = () => {
                 lineHeight: '1.4',
                 textAlign: 'right',
                 userSelect: 'none',
-                overflow: 'hidden',
+                overflowX: 'hidden',
+                overflowY: 'auto',
                 flexShrink: 0,
-                position: 'relative'
+                position: 'relative',
+                minHeight: 0
               }}>
                 {assignmentCode.split('\n').map((_, index) => (
                   <div key={index} style={{
@@ -1846,7 +1851,8 @@ const Learn = () => {
                   setAssignmentCode(newVal)
                 }}
                 onScroll={(e) => {
-                  const lineNumbers = e.target.parentElement?.querySelector('.playground-line-numbers')
+                  const row = e.target.closest?.('[data-playground-editor-row]')
+                  const lineNumbers = row?.querySelector('.playground-line-numbers')
                   if (lineNumbers) lineNumbers.scrollTop = e.target.scrollTop
                 }}
                 onKeyDown={(e) => {
