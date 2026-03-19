@@ -608,6 +608,7 @@ export default function SessionPlayground({
             }}
             style={{
               flex: 1,
+              minWidth: 0,
               padding: '16px',
               backgroundColor: '#0d1117',
               color: '#7ee787',
@@ -616,7 +617,7 @@ export default function SessionPlayground({
               lineHeight: '1.4',
               overflow: 'auto',
               minHeight: 0,
-              height: '100%'
+              boxSizing: 'border-box'
             }}
           >
             <div style={{ color: '#8b949e', fontStyle: 'italic' }}>Click &quot;Run&quot; to execute your code. Syntax errors will appear here when you run invalid code.</div>

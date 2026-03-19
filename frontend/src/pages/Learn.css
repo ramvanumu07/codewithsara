@@ -2304,7 +2304,7 @@
 
   /* ========== PROFESSIONAL RESPONSIVE CODE EDITOR SYSTEM ========== */
 
-  /* Universal Container Rules */
+  /* Universal Container Rules — column on small screens, row on desktop (matches JS isDesktop ≥768) */
   .playground-main-content,
   .assignment-main-content {
     height: 100% !important;
@@ -2312,6 +2312,14 @@
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
+  }
+
+  @media (min-width: 768px) {
+
+    .playground-main-content,
+    .assignment-main-content {
+      flex-direction: row !important;
+    }
   }
 
   /* Universal Panel System */
@@ -2329,6 +2337,9 @@
     overflow: auto !important;
     -webkit-overflow-scrolling: touch !important;
     scrollbar-width: thin !important;
+    box-sizing: border-box !important;
+    /* Reserve gutter so OS scrollbar (incl. arrow buttons on Windows) is not clipped by flex parents */
+    scrollbar-gutter: stable !important;
   }
 
   /* Universal Line Numbers — same pattern as terminal: hidden overflow + scrollTop sync from main panel */
