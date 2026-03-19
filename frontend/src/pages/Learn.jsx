@@ -223,6 +223,8 @@ const Learn = () => {
   const assignmentTestResultsRef = useRef(null) // persist so test block stays visible when AI review is shown
   const [assignmentReview, setAssignmentReview] = useState('')
   const [assignmentsCompletedCount, setAssignmentsCompletedCount] = useState(0)
+  /** Mirrors assignmentsCompletedCount but updated synchronously so Next works immediately after Test (state updates are async). */
+  const assignmentsCompletedCountRef = useRef(0)
   const [showIncompleteModal, setShowIncompleteModal] = useState(false)
   const [incompleteModalMessage, setIncompleteModalMessage] = useState('')
   const [submitLoading, setSubmitLoading] = useState(false)
@@ -390,6 +392,7 @@ const Learn = () => {
           setAssignments(assignmentsList)
           const topicCompleted = topicData?.topic_completed === true
           const assignmentsCompleted = topicData?.assignments_completed ?? 0
+          assignmentsCompletedCountRef.current = assignmentsCompleted
           setAssignmentsCompletedCount(assignmentsCompleted)
           // current_task is 1-based (next task number); convert to 0-based index for assignments array
           const currentTaskOneBased = topicData?.current_task ?? 1
@@ -859,11 +862,9 @@ const Learn = () => {
       } else {
         try {
           await learning.completeAssignment(topicId, currentAssignment, assignmentCode)
-          if (currentAssignment === assignmentsCompletedCount) {
-            setAssignmentsCompletedCount(prev => {
-              const next = prev + 1
-              return next
-            })
+          if (currentAssignment === assignmentsCompletedCountRef.current) {
+            assignmentsCompletedCountRef.current += 1
+            setAssignmentsCompletedCount(assignmentsCompletedCountRef.current)
           }
         } catch (completeErr) {
           setAssignmentOutput((prev) => (prev ? `${prev}\n(Progress could not be saved: ${completeErr?.response?.data?.message || completeErr.message})` : `Progress could not be saved: ${completeErr?.response?.data?.message || completeErr.message}`))
@@ -925,10 +926,10 @@ const Learn = () => {
       await goToNextTopicSession()
       return
     }
-    // Forward (next assignment or next topic): require current task completed; ref browse does not save so allow free nav
-    if (!referenceBrowse && assignmentsCompletedCount <= currentAssignment) {
+    // Forward (next assignment or next topic): require current task completed; use ref so Next works right after Test (state lags one render)
+    if (!referenceBrowse && assignmentsCompletedCountRef.current <= currentAssignment) {
       setIncompleteModalMessage(
-        'Finish this task before continuing: use Test until all checks pass for this assignment.'
+        'Pass all test cases for this task before you continue.'
       )
       setShowIncompleteModal(true)
       return
@@ -1357,7 +1358,7 @@ const Learn = () => {
           >
             <p style={{ margin: '0 0 16px', fontSize: '1rem', color: '#374151' }}>
               {incompleteModalMessage ||
-                'Finish this task before continuing: use Test until all checks pass for this assignment.'}
+                'Pass all test cases for this task before you continue.'}
             </p>
             <button
               type="button"
