@@ -181,6 +181,8 @@ const Learn = () => {
   const phaseParam = searchParams.get('phase') || 'session'
   const phase = phaseParam === 'playtime' ? 'session' : phaseParam
   const startFromFirst = searchParams.get('start') === '1'
+  /** Dashboard notes/code shortcuts: never persist progress or start paid session flows */
+  const referenceBrowse = searchParams.get('ref') === '1'
   const [topic, setTopic] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -252,8 +254,6 @@ const Learn = () => {
   // Load topic and initialize based on phase
   useEffect(() => {
     const requestedTopicId = topicId
-    /** Set from dashboard notes/code icons — do not bump server "resume" order (see GET /learn/topic?ref=1). */
-    const referenceBrowse = searchParams.get('ref') === '1'
     const loadTopic = async () => {
       try {
         setLoading(true)
@@ -291,12 +291,18 @@ const Learn = () => {
         }
 
         const viewIsNotes = searchParams.get('view') === 'notes'
+        // Reference browse + session without notes → notes-only (avoids POST /chat/session which upserts progress)
+        if (referenceBrowse && phase === 'session' && !viewIsNotes) {
+          navigate(`/learn/${requestedTopicId}?view=notes&ref=1`, { replace: true })
+          return
+        }
+
         if (viewIsNotes) {
           setLoading(false)
           return
         }
 
-        if (phase === 'session') {
+        if (phase === 'session' && !referenceBrowse) {
           // Load chat history (use requestedTopicId for the topic we're showing)
           try {
             const historyResponse = await chat.getHistory(requestedTopicId)
@@ -437,12 +443,12 @@ const Learn = () => {
     if (topicId) {
       loadTopic()
     }
-  }, [topicId, phase, startFromFirst, searchParams])
+  }, [topicId, phase, startFromFirst, searchParams, referenceBrowse, navigate])
 
   // When user returns to the tab, refetch chat history so we show DB truth (not stale in-memory state from another tab)
   useEffect(() => {
     const handleVisibility = async () => {
-      if (document.visibilityState !== 'visible' || phase !== 'session' || !topicId) return
+      if (referenceBrowse || document.visibilityState !== 'visible' || phase !== 'session' || !topicId) return
       try {
         const historyResponse = await chat.getHistory(topicId)
         if (topicIdRef.current !== topicId) return
@@ -453,11 +459,12 @@ const Learn = () => {
     }
     document.addEventListener('visibilitychange', handleVisibility)
     return () => document.removeEventListener('visibilitychange', handleVisibility)
-  }, [topicId, phase])
+  }, [topicId, phase, referenceBrowse])
 
   // Handle sending messages in session phase (no new messages once session is completed)
   const handleSendMessage = async (e) => {
     e.preventDefault()
+    if (referenceBrowse) return
     if (sessionComplete) {
       showInfo(SESSION_COMPLETE_REASON, 4000)
       return
@@ -846,19 +853,24 @@ const Learn = () => {
         setAssignmentOutput('No test cases for this assignment.')
       }
 
-      // 1b. Persist progress (current_task, assignments_completed) so dashboard and topic stay in sync
-      try {
-        await learning.completeAssignment(topicId, currentAssignment, assignmentCode)
-        // Advance local count only when this was the next task in sequence (backend enforces same rule)
-        if (currentAssignment === assignmentsCompletedCount) {
-          setAssignmentsCompletedCount(prev => {
-            const next = prev + 1
-            if (next >= assignments.length) setAssignmentComplete(true)
-            return next
-          })
+      // 1b. Persist progress (dashboard icons with ref=1: practice only — do not write DB)
+      if (referenceBrowse) {
+        setAssignmentOutput((prev) =>
+          (prev ? `${prev}\n` : '') + 'Practice mode — progress is not saved (reference from dashboard).'
+        )
+      } else {
+        try {
+          await learning.completeAssignment(topicId, currentAssignment, assignmentCode)
+          if (currentAssignment === assignmentsCompletedCount) {
+            setAssignmentsCompletedCount(prev => {
+              const next = prev + 1
+              if (next >= assignments.length) setAssignmentComplete(true)
+              return next
+            })
+          }
+        } catch (completeErr) {
+          setAssignmentOutput((prev) => (prev ? `${prev}\n(Progress could not be saved: ${completeErr?.response?.data?.message || completeErr.message})` : `Progress could not be saved: ${completeErr?.response?.data?.message || completeErr.message}`))
         }
-      } catch (completeErr) {
-        setAssignmentOutput((prev) => (prev ? `${prev}\n(Progress could not be saved: ${completeErr?.response?.data?.message || completeErr.message})` : `Progress could not be saved: ${completeErr?.response?.data?.message || completeErr.message}`))
       }
     } catch (err) {
       const body = err.response?.data
