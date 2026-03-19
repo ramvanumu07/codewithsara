@@ -222,7 +222,6 @@ const Learn = () => {
   const [assignmentTestResults, setAssignmentTestResults] = useState(null) // [{ passed, expected, actual, error, input }]
   const assignmentTestResultsRef = useRef(null) // persist so test block stays visible when AI review is shown
   const [assignmentReview, setAssignmentReview] = useState('')
-  const [assignmentComplete, setAssignmentComplete] = useState(false)
   const [assignmentsCompletedCount, setAssignmentsCompletedCount] = useState(0)
   const [showIncompleteModal, setShowIncompleteModal] = useState(false)
   const [incompleteModalMessage, setIncompleteModalMessage] = useState('')
@@ -398,7 +397,6 @@ const Learn = () => {
           // If coming from "assignment icon" on completed topic, or start=1, show 1st task
           const startIndex = (startFromFirst || topicCompleted) ? 0 : Math.min(currentTaskIndex, Math.max(0, assignmentsList.length - 1))
           setCurrentAssignment(startIndex)
-          setAssignmentComplete(topicCompleted && assignmentsCompleted >= assignmentsList.length)
           if (assignmentsList.length > 0) {
             const assignment = assignmentsList[startIndex]
             const description = assignment.description || 'Complete the assignment below'
@@ -864,7 +862,6 @@ const Learn = () => {
           if (currentAssignment === assignmentsCompletedCount) {
             setAssignmentsCompletedCount(prev => {
               const next = prev + 1
-              if (next >= assignments.length) setAssignmentComplete(true)
               return next
             })
           }
@@ -928,6 +925,14 @@ const Learn = () => {
       await goToNextTopicSession()
       return
     }
+    // Forward (next assignment or next topic): require current task completed; ref browse does not save so allow free nav
+    if (!referenceBrowse && assignmentsCompletedCount <= currentAssignment) {
+      setIncompleteModalMessage(
+        'Complete the current assignment first. Click Test after your code passes the tests for this task.'
+      )
+      setShowIncompleteModal(true)
+      return
+    }
     if (currentAssignment < assignments.length - 1) {
       // More assignments in this topic — load next assignment
       const nextAssignmentIndex = currentAssignment + 1
@@ -952,12 +957,7 @@ const Learn = () => {
       setAssignmentTestResults(null)
       setAssignmentReview('')
     } else {
-      // Last assignment — only allow next topic if all assignments completed
-      if (!assignmentComplete) {
-        setIncompleteModalMessage('Please complete all assignments in this topic before moving to the next topic. Click Test after your code passes the tests for each assignment.')
-        setShowIncompleteModal(true)
-        return
-      }
+      // Last assignment — next topic
       try {
         const coursesRes = await learning.getCourses()
         if (!coursesRes.data?.success || !coursesRes.data?.data?.courses?.length) {
@@ -1330,7 +1330,7 @@ const Learn = () => {
 
   return (
     <div className="learn-container">
-      {/* Modal: complete all assignments before next topic */}
+      {/* Modal: complete current assignment before next assignment */}
       {showIncompleteModal && (
         <div
           style={{
@@ -1356,7 +1356,8 @@ const Learn = () => {
             onClick={e => e.stopPropagation()}
           >
             <p style={{ margin: '0 0 16px', fontSize: '1rem', color: '#374151' }}>
-              {incompleteModalMessage || 'Complete and submit the current assignment before going to the next one.'}
+              {incompleteModalMessage ||
+                'Complete the current assignment first. Click Test after your code passes the tests for this task.'}
             </p>
             <button
               type="button"
