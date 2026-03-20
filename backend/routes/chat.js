@@ -13,6 +13,7 @@ import { getChatSessionRow, getCompletedTopics, getProgress, upsertProgress } fr
 import { courses } from '../data/curriculum.js'
 import { formatLearningObjectives, findTopicById } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
+import { getFirstOutcomeMessage } from '../utils/outcomeMessages.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse, getSafeUserMessage } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/prompts.js'
@@ -90,15 +91,24 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
       getCompletedTopics(userId, courseId)
     ])
 
-    const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
-    const historyMessages = getLastNExchangesAsMessages(chatHistory)
-    const userContent = message.trim() || 'Start teaching the first concept.'
+    const completionPhrases = ['Congratulations', "You've Mastered", 'ready for the playground']
+    let cleanedResponse = ''
 
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      ...historyMessages,
-      { role: 'user', content: userContent }
-    ]
+    const useCurriculumFirst =
+      !message.trim() && (!chatHistory || chatHistory.length === 0)
+    const firstFromCurriculum = useCurriculumFirst ? getFirstOutcomeMessage(topic) : null
+
+    if (useCurriculumFirst) {
+      if (!firstFromCurriculum) {
+        return res.status(400).json(
+          createErrorResponse(
+            'This topic has no first outcome message. Add outcome_messages[0] in the curriculum.',
+            'MISSING_OUTCOME_MESSAGES'
+          )
+        )
+      }
+      cleanedResponse = firstFromCurriculum
+    }
 
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
@@ -106,22 +116,31 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
     res.setHeader('X-Accel-Buffering', 'no')
     res.flushHeaders()
 
-    let fullResponse = ''
-    const completionPhrases = ['Congratulations', "You've Mastered", 'ready for the playground']
-
-    try {
-      for await (const chunk of streamAI(messages, 1500, 0.5)) {
-        fullResponse += chunk
-        res.write(`data: ${JSON.stringify({ type: 'chunk', content: chunk })}\n\n`)
-        if (typeof res.flush === 'function') res.flush()
+    if (useCurriculumFirst && firstFromCurriculum) {
+      res.write(`data: ${JSON.stringify({ type: 'chunk', content: firstFromCurriculum })}\n\n`)
+      if (typeof res.flush === 'function') res.flush()
+    } else {
+      const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
+      const historyMessages = getLastNExchangesAsMessages(chatHistory)
+      const userContent = message.trim() || 'Start teaching the first concept.'
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        ...historyMessages,
+        { role: 'user', content: userContent }
+      ]
+      try {
+        for await (const chunk of streamAI(messages, 1500, 0.5)) {
+          cleanedResponse += chunk
+          res.write(`data: ${JSON.stringify({ type: 'chunk', content: chunk })}\n\n`)
+          if (typeof res.flush === 'function') res.flush()
+        }
+      } catch (streamErr) {
+        res.write(`data: ${JSON.stringify({ type: 'error', message: streamErr.message || 'Stream failed' })}\n\n`)
+        res.end()
+        return
       }
-    } catch (streamErr) {
-      res.write(`data: ${JSON.stringify({ type: 'error', message: streamErr.message || 'Stream failed' })}\n\n`)
-      res.end()
-      return
+      cleanedResponse = cleanedResponse.trim()
     }
-
-    const cleanedResponse = fullResponse.trim()
     const isSessionComplete = completionPhrases.some(phrase => cleanedResponse.includes(phrase))
 
     let saveResult
@@ -197,20 +216,39 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       getCompletedTopics(userId, courseId)
     ])
 
-    const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
-    const historyMessages = getLastNExchangesAsMessages(chatHistory)
-    const userContent = message.trim() || 'Start teaching the first concept.'
-
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      ...historyMessages,
-      { role: 'user', content: userContent }
-    ]
-
-    const aiResponse = await callAI(messages, 1500, 0.5)
     const completionPhrases = ['Congratulations', "You've Mastered", 'ready for the playground']
-    const isSessionComplete = completionPhrases.some(phrase => aiResponse.includes(phrase))
-    const cleanedResponse = aiResponse
+
+    const useCurriculumFirst =
+      !message.trim() && (!chatHistory || chatHistory.length === 0)
+    let cleanedResponse
+
+    if (useCurriculumFirst) {
+      const first = getFirstOutcomeMessage(topic)
+      if (!first) {
+        return res.status(400).json(
+          createErrorResponse(
+            'This topic has no first outcome message. Add outcome_messages[0] in the curriculum.',
+            'MISSING_OUTCOME_MESSAGES'
+          )
+        )
+      }
+      cleanedResponse = first
+    } else {
+      const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
+      const historyMessages = getLastNExchangesAsMessages(chatHistory)
+      const userContent = message.trim() || 'Start teaching the first concept.'
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        ...historyMessages,
+        { role: 'user', content: userContent }
+      ]
+      const aiResponse = await callAI(messages, 1500, 0.5)
+      cleanedResponse = aiResponse
+    }
+
+    const isSessionComplete = completionPhrases.some(phrase =>
+      cleanedResponse.includes(phrase)
+    )
 
     let saveResult
     if (message.trim()) {

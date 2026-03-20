@@ -23,6 +23,7 @@ import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 import { formatLearningObjectives, findTopicById, getAllTopics, getNextTopicId, getTopicIdsForCourse } from '../utils/curriculum.js'
 import { expandLinearProgressToTopicRows, resolveCanonicalCurrentTopicId } from '../utils/linearProgress.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
+import { getFirstOutcomeMessage } from '../utils/outcomeMessages.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 
@@ -268,13 +269,7 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
     }, courseId)
 
     const outcomes = topic ? formatLearningObjectives(topic.outcomes) : 'Learn programming concepts'
-    const outcomeMessages = topic?.outcome_messages
-    const firstMessage =
-      Array.isArray(outcomeMessages) &&
-      typeof outcomeMessages[0] === 'string' &&
-      outcomeMessages[0].trim()
-        ? outcomeMessages[0].trim()
-        : null
+    const firstMessage = getFirstOutcomeMessage(topic)
 
     if (!firstMessage) {
       return res.status(400).json(
