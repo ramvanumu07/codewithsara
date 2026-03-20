@@ -9,11 +9,12 @@ import path from 'path'
 import { authenticateToken } from './auth.js'
 import { callAI, streamAI } from '../services/ai.js'
 import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
-import { getChatSessionRow, getCompletedTopics, getProgress, upsertProgress } from '../services/database.js'
+import { getChatSessionRow, getCompletedTopics, getProgress, getProgressRowForCourse, upsertProgress } from '../services/database.js'
 import { courses } from '../data/curriculum.js'
-import { formatLearningObjectives, findTopicById } from '../utils/curriculum.js'
+import { findTopicById } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { getFirstOutcomeMessage } from '../utils/outcomeMessages.js'
+import { processSessionAssistantReply } from '../utils/sessionOutcome.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse, getSafeUserMessage } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/prompts.js'
@@ -41,19 +42,30 @@ function validateChatRequest(req, res) {
 
 // ============ PROMPT BUILDING FUNCTIONS ============
 
-function buildSessionSystemPrompt(topicId, completedTopics = []) {
+function teachingOutcomeIndexFromProgress(topic, progress) {
+  const storedRaw = Number(progress?.current_outcome_index ?? 0) || 0
+  const olen = (topic.outcomes || []).length
+  const mlen = (topic.outcome_messages || []).length
+  const total = Math.max(olen, mlen, 1)
+  const maxIdx = Math.max(0, total - 1)
+  return Math.min(Math.max(0, storedRaw), maxIdx)
+}
+
+function buildSessionSystemPrompt(topicId, completedTopics = [], teachingOutcomeIndex = 0) {
   const topic = findTopicById(courses, topicId)
   if (!topic) {
     throw new Error(`Topic not found: ${topicId}`)
   }
-  const goals = formatLearningObjectives(topic.outcomes)
-  const completedList = completedTopics.length > 0
-    ? `\n\nCompleted Topics: ${completedTopics.join(', ')}`
-    : ''
+  const outcomes = topic.outcomes || []
+  const msgs = topic.outcome_messages || []
+  const total = Math.max(outcomes.length, msgs.length, 1)
+  const idx = Math.min(Math.max(0, teachingOutcomeIndex), Math.max(0, total - 1))
+  const singleObjective = outcomes[idx] || `Learning objective ${idx + 1}`
   return buildSessionPromptFromShared({
     topicTitle: topic.title,
-    goals,
-    completedList
+    currentOutcomeObjective: singleObjective,
+    outcomeIndexOneBased: idx + 1,
+    outcomeTotal: total
   })
 }
 
@@ -92,11 +104,13 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
     ])
 
     const completionPhrases = ['Congratulations', "You've Mastered", 'ready for the playground']
-    let cleanedResponse = ''
+    const teachingIdx = teachingOutcomeIndexFromProgress(topic, progress)
 
     const useCurriculumFirst =
       !message.trim() && (!chatHistory || chatHistory.length === 0)
     const firstFromCurriculum = useCurriculumFirst ? getFirstOutcomeMessage(topic) : null
+
+    let cleanedResponse = ''
 
     if (useCurriculumFirst) {
       if (!firstFromCurriculum) {
@@ -108,19 +122,8 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
         )
       }
       cleanedResponse = firstFromCurriculum
-    }
-
-    res.setHeader('Content-Type', 'text/event-stream')
-    res.setHeader('Cache-Control', 'no-cache')
-    res.setHeader('Connection', 'keep-alive')
-    res.setHeader('X-Accel-Buffering', 'no')
-    res.flushHeaders()
-
-    if (useCurriculumFirst && firstFromCurriculum) {
-      res.write(`data: ${JSON.stringify({ type: 'chunk', content: firstFromCurriculum })}\n\n`)
-      if (typeof res.flush === 'function') res.flush()
     } else {
-      const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
+      const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics, teachingIdx)
       const historyMessages = getLastNExchangesAsMessages(chatHistory)
       const userContent = message.trim() || 'Start teaching the first concept.'
       const messages = [
@@ -129,25 +132,46 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
         { role: 'user', content: userContent }
       ]
       try {
+        let rawAccum = ''
         for await (const chunk of streamAI(messages, 1500, 0.5)) {
-          cleanedResponse += chunk
-          res.write(`data: ${JSON.stringify({ type: 'chunk', content: chunk })}\n\n`)
-          if (typeof res.flush === 'function') res.flush()
+          rawAccum += chunk
         }
+        cleanedResponse = rawAccum.trim()
       } catch (streamErr) {
-        res.write(`data: ${JSON.stringify({ type: 'error', message: streamErr.message || 'Stream failed' })}\n\n`)
-        res.end()
-        return
+        return handleErrorResponse(res, streamErr, 'session chat stream')
       }
-      cleanedResponse = cleanedResponse.trim()
     }
-    const isSessionComplete = completionPhrases.some(phrase => cleanedResponse.includes(phrase))
+
+    const userMessaged = Boolean(message.trim())
+    const processed = processSessionAssistantReply(cleanedResponse, topic, teachingIdx, userMessaged)
+    const finalResponse = processed.finalText
+
+    if (processed.newOutcomeIndex !== teachingIdx) {
+      try {
+        await upsertProgress(userId, topicId, {
+          current_outcome_index: processed.newOutcomeIndex,
+          updated_at: new Date().toISOString()
+        }, courseId)
+      } catch (_) { /* ignore */ }
+    }
+
+    const isSessionComplete = processed.sessionComplete ||
+      completionPhrases.some(phrase => finalResponse.includes(phrase))
+
+    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Cache-Control', 'no-cache')
+    res.setHeader('Connection', 'keep-alive')
+    res.setHeader('X-Accel-Buffering', 'no')
+    res.flushHeaders()
+
+    res.write(`data: ${JSON.stringify({ type: 'chunk', content: finalResponse })}\n\n`)
+    if (typeof res.flush === 'function') res.flush()
 
     let saveResult
     if (message.trim()) {
-      saveResult = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse, 'session', courseId)
+      saveResult = await saveChatTurn(userId, topicId, message.trim(), finalResponse, 'session', courseId)
     } else {
-      saveResult = await saveInitialMessage(userId, topicId, cleanedResponse, 'session', courseId)
+      saveResult = await saveInitialMessage(userId, topicId, finalResponse, 'session', courseId)
     }
 
     const savedMessages = Array.isArray(saveResult) ? saveResult : (saveResult?.messages ?? [])
@@ -164,7 +188,7 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
 
     res.write(`data: ${JSON.stringify({
       type: 'done',
-      response: cleanedResponse,
+      response: finalResponse,
       messages: savedMessages,
       messageCount: savedMessages.length,
       conversationHistory: savedMessages.map(m =>
@@ -217,6 +241,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
     ])
 
     const completionPhrases = ['Congratulations', "You've Mastered", 'ready for the playground']
+    const teachingIdx = teachingOutcomeIndexFromProgress(topic, progress)
 
     const useCurriculumFirst =
       !message.trim() && (!chatHistory || chatHistory.length === 0)
@@ -234,7 +259,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       }
       cleanedResponse = first
     } else {
-      const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
+      const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics, teachingIdx)
       const historyMessages = getLastNExchangesAsMessages(chatHistory)
       const userContent = message.trim() || 'Start teaching the first concept.'
       const messages = [
@@ -246,15 +271,27 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       cleanedResponse = aiResponse
     }
 
-    const isSessionComplete = completionPhrases.some(phrase =>
-      cleanedResponse.includes(phrase)
-    )
+    const userMessaged = Boolean(message.trim())
+    const processed = processSessionAssistantReply(cleanedResponse, topic, teachingIdx, userMessaged)
+    const finalResponse = processed.finalText
+
+    if (processed.newOutcomeIndex !== teachingIdx) {
+      try {
+        await upsertProgress(userId, topicId, {
+          current_outcome_index: processed.newOutcomeIndex,
+          updated_at: new Date().toISOString()
+        }, courseId)
+      } catch (_) { /* ignore */ }
+    }
+
+    const isSessionComplete = processed.sessionComplete ||
+      completionPhrases.some(phrase => finalResponse.includes(phrase))
 
     let saveResult
     if (message.trim()) {
-      saveResult = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse, 'session', courseId)
+      saveResult = await saveChatTurn(userId, topicId, message.trim(), finalResponse, 'session', courseId)
     } else {
-      saveResult = await saveInitialMessage(userId, topicId, cleanedResponse, 'session', courseId)
+      saveResult = await saveInitialMessage(userId, topicId, finalResponse, 'session', courseId)
     }
 
     // saveChatTurn returns messages array; saveInitialMessage returns { messages, ... }
@@ -274,7 +311,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
     }
 
     res.json(createSuccessResponse({
-      response: cleanedResponse,
+      response: finalResponse,
       messages: savedMessages,
       messageCount: savedMessages.length,
       conversationHistory: savedMessages.map(m =>
@@ -371,6 +408,15 @@ router.delete('/history/:topicId', authenticateToken, async (req, res) => {
 
     await clearChatHistory(userId, topicId, topic.courseId)
 
+    const row = await getProgressRowForCourse(userId, topic.courseId)
+    if (row && String(row.topic_id) === String(topicId)) {
+      try {
+        await upsertProgress(userId, topicId, {
+          current_outcome_index: 0,
+          updated_at: new Date().toISOString()
+        }, topic.courseId)
+      } catch (_) { /* ignore */ }
+    }
 
     res.json(createSuccessResponse({
       message: 'Chat history cleared successfully',

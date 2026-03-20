@@ -265,6 +265,7 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
     await upsertProgress(userId, topicId, {
       phase: 'session',
       status: 'in_progress',
+      current_outcome_index: 0,
       updated_at: new Date().toISOString()
     }, courseId)
 
@@ -551,6 +552,7 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
             total_tasks: tt,
             assignments_completed: 0,
             completed_topics_count: doneCount,
+            current_outcome_index: 0,
             updated_at: now
           }, courseId)
         } else {
@@ -730,6 +732,7 @@ router.get('/progress', authenticateToken, async (req, res) => {
           total_tasks: totalTasks,
           assignments_completed: 0,
           completed_topics_count: 0,
+          current_outcome_index: 0,
           updated_at: new Date().toISOString()
         }, firstTopic.courseId)
         allProgress = await getAllProgress(userId)
@@ -994,6 +997,7 @@ router.get('/continue', authenticateToken, async (req, res) => {
           total_tasks: totalTasks,
           assignments_completed: 0,
           completed_topics_count: 0,
+          current_outcome_index: 0,
           updated_at: new Date().toISOString()
         }, firstTopic.courseId)
       }
@@ -1094,6 +1098,7 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
           current_task: totalTasks > 0 ? 1 : 0,
           total_tasks: totalTasks,
           assignments_completed: 0,
+          current_outcome_index: 0,
           updated_at: now
         }, courseId)
       } else {

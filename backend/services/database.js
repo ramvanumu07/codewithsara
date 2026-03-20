@@ -258,6 +258,10 @@ export async function upsertProgress(userId, topicId, updates, courseId = DEFAUL
           updates.completed_topics_count !== undefined
             ? updates.completed_topics_count
             : (existing.completed_topics_count ?? 0),
+        current_outcome_index:
+          updates.current_outcome_index !== undefined
+            ? updates.current_outcome_index
+            : (existing.current_outcome_index ?? 0),
         updated_at: new Date().toISOString()
       }
       DEV_PROGRESS.set(key, newProgress)
@@ -271,7 +275,8 @@ export async function upsertProgress(userId, topicId, updates, courseId = DEFAUL
       'total_tasks',
       'assignments_completed',
       'topic_id',
-      'completed_topics_count'
+      'completed_topics_count',
+      'current_outcome_index'
     ]
     const safe = {}
     for (const k of allowed) {
@@ -299,11 +304,15 @@ export async function upsertProgress(userId, topicId, updates, courseId = DEFAUL
       completed_topics_count:
         safe.completed_topics_count !== undefined
           ? safe.completed_topics_count
-          : (ex?.completed_topics_count ?? 0)
+          : (ex?.completed_topics_count ?? 0),
+      current_outcome_index:
+        safe.current_outcome_index !== undefined
+          ? safe.current_outcome_index
+          : (ex?.current_outcome_index ?? 0)
     }
     const { rows } = await query(
-      `INSERT INTO progress (user_id, course_id, topic_id, phase, status, current_task, total_tasks, assignments_completed, completed_topics_count, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+      `INSERT INTO progress (user_id, course_id, topic_id, phase, status, current_task, total_tasks, assignments_completed, completed_topics_count, current_outcome_index, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW())
        ON CONFLICT (user_id, course_id) DO UPDATE SET
          topic_id = EXCLUDED.topic_id,
          phase = EXCLUDED.phase,
@@ -312,6 +321,7 @@ export async function upsertProgress(userId, topicId, updates, courseId = DEFAUL
          total_tasks = EXCLUDED.total_tasks,
          assignments_completed = EXCLUDED.assignments_completed,
          completed_topics_count = EXCLUDED.completed_topics_count,
+         current_outcome_index = EXCLUDED.current_outcome_index,
          updated_at = NOW()
        RETURNING *`,
       [
@@ -323,7 +333,8 @@ export async function upsertProgress(userId, topicId, updates, courseId = DEFAUL
         merged.current_task,
         merged.total_tasks,
         merged.assignments_completed,
-        merged.completed_topics_count
+        merged.completed_topics_count,
+        merged.current_outcome_index
       ]
     )
     const data = rows[0]

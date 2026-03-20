@@ -6,67 +6,28 @@
 
 | Placeholder | Source |
 |-------------|--------|
-| `topicTitle` | Curriculum topic `title` (`findTopicById` → `topic.title`) |
-| `goals` | `formatLearningObjectives(topic.outcomes)` — numbered list of learning outcomes |
-| `goalCount` | Number of lines in `goals` (used in COMPLETION PROTOCOL) |
+| `topicTitle` | Curriculum topic `title` |
+| `currentOutcomeObjective` | Single string: `topic.outcomes[i]` (fallback if missing) |
+| `outcomeIndexOneBased` | `i + 1` where `i` is `current_outcome_index` from `progress` (clamped) |
+| `outcomeTotal` | `max(outcomes.length, outcome_messages.length, 1)` |
 
-**Note:** Callers pass `completedList` (completed topic ids for context), but the function currently **does not** append it to the string (`_completedList` is unused).
+**Completion (server):** The model may end with exactly `[[OUTCOME_COMPLETE]]` on its own line after correct answers to **its** prior task. The API strips that marker, merges the **correctness** text with the next `outcome_messages[i]` (or the mastery line on the last outcome), updates `current_outcome_index`, and saves one assistant message.
+
+**Note:** Callers pass `completedTopics` for context, but the template currently does not list completed topics in the string.
 
 ---
 
-## Full prompt template (as built in code)
+## Behaviour summary (as built in code)
 
-```
-You are a patient, encouraging JavaScript mentor teaching students one topic at a time.
-
-CURRENT TEACHING CONTEXT
-Topic: ${topicTitle}
-Learning Outcomes: 
-${goals}
-
-TEACHING PROTOCOL
-1. Determine Current Outcome:
-If no context/first interaction: Start with first outcome without mentioning the outcome name
-Otherwise: Continue from the last outcome being taught
-
-2. Teaching Format (for each outcome):
-Explain a clear, simple explanation of the concept 
-Example a simple code example demonstrating it
-Give a realistic practise task without solution to verify understanding
-
-3. Response Handling:
-Case A: If user answers the task:
-1. Verify correctness
-2. teach the next outcome (Do not show the moving to next topic message)
-Case B: If user asks question/objects/seeks clarification: 
-1. Address their message directly and helpfully
-2. Ask: "Ready to continue with the practice task?"
-3. If yes → Redisplay the task
-4. If no → Continue supporting them while tracking current outcome
-
-CONCISENESS
-Omit optional or redundant text.
-
-CORE RULES
-Never lose track of which outcome you're teaching
-Stay patient and encouraging—students learn at different paces
-Keep explanations simple and jargon-free
-Provide specific, actionable feedback on practice tasks
-One outcome at a time—don't rush ahead
-When all outcomes complete, congratulate and summarize key learnings
-
-COMPLETION PROTOCOL
-Before generating each response:
-Count outcomes taught, practiced, and verified
-If ALL ${goalCount} outcomes are complete, then write:
-Congratulations! You've mastered ${topicTitle}! You're ready for the playground. (Then stop the response)
-```
+- Teach **only** the current outcome (`current_outcome_index`).
+- Case A / B response handling matches the template in `prompts.js` (verify task → marker only when correct; questions → clarify then “Ready to continue with the practice task?”).
+- Do **not** paste the next curriculum block in the model reply when advancing; the server appends `outcome_messages[next]`.
 
 ---
 
 ## Where it is used
 
-- `backend/routes/learning.js` — **`POST /learn/session/start` does not call the model**; the first assistant turn is **`outcome_messages[0]`** from the curriculum.
-- `backend/routes/chat.js` — `buildSessionSystemPrompt()` (via local wrapper) for **`/session`** and **`/session/stream`** on follow-up turns.
+- `backend/routes/chat.js` — `buildSessionSystemPrompt()` for **`/session`** and **`/session/stream`** when the model runs.
+- `POST /learn/session/start` still seeds the first turn from **`outcome_messages[0]`** without calling the model.
 
-Conversation history is **not** part of this string; it is sent as separate `messages` in the chat API.
+Conversation history is sent as separate `messages` in the chat API, not inside this system string.

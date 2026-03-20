@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS public.progress (
   total_tasks INTEGER,
   assignments_completed INTEGER NOT NULL DEFAULT 0,
   completed_topics_count INTEGER NOT NULL DEFAULT 0,
+  current_outcome_index INTEGER NOT NULL DEFAULT 0,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   CONSTRAINT progress_user_course_unique UNIQUE (user_id, course_id)
 );
