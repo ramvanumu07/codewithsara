@@ -63,9 +63,7 @@ function buildSessionSystemPrompt(topicId, completedTopics = [], teachingOutcome
   const singleObjective = outcomes[idx] || `Learning objective ${idx + 1}`
   return buildSessionPromptFromShared({
     topicTitle: topic.title,
-    currentOutcomeObjective: singleObjective,
-    outcomeIndexOneBased: idx + 1,
-    outcomeTotal: total
+    currentOutcomeObjective: singleObjective
   })
 }
 

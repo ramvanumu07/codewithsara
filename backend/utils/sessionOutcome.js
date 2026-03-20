@@ -1,28 +1,32 @@
 /**
- * Session outcome advancement: model emits [[OUTCOME_COMPLETE]] after correct task answers;
- * server strips it and appends the next curriculum outcome message (or mastery line).
+ * Session outcome advancement: model writes "Congratulations! You've mastered …" (Case A);
+ * server treats it like a completion signal, strips it, and appends the next outcome message (or topic mastery line).
  */
 
-export const OUTCOME_COMPLETE_MARKER = '[[OUTCOME_COMPLETE]]'
+/** Legacy marker; stripped if present so old transcripts do not leak it. */
+const LEGACY_OUTCOME_MARKER = '[[OUTCOME_COMPLETE]]'
+
+/** Case-insensitive anchor; must match how `prompts.js` instructs the model (Case A). */
+export const MASTERY_COMPLETION_SUBSTR = "congratulations! you've mastered"
 
 /**
  * @param {string} raw
- * @returns {{ hasMarker: boolean, correctnessPart: string, remainderAfterMarker: string }}
+ * @returns {{ hasCompletion: boolean, beforeMastery: string }}
  */
-export function parseOutcomeCompleteMarker(raw) {
+export function parseMasteryCompletionSignal(raw) {
   const text = typeof raw === 'string' ? raw : ''
-  const idx = text.lastIndexOf(OUTCOME_COMPLETE_MARKER)
+  const lower = text.toLowerCase()
+  const idx = lower.lastIndexOf(MASTERY_COMPLETION_SUBSTR)
   if (idx < 0) {
-    return { hasMarker: false, correctnessPart: text.trim(), remainderAfterMarker: '' }
+    return { hasCompletion: false, beforeMastery: text.trim() }
   }
-  const correctnessPart = text.slice(0, idx).trim()
-  const remainderAfterMarker = text.slice(idx + OUTCOME_COMPLETE_MARKER.length).trim()
-  return { hasMarker: true, correctnessPart, remainderAfterMarker }
+  const beforeMastery = text.slice(0, idx).trim()
+  return { hasCompletion: true, beforeMastery }
 }
 
 /**
  * @param {{ title?: string, outcome_messages?: string[] }} topic
- * @param {string} correctnessPart — AI verification / praise (before marker)
+ * @param {string} correctnessPart — feedback before the mastery phrase (optional)
  * @param {number} currentOutcomeIndex — index of outcome currently being taught
  * @returns {{ text: string, newIndex: number, sessionComplete: boolean }}
  */
@@ -58,6 +62,11 @@ export function composeOutcomeTransition(topic, correctnessPart, currentOutcomeI
   }
 }
 
+function stripLegacyMarkers(s) {
+  if (typeof s !== 'string') return ''
+  return s.split(LEGACY_OUTCOME_MARKER).join('').trim()
+}
+
 /**
  * @param {string} raw
  * @param {{ title?: string, outcome_messages?: string[] }} topic
@@ -66,28 +75,28 @@ export function composeOutcomeTransition(topic, correctnessPart, currentOutcomeI
  * @returns {{ finalText: string, newOutcomeIndex: number, sessionComplete: boolean, advanced: boolean }}
  */
 export function processSessionAssistantReply(raw, topic, currentOutcomeIndex, userMessaged) {
-  const strippedLeak = (s) => (typeof s === 'string' ? s.split(OUTCOME_COMPLETE_MARKER).join('').trim() : '')
-
   if (!userMessaged) {
     return {
-      finalText: strippedLeak(raw),
+      finalText: stripLegacyMarkers(raw),
       newOutcomeIndex: currentOutcomeIndex,
       sessionComplete: false,
       advanced: false
     }
   }
 
-  const { hasMarker, correctnessPart } = parseOutcomeCompleteMarker(raw)
-  if (!hasMarker) {
+  const withoutLegacy = typeof raw === 'string' ? raw.split(LEGACY_OUTCOME_MARKER).join('') : ''
+  const { hasCompletion, beforeMastery } = parseMasteryCompletionSignal(withoutLegacy)
+
+  if (!hasCompletion) {
     return {
-      finalText: strippedLeak(raw),
+      finalText: stripLegacyMarkers(withoutLegacy),
       newOutcomeIndex: currentOutcomeIndex,
       sessionComplete: false,
       advanced: false
     }
   }
 
-  const built = composeOutcomeTransition(topic, correctnessPart, currentOutcomeIndex)
+  const built = composeOutcomeTransition(topic, beforeMastery, currentOutcomeIndex)
   return {
     finalText: built.text,
     newOutcomeIndex: built.newIndex,
