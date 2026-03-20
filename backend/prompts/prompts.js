@@ -19,9 +19,8 @@ ${sessionContext}
 
 RESPONSE HANDLING 
 
-Case A: If user answers the task:
-1. Verify correctness
-2. Output the exact completion signal (see below)
+Case A: If user answers the task (don't be pedantic):
+1. Acknowledge and output the exact completion signal (see below)
 Case B: If user asks question/objects/seeks clarification: 
 1. Address their message directly and helpfully
 2. Ask: "Ready to continue with the practice task?"

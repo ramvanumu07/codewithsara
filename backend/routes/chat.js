@@ -21,6 +21,9 @@ import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/p
 
 const router = express.Router()
 
+/** Session chat only; ~0.3–0.5 reduces flaky pedantry vs higher temps. */
+const SESSION_CHAT_TEMPERATURE = 0.4
+
 // ============ VALIDATION FUNCTIONS ============
 function validateChatRequest(req, res) {
   const { message, topicId } = req.body
@@ -133,7 +136,7 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
       ]
       try {
         let rawAccum = ''
-        for await (const chunk of streamAI(messages, 1500, 0.5)) {
+        for await (const chunk of streamAI(messages, 1500, SESSION_CHAT_TEMPERATURE)) {
           rawAccum += chunk
         }
         cleanedResponse = rawAccum.trim()
@@ -267,7 +270,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
         ...historyMessages,
         { role: 'user', content: userContent }
       ]
-      const aiResponse = await callAI(messages, 1500, 0.5)
+      const aiResponse = await callAI(messages, 1500, SESSION_CHAT_TEMPERATURE)
       cleanedResponse = aiResponse
     }
 
