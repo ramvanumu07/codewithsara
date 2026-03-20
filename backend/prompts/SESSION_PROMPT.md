@@ -66,7 +66,7 @@ Congratulations! You've mastered ${topicTitle}! You're ready for the playground.
 
 ## Where it is used
 
-- `backend/routes/learning.js` — `buildSessionSystemPrompt()` → session start (`/session/start`)
-- `backend/routes/chat.js` — same pattern for `/session` and `/session/stream`
+- `backend/routes/learning.js` — **`POST /learn/session/start` does not call the model**; the first assistant turn is **`outcome_messages[0]`** from the curriculum.
+- `backend/routes/chat.js` — `buildSessionSystemPrompt()` (via local wrapper) for **`/session`** and **`/session/stream`** on follow-up turns.
 
 Conversation history is **not** part of this string; it is sent as separate `messages` in the chat API.

@@ -4,15 +4,11 @@
  */
 
 import express from 'express'
-import fs from 'fs'
-import path from 'path'
 import { authenticateToken } from './auth.js'
-import { callAI } from '../services/ai.js'
 import {
   getProgress,
   upsertProgress,
   getAllProgress,
-  getCompletedTopics,
   getUnlockedCourseIds,
   isCourseUnlockedForUser,
   unlockCourseForUser,
@@ -20,7 +16,7 @@ import {
   clearChatSessionForCourse
 } from '../services/database.js'
 import { generateCertificatePDF, CERTIFICATE_TOPICS } from '../services/certificate.js'
-import { saveInitialMessage, getChatHistoryString, getChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
+import { saveInitialMessage, getChatHistoryString } from '../services/chatService.js'
 import { invalidateChatHistoryCache } from '../services/chatCache.js'
 import { courses } from '../data/curriculum.js'
 import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
@@ -29,7 +25,6 @@ import { expandLinearProgressToTopicRows, resolveCanonicalCurrentTopicId } from 
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
-import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/prompts.js'
 
 const router = express.Router()
 
@@ -141,31 +136,6 @@ async function executeCodeSecurely(code, testCases = [], functionName = null, so
       allTestsPassed: false,
       executionTime: 0
     };
-  }
-}
-
-function buildSessionSystemPrompt(topicId, completedTopics = []) {
-  const topic = findTopicById(courses, topicId)
-  if (!topic) {
-    throw new Error(`Topic not found: ${topicId}`)
-  }
-  const goals = formatLearningObjectives(topic.outcomes)
-  const completedList = completedTopics.length > 0
-    ? `\n\nCompleted Topics: ${completedTopics.join(', ')}`
-    : ''
-  return buildSessionPromptFromShared({
-    topicTitle: topic.title,
-    goals,
-    completedList
-  })
-}
-
-async function getCompletedTopicsForUser(userId, courseId = DEFAULT_COURSE_ID) {
-  try {
-    const completedTopics = await getCompletedTopics(userId, courseId)
-    return completedTopics
-  } catch (error) {
-    return []
   }
 }
 
@@ -297,37 +267,27 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
       updated_at: new Date().toISOString()
     }, courseId)
 
-    // Get student context and chat history for prompt
-    const [completedTopics, chatHistory] = await Promise.all([
-      getCompletedTopicsForUser(userId, courseId),
-      getChatHistory(userId, topicId, courseId)
-    ])
     const outcomes = topic ? formatLearningObjectives(topic.outcomes) : 'Learn programming concepts'
+    const outcomeMessages = topic?.outcome_messages
+    const firstMessage =
+      Array.isArray(outcomeMessages) &&
+      typeof outcomeMessages[0] === 'string' &&
+      outcomeMessages[0].trim()
+        ? outcomeMessages[0].trim()
+        : null
 
-    const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
-    const historyMessages = getLastNExchangesAsMessages(chatHistory)
-
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      ...historyMessages,
-      { role: 'user', content: 'Start teaching the first concept.' }
-    ]
-
-    // Log finalized system prompt for testing (file + console)
-    const promptLogPath = path.join(process.cwd(), 'logs', 'last-system-prompt.txt')
-    try {
-      fs.mkdirSync(path.dirname(promptLogPath), { recursive: true })
-      fs.writeFileSync(promptLogPath, `[SESSION/START] topicId=${topicId}\n---\n${systemPrompt}`, 'utf8')
-    } catch (e) {
-      // ignore
+    if (!firstMessage) {
+      return res.status(400).json(
+        createErrorResponse(
+          'This topic has no first outcome message. Add outcome_messages[0] in the curriculum (same length as outcomes).',
+          'MISSING_OUTCOME_MESSAGES'
+        )
+      )
     }
 
-    // Generate initial message (idempotent - won't duplicate if conversation exists)
-    const aiResponse = await callAI(messages, 800, 0.4)
+    const result = await saveInitialMessage(userId, topicId, firstMessage, 'session', courseId)
 
-    const result = await saveInitialMessage(userId, topicId, aiResponse, 'session', courseId)
-
-    const directResponse = result.wasCreated ? aiResponse :
+    const directResponse = result.wasCreated ? firstMessage :
       result.conversationHistory?.match(/AGENT: (.+?)(?=\nUSER:|$)/s)?.[1]?.trim() || 'Session ready'
 
     // Get updated progress after saving
