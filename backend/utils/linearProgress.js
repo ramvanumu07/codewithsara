@@ -3,6 +3,18 @@
  */
 
 /**
+ * Topic id the learner should be on: index = completed_topics_count (next after finished prefix).
+ */
+export function resolveCanonicalCurrentTopicId(row, course) {
+  if (!row) return null
+  const ids = course?.topics?.map((t) => t.id) ?? []
+  if (!ids.length) return row.topic_id
+  const done = Math.min(Number(row.completed_topics_count) || 0, ids.length)
+  if (done < ids.length) return ids[done]
+  return ids[ids.length - 1]
+}
+
+/**
  * @param {Array<{ id: string, topics: Array<{ id: string, tasks?: unknown[] }> }>} courses
  * @param {Array<{ course_id: string, topic_id: string, completed_topics_count?: number, status?: string, phase?: string, updated_at?: string, [k: string]: unknown }>} progressRows
  * @returns {object[]}
@@ -15,7 +27,8 @@ export function expandLinearProgressToTopicRows(courses, progressRows) {
     const topics = course.topics || []
     const ids = topics.map((t) => t.id)
     const done = Math.min(Number(row.completed_topics_count) || 0, ids.length)
-    const curIdx = ids.indexOf(row.topic_id)
+    // Live row applies to topic at index `done` (first not-yet-counted topic), not row.topic_id when counts disagree.
+    const currentIdx = done < ids.length ? done : -1
 
     for (let i = 0; i < ids.length; i++) {
       const topic = topics[i]
@@ -32,7 +45,7 @@ export function expandLinearProgressToTopicRows(courses, progressRows) {
           current_task: tt,
           updated_at: row.updated_at
         })
-      } else if (curIdx >= 0 && i === curIdx) {
+      } else if (currentIdx >= 0 && i === currentIdx) {
         out.push({
           ...row,
           topic_id: tid,

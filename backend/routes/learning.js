@@ -25,13 +25,24 @@ import { invalidateChatHistoryCache } from '../services/chatCache.js'
 import { courses } from '../data/curriculum.js'
 import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 import { formatLearningObjectives, findTopicById, getAllTopics, getNextTopicId, getTopicIdsForCourse } from '../utils/curriculum.js'
-import { expandLinearProgressToTopicRows } from '../utils/linearProgress.js'
+import { expandLinearProgressToTopicRows, resolveCanonicalCurrentTopicId } from '../utils/linearProgress.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/prompts.js'
 
 const router = express.Router()
+
+function lastAccessedPayload(rawRow) {
+  if (!rawRow) return null
+  const course = courses.find((c) => String(c.id) === String(rawRow.course_id))
+  const topicId = resolveCanonicalCurrentTopicId(rawRow, course) ?? rawRow.topic_id
+  return {
+    topicId,
+    phase: rawRow.phase || 'session',
+    status: rawRow.status || 'not_started'
+  }
+}
 
 // ============ VALIDATION SCHEMAS ============
 const schemas = {
@@ -784,10 +795,7 @@ router.get('/progress', authenticateToken, async (req, res) => {
       certificate_eligible: completedTopics >= CERTIFICATE_TOPICS
     }
 
-    const lastAccessed = allProgress.length > 0 ? {
-      topicId: allProgress[0].topic_id,
-      phase: allProgress[0].phase || 'session'
-    } : null
+    const lastAccessed = allProgress.length > 0 ? lastAccessedPayload(allProgress[0]) : null
 
     res.json(createSuccessResponse({
       progress: progressForClient,
@@ -824,9 +832,7 @@ router.get('/progress/summary', authenticateToken, async (req, res) => {
       completion_percentage: totalTopics > 0 ? Math.round((completedTopics / totalTopics) * 100) : 0,
       certificate_eligible: completedTopics >= CERTIFICATE_TOPICS
     }
-    const lastAccessed = allProgress.length > 0
-      ? { topicId: allProgress[0].topic_id, phase: allProgress[0].phase || 'session' }
-      : null
+    const lastAccessed = allProgress.length > 0 ? lastAccessedPayload(allProgress[0]) : null
     res.json(createSuccessResponse({ summary, lastAccessed }))
   } catch (error) {
     handleErrorResponse(res, error, 'get progress summary')
@@ -1050,14 +1056,13 @@ router.get('/continue', authenticateToken, async (req, res) => {
       }))
     }
 
-    findTopicById(courses, lastAccessed.topic_id) // validate topic exists
+    const payload = lastAccessedPayload(lastAccessed)
+    if (payload && !findTopicById(courses, payload.topicId)) {
+      return res.status(500).json(createErrorResponse('Invalid progress state'))
+    }
 
     res.json(createSuccessResponse({
-      lastAccessed: {
-        topicId: lastAccessed.topic_id,
-        phase: lastAccessed.phase || 'session',
-        status: lastAccessed.status || 'not_started'
-      }
+      lastAccessed: payload
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'get continue learning')
