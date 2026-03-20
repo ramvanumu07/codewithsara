@@ -4,6 +4,7 @@
  */
 
 import axios from 'axios'
+import { logGroqDebugFromApi } from '../utils/groqDebug'
 
 // Local dev: use relative /api so Vite proxy forwards to backend (no CORS). Production: use VITE_API_BASE_URL or same-origin /api
 const isLocalhost = typeof window !== 'undefined' && /^localhost$|^127\.0\.0\.1$/i.test(window.location.hostname)
@@ -108,7 +109,7 @@ export const learning = {
     })
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}))
-      const err = new Error(errData.message || errData.error || `Request failed: ${res.status}`)
+      const err = new Error(errData.message || errData.error || `Request failed with status code ${res.status}`)
       err.response = { status: res.status, data: errData }
       onError?.(err)
       throw err
@@ -128,7 +129,10 @@ export const learning = {
           try {
             const data = JSON.parse(line.slice(6))
             if (data.type === 'chunk' && data.content) onChunk?.(data.content)
-            if (data.type === 'done') onDone?.(data)
+            if (data.type === 'done') {
+              logGroqDebugFromApi(data)
+              onDone?.(data)
+            }
             if (data.type === 'error') {
               const err = new Error(data.message || 'AI stream failed')
               err.response = { status: 500, data: { message: data.message } }
@@ -210,13 +214,58 @@ export const removeUser = () => localStorage.removeItem('sara_user')
 // Technical error patterns - never show these to users
 const TECHNICAL_ERROR_PATTERNS = /getaddrinfo|ENOTFOUND|ECONNREFUSED|ETIMEDOUT|ECONNRESET|ENETUNREACH|connection refused|network error|socket hang up/i
 
-// Simplified error handling - returns user-friendly messages only
-export const handleApiError = (error, defaultMessage = 'Something went wrong') => {
-  const msg = error.response?.data?.message || error.response?.data?.error || error.message || ''
-  if (TECHNICAL_ERROR_PATTERNS.test(msg)) {
+const AXIOS_STATUS_CODE_MSG = /^Request failed with status code (\d+)$/i
+
+/**
+ * User-facing error string. Avoids showing raw axios text like "Request failed with status code 500".
+ * @param {unknown} error
+ * @param {string} [defaultMessage]
+ */
+export const handleApiError = (error, defaultMessage = 'Something went wrong. Please try again.') => {
+  const e = error && typeof error === 'object' ? error : {}
+  const status = e.response?.status
+  const bodyMsg = String(e.response?.data?.message || e.response?.data?.error || '').trim()
+  const axiosMsg = String(e.message || '').trim()
+  const axiosStatusMatch = axiosMsg.match(AXIOS_STATUS_CODE_MSG)
+  const effectiveStatus = typeof status === 'number' ? status : (axiosStatusMatch ? Number(axiosStatusMatch[1]) : undefined)
+
+  if (bodyMsg) {
+    if (TECHNICAL_ERROR_PATTERNS.test(bodyMsg)) {
+      return 'Service temporarily unavailable. Please try again in a moment.'
+    }
+    return bodyMsg
+  }
+
+  if (!e.response && (axiosMsg === 'Network Error' || e.code === 'ERR_NETWORK' || e.code === 'ECONNABORTED')) {
+    if (e.code === 'ECONNABORTED') {
+      return 'The request took too long. Please try again.'
+    }
+    return 'Could not reach the server. Check your connection and try again.'
+  }
+
+  if (TECHNICAL_ERROR_PATTERNS.test(axiosMsg)) {
     return 'Service temporarily unavailable. Please try again in a moment.'
   }
-  if (msg) return msg
+
+  if (axiosStatusMatch || (effectiveStatus != null && !bodyMsg)) {
+    if (effectiveStatus === 408 || effectiveStatus === 504) {
+      return 'The request took too long. Please try again.'
+    }
+    if (effectiveStatus === 429) {
+      return 'Too many requests. Please wait a moment and try again.'
+    }
+    if (effectiveStatus >= 500) {
+      return 'Something went wrong on our end. Please try again in a moment.'
+    }
+    if (effectiveStatus === 404) {
+      return 'We could not find that. Please try again.'
+    }
+  }
+
+  if (axiosMsg && !AXIOS_STATUS_CODE_MSG.test(axiosMsg)) {
+    return axiosMsg
+  }
+
   return defaultMessage
 }
 

@@ -12,6 +12,7 @@ import { copyToClipboard } from '../utils/copyToClipboard'
 import SyntaxHighlightedCode from '../components/SyntaxHighlightedCode'
 import SyntaxHighlightedTextarea from '../components/SyntaxHighlightedTextarea'
 import { formatTerminalRunResult } from '../lib/formatTerminalOutput'
+import { logGroqDebugFromApi } from '../utils/groqDebug'
 import './Learn.css'
 import './Learn-responsive.css'
 
@@ -362,6 +363,7 @@ const Learn = () => {
                 const res = await learning.sessionChat(requestedTopicId, '')
                 if (topicIdRef.current !== requestedTopicId) return
                 const data = res?.data?.data
+                logGroqDebugFromApi(data)
                 if (data?.response != null) {
                   const apiMessages = data.messages
                   if (apiMessages && Array.isArray(apiMessages) && apiMessages.length > 0) {
@@ -376,8 +378,8 @@ const Learn = () => {
                   setMessages([{ role: 'assistant', content: data?.message || 'No response from AI. Please try again.', timestamp: new Date().toISOString() }])
                 }
               } catch (err) {
-                const msg = err?.response?.data?.message || err?.response?.data?.error || err?.message
-                setMessages([{ role: 'assistant', content: msg || 'Sorry, the AI could not respond. Please try again.', timestamp: new Date().toISOString() }])
+                const msg = handleApiError(err, 'Sorry, Sara could not respond. Please try again.')
+                setMessages([{ role: 'assistant', content: msg, timestamp: new Date().toISOString() }])
               } finally {
                 sessionStartInProgressRef.current = null
               }
@@ -393,6 +395,7 @@ const Learn = () => {
                 const res = await learning.sessionChat(requestedTopicId, '')
                 if (topicIdRef.current !== requestedTopicId) return
                 const data = res?.data?.data
+                logGroqDebugFromApi(data)
                 if (data?.response != null) {
                   const apiMessages = data.messages
                   if (apiMessages && Array.isArray(apiMessages) && apiMessages.length > 0) {
@@ -407,8 +410,8 @@ const Learn = () => {
                   setMessages([{ role: 'assistant', content: data?.message || 'No response from AI. Please try again.', timestamp: new Date().toISOString() }])
                 }
               } catch (err) {
-                const msg = err?.response?.data?.message || err?.response?.data?.error || err?.message
-                setMessages([{ role: 'assistant', content: msg || 'Sorry, the AI could not respond. Please try again.', timestamp: new Date().toISOString() }])
+                const msg = handleApiError(err, 'Sorry, Sara could not respond. Please try again.')
+                setMessages([{ role: 'assistant', content: msg, timestamp: new Date().toISOString() }])
               } finally {
                 sessionStartInProgressRef.current = null
               }
@@ -521,6 +524,7 @@ const Learn = () => {
         const res = await learning.sessionChat(topicId, userMessage.content)
         if (topicIdRef.current !== topicId) return
         const data = res?.data?.data
+        logGroqDebugFromApi(data)
         if (data && 'response' in data) {
           // Use full messages from API when available (keeps UI in sync with Neon DB)
           const apiMessages = data.messages
@@ -555,7 +559,7 @@ const Learn = () => {
         showInfo(SESSION_COMPLETE_REASON, 4000)
         return
       }
-      const actualError = err.response?.data?.message || err.response?.data?.error || err.message || 'Something went wrong. Please try again.'
+      const actualError = handleApiError(err, 'Something went wrong. Please try again.')
       const errorMessage = {
         role: 'assistant',
         content: actualError,

@@ -24,8 +24,16 @@ export function parseMasteryCompletionSignal(raw) {
   return { hasCompletion: true, beforeMastery }
 }
 
+function outcomeObjectiveAt(topic, index) {
+  const outcomes = topic?.outcomes
+  if (Array.isArray(outcomes) && typeof outcomes[index] === 'string' && outcomes[index].trim()) {
+    return outcomes[index].trim()
+  }
+  return `Learning objective ${index + 1}`
+}
+
 /**
- * @param {{ title?: string, outcome_messages?: string[] }} topic
+ * @param {{ title?: string, outcomes?: string[], outcome_messages?: string[] }} topic
  * @param {string} correctnessPart — feedback before the mastery phrase (optional)
  * @param {number} currentOutcomeIndex — index of outcome currently being taught
  * @returns {{ text: string, newIndex: number, sessionComplete: boolean }}
@@ -34,7 +42,9 @@ export function composeOutcomeTransition(topic, correctnessPart, currentOutcomeI
   const messages = topic?.outcome_messages
   const n = Array.isArray(messages) ? messages.length : 0
   const nextIndex = currentOutcomeIndex + 1
-  const pre = (correctnessPart || '').trim() || 'Great work!'
+  const objective = outcomeObjectiveAt(topic, currentOutcomeIndex)
+  const defaultPre = `Great Work! You've completed ${objective}!`
+  const pre = (correctnessPart || '').trim() || defaultPre
 
   if (n === 0) {
     const title = topic?.title || 'this topic'

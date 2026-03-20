@@ -57,7 +57,8 @@ export const SESSION_CONTEXT_EXCHANGES = 5
 /**
  * Get last N exchanges as API-ready messages (role + content).
  * Used for passing conversation history in the messages array instead of embedding in system prompt.
- * @param {Array<{role: string, content: string}>} messages - Full chat history
+ * Session chat usually passes history already scoped with `sliceMessagesAfterCurrentOutcomeIntro`.
+ * @param {Array<{role: string, content: string}>} messages - Chat history (often outcome-scoped)
  * @param {number} maxExchanges - Max user+assistant pairs (default SESSION_CONTEXT_EXCHANGES)
  * @returns {Array<{role: string, content: string}>}
  */

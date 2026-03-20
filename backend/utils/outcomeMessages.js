@@ -23,3 +23,39 @@ export function extractPracticeTaskFromOutcomeMessage(markdown) {
   if (!m) return 'Use the Practice instructions from the latest lesson message in the chat.'
   return m[1].trim()
 }
+
+function normalizeForOutcomeMatch(s) {
+  return (typeof s === 'string' ? s : '').replace(/\r\n/g, '\n').trim()
+}
+
+/**
+ * Drop the current outcome's curriculum intro (and all prior turns) so Groq only sees
+ * exchanges for this outcome. The intro is either exactly `outcome_messages[i]` (first outcome)
+ * or ends with it after an outcome transition (short feedback, blank line, then the next message).
+ *
+ * @param {Array<{ role?: string, content?: string }>} messages - Parsed chat history (chronological)
+ * @param {{ outcome_messages?: string[] } | null | undefined} topic
+ * @param {number} teachingOutcomeIndex
+ * @returns {Array<{ role?: string, content?: string }>}
+ */
+export function sliceMessagesAfterCurrentOutcomeIntro(messages, topic, teachingOutcomeIndex) {
+  if (!Array.isArray(messages) || messages.length === 0) return []
+  const arr = topic?.outcome_messages
+  if (!Array.isArray(arr)) return messages
+
+  const seed = normalizeForOutcomeMatch(arr[teachingOutcomeIndex] ?? '')
+  if (!seed) return messages
+
+  const seedNorm = seed
+
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const role = messages[i].role === 'agent' ? 'assistant' : messages[i].role
+    if (role !== 'assistant') continue
+    const c = normalizeForOutcomeMatch(messages[i].content ?? '')
+    if (c === seedNorm || c.endsWith(seedNorm)) {
+      return messages.slice(i + 1)
+    }
+  }
+
+  return messages
+}

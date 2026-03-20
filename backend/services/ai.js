@@ -1,6 +1,6 @@
 /**
  * AI Service - Groq API (OpenAI-compatible)
- * Uses Llama models via Groq - fast inference, free tier available.
+ * Uses Llama models via Groq - primary: 3.3 70B Versatile; fallback: 3.1 8B Instant.
  * Model list is maintained in code (no env dependency). Falls back to next model if current is deprecated.
  */
 
@@ -8,7 +8,7 @@ const GROQ_BASE = 'https://api.groq.com/openai/v1'
 
 /** Ordered list of models to try. First available wins; fallback on 404/deprecated. */
 const GROQ_MODELS = [
-  'llama-3.1-8b-instant',      // primary: fast, free tier
+  'llama-3.1-8b-instant',      // fallback: faster / cheaper if primary unavailable
 ]
 
 function getDefaultModel() {
@@ -26,12 +26,32 @@ function isModelNotFoundError(error) {
   return error?.status === 404 || msg.includes('404') || msg.includes('not found') || msg.includes('deprecated')
 }
 
-/** Convert to OpenAI-compatible messages (system, user, assistant) */
+/** Convert to OpenAI-compatible messages (user, assistant only — no system here). */
 function toMessages(messages) {
   return messages.map((msg) => ({
     role: msg.role === 'assistant' ? 'assistant' : msg.role === 'system' ? 'system' : 'user',
     content: msg.content || ''
   }))
+}
+
+/**
+ * Body.messages for Groq: one system block + conversation turns.
+ * @param {string} [systemPrompt]
+ * @param {Array<{ role?: string, content?: string }>} [conversationMessages] - user/assistant only
+ */
+export function buildGroqRequestMessages(systemPrompt, conversationMessages = []) {
+  const sys = typeof systemPrompt === 'string' ? systemPrompt.trim() : ''
+  const head = sys ? [{ role: 'system', content: sys }] : []
+  return [...head, ...toMessages(conversationMessages)]
+}
+
+/**
+ * Exact `messages` array shape sent in the Groq request body (for DEBUG_GROQ_PAYLOAD).
+ * @param {Array<{ role: string, content?: string }>} messages
+ * @returns {Array<{ role: string, content: string }>}
+ */
+export function getGroqMessagesForDebug(messages) {
+  return toMessages(messages)
 }
 
 function toFriendlyError(error) {
@@ -48,14 +68,16 @@ function toFriendlyError(error) {
 /**
  * Call AI and return full response (for hint and session start).
  * Tries models in GROQ_MODELS order; falls back to next on 404/deprecated.
+ * @param {string} systemPrompt - Sent once as role=system (use '' to omit).
+ * @param {Array<{ role?: string, content?: string }>} messages - User/assistant turns only.
  */
-export async function callAI(messages, maxTokens = 1000, temperature = 0.5, model = undefined) {
+export async function callAI(systemPrompt, messages, maxTokens = 1000, temperature = 0.5, model = undefined) {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey?.trim()) {
     throw new Error('AI configuration missing. Check GROQ_API_KEY in backend/.env')
   }
 
-  const chatMessages = toMessages(messages)
+  const chatMessages = buildGroqRequestMessages(systemPrompt, messages)
   let modelToUse = (model && GROQ_MODELS.includes(model)) ? model : getDefaultModel()
   let lastError = null
 
@@ -117,14 +139,16 @@ export async function callAI(messages, maxTokens = 1000, temperature = 0.5, mode
 /**
  * Stream AI response, yielding each content chunk.
  * Tries models in GROQ_MODELS order; falls back to next on 404/deprecated.
+ * @param {string} systemPrompt - Sent once as role=system (use '' to omit).
+ * @param {Array<{ role?: string, content?: string }>} messages - User/assistant turns only.
  */
-export async function * streamAI(messages, maxTokens = 1000, temperature = 0.5, model = undefined) {
+export async function* streamAI(systemPrompt, messages, maxTokens = 1000, temperature = 0.5, model = undefined) {
   const apiKey = process.env.GROQ_API_KEY
   if (!apiKey?.trim()) {
     throw new Error('AI configuration missing. Check GROQ_API_KEY in backend/.env')
   }
 
-  const chatMessages = toMessages(messages)
+  const chatMessages = buildGroqRequestMessages(systemPrompt, messages)
   let modelToUse = (model && GROQ_MODELS.includes(model)) ? model : getDefaultModel()
   let lastError = null
 

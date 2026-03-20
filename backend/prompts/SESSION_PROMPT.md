@@ -8,8 +8,9 @@
 |-------------|--------|
 | `topicTitle` | `topic.title` |
 | `currentOutcomeObjective` | `topic.outcomes[i]` or fallback label |
+| `currentPracticeTask` | `extractPracticeTaskFromOutcomeMessage(topic.outcome_messages[i])` — body under `## Practice` for the current outcome index |
 
-The **practice task** lives in the prior assistant / curriculum messages in the chat thread (e.g. `outcome_messages[i]`), not in the system string.
+The learner may still see the full lesson in chat history; the system prompt repeats the **exact** practice line so the model grades against it without guessing.
 
 **Completion (server):** If the assistant reply contains **`Congratulations! You've mastered`** (case-insensitive), the API treats it like a completion signal: text **before** that phrase is kept as feedback, the mastery tail is stripped for merging, and the server appends the next `outcome_messages[i]` (or the full-topic mastery line on the last outcome), updates `current_outcome_index`, and saves one assistant message. Legacy `[[OUTCOME_COMPLETE]]` is stripped if present.
 

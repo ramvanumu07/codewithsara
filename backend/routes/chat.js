@@ -7,13 +7,17 @@ import express from 'express'
 import fs from 'fs'
 import path from 'path'
 import { authenticateToken } from './auth.js'
-import { callAI, streamAI } from '../services/ai.js'
+import { callAI, streamAI, getGroqMessagesForDebug } from '../services/ai.js'
 import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
 import { getChatSessionRow, getCompletedTopics, getProgress, getProgressRowForCourse, upsertProgress } from '../services/database.js'
 import { courses } from '../data/curriculum.js'
 import { findTopicById } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
-import { getFirstOutcomeMessage } from '../utils/outcomeMessages.js'
+import {
+  getFirstOutcomeMessage,
+  extractPracticeTaskFromOutcomeMessage,
+  sliceMessagesAfterCurrentOutcomeIntro
+} from '../utils/outcomeMessages.js'
 import { processSessionAssistantReply } from '../utils/sessionOutcome.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse, getSafeUserMessage } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
@@ -23,6 +27,21 @@ const router = express.Router()
 
 /** Session chat only; ~0.3–0.5 reduces flaky pedantry vs higher temps. */
 const SESSION_CHAT_TEMPERATURE = 0.4
+
+function shouldAttachGroqDebug() {
+  const v = (process.env.DEBUG_GROQ_PAYLOAD || '').toLowerCase().trim()
+  return v === '1' || v === 'true' || v === 'yes'
+}
+
+/** `messages` here are user/assistant only; Groq still receives system + these (see `buildGroqRequestMessages`). */
+function buildGroqDebugPayload(systemPrompt, conversationMessages) {
+  return {
+    systemPrompt: typeof systemPrompt === 'string' ? systemPrompt : '',
+    messages: getGroqMessagesForDebug(conversationMessages),
+    max_tokens: 1500,
+    temperature: SESSION_CHAT_TEMPERATURE
+  }
+}
 
 // ============ VALIDATION FUNCTIONS ============
 function validateChatRequest(req, res) {
@@ -64,9 +83,11 @@ function buildSessionSystemPrompt(topicId, completedTopics = [], teachingOutcome
   const total = Math.max(outcomes.length, msgs.length, 1)
   const idx = Math.min(Math.max(0, teachingOutcomeIndex), Math.max(0, total - 1))
   const singleObjective = outcomes[idx] || `Learning objective ${idx + 1}`
+  const currentPracticeTask = extractPracticeTaskFromOutcomeMessage(msgs[idx])
   return buildSessionPromptFromShared({
     topicTitle: topic.title,
-    currentOutcomeObjective: singleObjective
+    currentOutcomeObjective: singleObjective,
+    currentPracticeTask
   })
 }
 
@@ -112,6 +133,7 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
     const firstFromCurriculum = useCurriculumFirst ? getFirstOutcomeMessage(topic) : null
 
     let cleanedResponse = ''
+    let groqDebug = null
 
     if (useCurriculumFirst) {
       if (!firstFromCurriculum) {
@@ -123,18 +145,23 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
         )
       }
       cleanedResponse = firstFromCurriculum
+      if (shouldAttachGroqDebug()) {
+        groqDebug = { note: 'Groq was not called — first turn uses curriculum outcome_messages[0] only.' }
+      }
     } else {
       const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics, teachingIdx)
-      const historyMessages = getLastNExchangesAsMessages(chatHistory)
+      const historyForModel = sliceMessagesAfterCurrentOutcomeIntro(chatHistory, topic, teachingIdx)
+      const historyMessages = getLastNExchangesAsMessages(historyForModel).filter(
+        (m) => m.role !== 'system'
+      )
       const userContent = message.trim() || 'Start teaching the first concept.'
-      const messages = [
-        { role: 'system', content: systemPrompt },
-        ...historyMessages,
-        { role: 'user', content: userContent }
-      ]
+      const conversationMessages = [...historyMessages, { role: 'user', content: userContent }]
+      if (shouldAttachGroqDebug()) {
+        groqDebug = buildGroqDebugPayload(systemPrompt, conversationMessages)
+      }
       try {
         let rawAccum = ''
-        for await (const chunk of streamAI(messages, 1500, SESSION_CHAT_TEMPERATURE)) {
+        for await (const chunk of streamAI(systemPrompt, conversationMessages, 1500, SESSION_CHAT_TEMPERATURE)) {
           rawAccum += chunk
         }
         cleanedResponse = rawAccum.trim()
@@ -197,7 +224,8 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
       ).join('\n'),
       sessionComplete: isSessionComplete,
       nextPhase: isSessionComplete ? 'assignment' : null,
-      topic: { id: topicId, title: topic.title, category: topic.category }
+      topic: { id: topicId, title: topic.title, category: topic.category },
+      ...(groqDebug ? { groqDebug } : {})
     })}\n\n`)
     res.end()
   } catch (error) {
@@ -247,6 +275,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
     const useCurriculumFirst =
       !message.trim() && (!chatHistory || chatHistory.length === 0)
     let cleanedResponse
+    let groqDebug = null
 
     if (useCurriculumFirst) {
       const first = getFirstOutcomeMessage(topic)
@@ -259,16 +288,21 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
         )
       }
       cleanedResponse = first
+      if (shouldAttachGroqDebug()) {
+        groqDebug = { note: 'Groq was not called — first turn uses curriculum outcome_messages[0] only.' }
+      }
     } else {
       const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics, teachingIdx)
-      const historyMessages = getLastNExchangesAsMessages(chatHistory)
+      const historyForModel = sliceMessagesAfterCurrentOutcomeIntro(chatHistory, topic, teachingIdx)
+      const historyMessages = getLastNExchangesAsMessages(historyForModel).filter(
+        (m) => m.role !== 'system'
+      )
       const userContent = message.trim() || 'Start teaching the first concept.'
-      const messages = [
-        { role: 'system', content: systemPrompt },
-        ...historyMessages,
-        { role: 'user', content: userContent }
-      ]
-      const aiResponse = await callAI(messages, 1500, SESSION_CHAT_TEMPERATURE)
+      const conversationMessages = [...historyMessages, { role: 'user', content: userContent }]
+      if (shouldAttachGroqDebug()) {
+        groqDebug = buildGroqDebugPayload(systemPrompt, conversationMessages)
+      }
+      const aiResponse = await callAI(systemPrompt, conversationMessages, 1500, SESSION_CHAT_TEMPERATURE)
       cleanedResponse = aiResponse
     }
 
@@ -321,7 +355,8 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
       phase: 'session',
       sessionComplete: isSessionComplete,
       nextPhase: isSessionComplete ? 'assignment' : null,
-      topic: { id: topicId, title: topic.title, category: topic.category }
+      topic: { id: topicId, title: topic.title, category: topic.category },
+      ...(groqDebug ? { groqDebug } : {})
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'session chat')
