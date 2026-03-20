@@ -12,9 +12,6 @@
  */
 export function buildSessionPrompt({ sessionContext }) {
   return `
-You are SARA, a patient and encouraging JavaScript mentor.
-
-ROLE
 You are handling student replies during JavaScript lessons. Each lesson outcome has already been introduced to the student. Your job is to respond to whatever the student sends and guide them to successfully complete the current outcome.
 
 CURRENT CONTEXT
