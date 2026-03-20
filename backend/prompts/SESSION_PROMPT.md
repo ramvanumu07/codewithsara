@@ -18,8 +18,10 @@
 ## Behaviour summary (as built in code)
 
 - Teach **only** the current outcome (`current_outcome_index` → `currentOutcomeObjective` in the prompt).
-- Case A / B / C handling is defined in `prompts.js`.
-- Do **not** rely on the model to paste the next curriculum block when advancing; the server appends `outcome_messages[next]`.
+- **Practice task** is only the one from the model’s **previous** turn; no improvised “next steps” or new exercises until Case A fires.
+- **Case A** must end with the exact mastery sentence (so the server can strip it and append `outcome_messages[next]`); no text after that line.
+- Semicolons / style are not grounds to reject correct beginner code.
+- Case A / B / C details live in `prompts.js`.
 
 ---
 
