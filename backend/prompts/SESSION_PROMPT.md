@@ -6,22 +6,16 @@
 
 | Placeholder | Source |
 |-------------|--------|
-| `topicTitle` | Curriculum topic `title` |
-| `currentOutcomeObjective` | `topic.outcomes[i]` for `i = current_outcome_index` (clamped), or a fallback label |
+| `sessionContext` | Built in `chat.js` → `buildSessionSystemPrompt()`: **Topic**, **Current Outcome** (`topic.outcomes[i]`), **Practice Task** (from `## Practice` in `topic.outcome_messages[i]`, or a fallback string). |
 
-**Completion (server):** If the assistant reply contains **`Congratulations! You've mastered`** (case-insensitive), the API treats it like a completion signal: text **before** that phrase is kept as correctness feedback, the mastery phrase is **not** stored as-is for mid-topic turns, and the server appends the next `outcome_messages[i]` (or the full-topic mastery line on the last outcome), updates `current_outcome_index`, and saves one assistant message. Legacy `[[OUTCOME_COMPLETE]]` is stripped if present.
-
-**Note:** Callers pass `completedTopics` from `chat.js`, but the template does not inject it into the string.
+**Completion (server):** If the assistant reply contains **`Congratulations! You've mastered`** (case-insensitive), the API treats it like a completion signal: text **before** that phrase is kept as feedback, the mastery tail is stripped for merging, and the server appends the next `outcome_messages[i]` (or the full-topic mastery line on the last outcome), updates `current_outcome_index`, and saves one assistant message. Legacy `[[OUTCOME_COMPLETE]]` is stripped if present.
 
 ---
 
 ## Behaviour summary (as built in code)
 
-- Teach **only** the current outcome (`current_outcome_index` → `currentOutcomeObjective` in the prompt).
-- **Practice task** is only the one from the model’s **previous** turn; no improvised “next steps” or new exercises until Case A fires.
-- **Case A** must end with the exact mastery sentence (so the server can strip it and append `outcome_messages[next]`); no text after that line.
-- Semicolons / style are not grounds to reject correct beginner code.
-- Case A / B / C details live in `prompts.js`.
+- Dynamic session facts are passed as the single **`sessionContext`** block; the rest of the prompt is static in `prompts.js`.
+- The model should end with a mastery line that matches the **Current Outcome** text so it aligns with `sessionOutcome` stripping and progression.
 
 ---
 

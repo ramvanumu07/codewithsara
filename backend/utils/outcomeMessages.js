@@ -9,3 +9,17 @@ export function getFirstOutcomeMessage(topic) {
   const s = arr[0].trim()
   return s || null
 }
+
+/**
+ * Extract body under a "## Practice" heading from an outcome_message markdown block.
+ * @param {string} markdown
+ * @returns {string}
+ */
+export function extractPracticeTaskFromOutcomeMessage(markdown) {
+  if (typeof markdown !== 'string' || !markdown.trim()) {
+    return 'Use the Practice instructions from the latest lesson message in the chat.'
+  }
+  const m = markdown.match(/##\s*Practice\s*\n+([\s\S]*?)(?=\n##\s|$)/i)
+  if (!m) return 'Use the Practice instructions from the latest lesson message in the chat.'
+  return m[1].trim()
+}
