@@ -9,6 +9,7 @@ import {
   deleteChatSessionRow
 } from './database.js'
 import { getCachedChatHistory, setCachedChatHistory, invalidateChatHistoryCache } from './chatCache.js'
+import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 
 // ============ STRUCTURED CHAT OPERATIONS ============
 
@@ -74,17 +75,17 @@ export function getLastNExchangesAsMessages(messages, maxExchanges = SESSION_CON
  * Get chat history as structured messages array (parsed from text format)
  * OPTIMIZED with caching and performance monitoring
  */
-export async function getChatHistory(userId, topicId) {
+export async function getChatHistory(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   const _startTime = Date.now()
   try {
     // Try cache first
-    const cachedMessages = await getCachedChatHistory(userId, topicId)
+    const cachedMessages = await getCachedChatHistory(userId, topicId, courseId)
     if (cachedMessages) {
       return cachedMessages
     }
 
     // Cache miss - fetch from database
-    const data = await getChatSessionRow(userId, topicId)
+    const data = await getChatSessionRow(userId, topicId, courseId)
     const rawMessages = data?.messages
     if (!rawMessages) {
       return []
@@ -109,7 +110,7 @@ export async function getChatHistory(userId, topicId) {
     }
 
     // Cache the parsed messages for future requests
-    await setCachedChatHistory(userId, topicId, messages)
+    await setCachedChatHistory(userId, topicId, messages, courseId)
 
     return messages
 
@@ -122,10 +123,10 @@ export async function getChatHistory(userId, topicId) {
 /**
  * Save a single chat turn with text format
  */
-export async function saveChatTurn(userId, topicId, userMessage, aiResponse, phase = 'session') {
-  await invalidateChatHistoryCache(userId, topicId)
+export async function saveChatTurn(userId, topicId, userMessage, aiResponse, phase = 'session', courseId = DEFAULT_COURSE_ID) {
+  await invalidateChatHistoryCache(userId, topicId, courseId)
 
-  const currentData = await getChatSessionRow(userId, topicId)
+  const currentData = await getChatSessionRow(userId, topicId, courseId)
   let currentHistory = (currentData?.messages ?? '').trim()
 
   const newTurn = `USER: ${userMessage.trim()}\nAGENT: ${aiResponse.trim()}`
@@ -139,17 +140,17 @@ export async function saveChatTurn(userId, topicId, userMessage, aiResponse, pha
     phase,
     last_message_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
-  })
+  }, courseId)
 
-  await invalidateChatHistoryCache(userId, topicId)
+  await invalidateChatHistoryCache(userId, topicId, courseId)
   return parseTextToMessagesOptimized(updatedHistory)
 }
 
 /**
  * Save initial message (welcome message) in text format
  */
-export async function saveInitialMessage(userId, topicId, message, phase = 'session') {
-  const existing = await getChatSessionRow(userId, topicId)
+export async function saveInitialMessage(userId, topicId, message, phase = 'session', courseId = DEFAULT_COURSE_ID) {
+  const existing = await getChatSessionRow(userId, topicId, courseId)
   if (existing?.messages?.trim()) {
     return {
       wasCreated: false,
@@ -167,10 +168,10 @@ export async function saveInitialMessage(userId, topicId, message, phase = 'sess
     phase,
     last_message_at: now,
     updated_at: now
-  })
+  }, courseId)
 
     // Invalidate cache after creating initial message
-    await invalidateChatHistoryCache(userId, topicId)
+    await invalidateChatHistoryCache(userId, topicId, courseId)
 
     return {
       wasCreated: true,
@@ -182,17 +183,17 @@ export async function saveInitialMessage(userId, topicId, message, phase = 'sess
 /**
  * Clear chat history for a topic
  */
-export async function clearChatHistory(userId, topicId) {
-  await deleteChatSessionRow(userId, topicId)
-  await invalidateChatHistoryCache(userId, topicId)
+export async function clearChatHistory(userId, topicId, courseId = DEFAULT_COURSE_ID) {
+  await deleteChatSessionRow(userId, topicId, courseId)
+  await invalidateChatHistoryCache(userId, topicId, courseId)
 }
 
 /**
  * Get chat messages in string format (USER:/AGENT: for prompts and storage).
  */
-export async function getChatHistoryString(userId, topicId) {
+export async function getChatHistoryString(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   try {
-    const messages = await getChatHistory(userId, topicId)
+    const messages = await getChatHistory(userId, topicId, courseId)
 
     if (messages.length === 0) {
       return ''

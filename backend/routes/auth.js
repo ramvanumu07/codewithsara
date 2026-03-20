@@ -331,7 +331,7 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
           total_tasks: totalTasks,
           assignments_completed: 0,
           updated_at: new Date().toISOString()
-        })
+        }, firstTopic.courseId)
       }
     } catch (_progressErr) {
       // ignore progress init
@@ -404,7 +404,7 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
             total_tasks: totalTasks,
             assignments_completed: 0,
             updated_at: new Date().toISOString()
-          })
+          }, firstTopic.courseId)
         }
       }
     } catch (_progressErr) {

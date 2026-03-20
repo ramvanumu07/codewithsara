@@ -23,6 +23,8 @@ import { generateCertificatePDF, CERTIFICATE_TOPICS } from '../services/certific
 import { saveInitialMessage, getChatHistoryString, getChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
 import { invalidateChatHistoryCache } from '../services/chatCache.js'
 import { courses } from '../data/curriculum.js'
+import { TOPIC_ORDER } from '../data/curriculum-parts/order.js'
+import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 import { formatLearningObjectives, findTopicById, getAllTopics } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
@@ -30,6 +32,10 @@ import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/prompts.js'
 
 const router = express.Router()
+
+function progressRowForTopic(allProgress, topic) {
+  return allProgress.find((p) => p.topic_id === topic.id && p.course_id === topic.courseId)
+}
 
 // ============ VALIDATION SCHEMAS ============
 const schemas = {
@@ -147,9 +153,9 @@ function buildSessionSystemPrompt(topicId, completedTopics = []) {
   })
 }
 
-async function getCompletedTopicsForUser(userId) {
+async function getCompletedTopicsForUser(userId, courseId = DEFAULT_COURSE_ID) {
   try {
-    const completedTopics = await getCompletedTopics(userId)
+    const completedTopics = await getCompletedTopics(userId, courseId)
     return completedTopics
   } catch (error) {
     return []
@@ -210,10 +216,11 @@ router.get('/state/:topicId', authenticateToken, requireCourseUnlocked, async (r
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
+    const courseId = topic.courseId
     // Get progress and chat history in parallel
     const [progress, chatHistory] = await Promise.all([
-      getProgress(userId, topicId),
-      getChatHistoryString(userId, topicId)
+      getProgress(userId, topicId, courseId),
+      getChatHistoryString(userId, topicId, courseId)
     ])
 
     if (!progress) {
@@ -275,17 +282,18 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
       ? assignments
       : ['Practice the concept with a simple example']
 
+    const courseId = topic.courseId
     // Initialize topic progress - direct database call for compatibility
     await upsertProgress(userId, topicId, {
       phase: 'session',
       status: 'in_progress',
       updated_at: new Date().toISOString()
-    })
+    }, courseId)
 
     // Get student context and chat history for prompt
     const [completedTopics, chatHistory] = await Promise.all([
-      getCompletedTopicsForUser(userId),
-      getChatHistory(userId, topicId)
+      getCompletedTopicsForUser(userId, courseId),
+      getChatHistory(userId, topicId, courseId)
     ])
     const outcomes = topic ? formatLearningObjectives(topic.outcomes) : 'Learn programming concepts'
 
@@ -310,13 +318,13 @@ router.post('/session/start', authenticateToken, rateLimitMiddleware, validateBo
     // Generate initial message (idempotent - won't duplicate if conversation exists)
     const aiResponse = await callAI(messages, 800, 0.4)
 
-    const result = await saveInitialMessage(userId, topicId, aiResponse)
+    const result = await saveInitialMessage(userId, topicId, aiResponse, 'session', courseId)
 
     const directResponse = result.wasCreated ? aiResponse :
       result.conversationHistory?.match(/AGENT: (.+?)(?=\nUSER:|$)/s)?.[1]?.trim() || 'Session ready'
 
     // Get updated progress after saving
-    const progress = await getProgress(userId, topicId)
+    const progress = await getProgress(userId, topicId, courseId)
 
     res.json({
       success: true,
@@ -349,11 +357,12 @@ router.post('/playtime/start', authenticateToken, rateLimitMiddleware, validateB
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
+    const courseId = topic.courseId
     await upsertProgress(userId, topicId, {
       phase: 'playtime',
       status: 'in_progress',
       updated_at: new Date().toISOString()
-    })
+    }, courseId)
 
     res.json(createSuccessResponse({
       message: 'Practice what you learned in the session. Try out the concepts in the editor and run your code.',
@@ -386,6 +395,7 @@ router.post('/playtime/complete', authenticateToken, rateLimitMiddleware, valida
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
+    const courseId = topic.courseId
 
     // Complete playtime phase - direct database update for compatibility
     try {
@@ -394,7 +404,7 @@ router.post('/playtime/complete', authenticateToken, rateLimitMiddleware, valida
         phase: 'assignment',
         status: 'in_progress',
         updated_at: new Date().toISOString()
-      })
+      }, courseId)
 
     } catch (dbError) {
       throw new Error(`Failed to complete playtime: ${dbError.message}`)
@@ -433,6 +443,7 @@ router.post('/assignment/start', authenticateToken, rateLimitMiddleware, validat
       return res.status(400).json(createErrorResponse('No assignments available for this topic'))
     }
 
+    const courseId = topic.courseId
     // Start assignment phase - direct database call for compatibility
     await upsertProgress(userId, topicId, {
       phase: 'assignment',
@@ -440,7 +451,7 @@ router.post('/assignment/start', authenticateToken, rateLimitMiddleware, validat
       current_task: 1,
       total_tasks: tasks.length,
       updated_at: new Date().toISOString()
-    })
+    }, courseId)
 
     // Get first assignment
     const firstTask = tasks[0]
@@ -486,6 +497,7 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
+    const courseId = topic.courseId
     const tasks = topic.tasks || []
     if (assignmentIndex >= tasks.length) {
       return res.status(400).json(createErrorResponse('Invalid assignment index'))
@@ -512,7 +524,7 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
     }
 
     // Complete assignment - tests passed or no tests required. Only advance when user completes the next task in sequence (no reward for skipping).
-    const currentProgress = await getProgress(userId, topicId)
+    const currentProgress = await getProgress(userId, topicId, courseId)
     const currentCount = currentProgress?.assignments_completed ?? currentProgress?.completed_assignments ?? 0
     const isNextInSequence = assignmentIndex === currentCount
     const completedAssignments = isNextInSequence ? currentCount + 1 : currentCount
@@ -531,7 +543,7 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
     }
 
     try {
-      await upsertProgress(userId, topicId, progressPayload)
+      await upsertProgress(userId, topicId, progressPayload, courseId)
     } catch (progressErr) {
       const msg = progressErr?.message || ''
       if (msg.includes('column') && msg.includes('does not exist')) {
@@ -544,14 +556,14 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
           updated_at: now
         }
         try {
-          await upsertProgress(userId, topicId, minimalPayload)
+          await upsertProgress(userId, topicId, minimalPayload, courseId)
         } catch (minimalErr) {
           const m2 = minimalErr?.message || ''
           if (m2.includes('assignments_completed')) {
             const alt = { ...minimalPayload }
             delete alt.assignments_completed
             alt.completed_assignments = completedAssignments
-            await upsertProgress(userId, topicId, alt)
+            await upsertProgress(userId, topicId, alt, courseId)
           } else {
             throw minimalErr
           }
@@ -564,8 +576,8 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
     // When topic is fully completed, remove session chat so user uses topic notes instead
     if (isTopicComplete) {
       try {
-        await deleteChatSessionRow(userId, topicId)
-        await invalidateChatHistoryCache(userId, topicId)
+        await deleteChatSessionRow(userId, topicId, courseId)
+        await invalidateChatHistoryCache(userId, topicId, courseId)
       } catch (deleteErr) {
         console.warn('Could not delete chat session for completed topic:', deleteErr?.message)
       }
@@ -724,16 +736,22 @@ router.get('/progress', authenticateToken, async (req, res) => {
           total_tasks: totalTasks,
           assignments_completed: 0,
           updated_at: new Date().toISOString()
-        })
+        }, firstTopic.courseId)
         allProgress = await getAllProgress(userId)
       }
     }
 
-    // Calculate summary directly
+    // Calculate summary directly (match progress row to curriculum topic by topic_id + course_id)
     const allTopicsFromCurriculum = getAllTopics(courses)
     const totalTopics = allTopicsFromCurriculum.length
-    const completedTopics = allProgress.filter(p => p.status === 'completed').length
-    const inProgressTopics = allProgress.filter(p => p.status === 'in_progress').length
+    const completedTopics = allTopicsFromCurriculum.filter((t) => {
+      const p = progressRowForTopic(allProgress, t)
+      return p?.status === 'completed'
+    }).length
+    const inProgressTopics = allTopicsFromCurriculum.filter((t) => {
+      const p = progressRowForTopic(allProgress, t)
+      return p?.status === 'in_progress'
+    }).length
 
     const summary = {
       total_topics: totalTopics,
@@ -777,8 +795,14 @@ router.get('/progress/summary', authenticateToken, async (req, res) => {
     const allProgress = await getAllProgress(userId)
     const allTopicsFromCurriculum = getAllTopics(courses)
     const totalTopics = allTopicsFromCurriculum.length
-    const completedTopics = allProgress.filter(p => p.status === 'completed').length
-    const inProgressTopics = allProgress.filter(p => p.status === 'in_progress').length
+    const completedTopics = allTopicsFromCurriculum.filter((t) => {
+      const p = progressRowForTopic(allProgress, t)
+      return p?.status === 'completed'
+    }).length
+    const inProgressTopics = allTopicsFromCurriculum.filter((t) => {
+      const p = progressRowForTopic(allProgress, t)
+      return p?.status === 'in_progress'
+    }).length
     const summary = {
       total_topics: totalTopics,
       completed_topics: completedTopics,
@@ -800,7 +824,14 @@ router.get('/certificate/download', authenticateToken, rateLimitMiddleware, asyn
   try {
     const userId = req.user.userId
     const allProgress = await getAllProgress(userId)
-    const completedTopics = allProgress.filter(p => p.status === 'completed').length
+    const certCourseId = courses[0]?.id ?? DEFAULT_COURSE_ID
+    const orderedTopicSet = new Set(TOPIC_ORDER)
+    const completedTopics = allProgress.filter(
+      (p) =>
+        p.course_id === certCourseId &&
+        orderedTopicSet.has(p.topic_id) &&
+        p.status === 'completed'
+    ).length
 
     if (completedTopics < CERTIFICATE_TOPICS) {
       return res.status(403).json(createErrorResponse(
@@ -902,8 +933,10 @@ router.get('/debug/progress/:topicId', authenticateToken, async (req, res) => {
   try {
     const { topicId } = req.params
     const userId = req.user.userId
+    const topicMeta = findTopicById(courses, topicId)
+    const courseId = topicMeta?.courseId ?? DEFAULT_COURSE_ID
 
-    const progress = await getProgress(userId, topicId)
+    const progress = await getProgress(userId, topicId, courseId)
 
 
     res.json({
@@ -988,7 +1021,7 @@ router.get('/continue', authenticateToken, async (req, res) => {
           total_tasks: totalTasks,
           assignments_completed: 0,
           updated_at: new Date().toISOString()
-        })
+        }, firstTopic.courseId)
       }
 
       const topic = firstTopic || getAllTopics(courses)[0]
@@ -1041,7 +1074,7 @@ router.get('/topics', authenticateToken, async (req, res) => {
 
     // Enhance topics with progress information
     const enhancedTopics = topics.map(topic => {
-      const progress = userProgress.find(p => p.topic_id === topic.id)
+      const progress = progressRowForTopic(userProgress, topic)
       return {
         ...topic,
         status: progress?.status || 'not_started',
@@ -1052,7 +1085,7 @@ router.get('/topics', authenticateToken, async (req, res) => {
     res.json(createSuccessResponse({
       topics: enhancedTopics,
       totalTopics: topics.length,
-      completedTopics: userProgress.filter(p => p.status === 'completed').length
+      completedTopics: topics.filter((t) => progressRowForTopic(userProgress, t)?.status === 'completed').length
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'get topics')
@@ -1070,7 +1103,8 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
-    let progress = await getProgress(userId, topicId)
+    const courseId = topic.courseId
+    let progress = await getProgress(userId, topicId, courseId)
     const totalTasks = (topic.tasks || []).length
 
     if (!referenceOnly) {
@@ -1085,14 +1119,14 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
           total_tasks: totalTasks,
           assignments_completed: 0,
           updated_at: now
-        })
+        }, courseId)
       } else {
         progress = await upsertProgress(userId, topicId, {
           phase: progress.phase || 'session',
           status: progress.status || 'in_progress',
           total_tasks: totalTasks,
           updated_at: now
-        })
+        }, courseId)
       }
 
       // Normalize legacy state: completed + session → assignment + in_progress (2-phase model)
@@ -1102,7 +1136,7 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
           status: 'in_progress',
           total_tasks: totalTasks,
           updated_at: new Date().toISOString()
-        })
+        }, courseId)
         progress = { ...progress, phase: 'assignment', status: 'in_progress' }
       }
     } else if (!progress) {

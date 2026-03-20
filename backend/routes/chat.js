@@ -70,14 +70,15 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
-    let progress = await getProgress(userId, topicId)
+    const courseId = topic.courseId
+    let progress = await getProgress(userId, topicId, courseId)
     if (!progress) {
       await upsertProgress(userId, topicId, {
         phase: 'session',
         status: 'in_progress',
         updated_at: new Date().toISOString()
-      })
-      progress = await getProgress(userId, topicId)
+      }, courseId)
+      progress = await getProgress(userId, topicId, courseId)
     }
 
     if (progress && (progress.phase === 'assignment' || progress.topic_completed === true)) {
@@ -85,8 +86,8 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
     }
 
     const [chatHistory, completedTopics] = await Promise.all([
-      getChatHistory(userId, topicId),
-      getCompletedTopics(userId)
+      getChatHistory(userId, topicId, courseId),
+      getCompletedTopics(userId, courseId)
     ])
 
     const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
@@ -125,9 +126,9 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
 
     let saveResult
     if (message.trim()) {
-      saveResult = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse)
+      saveResult = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse, 'session', courseId)
     } else {
-      saveResult = await saveInitialMessage(userId, topicId, cleanedResponse)
+      saveResult = await saveInitialMessage(userId, topicId, cleanedResponse, 'session', courseId)
     }
 
     const savedMessages = Array.isArray(saveResult) ? saveResult : (saveResult?.messages ?? [])
@@ -138,7 +139,7 @@ router.post('/session/stream', authenticateToken, rateLimitMiddleware, async (re
           phase: 'assignment',
           status: 'in_progress',
           updated_at: new Date().toISOString()
-        })
+        }, courseId)
       } catch (_) { /* ignore */ }
     }
 
@@ -176,14 +177,15 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
-    let progress = await getProgress(userId, topicId)
+    const courseId = topic.courseId
+    let progress = await getProgress(userId, topicId, courseId)
     if (!progress) {
       await upsertProgress(userId, topicId, {
         phase: 'session',
         status: 'in_progress',
         updated_at: new Date().toISOString()
-      })
-      progress = await getProgress(userId, topicId)
+      }, courseId)
+      progress = await getProgress(userId, topicId, courseId)
     }
 
     if (progress && (progress.phase === 'assignment' || progress.topic_completed === true)) {
@@ -191,8 +193,8 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
     }
 
     const [chatHistory, completedTopics] = await Promise.all([
-      getChatHistory(userId, topicId),
-      getCompletedTopics(userId)
+      getChatHistory(userId, topicId, courseId),
+      getCompletedTopics(userId, courseId)
     ])
 
     const systemPrompt = buildSessionSystemPrompt(topicId, completedTopics)
@@ -212,9 +214,9 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
 
     let saveResult
     if (message.trim()) {
-      saveResult = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse)
+      saveResult = await saveChatTurn(userId, topicId, message.trim(), cleanedResponse, 'session', courseId)
     } else {
-      saveResult = await saveInitialMessage(userId, topicId, cleanedResponse)
+      saveResult = await saveInitialMessage(userId, topicId, cleanedResponse, 'session', courseId)
     }
 
     // saveChatTurn returns messages array; saveInitialMessage returns { messages, ... }
@@ -229,7 +231,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
           phase: 'assignment',
           status: 'in_progress',
           updated_at: new Date().toISOString()
-        })
+        }, courseId)
       } catch (_) { /* ignore */ }
     }
 
@@ -257,8 +259,10 @@ router.get('/debug/history/:topicId', authenticateToken, async (req, res) => {
   try {
     const { topicId } = req.params
     const userId = req.user.userId
+    const topicMeta = findTopicById(courses, topicId)
+    const courseId = topicMeta?.courseId
 
-    const data = await getChatSessionRow(userId, topicId)
+    const data = await getChatSessionRow(userId, topicId, courseId)
     res.json(createSuccessResponse({
       raw_data: data,
       messages_type: typeof data?.messages,
@@ -281,7 +285,7 @@ router.get('/history/:topicId', authenticateToken, async (req, res) => {
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
-    const messages = await getChatHistory(userId, topicId)
+    const messages = await getChatHistory(userId, topicId, topic.courseId)
     const duration = Date.now() - startTime
 
     // Add performance metrics to response
@@ -327,7 +331,7 @@ router.delete('/history/:topicId', authenticateToken, async (req, res) => {
     const topic = getTopicOrRespond(res, courses, topicId, createErrorResponse)
     if (!topic) { return }
 
-    await clearChatHistory(userId, topicId)
+    await clearChatHistory(userId, topicId, topic.courseId)
 
 
     res.json(createSuccessResponse({
@@ -348,18 +352,23 @@ router.post('/complete/:topicId', authenticateToken, async (req, res) => {
   try {
     const { topicId } = req.params
     const userId = req.user.userId
+    const topicMeta = findTopicById(courses, topicId)
+    if (!topicMeta) {
+      return res.status(404).json(createErrorResponse('Topic not found'))
+    }
+    const courseId = topicMeta.courseId
 
     // Update progress: session complete → assignment phase (2-phase model)
     await upsertProgress(userId, topicId, {
       status: 'in_progress',
       phase: 'assignment',
       updated_at: new Date().toISOString()
-    })
+    }, courseId)
 
     // Add completion message to chat history
-    const completionMessage = `Congratulations! You've Mastered ${topicId}!\n\nYou have successfully completed all learning objectives. Ready for the next phase!`
+    const completionMessage = `Congratulations! You've Mastered ${topicMeta.title || topicId}!\n\nYou have successfully completed all learning objectives. Ready for the next phase!`
 
-    await saveChatTurn(userId, topicId, 'MANUAL_COMPLETION', completionMessage)
+    await saveChatTurn(userId, topicId, 'MANUAL_COMPLETION', completionMessage, 'session', courseId)
 
     res.json(createSuccessResponse({
       message: 'Session completed successfully',

@@ -5,6 +5,9 @@
 import express from 'express'
 import { getSupabaseClient, getChatSessionRaw } from '../services/database.js'
 import { getChatHistory } from '../services/chatService.js'
+import { courses } from '../data/curriculum.js'
+import { findTopicById } from '../utils/curriculum.js'
+import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 
 const router = express.Router()
 
@@ -27,7 +30,10 @@ router.get('/chat-history/:topicId', async (req, res) => {
       })
     }
 
-    const rawData = await getChatSessionRaw(userId, topicId)
+    const topicMeta = findTopicById(courses, topicId)
+    const courseId = topicMeta?.courseId ?? DEFAULT_COURSE_ID
+
+    const rawData = await getChatSessionRaw(userId, topicId, courseId)
     if (!rawData) {
       return res.json({
         status: 'no_history',
@@ -38,7 +44,7 @@ router.get('/chat-history/:topicId', async (req, res) => {
     }
 
     // Get parsed data using chat service
-    const parsedMessages = await getChatHistory(userId, topicId)
+    const parsedMessages = await getChatHistory(userId, topicId, courseId)
 
     // Analyze the raw messages format
     const rawMessages = rawData.messages

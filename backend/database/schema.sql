@@ -1,7 +1,21 @@
 -- Sara Learning Platform - Postgres schema (Neon or any Postgres)
 -- Run this in Neon SQL Editor (or psql) to create tables.
+-- progress + chat_sessions are scoped by (user_id, course_id, topic_id).
 --
--- New project: safe to run as-is. DROP TRIGGER / CREATE OR REPLACE only affect objects that don't exist yet on a fresh project.
+-- New project: safe to run as-is. Existing DBs: use your migration path; this file is the target shape for fresh installs.
+
+-- ============ COURSES (catalog; FK target for progress / chat_sessions) ============
+CREATE TABLE IF NOT EXISTS public.courses (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Seed default course — keep id aligned with backend/data/curriculum.js and backend/config/defaultCourse.js
+INSERT INTO public.courses (id, title, description) VALUES
+  ('javascript', 'JavaScript', 'Master JavaScript from fundamentals to advanced concepts')
+ON CONFLICT (id) DO NOTHING;
 
 -- ============ USERS ============
 CREATE TABLE IF NOT EXISTS public.users (
@@ -21,10 +35,11 @@ CREATE TABLE IF NOT EXISTS public.users (
 
 CREATE INDEX IF NOT EXISTS idx_users_username_lower ON public.users (LOWER(username));
 
--- ============ PROGRESS (per-user, per-topic learning state) ============
+-- ============ PROGRESS (per user, per course, per topic) ============
 CREATE TABLE IF NOT EXISTS public.progress (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  course_id TEXT NOT NULL REFERENCES public.courses(id) ON DELETE CASCADE,
   topic_id TEXT NOT NULL,
   phase TEXT,
   status TEXT,
@@ -32,16 +47,18 @@ CREATE TABLE IF NOT EXISTS public.progress (
   total_tasks INTEGER,
   assignments_completed INTEGER NOT NULL DEFAULT 0,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  CONSTRAINT progress_user_topic_unique UNIQUE (user_id, topic_id)
+  CONSTRAINT progress_user_course_topic_unique UNIQUE (user_id, course_id, topic_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_progress_user_id ON public.progress (user_id);
+CREATE INDEX IF NOT EXISTS idx_progress_course_id ON public.progress (course_id);
 CREATE INDEX IF NOT EXISTS idx_progress_updated_at ON public.progress (updated_at DESC);
 
--- ============ CHAT_SESSIONS (chat history per user per topic) ============
+-- ============ CHAT_SESSIONS (chat history per user per course per topic) ============
 CREATE TABLE IF NOT EXISTS public.chat_sessions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  course_id TEXT NOT NULL REFERENCES public.courses(id) ON DELETE CASCADE,
   topic_id TEXT NOT NULL,
   messages TEXT,
   message_count INTEGER NOT NULL DEFAULT 0,
@@ -49,10 +66,11 @@ CREATE TABLE IF NOT EXISTS public.chat_sessions (
   last_message_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  CONSTRAINT chat_sessions_user_topic_unique UNIQUE (user_id, topic_id)
+  CONSTRAINT chat_sessions_user_course_topic_unique UNIQUE (user_id, course_id, topic_id)
 );
 
 CREATE INDEX IF NOT EXISTS idx_chat_sessions_user_id ON public.chat_sessions (user_id);
+CREATE INDEX IF NOT EXISTS idx_chat_sessions_course_id ON public.chat_sessions (course_id);
 
 -- ============ ADMINS (admin users) ============
 CREATE TABLE IF NOT EXISTS public.admins (
@@ -107,3 +125,4 @@ CREATE TRIGGER chat_sessions_updated_at
 -- ALTER TABLE public.chat_sessions ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.admins ENABLE ROW LEVEL SECURITY;
 -- ALTER TABLE public.user_course_unlocks ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;

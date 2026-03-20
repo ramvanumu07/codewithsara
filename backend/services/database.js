@@ -6,6 +6,7 @@
 
 import { query, getPool } from './db.js'
 import { withPerformanceLogging, progressCache } from '../middleware/performance.js'
+import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 
 // ============ INIT ============
 function isDevMode() {
@@ -16,7 +17,7 @@ function isDevMode() {
 // Development mode fallback data
 const DEV_USERS = new Map()
 const DEV_PROGRESS = new Map()
-const DEV_CHAT_SESSIONS = new Map() // key: `${userId}:${topicId}`
+const DEV_CHAT_SESSIONS = new Map() // key: `${userId}:${courseId}:${topicId}`
 
 function initializeDatabase() {
   return isDevMode() ? 'DEV_MODE' : getPool()
@@ -179,20 +180,24 @@ export async function isAdmin(userId) {
 
 // ============ PROGRESS OPERATIONS ============
 
-export async function getProgress(userId, topicId) {
-  const cacheKey = `progress:${userId}:${topicId}`
+function progressDevKey(userId, courseId, topicId) {
+  return `${userId}:${courseId}:${topicId}`
+}
+
+export async function getProgress(userId, topicId, courseId = DEFAULT_COURSE_ID) {
+  const cacheKey = `progress:${userId}:${courseId}:${topicId}`
   const cached = progressCache.get(cacheKey)
   if (cached) return cached
 
   return await withPerformanceLogging(async () => {
     if (initializeDatabase() === 'DEV_MODE') {
-      const progress = DEV_PROGRESS.get(`${userId}:${topicId}`)
+      const progress = DEV_PROGRESS.get(progressDevKey(userId, courseId, topicId))
       if (progress) progressCache.set(cacheKey, progress)
       return progress || null
     }
     const { rows } = await query(
-      'SELECT * FROM progress WHERE user_id = $1 AND topic_id = $2',
-      [userId, topicId]
+      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2 AND topic_id = $3',
+      [userId, courseId, topicId]
     )
     const data = rows[0] || null
     if (data) progressCache.set(cacheKey, data)
@@ -200,20 +205,21 @@ export async function getProgress(userId, topicId) {
   }, `getProgress(${topicId})`)
 }
 
-export async function upsertProgress(userId, topicId, updates) {
+export async function upsertProgress(userId, topicId, updates, courseId = DEFAULT_COURSE_ID) {
   return await withPerformanceLogging(async () => {
     if (initializeDatabase() === 'DEV_MODE') {
-      const key = `${userId}:${topicId}`
+      const key = progressDevKey(userId, courseId, topicId)
       const existing = DEV_PROGRESS.get(key) || {}
       const newProgress = {
         user_id: userId,
+        course_id: courseId,
         topic_id: topicId,
         ...existing,
         ...updates,
         updated_at: new Date().toISOString()
       }
       DEV_PROGRESS.set(key, newProgress)
-      progressCache.set(`progress:${userId}:${topicId}`, newProgress)
+      progressCache.set(`progress:${userId}:${courseId}:${topicId}`, newProgress)
       return newProgress
     }
     const allowed = ['phase', 'status', 'current_task', 'total_tasks', 'assignments_completed', 'topic_id']
@@ -221,7 +227,10 @@ export async function upsertProgress(userId, topicId, updates) {
     for (const k of allowed) {
       if (Object.prototype.hasOwnProperty.call(updates, k) && updates[k] !== undefined) safe[k] = updates[k]
     }
-    const existing = await query('SELECT * FROM progress WHERE user_id = $1 AND topic_id = $2', [userId, topicId])
+    const existing = await query(
+      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2 AND topic_id = $3',
+      [userId, courseId, topicId]
+    )
     const merged = {
       phase: safe.phase ?? existing.rows[0]?.phase ?? null,
       status: safe.status ?? existing.rows[0]?.status ?? null,
@@ -230,9 +239,9 @@ export async function upsertProgress(userId, topicId, updates) {
       assignments_completed: safe.assignments_completed ?? existing.rows[0]?.assignments_completed ?? 0
     }
     const { rows } = await query(
-      `INSERT INTO progress (user_id, topic_id, phase, status, current_task, total_tasks, assignments_completed, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
-       ON CONFLICT (user_id, topic_id) DO UPDATE SET
+      `INSERT INTO progress (user_id, course_id, topic_id, phase, status, current_task, total_tasks, assignments_completed, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
+       ON CONFLICT (user_id, course_id, topic_id) DO UPDATE SET
          phase = EXCLUDED.phase,
          status = EXCLUDED.status,
          current_task = EXCLUDED.current_task,
@@ -240,22 +249,31 @@ export async function upsertProgress(userId, topicId, updates) {
          assignments_completed = EXCLUDED.assignments_completed,
          updated_at = NOW()
        RETURNING *`,
-      [userId, topicId, merged.phase, merged.status, merged.current_task, merged.total_tasks, merged.assignments_completed]
+      [userId, courseId, topicId, merged.phase, merged.status, merged.current_task, merged.total_tasks, merged.assignments_completed]
     )
     const data = rows[0]
-    if (data) progressCache.set(`progress:${userId}:${topicId}`, data)
+    if (data) progressCache.set(`progress:${userId}:${courseId}:${topicId}`, data)
     return data
   }, `upsertProgress(${topicId})`)
 }
 
-export async function getAllProgress(userId) {
+export async function getAllProgress(userId, courseId = null) {
   if (initializeDatabase() === 'DEV_MODE') {
     const list = []
     for (const [, p] of DEV_PROGRESS.entries()) {
-      if (p && String(p.user_id) === String(userId)) list.push(p)
+      if (!p || String(p.user_id) !== String(userId)) continue
+      if (courseId != null && p.course_id !== courseId) continue
+      list.push(p)
     }
     list.sort((a, b) => new Date(b.updated_at || 0) - new Date(a.updated_at || 0))
     return list
+  }
+  if (courseId != null) {
+    const { rows } = await query(
+      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2 ORDER BY updated_at DESC',
+      [userId, courseId]
+    )
+    return rows || []
   }
   const { rows } = await query(
     'SELECT * FROM progress WHERE user_id = $1 ORDER BY updated_at DESC',
@@ -264,17 +282,24 @@ export async function getAllProgress(userId) {
   return rows || []
 }
 
-export async function getCompletedTopics(userId) {
+export async function getCompletedTopics(userId, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
     const list = []
     for (const [, p] of DEV_PROGRESS.entries()) {
-      if (p && String(p.user_id) === String(userId) && p.status === 'completed') list.push(p.topic_id)
+      if (
+        p &&
+        String(p.user_id) === String(userId) &&
+        p.course_id === courseId &&
+        p.status === 'completed'
+      ) {
+        list.push(p.topic_id)
+      }
     }
     return list
   }
   const { rows } = await query(
-    'SELECT topic_id FROM progress WHERE user_id = $1 AND status = $2',
-    [userId, 'completed']
+    'SELECT topic_id FROM progress WHERE user_id = $1 AND status = $2 AND course_id = $3',
+    [userId, 'completed', courseId]
   )
   return (rows || []).map((r) => r.topic_id)
 }
@@ -393,41 +418,51 @@ export async function redeemUnlockCode(userId, codeId) {
 
 // ============ CHAT SESSIONS (for chatService.js) ============
 
-export async function getChatSessionRow(userId, topicId) {
+function chatDevKey(userId, courseId, topicId) {
+  return `${userId}:${courseId}:${topicId}`
+}
+
+export async function getChatSessionRow(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
-    const row = DEV_CHAT_SESSIONS.get(`${userId}:${topicId}`)
+    const row = DEV_CHAT_SESSIONS.get(chatDevKey(userId, courseId, topicId))
     return row ? { messages: row.messages, message_count: row.message_count } : null
   }
   const { rows } = await query(
-    'SELECT messages, message_count FROM chat_sessions WHERE user_id = $1 AND topic_id = $2',
-    [userId, topicId]
+    'SELECT messages, message_count FROM chat_sessions WHERE user_id = $1 AND course_id = $2 AND topic_id = $3',
+    [userId, courseId, topicId]
   )
   return rows[0] || null
 }
 
 /** Full row for debug endpoints. */
-export async function getChatSessionRaw(userId, topicId) {
+export async function getChatSessionRaw(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
-    return DEV_CHAT_SESSIONS.get(`${userId}:${topicId}`) || null
+    return DEV_CHAT_SESSIONS.get(chatDevKey(userId, courseId, topicId)) || null
   }
   const { rows } = await query(
-    'SELECT * FROM chat_sessions WHERE user_id = $1 AND topic_id = $2',
-    [userId, topicId]
+    'SELECT * FROM chat_sessions WHERE user_id = $1 AND course_id = $2 AND topic_id = $3',
+    [userId, courseId, topicId]
   )
   return rows[0] || null
 }
 
-export async function upsertChatSessionRow(userId, topicId, payload) {
+export async function upsertChatSessionRow(userId, topicId, payload, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
-    const key = `${userId}:${topicId}`
+    const key = chatDevKey(userId, courseId, topicId)
     const existing = DEV_CHAT_SESSIONS.get(key) || {}
-    DEV_CHAT_SESSIONS.set(key, { ...existing, ...payload, user_id: userId, topic_id: topicId })
+    DEV_CHAT_SESSIONS.set(key, {
+      ...existing,
+      ...payload,
+      user_id: userId,
+      course_id: courseId,
+      topic_id: topicId
+    })
     return
   }
   await query(
-    `INSERT INTO chat_sessions (user_id, topic_id, messages, message_count, phase, last_message_at, updated_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
-     ON CONFLICT (user_id, topic_id) DO UPDATE SET
+    `INSERT INTO chat_sessions (user_id, course_id, topic_id, messages, message_count, phase, last_message_at, updated_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     ON CONFLICT (user_id, course_id, topic_id) DO UPDATE SET
        messages = EXCLUDED.messages,
        message_count = EXCLUDED.message_count,
        phase = EXCLUDED.phase,
@@ -435,6 +470,7 @@ export async function upsertChatSessionRow(userId, topicId, payload) {
        updated_at = EXCLUDED.updated_at`,
     [
       userId,
+      courseId,
       topicId,
       payload.messages,
       payload.message_count,
@@ -445,12 +481,16 @@ export async function upsertChatSessionRow(userId, topicId, payload) {
   )
 }
 
-export async function deleteChatSessionRow(userId, topicId) {
+export async function deleteChatSessionRow(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
-    DEV_CHAT_SESSIONS.delete(`${userId}:${topicId}`)
+    DEV_CHAT_SESSIONS.delete(chatDevKey(userId, courseId, topicId))
     return
   }
-  await query('DELETE FROM chat_sessions WHERE user_id = $1 AND topic_id = $2', [userId, topicId])
+  await query('DELETE FROM chat_sessions WHERE user_id = $1 AND course_id = $2 AND topic_id = $3', [
+    userId,
+    courseId,
+    topicId
+  ])
 }
 
 export async function deleteProgressByUserId(userId) {
@@ -475,21 +515,41 @@ export async function deleteChatSessionsByUserId(userId) {
   await query('DELETE FROM chat_sessions WHERE user_id = $1', [userId])
 }
 
-export async function getProgressRowsByUserId(userId) {
+export async function getProgressRowsByUserId(userId, courseId = null) {
   if (initializeDatabase() === 'DEV_MODE') {
-    return Array.from(DEV_PROGRESS.values()).filter((p) => String(p.user_id) === String(userId))
+    return Array.from(DEV_PROGRESS.values()).filter(
+      (p) =>
+        String(p.user_id) === String(userId) &&
+        (courseId == null || p.course_id === courseId)
+    )
+  }
+  if (courseId != null) {
+    const { rows } = await query(
+      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2',
+      [userId, courseId]
+    )
+    return rows || []
   }
   const { rows } = await query('SELECT * FROM progress WHERE user_id = $1', [userId])
   return rows || []
 }
 
-export async function getChatSessionRowsByUserId(userId) {
+export async function getChatSessionRowsByUserId(userId, courseId = null) {
   if (initializeDatabase() === 'DEV_MODE') {
     const list = []
     for (const [key, row] of DEV_CHAT_SESSIONS.entries()) {
-      if (key.startsWith(`${userId}:`)) list.push(row)
+      if (!key.startsWith(`${userId}:`)) continue
+      if (courseId != null && row.course_id !== courseId) continue
+      list.push(row)
     }
     return list
+  }
+  if (courseId != null) {
+    const { rows } = await query(
+      'SELECT * FROM chat_sessions WHERE user_id = $1 AND course_id = $2',
+      [userId, courseId]
+    )
+    return rows || []
   }
   const { rows } = await query('SELECT * FROM chat_sessions WHERE user_id = $1', [userId])
   return rows || []
