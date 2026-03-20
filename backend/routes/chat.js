@@ -66,10 +66,11 @@ function buildSessionSystemPrompt(topicId, completedTopics = [], teachingOutcome
   const singleObjective = outcomes[idx] || `Learning objective ${idx + 1}`
   const outcomeBody = typeof msgs[idx] === 'string' ? msgs[idx] : ''
   const practiceTask = extractPracticeTaskFromOutcomeMessage(outcomeBody)
-  const sessionContext = `Topic: ${topic.title}
-Current Outcome: ${singleObjective}
-Practice Task: ${practiceTask}`
-  return buildSessionPromptFromShared({ sessionContext })
+  return buildSessionPromptFromShared({
+    topicTitle: topic.title,
+    currentOutcomeObjective: singleObjective,
+    currentPracticeTask: practiceTask
+  })
 }
 
 // ============ CHAT ENDPOINTS ============

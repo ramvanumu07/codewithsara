@@ -6,7 +6,9 @@
 
 | Placeholder | Source |
 |-------------|--------|
-| `sessionContext` | Built in `chat.js` → `buildSessionSystemPrompt()`: **Topic**, **Current Outcome** (`topic.outcomes[i]`), **Practice Task** (from `## Practice` in `topic.outcome_messages[i]`, or a fallback string). |
+| `topicTitle` | `topic.title` |
+| `currentOutcomeObjective` | `topic.outcomes[i]` or fallback label |
+| `currentPracticeTask` | `## Practice` body from `topic.outcome_messages[i]` (see `extractPracticeTaskFromOutcomeMessage`) |
 
 **Completion (server):** If the assistant reply contains **`Congratulations! You've mastered`** (case-insensitive), the API treats it like a completion signal: text **before** that phrase is kept as feedback, the mastery tail is stripped for merging, and the server appends the next `outcome_messages[i]` (or the full-topic mastery line on the last outcome), updates `current_outcome_index`, and saves one assistant message. Legacy `[[OUTCOME_COMPLETE]]` is stripped if present.
 
@@ -14,7 +16,7 @@
 
 ## Behaviour summary (as built in code)
 
-- Dynamic session facts are passed as the single **`sessionContext`** block; the rest of the prompt is static in `prompts.js`.
+- Dynamic session facts are passed as separate fields to `buildSessionPrompt()`; the rest of the prompt is static in `prompts.js`.
 - The model should end with a mastery line that matches the **Current Outcome** text so it aligns with `sessionOutcome` stripping and progression.
 
 ---
