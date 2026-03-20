@@ -472,6 +472,11 @@ const Dashboard = () => {
 
   const selectedCourseData = courses.find(c => c.id === selectedCourse)
   const currentProgressSummary = updateProgressForCourse(selectedCourse)
+  const selectedCourseComplete =
+    (currentProgressSummary.total_topics || 0) > 0 &&
+    (currentProgressSummary.completed_topics || 0) >= (currentProgressSummary.total_topics || 0)
+  const hideCurrentlyLearningAndContinue =
+    selectedCourseComplete && !!progressSummary.certificate_eligible
 
   const courseTopicIds = selectedCourseData?.topics?.map(t => t.id) || []
   const allTopicsForCourse = selectedCourseData?.topics || []
@@ -781,53 +786,56 @@ const Dashboard = () => {
 
             {/* Continue Learning Section */}
             <div className="continue-section">
-              {/* Current Learning Status Card - Above Button */}
-              {(() => {
-                const currentTopic = getCurrentActiveTopic()
-                if (currentTopic) {
-                  return (
-                    <div className="current-learning-card">
-                      <div className="learning-header">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="learning-icon">
-                          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                        </svg>
-                        <span className="learning-label">Currently Learning</span>
-                      </div>
-                      <div className="topic-info">
-                        <h4 className="topic-title">{currentTopic.title}</h4>
-                        <div className="phase-info">
-                          {getPhaseIcon(currentTopic.phase)}
-                          <span className="phase-name">{getPhaseDisplayName(currentTopic.phase)}</span>
+              {!hideCurrentlyLearningAndContinue && (
+                <>
+                  {/* Current Learning Status Card - Above Button */}
+                  {(() => {
+                    const currentTopic = getCurrentActiveTopic()
+                    if (currentTopic) {
+                      return (
+                        <div className="current-learning-card">
+                          <div className="learning-header">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="learning-icon">
+                              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                            </svg>
+                            <span className="learning-label">Currently Learning</span>
+                          </div>
+                          <div className="topic-info">
+                            <h4 className="topic-title">{currentTopic.title}</h4>
+                            <div className="phase-info">
+                              {getPhaseIcon(currentTopic.phase)}
+                              <span className="phase-name">{getPhaseDisplayName(currentTopic.phase)}</span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  )
-                } else {
-                  return null
-                }
-              })()}
+                      )
+                    }
+                    return null
+                  })()}
 
-              {/* Continue Learning Button - disabled when current topic's course is locked */}
-              {(() => {
-                const currentTopic = getCurrentActiveTopic()
-                const currentTopicCourseId = currentTopic ? courses.find(c => c.topics?.some(t => t.id === currentTopic.id))?.id : null
-                const isContinueDisabled = currentTopicCourseId && !unlockedCourseIds.includes(currentTopicCourseId)
-                return (
-                  <button
-                    className="continue-btn"
-                    onClick={handleContinueLearning}
-                    disabled={isContinueDisabled}
-                    title={isContinueDisabled ? 'Purchase this course to continue' : undefined}
-                    style={isContinueDisabled ? { opacity: 0.7, cursor: 'not-allowed' } : undefined}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polygon points="5,3 19,12 5,21" />
-                    </svg>
-                    Continue Learning
-                  </button>
-                )
-              })()}
+                  {/* Continue Learning Button - disabled when current topic's course is locked */}
+                  {(() => {
+                    const currentTopic = getCurrentActiveTopic()
+                    const currentTopicCourseId = currentTopic ? courses.find(c => c.topics?.some(t => t.id === currentTopic.id))?.id : null
+                    const isContinueDisabled = currentTopicCourseId && !unlockedCourseIds.includes(currentTopicCourseId)
+                    return (
+                      <button
+                        className="continue-btn"
+                        onClick={handleContinueLearning}
+                        disabled={isContinueDisabled}
+                        title={isContinueDisabled ? 'Purchase this course to continue' : undefined}
+                        style={isContinueDisabled ? { opacity: 0.7, cursor: 'not-allowed' } : undefined}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polygon points="5,3 19,12 5,21" />
+                        </svg>
+                        Continue Learning
+                      </button>
+                    )
+                  })()}
+                </>
+              )}
 
               {/* All topics under Continue – notes and assignment icons for all */}
               {allTopicsForCourse.length > 0 && (
