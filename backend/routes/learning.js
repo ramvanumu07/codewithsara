@@ -23,6 +23,7 @@ import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 import { formatLearningObjectives, findTopicById, getAllTopics, getNextTopicId, getTopicIdsForCourse } from '../utils/curriculum.js'
 import { expandLinearProgressToTopicRows, resolveCanonicalCurrentTopicId } from '../utils/linearProgress.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
+import { slimCoursesForList, slimTopicNavRef } from '../utils/courseListSerializer.js'
 import { getFirstOutcomeMessage } from '../utils/outcomeMessages.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
@@ -1030,11 +1031,11 @@ router.get('/continue', authenticateToken, async (req, res) => {
 
 // ============ COURSE MANAGEMENT ============
 
-// GET /courses - Get all courses
+// GET /courses - Course + topic metadata only (no lesson bodies or assignment payloads)
 router.get('/courses', authenticateToken, async (req, res) => {
   try {
     res.json(createSuccessResponse({
-      courses
+      courses: slimCoursesForList(courses)
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'Failed to get courses')
@@ -1134,7 +1135,7 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
     // Get all topics to find next topic
     const allTopics = getAllTopics(courses)
     const currentIndex = allTopics.findIndex(t => t.id === topicId)
-    const nextTopic = currentIndex >= 0 && currentIndex < allTopics.length - 1
+    const nextTopicFull = currentIndex >= 0 && currentIndex < allTopics.length - 1
       ? allTopics[currentIndex + 1]
       : null
 
@@ -1148,7 +1149,7 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
         assignments_completed: progress?.assignments_completed ?? 0,
         topic_completed: progress?.status === 'completed' || (totalTasks > 0 && (progress?.assignments_completed ?? 0) >= totalTasks)
       },
-      nextTopic
+      nextTopic: slimTopicNavRef(nextTopicFull)
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'get topic details')
