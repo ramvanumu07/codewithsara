@@ -7,6 +7,8 @@
 import { query, getPool } from './db.js'
 import { withPerformanceLogging, progressCache } from '../middleware/performance.js'
 import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
+import { courses as curriculumCourses } from '../data/curriculum.js'
+import { getTopicIdsForCourse } from '../utils/curriculum.js'
 
 // ============ INIT ============
 function isDevMode() {
@@ -17,7 +19,7 @@ function isDevMode() {
 // Development mode fallback data
 const DEV_USERS = new Map()
 const DEV_PROGRESS = new Map()
-const DEV_CHAT_SESSIONS = new Map() // key: `${userId}:${courseId}:${topicId}`
+const DEV_CHAT_SESSIONS = new Map() // key: `${userId}:${courseId}` — one row per course (current topic only)
 
 function initializeDatabase() {
   return isDevMode() ? 'DEV_MODE' : getPool()
@@ -179,80 +181,153 @@ export async function isAdmin(userId) {
 }
 
 // ============ PROGRESS OPERATIONS ============
+// One row per (user_id, course_id): only the topic currently being learned. completed_topics_count = fully mastered topics in order.
 
-function progressDevKey(userId, courseId, topicId) {
-  return `${userId}:${courseId}:${topicId}`
+function progressCourseCacheKey(userId, courseId) {
+  return `progress:${userId}:${courseId}`
+}
+
+function progressDevKey(userId, courseId) {
+  return `${userId}:${courseId}`
+}
+
+/** Single progress row for a course (current topic only). */
+export async function getProgressRowForCourse(userId, courseId = DEFAULT_COURSE_ID) {
+  if (initializeDatabase() === 'DEV_MODE') {
+    return DEV_PROGRESS.get(progressDevKey(userId, courseId)) || null
+  }
+  const { rows } = await query('SELECT * FROM progress WHERE user_id = $1 AND course_id = $2', [userId, courseId])
+  return rows[0] || null
 }
 
 export async function getProgress(userId, topicId, courseId = DEFAULT_COURSE_ID) {
-  const cacheKey = `progress:${userId}:${courseId}:${topicId}`
-  const cached = progressCache.get(cacheKey)
-  if (cached) return cached
-
+  const cacheKey = progressCourseCacheKey(userId, courseId)
   return await withPerformanceLogging(async () => {
     if (initializeDatabase() === 'DEV_MODE') {
-      const progress = DEV_PROGRESS.get(progressDevKey(userId, courseId, topicId))
-      if (progress) progressCache.set(cacheKey, progress)
-      return progress || null
+      const row = DEV_PROGRESS.get(progressDevKey(userId, courseId))
+      if (!row || String(row.topic_id) !== String(topicId)) {
+        return null
+      }
+      progressCache.set(cacheKey, row)
+      return row
+    }
+    const cached = progressCache.get(cacheKey)
+    if (cached && String(cached.topic_id) === String(topicId)) {
+      return cached
     }
     const { rows } = await query(
-      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2 AND topic_id = $3',
-      [userId, courseId, topicId]
+      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2',
+      [userId, courseId]
     )
     const data = rows[0] || null
-    if (data) progressCache.set(cacheKey, data)
+    if (!data || String(data.topic_id) !== String(topicId)) {
+      return null
+    }
+    progressCache.set(cacheKey, data)
     return data
   }, `getProgress(${topicId})`)
 }
 
 export async function upsertProgress(userId, topicId, updates, courseId = DEFAULT_COURSE_ID) {
+  const cacheKey = progressCourseCacheKey(userId, courseId)
   return await withPerformanceLogging(async () => {
     if (initializeDatabase() === 'DEV_MODE') {
-      const key = progressDevKey(userId, courseId, topicId)
+      const key = progressDevKey(userId, courseId)
       const existing = DEV_PROGRESS.get(key) || {}
+      if (
+        existing.user_id &&
+        String(existing.topic_id) !== String(topicId) &&
+        updates.topic_id === undefined
+      ) {
+        progressCache.set(cacheKey, existing)
+        return existing
+      }
+      const mergedTopicId =
+        updates.topic_id !== undefined ? updates.topic_id : topicId
       const newProgress = {
         user_id: userId,
         course_id: courseId,
-        topic_id: topicId,
-        ...existing,
-        ...updates,
+        topic_id: mergedTopicId,
+        phase: updates.phase ?? existing.phase ?? null,
+        status: updates.status ?? existing.status ?? null,
+        current_task: updates.current_task ?? existing.current_task ?? null,
+        total_tasks: updates.total_tasks ?? existing.total_tasks ?? null,
+        assignments_completed:
+          updates.assignments_completed ?? existing.assignments_completed ?? 0,
+        completed_topics_count:
+          updates.completed_topics_count !== undefined
+            ? updates.completed_topics_count
+            : (existing.completed_topics_count ?? 0),
         updated_at: new Date().toISOString()
       }
       DEV_PROGRESS.set(key, newProgress)
-      progressCache.set(`progress:${userId}:${courseId}:${topicId}`, newProgress)
+      progressCache.set(cacheKey, newProgress)
       return newProgress
     }
-    const allowed = ['phase', 'status', 'current_task', 'total_tasks', 'assignments_completed', 'topic_id']
+    const allowed = [
+      'phase',
+      'status',
+      'current_task',
+      'total_tasks',
+      'assignments_completed',
+      'topic_id',
+      'completed_topics_count'
+    ]
     const safe = {}
     for (const k of allowed) {
-      if (Object.prototype.hasOwnProperty.call(updates, k) && updates[k] !== undefined) safe[k] = updates[k]
+      if (Object.prototype.hasOwnProperty.call(updates, k) && updates[k] !== undefined) {
+        safe[k] = updates[k]
+      }
     }
-    const existing = await query(
-      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2 AND topic_id = $3',
-      [userId, courseId, topicId]
+    const existingQ = await query(
+      'SELECT * FROM progress WHERE user_id = $1 AND course_id = $2',
+      [userId, courseId]
     )
+    const ex = existingQ.rows[0]
+    if (ex && String(ex.topic_id) !== String(topicId) && updates.topic_id === undefined) {
+      progressCache.set(cacheKey, ex)
+      return ex
+    }
+    const mergedTopicId = safe.topic_id !== undefined ? safe.topic_id : topicId
     const merged = {
-      phase: safe.phase ?? existing.rows[0]?.phase ?? null,
-      status: safe.status ?? existing.rows[0]?.status ?? null,
-      current_task: safe.current_task ?? existing.rows[0]?.current_task ?? null,
-      total_tasks: safe.total_tasks ?? existing.rows[0]?.total_tasks ?? null,
-      assignments_completed: safe.assignments_completed ?? existing.rows[0]?.assignments_completed ?? 0
+      topic_id: mergedTopicId,
+      phase: safe.phase ?? ex?.phase ?? null,
+      status: safe.status ?? ex?.status ?? null,
+      current_task: safe.current_task ?? ex?.current_task ?? null,
+      total_tasks: safe.total_tasks ?? ex?.total_tasks ?? null,
+      assignments_completed: safe.assignments_completed ?? ex?.assignments_completed ?? 0,
+      completed_topics_count:
+        safe.completed_topics_count !== undefined
+          ? safe.completed_topics_count
+          : (ex?.completed_topics_count ?? 0)
     }
     const { rows } = await query(
-      `INSERT INTO progress (user_id, course_id, topic_id, phase, status, current_task, total_tasks, assignments_completed, updated_at)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW())
-       ON CONFLICT (user_id, course_id, topic_id) DO UPDATE SET
+      `INSERT INTO progress (user_id, course_id, topic_id, phase, status, current_task, total_tasks, assignments_completed, completed_topics_count, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW())
+       ON CONFLICT (user_id, course_id) DO UPDATE SET
+         topic_id = EXCLUDED.topic_id,
          phase = EXCLUDED.phase,
          status = EXCLUDED.status,
          current_task = EXCLUDED.current_task,
          total_tasks = EXCLUDED.total_tasks,
          assignments_completed = EXCLUDED.assignments_completed,
+         completed_topics_count = EXCLUDED.completed_topics_count,
          updated_at = NOW()
        RETURNING *`,
-      [userId, courseId, topicId, merged.phase, merged.status, merged.current_task, merged.total_tasks, merged.assignments_completed]
+      [
+        userId,
+        courseId,
+        merged.topic_id,
+        merged.phase,
+        merged.status,
+        merged.current_task,
+        merged.total_tasks,
+        merged.assignments_completed,
+        merged.completed_topics_count
+      ]
     )
     const data = rows[0]
-    if (data) progressCache.set(`progress:${userId}:${courseId}:${topicId}`, data)
+    if (data) progressCache.set(cacheKey, data)
     return data
   }, `upsertProgress(${topicId})`)
 }
@@ -282,26 +357,22 @@ export async function getAllProgress(userId, courseId = null) {
   return rows || []
 }
 
+/** Topic ids fully completed in order (linear); derived from completed_topics_count + curriculum. */
 export async function getCompletedTopics(userId, courseId = DEFAULT_COURSE_ID) {
+  const orderedIds = getTopicIdsForCourse(curriculumCourses, courseId)
   if (initializeDatabase() === 'DEV_MODE') {
-    const list = []
-    for (const [, p] of DEV_PROGRESS.entries()) {
-      if (
-        p &&
-        String(p.user_id) === String(userId) &&
-        p.course_id === courseId &&
-        p.status === 'completed'
-      ) {
-        list.push(p.topic_id)
-      }
-    }
-    return list
+    const p = DEV_PROGRESS.get(progressDevKey(userId, courseId))
+    if (!p) return []
+    const n = Math.min(Number(p.completed_topics_count) || 0, orderedIds.length)
+    return orderedIds.slice(0, n)
   }
   const { rows } = await query(
-    'SELECT topic_id FROM progress WHERE user_id = $1 AND status = $2 AND course_id = $3',
-    [userId, 'completed', courseId]
+    'SELECT completed_topics_count FROM progress WHERE user_id = $1 AND course_id = $2',
+    [userId, courseId]
   )
-  return (rows || []).map((r) => r.topic_id)
+  const count = Number(rows[0]?.completed_topics_count) || 0
+  const n = Math.min(count, orderedIds.length)
+  return orderedIds.slice(0, n)
 }
 
 export async function updateUserPassword(userId, hashedPassword) {
@@ -418,37 +489,52 @@ export async function redeemUnlockCode(userId, codeId) {
 
 // ============ CHAT SESSIONS (for chatService.js) ============
 
-function chatDevKey(userId, courseId, topicId) {
-  return `${userId}:${courseId}:${topicId}`
+function chatDevKey(userId, courseId) {
+  return `${userId}:${courseId}`
 }
 
 export async function getChatSessionRow(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
-    const row = DEV_CHAT_SESSIONS.get(chatDevKey(userId, courseId, topicId))
-    return row ? { messages: row.messages, message_count: row.message_count } : null
+    const row = DEV_CHAT_SESSIONS.get(chatDevKey(userId, courseId))
+    if (!row || String(row.topic_id) !== String(topicId)) {
+      return null
+    }
+    return { messages: row.messages, message_count: row.message_count }
   }
   const { rows } = await query(
-    'SELECT messages, message_count FROM chat_sessions WHERE user_id = $1 AND course_id = $2 AND topic_id = $3',
-    [userId, courseId, topicId]
+    'SELECT messages, message_count, topic_id FROM chat_sessions WHERE user_id = $1 AND course_id = $2',
+    [userId, courseId]
   )
-  return rows[0] || null
+  const row = rows[0]
+  if (!row || String(row.topic_id) !== String(topicId)) {
+    return null
+  }
+  return { messages: row.messages, message_count: row.message_count }
 }
 
 /** Full row for debug endpoints. */
 export async function getChatSessionRaw(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
-    return DEV_CHAT_SESSIONS.get(chatDevKey(userId, courseId, topicId)) || null
+    const row = DEV_CHAT_SESSIONS.get(chatDevKey(userId, courseId))
+    if (!row || String(row.topic_id) !== String(topicId)) {
+      return null
+    }
+    return row || null
   }
   const { rows } = await query(
-    'SELECT * FROM chat_sessions WHERE user_id = $1 AND course_id = $2 AND topic_id = $3',
-    [userId, courseId, topicId]
+    'SELECT * FROM chat_sessions WHERE user_id = $1 AND course_id = $2',
+    [userId, courseId]
   )
-  return rows[0] || null
+  const row = rows[0]
+  if (!row || String(row.topic_id) !== String(topicId)) {
+    return null
+  }
+  return row
 }
 
 export async function upsertChatSessionRow(userId, topicId, payload, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
-    const key = chatDevKey(userId, courseId, topicId)
+    const key = chatDevKey(userId, courseId)
     const existing = DEV_CHAT_SESSIONS.get(key) || {}
     DEV_CHAT_SESSIONS.set(key, {
       ...existing,
@@ -462,7 +548,8 @@ export async function upsertChatSessionRow(userId, topicId, payload, courseId = 
   await query(
     `INSERT INTO chat_sessions (user_id, course_id, topic_id, messages, message_count, phase, last_message_at, updated_at)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-     ON CONFLICT (user_id, course_id, topic_id) DO UPDATE SET
+     ON CONFLICT (user_id, course_id) DO UPDATE SET
+       topic_id = EXCLUDED.topic_id,
        messages = EXCLUDED.messages,
        message_count = EXCLUDED.message_count,
        phase = EXCLUDED.phase,
@@ -481,16 +568,28 @@ export async function upsertChatSessionRow(userId, topicId, payload, courseId = 
   )
 }
 
-export async function deleteChatSessionRow(userId, topicId, courseId = DEFAULT_COURSE_ID) {
+/** Clear messages for this course (one row per course; completed topics leave no separate chat rows). */
+export async function clearChatSessionForCourse(userId, courseId = DEFAULT_COURSE_ID) {
   if (initializeDatabase() === 'DEV_MODE') {
-    DEV_CHAT_SESSIONS.delete(chatDevKey(userId, courseId, topicId))
+    const key = chatDevKey(userId, courseId)
+    const row = DEV_CHAT_SESSIONS.get(key)
+    if (row) {
+      row.messages = ''
+      row.message_count = 0
+      row.updated_at = new Date().toISOString()
+    }
     return
   }
-  await query('DELETE FROM chat_sessions WHERE user_id = $1 AND course_id = $2 AND topic_id = $3', [
-    userId,
-    courseId,
-    topicId
-  ])
+  await query(
+    `UPDATE chat_sessions SET messages = NULL, message_count = 0, updated_at = NOW()
+     WHERE user_id = $1 AND course_id = $2`,
+    [userId, courseId]
+  )
+}
+
+/** @deprecated Use clearChatSessionForCourse — one row per course; this clears that row’s messages. */
+export async function deleteChatSessionRow(userId, topicId, courseId = DEFAULT_COURSE_ID) {
+  await clearChatSessionForCourse(userId, courseId)
 }
 
 export async function deleteProgressByUserId(userId) {

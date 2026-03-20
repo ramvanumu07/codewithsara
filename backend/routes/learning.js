@@ -17,25 +17,21 @@ import {
   isCourseUnlockedForUser,
   unlockCourseForUser,
   getUserById,
-  deleteChatSessionRow
+  clearChatSessionForCourse
 } from '../services/database.js'
 import { generateCertificatePDF, CERTIFICATE_TOPICS } from '../services/certificate.js'
 import { saveInitialMessage, getChatHistoryString, getChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
 import { invalidateChatHistoryCache } from '../services/chatCache.js'
 import { courses } from '../data/curriculum.js'
-import { TOPIC_ORDER } from '../data/curriculum-parts/order.js'
 import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
-import { formatLearningObjectives, findTopicById, getAllTopics } from '../utils/curriculum.js'
+import { formatLearningObjectives, findTopicById, getAllTopics, getNextTopicId, getTopicIdsForCourse } from '../utils/curriculum.js'
+import { expandLinearProgressToTopicRows } from '../utils/linearProgress.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 import { buildSessionPrompt as buildSessionPromptFromShared } from '../prompts/prompts.js'
 
 const router = express.Router()
-
-function progressRowForTopic(allProgress, topic) {
-  return allProgress.find((p) => p.topic_id === topic.id && p.course_id === topic.courseId)
-}
 
 // ============ VALIDATION SCHEMAS ============
 const schemas = {
@@ -542,44 +538,76 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
       updated_at: now
     }
 
-    try {
-      await upsertProgress(userId, topicId, progressPayload, courseId)
-    } catch (progressErr) {
-      const msg = progressErr?.message || ''
-      if (msg.includes('column') && msg.includes('does not exist')) {
-        const minimalPayload = {
-          phase: 'assignment',
-          status: isTopicComplete ? 'completed' : 'in_progress',
-          current_task: nextTaskOneBased,
-          total_tasks: tasks.length,
-          assignments_completed: completedAssignments,
-          updated_at: now
-        }
-        try {
-          await upsertProgress(userId, topicId, minimalPayload, courseId)
-        } catch (minimalErr) {
-          const m2 = minimalErr?.message || ''
-          if (m2.includes('assignments_completed')) {
-            const alt = { ...minimalPayload }
-            delete alt.assignments_completed
-            alt.completed_assignments = completedAssignments
-            await upsertProgress(userId, topicId, alt, courseId)
-          } else {
-            throw minimalErr
-          }
-        }
-      } else {
-        throw progressErr
-      }
-    }
-
-    // When topic is fully completed, remove session chat so user uses topic notes instead
-    if (isTopicComplete) {
+    if (!isTopicComplete) {
       try {
-        await deleteChatSessionRow(userId, topicId, courseId)
+        await upsertProgress(userId, topicId, progressPayload, courseId)
+      } catch (progressErr) {
+        const msg = progressErr?.message || ''
+        if (msg.includes('column') && msg.includes('does not exist')) {
+          const minimalPayload = {
+            phase: 'assignment',
+            status: isTopicComplete ? 'completed' : 'in_progress',
+            current_task: nextTaskOneBased,
+            total_tasks: tasks.length,
+            assignments_completed: completedAssignments,
+            updated_at: now
+          }
+          try {
+            await upsertProgress(userId, topicId, minimalPayload, courseId)
+          } catch (minimalErr) {
+            const m2 = minimalErr?.message || ''
+            if (m2.includes('assignments_completed')) {
+              const alt = { ...minimalPayload }
+              delete alt.assignments_completed
+              alt.completed_assignments = completedAssignments
+              await upsertProgress(userId, topicId, alt, courseId)
+            } else {
+              throw minimalErr
+            }
+          }
+        } else {
+          throw progressErr
+        }
+      }
+    } else {
+      const doneCount = (Number(currentProgress?.completed_topics_count) || 0) + 1
+      const nextTopicId = getNextTopicId(courses, courseId, topicId)
+
+      try {
+        if (nextTopicId) {
+          const nextTopic = findTopicById(courses, nextTopicId)
+          const tt = (nextTopic?.tasks || []).length
+          await upsertProgress(userId, nextTopicId, {
+            topic_id: nextTopicId,
+            phase: 'session',
+            status: 'in_progress',
+            current_task: tt > 0 ? 1 : 0,
+            total_tasks: tt,
+            assignments_completed: 0,
+            completed_topics_count: doneCount,
+            updated_at: now
+          }, courseId)
+        } else {
+          await upsertProgress(userId, topicId, {
+            phase: 'assignment',
+            status: 'completed',
+            current_task: tasks.length,
+            total_tasks: tasks.length,
+            assignments_completed: completedAssignments,
+            completed_topics_count: doneCount,
+            updated_at: now
+          }, courseId)
+        }
+      } catch (advanceErr) {
+        console.warn('Advance after topic complete failed:', advanceErr?.message)
+        throw advanceErr
+      }
+
+      try {
+        await clearChatSessionForCourse(userId, courseId)
         await invalidateChatHistoryCache(userId, topicId, courseId)
-      } catch (deleteErr) {
-        console.warn('Could not delete chat session for completed topic:', deleteErr?.message)
+      } catch (clearErr) {
+        console.warn('Could not clear chat session for completed topic:', clearErr?.message)
       }
     }
 
@@ -735,23 +763,18 @@ router.get('/progress', authenticateToken, async (req, res) => {
           current_task: totalTasks > 0 ? 1 : 0,
           total_tasks: totalTasks,
           assignments_completed: 0,
+          completed_topics_count: 0,
           updated_at: new Date().toISOString()
         }, firstTopic.courseId)
         allProgress = await getAllProgress(userId)
       }
     }
 
-    // Calculate summary directly (match progress row to curriculum topic by topic_id + course_id)
+    const progressForClient = expandLinearProgressToTopicRows(courses, allProgress)
     const allTopicsFromCurriculum = getAllTopics(courses)
     const totalTopics = allTopicsFromCurriculum.length
-    const completedTopics = allTopicsFromCurriculum.filter((t) => {
-      const p = progressRowForTopic(allProgress, t)
-      return p?.status === 'completed'
-    }).length
-    const inProgressTopics = allTopicsFromCurriculum.filter((t) => {
-      const p = progressRowForTopic(allProgress, t)
-      return p?.status === 'in_progress'
-    }).length
+    const completedTopics = progressForClient.filter((p) => p.status === 'completed').length
+    const inProgressTopics = progressForClient.filter((p) => p.status === 'in_progress').length
 
     const summary = {
       total_topics: totalTopics,
@@ -761,17 +784,13 @@ router.get('/progress', authenticateToken, async (req, res) => {
       certificate_eligible: completedTopics >= CERTIFICATE_TOPICS
     }
 
-
-    // Find most recent topic for lastAccessed
     const lastAccessed = allProgress.length > 0 ? {
       topicId: allProgress[0].topic_id,
       phase: allProgress[0].phase || 'session'
     } : null
 
-    // Topics already loaded above
-
     res.json(createSuccessResponse({
-      progress: allProgress,
+      progress: progressForClient,
       summary,
       lastAccessed,
       topics: allTopicsFromCurriculum.map(topic => ({
@@ -793,16 +812,11 @@ router.get('/progress/summary', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId
     const allProgress = await getAllProgress(userId)
+    const expanded = expandLinearProgressToTopicRows(courses, allProgress)
     const allTopicsFromCurriculum = getAllTopics(courses)
     const totalTopics = allTopicsFromCurriculum.length
-    const completedTopics = allTopicsFromCurriculum.filter((t) => {
-      const p = progressRowForTopic(allProgress, t)
-      return p?.status === 'completed'
-    }).length
-    const inProgressTopics = allTopicsFromCurriculum.filter((t) => {
-      const p = progressRowForTopic(allProgress, t)
-      return p?.status === 'in_progress'
-    }).length
+    const completedTopics = expanded.filter((p) => p.status === 'completed').length
+    const inProgressTopics = expanded.filter((p) => p.status === 'in_progress').length
     const summary = {
       total_topics: totalTopics,
       completed_topics: completedTopics,
@@ -825,13 +839,11 @@ router.get('/certificate/download', authenticateToken, rateLimitMiddleware, asyn
     const userId = req.user.userId
     const allProgress = await getAllProgress(userId)
     const certCourseId = courses[0]?.id ?? DEFAULT_COURSE_ID
-    const orderedTopicSet = new Set(TOPIC_ORDER)
-    const completedTopics = allProgress.filter(
-      (p) =>
-        p.course_id === certCourseId &&
-        orderedTopicSet.has(p.topic_id) &&
-        p.status === 'completed'
-    ).length
+    const jsRow = allProgress.find((p) => p.course_id === certCourseId)
+    const completedTopics = Math.min(
+      Number(jsRow?.completed_topics_count) || 0,
+      getTopicIdsForCourse(courses, certCourseId).length
+    )
 
     if (completedTopics < CERTIFICATE_TOPICS) {
       return res.status(403).json(createErrorResponse(
@@ -1020,6 +1032,7 @@ router.get('/continue', authenticateToken, async (req, res) => {
           current_task: totalTasks > 0 ? 1 : 0,
           total_tasks: totalTasks,
           assignments_completed: 0,
+          completed_topics_count: 0,
           updated_at: new Date().toISOString()
         }, firstTopic.courseId)
       }
@@ -1071,21 +1084,24 @@ router.get('/topics', authenticateToken, async (req, res) => {
     const userId = req.user.userId
     const topics = getAllTopics(courses)
     const userProgress = await getAllProgress(userId)
+    const expanded = expandLinearProgressToTopicRows(courses, userProgress)
 
     // Enhance topics with progress information
     const enhancedTopics = topics.map(topic => {
-      const progress = progressRowForTopic(userProgress, topic)
+      const p = expanded.find(
+        (row) => String(row.topic_id) === String(topic.id) && String(row.course_id) === String(topic.courseId)
+      )
       return {
         ...topic,
-        status: progress?.status || 'not_started',
-        phase: progress?.phase || 'session'
+        status: p?.status || 'not_started',
+        phase: p?.phase || 'session'
       }
     })
 
     res.json(createSuccessResponse({
       topics: enhancedTopics,
       totalTopics: topics.length,
-      completedTopics: topics.filter((t) => progressRowForTopic(userProgress, t)?.status === 'completed').length
+      completedTopics: enhancedTopics.filter((t) => t.status === 'completed').length
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'get topics')

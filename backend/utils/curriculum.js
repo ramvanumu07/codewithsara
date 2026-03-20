@@ -50,3 +50,17 @@ export function getAllTopics(courses) {
     }))
   )
 }
+
+/** Ordered topic ids for a course (linear progression). */
+export function getTopicIdsForCourse(courses, courseId) {
+  const course = courses.find((c) => c.id === courseId)
+  return course ? course.topics.map((t) => t.id) : []
+}
+
+/** Next topic id after `topicId` in course order, or null if none / not found. */
+export function getNextTopicId(courses, courseId, topicId) {
+  const ids = getTopicIdsForCourse(courses, courseId)
+  const i = ids.indexOf(topicId)
+  if (i < 0 || i >= ids.length - 1) return null
+  return ids[i + 1]
+}

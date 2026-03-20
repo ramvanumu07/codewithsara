@@ -1,5 +1,6 @@
 /**
- * Chat history caching – uses cache.js (Redis or in-memory). Key: chat_history:userId:courseId:topicId.
+ * Chat history caching – one row per (user, course) in DB. Key: chat_history:userId:courseId.
+ * Stored payload includes topicId so a cache hit only applies to the same topic.
  */
 
 import { get, set, del } from './cache.js'
@@ -9,15 +10,16 @@ const CACHE_KEY_PREFIX = 'chat_history:'
 const CHAT_HISTORY_TTL_SECONDS = 5 * 60 // 5 minutes
 const MAX_CACHE_SIZE = 1000
 
-function getCacheKey(userId, topicId, courseId = DEFAULT_COURSE_ID) {
-  return `${CACHE_KEY_PREFIX}${userId}:${courseId}:${topicId}`
+function getCacheKey(userId, courseId = DEFAULT_COURSE_ID) {
+  return `${CACHE_KEY_PREFIX}${userId}:${courseId}`
 }
 
 export async function getCachedChatHistory(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   try {
-    const cacheKey = getCacheKey(userId, topicId, courseId)
+    const cacheKey = getCacheKey(userId, courseId)
     const data = await get(cacheKey)
     if (!data || typeof data !== 'object' || !data.messages) return null
+    if (String(data.topicId || '') !== String(topicId || '')) return null
     const now = Date.now()
     if (now - (data.timestamp || 0) >= CHAT_HISTORY_TTL_SECONDS * 1000) {
       await del(cacheKey)
@@ -32,9 +34,10 @@ export async function getCachedChatHistory(userId, topicId, courseId = DEFAULT_C
 
 export async function setCachedChatHistory(userId, topicId, messages, courseId = DEFAULT_COURSE_ID) {
   try {
-    const cacheKey = getCacheKey(userId, topicId, courseId)
+    const cacheKey = getCacheKey(userId, courseId)
     await set(cacheKey, {
       messages,
+      topicId,
       timestamp: Date.now(),
       messageCount: (messages && messages.length) || 0
     }, CHAT_HISTORY_TTL_SECONDS)
@@ -45,7 +48,7 @@ export async function setCachedChatHistory(userId, topicId, messages, courseId =
 
 export async function invalidateChatHistoryCache(userId, topicId, courseId = DEFAULT_COURSE_ID) {
   try {
-    await del(getCacheKey(userId, topicId, courseId))
+    await del(getCacheKey(userId, courseId))
   } catch (error) {
     console.warn('Cache invalidation error:', error.message)
   }

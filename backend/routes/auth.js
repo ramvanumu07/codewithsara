@@ -330,6 +330,7 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
           current_task: totalTasks > 0 ? 1 : 0,
           total_tasks: totalTasks,
           assignments_completed: 0,
+          completed_topics_count: 0,
           updated_at: new Date().toISOString()
         }, firstTopic.courseId)
       }
@@ -403,6 +404,7 @@ router.post('/login', rateLimitMiddleware, asyncHandler(async (req, res) => {
             current_task: totalTasks > 0 ? 1 : 0,
             total_tasks: totalTasks,
             assignments_completed: 0,
+            completed_topics_count: 0,
             updated_at: new Date().toISOString()
           }, firstTopic.courseId)
         }
