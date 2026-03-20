@@ -13,7 +13,7 @@ import { getChatSessionRow, getCompletedTopics, getProgress, getProgressRowForCo
 import { courses } from '../data/curriculum.js'
 import { findTopicById } from '../utils/curriculum.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
-import { extractPracticeTaskFromOutcomeMessage, getFirstOutcomeMessage } from '../utils/outcomeMessages.js'
+import { getFirstOutcomeMessage } from '../utils/outcomeMessages.js'
 import { processSessionAssistantReply } from '../utils/sessionOutcome.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse, getSafeUserMessage } from '../utils/responses.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
@@ -64,12 +64,9 @@ function buildSessionSystemPrompt(topicId, completedTopics = [], teachingOutcome
   const total = Math.max(outcomes.length, msgs.length, 1)
   const idx = Math.min(Math.max(0, teachingOutcomeIndex), Math.max(0, total - 1))
   const singleObjective = outcomes[idx] || `Learning objective ${idx + 1}`
-  const outcomeBody = typeof msgs[idx] === 'string' ? msgs[idx] : ''
-  const practiceTask = extractPracticeTaskFromOutcomeMessage(outcomeBody)
   return buildSessionPromptFromShared({
     topicTitle: topic.title,
-    currentOutcomeObjective: singleObjective,
-    currentPracticeTask: practiceTask
+    currentOutcomeObjective: singleObjective
   })
 }
 

@@ -7,22 +7,20 @@
  * Session teaching prompt: structured context fields (built in chat.js).
  * The server detects "Congratulations! You've mastered" (see sessionOutcome.js).
  * Conversation history is passed separately via the messages array.
- * @param {{ topicTitle: string, currentOutcomeObjective: string, currentPracticeTask: string }} options
+ * @param {{ topicTitle: string, currentOutcomeObjective: string }} options
  * @returns {string}
  */
 export function buildSessionPrompt({
   topicTitle,
-  currentOutcomeObjective,
-  currentPracticeTask
+  currentOutcomeObjective
 }) {
   return `
 CURRENT CONTEXT
 Topic: ${topicTitle}
 Learning Outcome: ${currentOutcomeObjective}
-Practice Task: ${currentPracticeTask}
 
 RESPONSE HANDLING 
-Case A: If user last message has the answer to the ${currentPracticeTask} (don't be pedantic):
+Case A: If user last message has the answer to the practice task (don't be pedantic):
 1. Acknowledge and output the exact message - Congratulations! You've mastered ${currentOutcomeObjective} ! (Then stop the response)
 Case B: If user asks question/objects/seeks clarification:
 1. Address their message directly and helpfully
