@@ -45,6 +45,8 @@ initializeCache()
 
 const app = express()
 
+app.set('trust proxy', 1)
+
 app.use(cors({
   origin (origin, callback) {
     if (!origin) { return callback(null, true) }
@@ -98,13 +100,13 @@ app.use('/api/chat', asMiddleware(chatRoutes))
 app.use('/api/learn', asMiddleware(learningRoutes))
 app.use('/api/debug', asMiddleware(debugSchemaRoutes))
 app.use('/api/debug', asMiddleware(debugChatRoutes))
-app.use(asMiddleware(errorHandlerExport))
 
 app.get('/health', (req, res) => {
+  const isProd = process.env.NODE_ENV === 'production'
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    version: '2.0.1'
+    ...(isProd ? {} : { version: '2.0.1' })
   })
 })
 
@@ -146,6 +148,8 @@ app.get('/api/health/db', async (req, res) => {
     })
   }
 })
+
+app.use(asMiddleware(errorHandlerExport))
 
 app.use((err, req, res, _next) => {
   const status = err.status || err.statusCode || 500

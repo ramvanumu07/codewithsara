@@ -158,8 +158,16 @@ export const cleanupMetrics = () => {
 }
 
 // Middleware for Express request tracking
+function normalizePath(path) {
+  return path
+    .replace(/\/[0-9a-f]{8,}/gi, '/:id')
+    .replace(/\/\d+/g, '/:id')
+    .replace(/\/:id(\/):id/g, '/:id$1:id2')
+}
+
 export const performanceMiddleware = (req, res, next) => {
-  const timer = trackRequest(req.method, req.route?.path || req.path)
+  const rawPath = req.route?.path || normalizePath(req.path)
+  const timer = trackRequest(req.method, rawPath)
   timer.addMetadata('ip', req.ip)
   timer.addMetadata('userAgent', req.get('User-Agent'))
   
@@ -204,8 +212,8 @@ export const checkPerformanceAlerts = () => {
 }
 
 // Initialize periodic cleanup
-setInterval(cleanupMetrics, 60 * 60 * 1000) // Every hour
-setInterval(checkPerformanceAlerts, 5 * 60 * 1000) // Every 5 minutes
+setInterval(cleanupMetrics, 60 * 60 * 1000).unref()
+setInterval(checkPerformanceAlerts, 5 * 60 * 1000).unref()
 
 export default {
   PerformanceTimer,

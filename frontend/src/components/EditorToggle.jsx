@@ -3,13 +3,11 @@ import React from 'react'
 const STORAGE_KEY = 'sara_editor_toggle'
 
 export function getEditorToggleFromStorage() {
-  return typeof window !== 'undefined' && localStorage.getItem(STORAGE_KEY) === 'on'
+  try { return typeof window !== 'undefined' && localStorage.getItem(STORAGE_KEY) === 'on' } catch { return false }
 }
 
 export function setEditorToggleInStorage(on) {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem(STORAGE_KEY, on ? 'on' : 'off')
-  }
+  try { if (typeof window !== 'undefined') localStorage.setItem(STORAGE_KEY, on ? 'on' : 'off') } catch { /* restricted */ }
 }
 
 // Pill / stadium shape (rounded, not semicircle) – same on desktop and mobile

@@ -63,6 +63,40 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+class RouteErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Route ErrorBoundary caught:', error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", padding: 24
+        }}>
+          <div style={{ textAlign: 'center', maxWidth: 480 }}>
+            <h2 style={{ fontSize: '1.25rem', color: '#111827', marginBottom: 8 }}>This section encountered an error</h2>
+            <p style={{ color: '#6b7280', marginBottom: 16, fontSize: '0.9375rem' }}>Try going back or reloading.</p>
+            <button onClick={() => this.setState({ hasError: false })} style={{ padding: '8px 20px', background: '#10a37f', color: 'white', border: 'none', borderRadius: 8, fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer', marginRight: 8 }}>Try Again</button>
+            <button onClick={() => window.location.href = '/dashboard'} style={{ padding: '8px 20px', background: '#374151', color: 'white', border: 'none', borderRadius: 8, fontSize: '0.875rem', fontWeight: 600, cursor: 'pointer' }}>Go to Dashboard</button>
+          </div>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
 // Import Pages
 import Welcome from './pages/Welcome'
 import Login from './pages/Login'
@@ -159,10 +193,9 @@ const AppRoutes = () => {
       <Route path="/products" element={<Products />} />
       
       {/* Protected Routes */}
-      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/dashboard" element={<ProtectedRoute><RouteErrorBoundary><Dashboard /></RouteErrorBoundary></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
-      {/* key=topicId remounts Learn on topic change so assignment/session state never shows the previous topic's tasks */}
-      <Route path="/learn/:topicId" element={<ProtectedRoute><LearnRoute /></ProtectedRoute>} />
+      <Route path="/learn/:topicId" element={<ProtectedRoute><RouteErrorBoundary><LearnRoute /></RouteErrorBoundary></ProtectedRoute>} />
       
       {/* Legacy Route Redirects */}
       <Route path="/learn/:topicId/:subtopicId" element={<LegacyRedirect />} />

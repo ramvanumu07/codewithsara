@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -30,10 +30,11 @@ const Dashboard = () => {
   const [editorToggleOn, setEditorToggleOn] = useState(false)
   const [playgroundCode, setPlaygroundCode] = useState('')
 
+  const cancelledRef = useRef(false)
   useEffect(() => {
-    let cancelled = false
-    loadDashboardData(cancelled)
-    return () => { cancelled = true }
+    cancelledRef.current = false
+    loadDashboardData()
+    return () => { cancelledRef.current = true }
   }, [])
 
   // Open unlock modal if URL has ?unlock=courseId (e.g. from Learn paywall)
@@ -72,7 +73,7 @@ const Dashboard = () => {
     }
   }, [showMobileMenu])
 
-  const loadDashboardData = async (cancelled = false) => {
+  const loadDashboardData = async () => {
     try {
       setLoading(true)
       setError(null)
@@ -108,7 +109,7 @@ const Dashboard = () => {
         throw e
       }
 
-      if (cancelled) return
+      if (cancelledRef.current) return
 
       if (unlockedRes.data.success && Array.isArray(unlockedRes.data.data?.courseIds)) {
         setUnlockedCourseIds(unlockedRes.data.data.courseIds)
@@ -141,9 +142,9 @@ const Dashboard = () => {
       }
 
     } catch (err) {
-      if (!cancelled) setError(handleApiError(err, 'Failed to load dashboard. Please try again.'))
+      if (!cancelledRef.current) setError(handleApiError(err, 'Failed to load dashboard. Please try again.'))
     } finally {
-      if (!cancelled) setLoading(false)
+      if (!cancelledRef.current) setLoading(false)
     }
   }
 

@@ -310,8 +310,8 @@ class SecureCodeExecutor {
    * Create secure execution context
    */
   createSecureContext() {
+    const pendingTimers = { timeouts: new Set(), intervals: new Set() }
     const context = {
-      // Safe globals
       console: { log: () => {} },
       Math,
       JSON,
@@ -326,23 +326,23 @@ class SecureCodeExecutor {
       TypeError,
       ReferenceError,
       SyntaxError,
-      
-      // Utility functions
       parseInt,
       parseFloat,
       isNaN,
       isFinite,
-      
-      // Safe methods
       Promise,
-      setTimeout: (cb, ms) =>
-        globalThis.setTimeout(cb, Math.min(Math.max(0, Number(ms) || 0), 10000)),
-      setInterval: (cb, ms) =>
-        globalThis.setInterval(cb, Math.min(Math.max(1, Number(ms) || 1), 10000)),
-      clearTimeout: globalThis.clearTimeout.bind(globalThis),
-      clearInterval: globalThis.clearInterval.bind(globalThis),
-      
-      // Loop protection
+      setTimeout: (cb, ms) => {
+        const id = globalThis.setTimeout(cb, Math.min(Math.max(0, Number(ms) || 0), 5000))
+        pendingTimers.timeouts.add(id)
+        return id
+      },
+      setInterval: (cb, ms) => {
+        const id = globalThis.setInterval(cb, Math.min(Math.max(10, Number(ms) || 10), 5000))
+        pendingTimers.intervals.add(id)
+        return id
+      },
+      clearTimeout: (id) => { pendingTimers.timeouts.delete(id); globalThis.clearTimeout(id) },
+      clearInterval: (id) => { pendingTimers.intervals.delete(id); globalThis.clearInterval(id) },
       __loopCount: 0,
       __checkLoop: function() {
         if (++this.__loopCount > this.maxIterations) {
@@ -350,8 +350,17 @@ class SecureCodeExecutor {
         }
       }.bind(this)
     };
-    
+    context.__pendingTimers = pendingTimers
     return vm.createContext(context);
+  }
+
+  clearPendingTimers(context) {
+    const t = context?.__pendingTimers
+    if (!t) return
+    for (const id of t.timeouts) globalThis.clearTimeout(id)
+    for (const id of t.intervals) globalThis.clearInterval(id)
+    t.timeouts.clear()
+    t.intervals.clear()
   }
 
   /**
@@ -373,9 +382,11 @@ class SecureCodeExecutor {
         });
         
         clearTimeout(timeoutId);
+        this.clearPendingTimers(context);
         resolve();
       } catch (error) {
         clearTimeout(timeoutId);
+        this.clearPendingTimers(context);
         reject(error);
       }
     });
@@ -388,12 +399,13 @@ class SecureCodeExecutor {
   async runInContextAndReturn(code, context) {
     const protectedCode = this.addBasicProtections(code);
     return new Promise((resolve, reject) => {
-      const timeoutId = setTimeout(() => reject(new Error('Execution timeout')), this.executionTimeout);
+      const timeoutId = setTimeout(() => { this.clearPendingTimers(context); reject(new Error('Execution timeout')); }, this.executionTimeout);
       try {
         const result = vm.runInContext(protectedCode, context, {
           timeout: this.executionTimeout,
           breakOnSigint: true
         });
+        this.clearPendingTimers(context);
         clearTimeout(timeoutId);
         resolve(result);
       } catch (error) {

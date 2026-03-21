@@ -10,7 +10,7 @@ const router = express.Router()
 const TABLES = ['users', 'progress', 'chat_sessions', 'admins', 'user_course_unlocks']
 
 function blockInProduction(req, res, next) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || process.env.ENABLE_DEBUG_ROUTES !== 'true') {
     return res.status(404).json({ success: false, message: 'Not found' })
   }
   next()

@@ -224,6 +224,7 @@ const Learn = () => {
   const [editorWidth, setEditorWidth] = useState(60) // 60% editor, 40% terminal (desktop)
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768)
   const [isDragging, setIsDragging] = useState(false)
+  const dragCleanupRef = useRef(null)
 
   // Assignment phase states
   const [assignments, setAssignments] = useState([])
@@ -282,6 +283,10 @@ const Learn = () => {
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    return () => { dragCleanupRef.current?.() }
   }, [])
 
   // Load topic and initialize based on phase
@@ -471,7 +476,7 @@ const Learn = () => {
           setError(handleApiError(err, 'Failed to load topic. Please try again.'))
         }
       } finally {
-        setLoading(false)
+        if (topicIdRef.current === requestedTopicId) setLoading(false)
       }
     }
 
@@ -602,7 +607,7 @@ const Learn = () => {
 
       const outputLines = outputText.split('\n')
 
-      const lineNumbersDiv = outputDiv.parentElement.querySelector('.terminal-line-numbers')
+      const lineNumbersDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
       if (lineNumbersDiv) {
         let lineNumbersHTML = ''
         outputLines.forEach((_, index) => {
@@ -655,12 +660,13 @@ const Learn = () => {
         setIsDragging(false)
         document.removeEventListener('mousemove', handleMouseMove)
         document.removeEventListener('mouseup', handleMouseUp)
+        dragCleanupRef.current = null
       }
 
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)
+      dragCleanupRef.current = () => { document.removeEventListener('mousemove', handleMouseMove); document.removeEventListener('mouseup', handleMouseUp) }
     } else {
-      // Vertical resizing for mobile
       const startY = e.clientY
       const startHeight = editorHeight
       const containerHeight = container.clientHeight
@@ -676,14 +682,15 @@ const Learn = () => {
         setIsDragging(false)
         document.removeEventListener('mousemove', handleMouseMove)
         document.removeEventListener('mouseup', handleMouseUp)
+        dragCleanupRef.current = null
       }
 
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)
+      dragCleanupRef.current = () => { document.removeEventListener('mousemove', handleMouseMove); document.removeEventListener('mouseup', handleMouseUp) }
     }
   }
 
-  // Handle splitter dragging (touch)
   const handleTouchStart = (e) => {
     e.preventDefault()
     setIsDragging(true)
@@ -709,12 +716,13 @@ const Learn = () => {
         setIsDragging(false)
         document.removeEventListener('touchmove', handleTouchMove)
         document.removeEventListener('touchend', handleTouchEnd)
+        dragCleanupRef.current = null
       }
 
       document.addEventListener('touchmove', handleTouchMove, { passive: false })
       document.addEventListener('touchend', handleTouchEnd)
+      dragCleanupRef.current = () => { document.removeEventListener('touchmove', handleTouchMove); document.removeEventListener('touchend', handleTouchEnd) }
     } else {
-      // Vertical resizing for mobile
       const startY = touch.clientY
       const startHeight = editorHeight
       const containerHeight = container.clientHeight
@@ -732,10 +740,12 @@ const Learn = () => {
         setIsDragging(false)
         document.removeEventListener('touchmove', handleTouchMove)
         document.removeEventListener('touchend', handleTouchEnd)
+        dragCleanupRef.current = null
       }
 
       document.addEventListener('touchmove', handleTouchMove, { passive: false })
       document.addEventListener('touchend', handleTouchEnd)
+      dragCleanupRef.current = () => { document.removeEventListener('touchmove', handleTouchMove); document.removeEventListener('touchend', handleTouchEnd) }
     }
   }
 

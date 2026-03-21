@@ -62,12 +62,16 @@ function createTransporter() {
  * @param {string} userName - User's name
  * @returns {Promise<boolean>} - Success status
  */
+function escapeHtmlEmail(str) {
+  if (!str) return ''
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
 export async function sendPasswordResetEmail(email, resetToken, userName = '') {
   try {
     const transporter = createTransporter()
     
-    // Generate reset link
-    const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`
+    const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${encodeURIComponent(resetToken)}`
     
     // Email content
     const mailOptions = {
@@ -106,13 +110,13 @@ export async function sendPasswordResetEmail(email, resetToken, userName = '') {
             </div>
             <div class="content">
               <div class="greeting">
-                Hi ${userName || 'there'},
+                Hi ${escapeHtmlEmail(userName) || 'there'},
               </div>
               <div class="message">
                 You requested a password reset for your Sara Learning Platform account. Click the button below to create a new password:
               </div>
               <div style="text-align: center;">
-                <a href="${resetLink}" class="reset-button">Reset My Password</a>
+                <a href="${escapeHtmlEmail(resetLink)}" class="reset-button">Reset My Password</a>
               </div>
               <div class="warning">
                 <strong>Important:</strong> This link will expire in 1 hour for security reasons. If you didn't request this reset, please ignore this email.
@@ -121,7 +125,7 @@ export async function sendPasswordResetEmail(email, resetToken, userName = '') {
                 If the button doesn't work, copy and paste this link into your browser:
               </div>
               <div class="link-text">
-                ${resetLink}
+                ${escapeHtmlEmail(resetLink)}
               </div>
             </div>
             <div class="footer">

@@ -505,6 +505,16 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
     const currentProgress = await getProgress(userId, topicId, courseId)
     const currentCount = currentProgress?.assignments_completed ?? currentProgress?.completed_assignments ?? 0
     const isNextInSequence = assignmentIndex === currentCount
+    if (!isNextInSequence && assignmentIndex < currentCount) {
+      return res.json(createSuccessResponse({
+        message: 'Assignment already completed',
+        assignmentCompleted: true,
+        topicCompleted: currentCount >= tasks.length,
+        completedAssignments: currentCount,
+        totalAssignments: tasks.length,
+        alreadyCompleted: true
+      }))
+    }
     const completedAssignments = isNextInSequence ? currentCount + 1 : currentCount
     const isTopicComplete = completedAssignments >= tasks.length
     const now = new Date().toISOString()
@@ -622,7 +632,7 @@ router.post('/assignment/complete', authenticateToken, rateLimitMiddleware, requ
 // ============ CODE EXECUTION ============
 
 // Playground execution (no topic required) - for dashboard and standalone editor
-router.post('/execute-playground', authenticateToken, async (req, res) => {
+router.post('/execute-playground', authenticateToken, rateLimitMiddleware, async (req, res) => {
   try {
     const { code } = req.body
     if (!code || typeof code !== 'string') {
@@ -635,7 +645,7 @@ router.post('/execute-playground', authenticateToken, async (req, res) => {
   }
 })
 
-router.post('/execute', authenticateToken, async (req, res) => {
+router.post('/execute', authenticateToken, rateLimitMiddleware, async (req, res) => {
   try {
     const { code, topicId, assignmentIndex } = req.body
 
@@ -680,7 +690,7 @@ router.post('/execute', authenticateToken, async (req, res) => {
 })
 
 // New secure execution endpoint with enhanced validation
-router.post('/execute-secure', authenticateToken, async (req, res) => {
+router.post('/execute-secure', authenticateToken, rateLimitMiddleware, async (req, res) => {
   try {
     const { code, testCases, functionName, solutionType } = req.body;
 
@@ -851,7 +861,7 @@ router.get('/certificate/download', authenticateToken, rateLimitMiddleware, asyn
 })
 
 function blockDebugInProduction(req, res, next) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || process.env.ENABLE_DEBUG_ROUTES !== 'true') {
     return res.status(404).json({ success: false, message: 'Not found' })
   }
   next()

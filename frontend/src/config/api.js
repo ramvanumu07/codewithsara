@@ -119,9 +119,16 @@ export const learning = {
       onError?.(err)
       throw err
     }
+    if (!res.body) {
+      const err = new Error('Empty response body from server')
+      onError?.(err)
+      throw err
+    }
     const reader = res.body.getReader()
     const decoder = new TextDecoder()
     let buffer = ''
+    let parseFailures = 0
+    const MAX_PARSE_FAILURES = 20
     try {
       while (true) {
         if (signal?.aborted) break
@@ -134,6 +141,7 @@ export const learning = {
           if (!line.startsWith('data: ')) continue
           try {
             const data = JSON.parse(line.slice(6))
+            parseFailures = 0
             if (data.type === 'chunk' && data.content) onChunk?.(data.content)
             if (data.type === 'done') {
               logGroqDebugFromApi(data)
@@ -145,7 +153,14 @@ export const learning = {
               onError?.(err)
               throw err
             }
-          } catch (_) { /* ignore */ }
+          } catch (parseErr) {
+            if (parseErr?.response) throw parseErr
+            if (++parseFailures >= MAX_PARSE_FAILURES) {
+              const err = new Error('Stream corrupted — too many parse failures')
+              onError?.(err)
+              throw err
+            }
+          }
         }
       }
     } finally {
@@ -205,9 +220,9 @@ export const chat = {
 // ============ HELPER FUNCTIONS ============
 
 // Token management
-export const getToken = () => localStorage.getItem('sara_token')
-export const setToken = (token) => localStorage.setItem('sara_token', token)
-export const removeToken = () => localStorage.removeItem('sara_token')
+export const getToken = () => { try { return localStorage.getItem('sara_token') } catch { return null } }
+export const setToken = (token) => { try { localStorage.setItem('sara_token', token) } catch { /* quota/restricted */ } }
+export const removeToken = () => { try { localStorage.removeItem('sara_token') } catch { /* restricted */ } }
 
 // User management
 export const getUser = () => {
@@ -219,8 +234,8 @@ export const getUser = () => {
     return null
   }
 }
-export const setUser = (user) => localStorage.setItem('sara_user', JSON.stringify(user))
-export const removeUser = () => localStorage.removeItem('sara_user')
+export const setUser = (user) => { try { localStorage.setItem('sara_user', JSON.stringify(user)) } catch { /* quota/restricted */ } }
+export const removeUser = () => { try { localStorage.removeItem('sara_user') } catch { /* restricted */ } }
 
 // Technical error patterns - never show these to users
 const TECHNICAL_ERROR_PATTERNS = /getaddrinfo|ENOTFOUND|ECONNREFUSED|ETIMEDOUT|ECONNRESET|ENETUNREACH|connection refused|network error|socket hang up/i

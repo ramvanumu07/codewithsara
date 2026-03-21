@@ -94,7 +94,8 @@ export async function callAI(systemPrompt, messages, maxTokens = 1000, temperatu
           messages: chatMessages,
           max_tokens: maxTokens,
           temperature
-        })
+        }),
+        signal: AbortSignal.timeout(60000)
       })
 
       if (!response.ok) {
@@ -166,7 +167,8 @@ export async function* streamAI(systemPrompt, messages, maxTokens = 1000, temper
           max_tokens: maxTokens,
           temperature,
           stream: true
-        })
+        }),
+        signal: AbortSignal.timeout(60000)
       })
 
       if (!response.ok) {

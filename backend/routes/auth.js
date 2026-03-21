@@ -177,8 +177,8 @@ function checkUsernameRateLimit(identifier) {
   const userRequests = usernameCheckLimiter.get(identifier) || []
   const validRequests = userRequests.filter(timestamp => now - timestamp < WINDOW)
 
-  if (usernameCheckLimiter.size > 10000 && !usernameCheckLimiter.has(identifier)) {
-    return true
+  if (usernameCheckLimiter.size >= 10000 && !usernameCheckLimiter.has(identifier)) {
+    return false
   }
 
   if (validRequests.length >= LIMIT) {

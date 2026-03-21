@@ -12,7 +12,7 @@ import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 const router = express.Router()
 
 function blockInProduction(req, res, next) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || process.env.ENABLE_DEBUG_ROUTES !== 'true') {
     return res.status(404).json({ success: false, message: 'Not found' })
   }
   next()

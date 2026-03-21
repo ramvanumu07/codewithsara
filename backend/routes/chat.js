@@ -27,6 +27,7 @@ const router = express.Router()
 const SESSION_CHAT_TEMPERATURE = 0.4
 
 function shouldAttachGroqDebug() {
+  if (process.env.NODE_ENV === 'production') return false
   const v = (process.env.DEBUG_GROQ_PAYLOAD || '').toLowerCase().trim()
   return v === '1' || v === 'true' || v === 'yes'
 }
@@ -374,7 +375,7 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
 // ============ CHAT HISTORY MANAGEMENT ============
 
 function blockDebugInProduction(req, res, next) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' || process.env.ENABLE_DEBUG_ROUTES !== 'true') {
     return res.status(404).json({ success: false, message: 'Not found' })
   }
   next()

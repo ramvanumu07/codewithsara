@@ -57,16 +57,20 @@ async function handleLoadDebug(event) {
 
 let appInstance = null
 let appError = null
+let appErrorTime = 0
+const ERROR_RETRY_MS = 30000
 
 async function loadApp() {
   if (appInstance) return appInstance
-  if (appError) throw appError
+  if (appError && (Date.now() - appErrorTime) < ERROR_RETRY_MS) throw appError
+  appError = null
   try {
     const appModule = await import('../../backend/app.js')
     appInstance = typeof appModule === 'function' ? appModule : (appModule?.default ?? appModule)
     return appInstance
   } catch (err) {
     appError = err
+    appErrorTime = Date.now()
     throw err
   }
 }

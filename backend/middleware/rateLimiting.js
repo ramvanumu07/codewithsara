@@ -33,8 +33,8 @@ export function checkRateLimit(userId) {
   
   const validRequests = userRequests.filter(timestamp => now - timestamp < RATE_WINDOW)
   
-  if (rateLimiter.size > MAX_TRACKED_KEYS && !rateLimiter.has(userId)) {
-    return true
+  if (rateLimiter.size >= MAX_TRACKED_KEYS && !rateLimiter.has(userId)) {
+    return false
   }
 
   rateLimiter.set(userId, validRequests)

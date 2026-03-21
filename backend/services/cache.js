@@ -91,6 +91,8 @@ const memoryCache = new Map()
 const memoryExpiry = new Map()
 let memoryCacheInitialized = false
 
+const MAX_MEMORY_CACHE_KEYS = 5000
+
 const initializeMemoryCache = () => {
   if (memoryCacheInitialized) return
   memoryCacheInitialized = true
@@ -136,7 +138,11 @@ export const set = async (key, value, ttlSeconds = 3600) => {
     if (isConnected && redisClient) {
       await redisClient.setex(key, ttlSeconds, JSON.stringify(value))
     } else {
-      // Memory cache fallback
+      if (memoryCache.size >= MAX_MEMORY_CACHE_KEYS && !memoryCache.has(key)) {
+        const firstKey = memoryCache.keys().next().value
+        memoryCache.delete(firstKey)
+        memoryExpiry.delete(firstKey)
+      }
       memoryCache.set(key, value)
       memoryExpiry.set(key, Date.now() + (ttlSeconds * 1000))
     }

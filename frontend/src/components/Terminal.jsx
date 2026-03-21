@@ -12,9 +12,8 @@ export default function Terminal({ onExecute, history = [], disabled = false, in
     }
   }, [history])
 
-  // Set initial code when provided
   useEffect(() => {
-    if (initialCode && !code) {
+    if (initialCode) {
       setCode(initialCode)
     }
   }, [initialCode])

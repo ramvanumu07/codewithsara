@@ -11,7 +11,10 @@ if (rootEl) {
     </React.StrictMode>
   )
 } else {
-  console.error('Root element #root not found. Cannot mount React app.')
+  const fallback = document.createElement('div')
+  fallback.style.cssText = 'display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;color:#374151'
+  fallback.innerHTML = '<p>Failed to load. Please refresh the page.</p>'
+  document.body.appendChild(fallback)
 }
 
 

@@ -36,7 +36,9 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
-    initializeAuth()
+    const cancelRef = { current: false }
+    initializeAuth(cancelRef)
+    return () => { cancelRef.current = true }
   }, [])
 
   // When API interceptor gets 401, it clears token and redirects. Update auth state immediately so UI reflects it.
@@ -51,9 +53,8 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('auth-session-expired', onSessionExpired)
   }, [])
 
-  const initializeAuth = async () => {
+  const initializeAuth = async (cancelRef) => {
     const AUTH_TIMEOUT_MS = 10000
-    let cancelled = false
 
     try {
       const token = getToken()
@@ -70,7 +71,7 @@ export const AuthProvider = ({ children }) => {
           const response = await Promise.race([validatePromise, timeoutPromise])
           clearTimeout(timeoutId)
 
-          if (cancelled) return
+          if (cancelRef.current) return
 
           if (response?.data?.success && response.data.data?.user) {
             const freshUser = response.data.data.user
@@ -81,18 +82,16 @@ export const AuthProvider = ({ children }) => {
             await logout()
           }
         } catch (validationError) {
-          if (!cancelled) await logout()
+          if (!cancelRef.current) await logout()
         }
       } else if (savedUser) {
         await logout()
       }
     } catch (error) {
-      if (!cancelled) await logout()
+      if (!cancelRef.current) await logout()
     } finally {
-      if (!cancelled) setLoading(false)
+      if (!cancelRef.current) setLoading(false)
     }
-
-    return () => { cancelled = true }
   }
 
   const login = async (username, password) => {
