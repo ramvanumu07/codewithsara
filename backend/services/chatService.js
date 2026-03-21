@@ -116,6 +116,7 @@ export async function getChatHistory(userId, topicId, courseId = DEFAULT_COURSE_
     return messages
 
   } catch (error) {
+    console.error('getChatHistory failed:', error?.message)
     return []
   }
 }

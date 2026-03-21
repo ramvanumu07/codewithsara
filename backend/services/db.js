@@ -16,7 +16,7 @@ export function getPool() {
   if (url.includes('your_') || url.includes('placeholder') || /:\/\/USER:PASSWORD@/.test(url)) {
     throw new Error('DATABASE_URL is a placeholder. Set your real Neon connection string in backend/.env')
   }
-  pool = new Pool({ connectionString: url, max: 10 })
+  pool = new Pool({ connectionString: url, max: 10, idleTimeoutMillis: 30000 })
   return pool
 }
 

@@ -27,11 +27,10 @@ function handleHealth(event) {
   const ok = hasDb && hasJwt
   return jsonResponse(ok ? 200 : 503, {
     ok,
-    env: {
-      DATABASE_URL: hasDb ? 'set' : 'missing',
-      JWT_SECRET: hasJwt ? 'set' : 'missing',
-      GROQ_API_KEY: process.env.GROQ_API_KEY ? 'set' : 'missing',
-      FRONTEND_URL: process.env.FRONTEND_URL ? 'set' : 'missing'
+    services: {
+      database: hasDb ? 'configured' : 'not configured',
+      auth: hasJwt ? 'configured' : 'not configured',
+      ai: process.env.GROQ_API_KEY ? 'configured' : 'not configured'
     }
   })
 }

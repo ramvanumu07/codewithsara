@@ -70,9 +70,9 @@ function validateBody(schema) {
     const { required = [], optional = [] } = schema
     const allowedFields = [...required, ...optional]
 
-    // Check required fields
     for (const field of required) {
-      if (!req.body[field]) {
+      const val = req.body[field]
+      if (val === undefined || val === null || val === '') {
         return res.status(400).json(createErrorResponse(`${field} is required`))
       }
     }
@@ -143,18 +143,22 @@ async function executeCodeSecurely(code, testCases = [], functionName = null, so
 
 // Require course to be unlocked for user (used for topic access)
 async function requireCourseUnlocked(req, res, next) {
-  const topicId = req.params.topicId || req.body?.topicId
-  if (!topicId) { return next() }
-  const topic = findTopicById(courses, topicId)
-  if (!topic) { return next() }
-  const courseId = topic.courseId
-  const userId = req.user?.userId
-  if (!userId) { return next() }
-  const unlocked = await isCourseUnlockedForUser(userId, courseId)
-  if (!unlocked) {
-    return res.status(403).json(createErrorResponse('This course is locked. Unlock it to continue.', 'COURSE_LOCKED', { courseId }))
+  try {
+    const topicId = req.params.topicId || req.body?.topicId
+    if (!topicId) { return next() }
+    const topic = findTopicById(courses, topicId)
+    if (!topic) { return next() }
+    const courseId = topic.courseId
+    const userId = req.user?.userId
+    if (!userId) { return next() }
+    const unlocked = await isCourseUnlockedForUser(userId, courseId)
+    if (!unlocked) {
+      return res.status(403).json(createErrorResponse('This course is locked. Unlock it to continue.', 'COURSE_LOCKED', { courseId }))
+    }
+    next()
+  } catch (error) {
+    next(error)
   }
-  next()
 }
 
 // ============ COURSE UNLOCK (payment flow) ============
@@ -687,6 +691,10 @@ router.post('/execute-secure', authenticateToken, async (req, res) => {
 
     if (!testCases || !Array.isArray(testCases)) {
       return res.status(400).json(createErrorResponse('Valid test cases are required'));
+    }
+
+    if (testCases.length > 50) {
+      return res.status(400).json(createErrorResponse('Too many test cases (max 50)'));
     }
 
     if (solutionType === 'function' && !functionName) {

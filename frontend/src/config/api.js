@@ -22,10 +22,12 @@ const api = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('sara_token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
+    try {
+      const token = localStorage.getItem('sara_token')
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+    } catch (_) { /* private/restricted browsing */ }
     return config
   },
   (error) => Promise.reject(error)
@@ -42,8 +44,10 @@ api.interceptors.response.use(
       const currentPath = window.location.pathname
       const isAuthPage = ['/login', '/signup', '/forgot-password'].includes(currentPath)
       if (!isAuthPage) {
-        localStorage.removeItem('sara_token')
-        localStorage.removeItem('sara_user')
+        try {
+          localStorage.removeItem('sara_token')
+          localStorage.removeItem('sara_user')
+        } catch (_) { /* private/restricted browsing */ }
         const event = new CustomEvent('auth-session-expired', {
           detail: { message: 'Your session has expired. Please log in again.' }
         })

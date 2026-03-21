@@ -52,7 +52,7 @@ function createTransporter() {
     throw new Error('Email credentials not configured. Please set EMAIL_USER and EMAIL_PASSWORD/EMAIL_APP_PASSWORD in .env')
   }
   
-  return nodemailer.createTransporter(config)
+  return nodemailer.createTransport(config)
 }
 
 /**

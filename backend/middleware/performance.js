@@ -32,7 +32,7 @@ export const withPerformanceLogging = async (operation) => {
 
 // ============ PERFORMANCE OPTIMIZATION UTILITIES ============
 
-export const createCache = (ttlMs = 60000) => {
+export const createCache = (ttlMs = 60000, maxSize = 5000) => {
   const cache = new Map()
   
   return {
@@ -49,6 +49,10 @@ export const createCache = (ttlMs = 60000) => {
     },
     
     set: (key, value) => {
+      if (cache.size >= maxSize && !cache.has(key)) {
+        const firstKey = cache.keys().next().value
+        cache.delete(firstKey)
+      }
       cache.set(key, {
         value,
         expires: Date.now() + ttlMs

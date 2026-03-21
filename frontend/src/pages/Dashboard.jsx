@@ -31,7 +31,9 @@ const Dashboard = () => {
   const [playgroundCode, setPlaygroundCode] = useState('')
 
   useEffect(() => {
-    loadDashboardData()
+    let cancelled = false
+    loadDashboardData(cancelled)
+    return () => { cancelled = true }
   }, [])
 
   // Open unlock modal if URL has ?unlock=courseId (e.g. from Learn paywall)
@@ -70,7 +72,7 @@ const Dashboard = () => {
     }
   }, [showMobileMenu])
 
-  const loadDashboardData = async () => {
+  const loadDashboardData = async (cancelled = false) => {
     try {
       setLoading(true)
       setError(null)
@@ -106,6 +108,8 @@ const Dashboard = () => {
         throw e
       }
 
+      if (cancelled) return
+
       if (unlockedRes.data.success && Array.isArray(unlockedRes.data.data?.courseIds)) {
         setUnlockedCourseIds(unlockedRes.data.data.courseIds)
       }
@@ -121,7 +125,6 @@ const Dashboard = () => {
         : null
       if (lastAccessedData) {
         setLastAccessed(lastAccessedData)
-        // If progress list is empty but continue returned a topic, use it as the only progress so Continue button works
         if (!progressRes.data?.data?.progress?.length && lastAccessedData.topicId) {
           const synthetic = [{
             topic_id: lastAccessedData.topicId,
@@ -138,9 +141,9 @@ const Dashboard = () => {
       }
 
     } catch (err) {
-      setError(handleApiError(err, 'Failed to load dashboard. Please try again.'))
+      if (!cancelled) setError(handleApiError(err, 'Failed to load dashboard. Please try again.'))
     } finally {
-      setLoading(false)
+      if (!cancelled) setLoading(false)
     }
   }
 

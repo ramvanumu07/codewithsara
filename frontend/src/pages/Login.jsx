@@ -3,7 +3,7 @@
  * Enhanced login with username/email support and forgot password
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import './Auth.css'
@@ -37,13 +37,21 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [loginAttempts, setLoginAttempts] = useState(0)
   const [lastAttemptTime, setLastAttemptTime] = useState(0)
+  const redirectTimerRef = useRef(null)
+  const resetTimerRef = useRef(null)
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard', { replace: true })
     }
   }, [isAuthenticated, navigate])
+
+  useEffect(() => {
+    return () => {
+      if (redirectTimerRef.current) clearTimeout(redirectTimerRef.current)
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current)
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -117,7 +125,7 @@ const Login = () => {
         succeeded = true
         setLoginAttempts(0)
         setErrors({ general: '' })
-        setTimeout(() => {
+        redirectTimerRef.current = setTimeout(() => {
           navigate('/dashboard')
         }, 500)
       } else {
@@ -147,7 +155,7 @@ const Login = () => {
     } finally {
       setIsLoading(false)
       if (!succeeded) {
-        setTimeout(() => {
+        resetTimerRef.current = setTimeout(() => {
           setLoginAttempts(0)
         }, RATE_LIMIT_WINDOW)
       }

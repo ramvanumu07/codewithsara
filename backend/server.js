@@ -6,7 +6,7 @@
 import { createServer } from 'http'
 import { getSafePort } from './utils/portManager.js'
 import { logInfo, logError } from './services/logger.js'
-import { query, isDatabaseConfigured } from './services/db.js'
+import { query, isDatabaseConfigured, getPool } from './services/db.js'
 import app from './app.js'
 
 process.on('unhandledRejection', (reason, promise) => {
@@ -69,8 +69,11 @@ const startServer = async () => {
       process.exit(1)
     })
 
-    const gracefulShutdown = () => {
-      server.close(() => process.exit(0))
+    const gracefulShutdown = async () => {
+      server.close(async () => {
+        try { await getPool()?.end?.() } catch (_) { /* ignore */ }
+        process.exit(0)
+      })
       setTimeout(() => process.exit(1), 10000)
     }
     process.on('SIGTERM', gracefulShutdown)

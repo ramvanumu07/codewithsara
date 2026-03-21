@@ -87,18 +87,23 @@ class CodeExecutionService {
       });
 
       try {
-        this.worker = new CodeExecutorWorker();
+        if (this.worker) {
+          this.worker.terminate();
+          this.worker = null;
+        }
 
-        this.worker.onmessage = (event) => {
+        const worker = new CodeExecutorWorker();
+        this.worker = worker;
+
+        worker.onmessage = (event) => {
           this.handleWorkerMessage(event.data);
         };
 
-        this.worker.onerror = (error) => {
+        worker.onerror = (error) => {
           this.handleWorkerError(taskId, error);
         };
 
-        // Send execution request
-        this.worker.postMessage({
+        worker.postMessage({
           taskId,
           code,
           testCases,

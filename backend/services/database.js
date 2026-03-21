@@ -165,7 +165,6 @@ export async function updateUserProfile(userId, updates) {
     values
   )
   if (!rows[0]) throw new Error('Failed to update user profile')
-  if (rows[0].code === '23505') throw new Error('Username already exists')
   return rows[0]
 }
 
@@ -175,7 +174,7 @@ export async function updateLastLogin(userId) {
 }
 
 export async function isAdmin(userId) {
-  if (initializeDatabase() === 'DEV_MODE') return true
+  if (initializeDatabase() === 'DEV_MODE') return false
   const { rows } = await query('SELECT id FROM admins WHERE user_id = $1', [userId])
   return !!rows[0]
 }

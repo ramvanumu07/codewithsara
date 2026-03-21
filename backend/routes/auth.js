@@ -620,6 +620,7 @@ router.post('/verify-security-answer-only', rateLimitMiddleware, async (req, res
     }))
 
   } catch (error) {
+    console.error('verify-security-answer-only error:', error?.message)
     res.status(500).json(createErrorResponse('Failed to verify security answer'))
   }
 })
@@ -665,6 +666,7 @@ router.post('/verify-security-answer', rateLimitMiddleware, async (req, res) => 
     }))
 
   } catch (error) {
+    console.error('verify-security-answer error:', error?.message)
     res.status(500).json(createErrorResponse('Failed to verify security answer'))
   }
 })

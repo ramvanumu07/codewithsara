@@ -190,6 +190,9 @@ export async function* streamAI(systemPrompt, messages, maxTokens = 1000, temper
         throw friendly || err
       }
 
+      if (!response.body) {
+        throw new Error('Empty response body from AI provider')
+      }
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
       let buffer = ''

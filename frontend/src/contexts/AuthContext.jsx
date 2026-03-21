@@ -52,7 +52,8 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const initializeAuth = async () => {
-    const AUTH_TIMEOUT_MS = 10000 // 10s - avoid stuck "Loading Sara..." if backend is down
+    const AUTH_TIMEOUT_MS = 10000
+    let cancelled = false
 
     try {
       const token = getToken()
@@ -60,10 +61,16 @@ export const AuthProvider = ({ children }) => {
 
       if (token) {
         try {
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error('Auth check timed out')), AUTH_TIMEOUT_MS)
-          )
-          const response = await Promise.race([auth.validate(), timeoutPromise])
+          const controller = new AbortController()
+          const timeoutId = setTimeout(() => controller.abort(), AUTH_TIMEOUT_MS)
+          const validatePromise = auth.validate().catch(() => null)
+          const timeoutPromise = new Promise((_, reject) => {
+            controller.signal.addEventListener('abort', () => reject(new Error('Auth check timed out')))
+          })
+          const response = await Promise.race([validatePromise, timeoutPromise])
+          clearTimeout(timeoutId)
+
+          if (cancelled) return
 
           if (response?.data?.success && response.data.data?.user) {
             const freshUser = response.data.data.user
@@ -74,18 +81,18 @@ export const AuthProvider = ({ children }) => {
             await logout()
           }
         } catch (validationError) {
-          // Never trust savedUser when validation fails - token may be expired or invalid
-          await logout()
+          if (!cancelled) await logout()
         }
       } else if (savedUser) {
         await logout()
       }
     } catch (error) {
-      // Clear invalid session
-      await logout()
+      if (!cancelled) await logout()
     } finally {
-      setLoading(false)
+      if (!cancelled) setLoading(false)
     }
+
+    return () => { cancelled = true }
   }
 
   const login = async (username, password) => {

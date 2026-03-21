@@ -4,8 +4,6 @@
  */
 
 import express from 'express'
-import fs from 'fs'
-import path from 'path'
 import { authenticateToken } from './auth.js'
 import { callAI, streamAI, getGroqMessagesForDebug } from '../services/ai.js'
 import { getChatHistory, saveChatTurn, saveInitialMessage, clearChatHistory, getLastNExchangesAsMessages } from '../services/chatService.js'
@@ -59,7 +57,12 @@ function validateChatRequest(req, res) {
     return false
   }
 
-  if (typeof message === 'string' && message.length > MAX_MESSAGE_LENGTH) {
+  if (typeof message !== 'string') {
+    res.status(400).json(createErrorResponse('message must be a string'))
+    return false
+  }
+
+  if (message.length > MAX_MESSAGE_LENGTH) {
     res.status(400).json(createErrorResponse(`Message is too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.`))
     return false
   }

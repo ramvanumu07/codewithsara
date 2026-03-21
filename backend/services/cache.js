@@ -218,10 +218,14 @@ export const expire = async (key, ttlSeconds) => {
 export const clearCache = async (pattern = '*') => {
   try {
     if (isConnected && redisClient) {
-      const keys = await redisClient.keys(pattern)
-      if (keys.length > 0) {
-        await redisClient.del(...keys)
-      }
+      let cursor = '0'
+      do {
+        const [nextCursor, keys] = await redisClient.scan(cursor, 'MATCH', pattern, 'COUNT', 100)
+        cursor = nextCursor
+        if (keys.length > 0) {
+          await redisClient.del(...keys)
+        }
+      } while (cursor !== '0')
     } else {
       // Memory cache fallback
       if (pattern === '*') {

@@ -577,21 +577,24 @@ const Learn = () => {
     }
   }
 
-  // Industry-level secure code execution system
+  const escapeHtmlLearn = (text) => {
+    const div = document.createElement('div')
+    div.textContent = text
+    return div.innerHTML
+  }
+
   const handleRunPlayground = async () => {
     const outputDiv = document.getElementById('terminal-output')
     if (!outputDiv) return
 
     try {
-      // Clear previous output
       outputDiv.innerHTML = '<div style="color: #10a37f; font-family: Monaco, Consolas, monospace; padding: 8px;">Executing code securely...</div>'
 
-      // Execute code using secure Web Worker
       const result = await CodeExecutor.executeForTesting(
         userCode,
-        [], // No test cases for playground
-        null, // No function name for playground
-        'script' // Always script type for playground
+        [],
+        null,
+        'script'
       )
 
       const { text: outputText, isError } = formatTerminalRunResult(result)
@@ -599,7 +602,6 @@ const Learn = () => {
 
       const outputLines = outputText.split('\n')
 
-      // Update line numbers
       const lineNumbersDiv = outputDiv.parentElement.querySelector('.terminal-line-numbers')
       if (lineNumbersDiv) {
         let lineNumbersHTML = ''
@@ -609,13 +611,12 @@ const Learn = () => {
         lineNumbersDiv.innerHTML = lineNumbersHTML
       }
 
-      // Update output content
       let formattedOutput = ''
       outputLines.forEach((line) => {
         const color = line.includes('Error:') ? '#ef4444' :
           line.includes('Warning') ? '#f59e0b' :
             line.includes('Execution completed') ? '#10a37f' : outputColor
-        formattedOutput += `<div style="line-height: 1.4; color: ${color}; white-space: pre; padding-left: 2px; font-size: 0.875rem;">${line || ' '}</div>`
+        formattedOutput += `<div style="line-height: 1.4; color: ${color}; white-space: pre; padding-left: 2px; font-size: 0.875rem;">${escapeHtmlLearn(line) || ' '}</div>`
       })
 
       outputDiv.innerHTML = `
@@ -624,10 +625,9 @@ const Learn = () => {
         </div>
       `
 
-      // Set output for reference
       setPlaygroundOutput(outputText)
     } catch (error) {
-      const errorDiv = `<div style="color: #ef4444; font-family: Monaco, Consolas, monospace; padding: 16px;">Error: ${error.message}</div>`
+      const errorDiv = `<div style="color: #ef4444; font-family: Monaco, Consolas, monospace; padding: 16px;">Error: ${escapeHtmlLearn(error.message)}</div>`
       outputDiv.innerHTML = errorDiv
     }
   }
@@ -1265,8 +1265,8 @@ const Learn = () => {
           />
         ),
       pre: ({ children }) => {
-        const child = React.Children.only(children)
-        if (child?.type === 'pre') return <>{child}</>
+        const childArray = React.Children.toArray(children)
+        if (childArray.length === 1 && childArray[0]?.type === 'pre') return <>{childArray[0]}</>
         return children
       },
       p: ({ children }) => <p>{children}</p>,

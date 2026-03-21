@@ -3,7 +3,7 @@
  * Enhanced registration with validation and modern design
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import api, { handleApiError } from '../config/api'
@@ -21,7 +21,9 @@ const SUCCESS_REDIRECT_DELAY = 1000 // 1 second
 const Signup = () => {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
-  let usernameCheckTimeout = null
+  const usernameCheckTimeoutRef = useRef(null)
+  const submitResetTimeoutRef = useRef(null)
+  const redirectTimeoutRef = useRef(null)
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -40,12 +42,19 @@ const Signup = () => {
   const [submitAttempts, setSubmitAttempts] = useState(0)
   const [lastSubmitTime, setLastSubmitTime] = useState(0)
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard', { replace: true })
     }
   }, [isAuthenticated, navigate])
+
+  useEffect(() => {
+    return () => {
+      if (usernameCheckTimeoutRef.current) clearTimeout(usernameCheckTimeoutRef.current)
+      if (submitResetTimeoutRef.current) clearTimeout(submitResetTimeoutRef.current)
+      if (redirectTimeoutRef.current) clearTimeout(redirectTimeoutRef.current)
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -70,7 +79,7 @@ const Signup = () => {
 
     // Username real-time validation and availability check
     if (name === 'username') {
-      clearTimeout(usernameCheckTimeout)
+      if (usernameCheckTimeoutRef.current) clearTimeout(usernameCheckTimeoutRef.current)
       
       // Real-time username format validation
       if (value && !/^[a-zA-Z0-9_]{3,20}$/.test(value)) {
@@ -102,7 +111,7 @@ const Signup = () => {
           username: ''
         }))
         setUsernameAvailable(null)
-        usernameCheckTimeout = setTimeout(async () => {
+        usernameCheckTimeoutRef.current = setTimeout(async () => {
           try {
             const response = await api.get(`/auth/check-username/${encodeURIComponent(value)}`)
             if (response.data.success) {
@@ -241,11 +250,12 @@ const Signup = () => {
         // Account created successfully
         const token = response.data.data.token || response.data.data.accessToken
         const user = response.data.data.user
-        if (token) localStorage.setItem('sara_token', token)
-        if (user) localStorage.setItem('sara_user', JSON.stringify(user))
+        try {
+          if (token) localStorage.setItem('sara_token', token)
+          if (user) localStorage.setItem('sara_user', JSON.stringify(user))
+        } catch (_) { /* quota or private mode */ }
 
-        // Full reload so AuthContext picks up the new token
-        setTimeout(() => {
+        redirectTimeoutRef.current = setTimeout(() => {
           window.location.href = '/dashboard'
         }, SUCCESS_REDIRECT_DELAY)
       }
@@ -271,8 +281,7 @@ const Signup = () => {
       setIsLoading(false)
       setIsSubmitting(false)
       
-      // Reset submit attempts after timeout
-      setTimeout(() => {
+      submitResetTimeoutRef.current = setTimeout(() => {
         setSubmitAttempts(0)
       }, SUBMIT_RESET_TIME)
     }

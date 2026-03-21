@@ -86,13 +86,13 @@ export function errorHandler(error, req, res, _next) {
     statusCode: error.statusCode || error.status
   })
 
-  // Handle known error types
-  if (error.statusCode) {
+  const httpStatus = error.statusCode || error.status
+  if (httpStatus && httpStatus >= 400 && httpStatus < 600) {
     const code = error.name || 'ERROR'
     const details = [error.field, error.service].some(Boolean)
       ? { field: error.field, service: error.service }
       : null
-    return res.status(error.statusCode).json(createErrorResponse(error.message, code, details))
+    return res.status(httpStatus).json(createErrorResponse(error.message, code, details))
   }
 
   // Handle specific error cases
