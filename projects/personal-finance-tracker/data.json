@@ -1,24 +1,4 @@
 {
-  "transactions": [
-    {
-      "id": 1,
-      "type": "income",
-      "amount": 10000,
-      "category": "salary",
-      "description": "tw",
-      "date": "2026-03-21T08:35:18.961Z"
-    },
-    {
-      "id": 2,
-      "type": "expense",
-      "amount": 100,
-      "category": "food",
-      "description": "biryani",
-      "date": "2026-03-21T08:35:36.602Z"
-    }
-  ],
-  "budgets": {
-    "food": 1000,
-    "travel": 10000
-  }
+  "transactions": [],
+  "budgets": {}
 }
