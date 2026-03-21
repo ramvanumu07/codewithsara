@@ -1,117 +1,144 @@
-# Terminal Wordle
+# Terminal Hangman (Stickman) Game
 
-A **Wordle-style** word game for the terminal, built with **Node.js** and **`readline`**. Guesses are checked against a built-in bank of common five-letter words; stats persist in `stats.json`.
+An interactive terminal-based Hangman game built entirely in **pure JavaScript**. Guess the secret word letter by letter before the stickman is fully drawn — with categories, difficulty levels, hints, and persistent statistics — all from the terminal.
 
-## How to run
-
-From the repo root:
+## Run
 
 ```bash
-cd projects/terminal-wordle-game
 node index.js
 ```
 
-Or:
-
-```bash
-npm start
-```
-
-Requires **Node.js 18+** (for private class fields `#`).
+No external dependencies required — uses only Node.js built-in modules.
 
 ## Features
 
-- **Menu-driven CLI** — play, stats, how-to, settings, exit
-- **Color tiles** — 🟩 correct position, 🟨 wrong position, ⬛ absent
-- **Keyboard tracker** — letter states update after each guess
-- **Strict guesses** — exactly five letters, alphabetic, must exist in the word bank
-- **Duplicate-aware scoring** — same rules as standard Wordle (e.g. target `apple` vs guess `papal`)
-- **Statistics** — games played, win rate, streaks, guess distribution bar chart; saved with **async** `fs` + Promises
-- **Hard mode** — every green/yellow clue from previous guesses must be satisfied on later guesses
-- **Hints** — after four guesses, optional hint reveals one unrevealed position (if hints are enabled in settings)
-- **Reveal animation** — recursive `setTimeout` + `Promise` stepping through each letter’s tile
+- **Interactive CLI** — menu-driven game with real-time input via `readline`
+- **ASCII Stickman Art** — 7-stage progressive drawing that builds with each wrong guess
+- **6 Word Categories** — Animals, Countries, Foods, Science, Sports, Technology
+- **3 Difficulty Levels** — Easy (≤6 letters, 3 hints), Medium (7 letters, 2 hints), Hard (8+ letters, 1 hint)
+- **Letter-by-Letter Guessing** — guess single letters to reveal the word
+- **Full Word Guessing** — take a risk and guess the entire word (costs 2 lives if wrong)
+- **Hint System** — reveals a random unguessed letter and its positions
+- **Visual Keyboard** — live keyboard display shows correct (green) and wrong (red) letters
+- **Lives Display** — heart icons (♥/♡) show remaining lives at a glance
+- **Progress Tracking** — shows how many unique letters you've found
+- **Duplicate Guess Detection** — prevents guessing the same letter twice
+- **Game Timer** — tracks how long each game takes
+- **Persistent Statistics** — win rate, streaks, category/difficulty breakdowns saved to `stats.json`
+- **Game History** — tracks last 50 games with date, word, category, and result
+- **How to Play** — built-in tutorial accessible from the menu
+- **150 Words** — 25 per category, carefully curated
+- **Color-Coded Output** — ANSI-colored terminal UI throughout
 
-## Example gameplay
-
-```
-╔══════════════════════════════════════════════╗
-║         🟩 TERMINAL WORDLE 🟩                ║
-╠══════════════════════════════════════════════╣
-║  1. Play Game                                ║
-║  2. View Statistics                          ║
-║  3. How to Play                              ║
-║  4. Settings                                 ║
-║  0. Exit                                     ║
-╚══════════════════════════════════════════════╝
-
-  ┌───┬───┬───┬───┬───┐
-  │ 🟨 │ ⬛ │ 🟩 │ ⬛ │ ⬛ │
-  │  S │  T │  A │  R │  E │
-  └───┴───┴───┴───┴───┘
-
-Keyboard:
-·q ·w ·e 🟨r ·t ·y ·u ·i ·o ·p
-·a 🟩s ·d ·f ·g ·h ·j ·k ·l
-·z ·x ·c ·v ·b ·n ·m
-```
-
-## JavaScript topics covered
-
-| Topic | Where it appears |
-|--------|------------------|
-| Console / logging | `index.js`, `Stats.js` |
-| Variables & constants | `const` / `let` throughout |
-| Numbers & arithmetic | scoring indices, `Math.random`, `Math.floor`, `Math.round`, `Math.max` / `Math.min` |
-| `Math` utilities | `WordBank.js`, `Stats.js` |
-| `undefined` / `null` | optional hint, `readline` callbacks |
-| Strings & operations | normalization, `toUpperCase`, `toLowerCase`, `padEnd`, template literals |
-| Type coercion | numeric keys vs string keys in stats JSON |
-| Comparison & logical operators | game state, validation |
-| Conditionals | menus, validation branches |
-| Loops | `for`, `while`, `for...of` |
-| Loop control | `break`, `continue` |
-| Nested loops | letter matching in `Game.js` |
-| Arrays | word bank, guesses, keyboard rows |
-| Objects | keyboard state, settings, distribution map |
-| Destructuring | `Stats`, settings, `Game` constructor |
-| Spread / rest | copies of settings, guesses, merged stats |
-| JSON | `stats.json`, `toJSON` / `fromJSON` |
-| Functions & arrow functions | helpers, callbacks, `createPrompt` |
-| Recursion | `revealLetters`, `startRevealWithFrames` in `Game.js` |
-| Closures | `createPrompt(rl)`, guess scorer closure in `Game` |
-| `forEach` | keyboard aggregation |
-| `map` | rendering rows, shallow copies |
-| `filter` | word bank hygiene, slot picking |
-| `find` / `findIndex` | hints, `isValidWord` |
-| `some` / `every` | win check (`every` correct), `hasAmbiguousPrefix` |
-| `reduce` | distribution chart scaling |
-| String manipulation | trim, split, join |
-| `split` / `join` | rows, words |
-| `substring` / `slice` | menu / error display |
-| String searching | `includes` in hard mode |
-| Regex | `/^[A-Za-z]{5}$/` for guesses |
-| Array patterns | batches + dedupe in `WordBank`, keyboard layout |
-| Error handling | `try` / `catch` in CLI and `Stats.fromJSON` |
-| Classes (basics) | `WordBank`, `Game`, `Stats`, `Serializable` |
-| Inheritance | `Stats extends Serializable` |
-| Modules | CommonJS `require` / `module.exports` |
-| Async basics | `async` main menu / game flow |
-| Promises | `createPrompt`, `fs` wrappers, animation chain |
-| `async` / `await` | `Stats.load` / `save`, game loop |
-
-## File structure
+## Menu
 
 ```
-projects/terminal-wordle-game/
-├── index.js        # readline CLI, menus, rendering
-├── Game.js         # session state, scoring, keyboard, reveal animation
-├── WordBank.js     # large built-in word list (200+ required; current bank has 500+ unique words)
-├── Stats.js        # Serializable base class + persisted statistics
-├── stats.json      # saved stats (updated by the game)
-├── package.json    # "type": "commonjs"
+  1. New Game
+  2. View Statistics
+  3. How to Play
+  0. Exit
+```
+
+## JS Topics Covered
+
+| # | Topic | Where It's Used |
+|---|---|---|
+| 1 | **Console.log** | All game output, stickman rendering, statistics display |
+| 2 | **Variables & Constants** | `const`/`let` throughout; ANSI constants, game state, stage arrays |
+| 3 | **Numbers & Arithmetic** | Win rate calc, progress percentages, elapsed time, hint limits |
+| 4 | **Math Utilities** | `Math.floor()`, `Math.random()`, `Math.max()`, `Math.round()`, `Math.min()` |
+| 5 | **Undefined/Null** | Null hint returns, optional category, nullish coalescing `??` |
+| 6 | **Strings & Operations** | Template literals, ANSI codes, `toUpperCase()`, `charAt()`, padding |
+| 7 | **Type Coercion** | `Number(choice)` from readline, truthy/falsy checks on input |
+| 8 | **Operators** | Comparison, logical AND/OR, ternary, nullish coalescing `??` |
+| 9 | **Conditionals** | `if/else`, `switch` for menu, validation branching, difficulty gates |
+| 10 | **Date/Time** | `Date.now()` for timer, `new Date().toISOString()`, `toLocaleDateString()` |
+| 11 | **Loops** | `while` game loop, `for` in stickman stages |
+| 12 | **Loop Control** | `break`, `continue` (hint turns), early `return` in handlers |
+| 13 | **Nested Loops** | Keyboard rendering (rows × keys), stickman art (stages × lines) |
+| 14 | **Arrays** | Word banks, stickman stages, wrong letters list, `Array.from()` |
+| 15 | **Objects** | Game state, hint objects, category maps, stats data |
+| 16 | **Destructuring** | `const { word, category } = ...`, `{ letter, correct }`, handler params |
+| 17 | **Spread/Rest** | `[...Set]`, `{ ...categoryWins }`, `[...letters]`, `Object.values().flat()` |
+| 18 | **JSON** | `JSON.parse()`, `JSON.stringify()` for stats persistence |
+| 19 | **Functions** | `showBanner()`, `playGame()`, `pickCategory()`, handler functions |
+| 20 | **Arrow Functions** | All callbacks, `ask()`, comparators, mappers, keyboard renderers |
+| 21 | **Recursion** | Menu loop pattern, self-continuing async game flow |
+| 22 | **Closures** | `createHintSystem()` captures revealed set + hints count in closure |
+| 23 | **forEach** | Iterating stickman lines, keyboard rows, category list, history |
+| 24 | **map** | `secret.split("").map()` for masked word, keyboard keys, positions |
+| 25 | **filter** | `unrevealed.filter()` in hints, filtering by difficulty/category |
+| 26 | **find / findIndex** | `CATEGORY_NAMES.find()` to resolve category for a word |
+| 27 | **some / every** | `every()` to check all letters revealed, `some()` for category wins |
+| 28 | **reduce** | `getTotalWordCount()`, max bar length in stats, accumulating wins |
+| 29 | **String Manipulations** | `padEnd()`, `toUpperCase()`, `trim()`, `repeat()`, `charAt()` |
+| 30 | **Split / Join** | `word.split("")`, `positions.join(", ")`, `keys.join("")`, category list |
+| 31 | **Substring / Slice** | `history.slice(-5)`, `cat.slice(1)`, `history.slice(-50)` |
+| 32 | **String Searching** | `includes()` for letter-in-word check, `Set.has()` for guessed letters |
+| 33 | **Regex** | `/^[A-Z]$/` for single-letter validation, `/^[A-Z]+$/` for word validation |
+| 34 | **Array Advanced Patterns** | Chained `.map().filter()`, `Object.values().flat()`, `Object.entries().sort()` |
+| 35 | **Error Handling** | `try/catch` in game loop, file I/O, validation with thrown errors |
+| 36 | **Classes Basics** | `Game`, `Stats` with private `#` fields, getters, and methods |
+| 37 | **Classes Inheritance** | Composition patterns, `Set` usage for state, static-like helpers |
+| 38 | **Modules** | `require`/`module.exports` across 3 files |
+| 39 | **Async Basics** | Callback in `fs.writeFile`, event-driven readline |
+| 40 | **Promises** | `new Promise()` wrapping `fs.writeFile`, `ask()` wrapper |
+| 41 | **Async/Await** | `async playGame()`, `await ask()`, `await stats.save()` |
+
+## File Structure
+
+```
+terminal-wordle-game/
+├── index.js       # Interactive CLI (menus, game loop, display)
+├── Game.js        # Core engine (stickman art, scoring, hints, stats)
+├── words.js       # Word banks (150 words across 6 categories)
+├── stats.json     # Auto-generated persistent statistics
+├── package.json
 └── README.md
 ```
 
-## License
+## Sample Interaction
 
-MIT
+```
+  ╔════════════════════════════════════════════════════╗
+  ║                                                    ║
+  ║    TERMINAL HANGMAN                                ║
+  ║    Save the stickman — guess the word!             ║
+  ║                                                    ║
+  ╚════════════════════════════════════════════════════╝
+
+  ┌──────────────────────────────────┐
+  │         MAIN MENU                │
+  ├──────────────────────────────────┤
+  │   1.  New Game                   │
+  │   2.  View Statistics            │
+  │   3.  How to Play                │
+  │   0.  Exit                       │
+  └──────────────────────────────────┘
+
+  TERMINAL HANGMAN — MEDIUM [animals]
+
+    ┌───────┐
+    │       │
+    │       O
+    │      /│\
+    │
+    │
+  ══╧════════
+
+     _  O  L  P  H  I  _
+
+  Lives: ♥♥♥♡♡♡♡   Category: animals | Difficulty: medium
+  Wrong: X Z Q
+
+  ---- Keyboard ----
+   Q  W  E  R  T  Y  U  I  O  P
+    A  S  D  F  G  H  J  K  L
+     Z  X  C  V  B  N  M
+
+  [4 lives] > D
+
+  You saved the stickman!
+  The word was: DOLPHIN
+  Wrong guesses: 3 | Time: 45s
+```

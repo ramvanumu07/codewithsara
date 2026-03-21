@@ -1,12 +1,11 @@
 {
-  "name": "terminal-wordle-game",
+  "name": "terminal-hangman-game",
   "version": "1.0.0",
-  "description": "Terminal Wordle-style game with readline (course demo project)",
-  "type": "commonjs",
+  "description": "Interactive terminal Hangman game with stickman art built with pure JavaScript",
   "main": "index.js",
+  "type": "commonjs",
+  "private": true,
   "scripts": {
     "start": "node index.js"
-  },
-  "keywords": ["wordle", "cli", "nodejs"],
-  "license": "MIT"
+  }
 }

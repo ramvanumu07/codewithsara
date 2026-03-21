@@ -1,7 +1,7 @@
 {
-  "name": "personal-finance-tracker",
+  "name": "task-manager-priority-queue",
   "version": "1.0.0",
-  "description": "Interactive CLI personal finance tracker built with pure JavaScript",
+  "description": "Interactive CLI task board with priority queue built with pure JavaScript",
   "main": "index.js",
   "type": "commonjs",
   "private": true,
