@@ -1335,7 +1335,7 @@ const Learn = () => {
             style={{
               flex: 1,
               overflow: 'auto',
-              padding: '28px 24px 48px',
+              padding: '20px 20px 36px',
               maxWidth: 720,
               margin: '0 auto',
               width: '100%',

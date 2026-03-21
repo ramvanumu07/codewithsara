@@ -211,7 +211,7 @@
 .message-row {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   width: 100%;
 }
 
@@ -231,7 +231,7 @@
   max-width: 85%;
   background: #d1f0e8;
   border-radius: 16px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   box-shadow: 0 1px 2px rgba(16, 163, 127, 0.15);
 }
 
@@ -258,13 +258,13 @@
 /* ========== Message Markdown (single prose: chat, outcome messages, assignment review) ========== */
 .message-markdown {
   font-size: 1rem;
-  line-height: 1.7;
+  line-height: 1.45;
   color: #374151;
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .message-markdown p {
-  margin: 0 0 0.75em;
+  margin: 0 0 0.4em;
 }
 
 .message-markdown p:last-child {
@@ -287,7 +287,7 @@
 .message-markdown h3 {
   font-weight: 600;
   color: #111827;
-  margin: 1em 0 0.35em;
+  margin: 0.55em 0 0.22em;
 }
 
 .message-markdown h1 {
@@ -310,12 +310,12 @@
 
 .message-markdown ul,
 .message-markdown ol {
-  margin: 0.5em 0 0.75em;
+  margin: 0.3em 0 0.45em;
   padding-left: 1.5em;
 }
 
 .message-markdown li {
-  margin: 0.25em 0;
+  margin: 0.1em 0;
 }
 
 .message-markdown__inline-code {
@@ -330,7 +330,7 @@
 
 .message-markdown__code-wrapper {
   position: relative;
-  margin: 0.75em 0;
+  margin: 0.45em 0;
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -383,7 +383,7 @@
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   font-size: 0.875rem;
-  line-height: 1.5;
+  line-height: 1.4;
   font-family: 'SF Mono', Monaco, Consolas, monospace;
   white-space: pre;
   word-break: normal;
@@ -414,7 +414,7 @@
 
 .topic-notes-view .topic-notes-doc {
   font-size: 1rem;
-  line-height: 1.75;
+  line-height: 1.48;
   color: #374151;
 }
 
@@ -422,7 +422,7 @@
   font-size: 1.125rem;
   font-weight: 600;
   color: #111827;
-  margin: 1.5rem 0 0.5rem;
+  margin: 0.85rem 0 0.35rem;
 }
 
 .topic-notes-view .topic-notes-doc h2:first-child {
@@ -433,11 +433,11 @@
   font-size: 1rem;
   font-weight: 600;
   color: #111827;
-  margin: 1.25rem 0 0.5rem;
+  margin: 0.65rem 0 0.3rem;
 }
 
 .topic-notes-view .topic-notes-doc p {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.35rem;
   color: #6b7280;
 }
 
@@ -448,13 +448,13 @@
   color: #e2e8f0;
   padding: 12px 16px;
   border-radius: 8px;
-  margin: 0.5rem 0 1rem;
+  margin: 0.4rem 0 0.65rem;
   overflow-x: hidden;
   overflow-y: visible;
   white-space: pre-wrap;
   word-break: break-word;
   font-size: 0.8125rem;
-  line-height: 1.5;
+  line-height: 1.4;
   font-family: 'SF Mono', Monaco, 'Consolas', monospace;
   border: 1px solid #2d3748;
 }
@@ -478,19 +478,19 @@
 }
 
 .topic-notes-view .topic-notes-doc ul {
-  margin: 0.5rem 0 1rem;
+  margin: 0.35rem 0 0.55rem;
   padding-left: 1.5rem;
 }
 
 .topic-notes-view .topic-notes-doc li {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.2rem;
   color: #475569;
 }
 
 .typing-dots {
   display: flex;
   gap: 4px;
-  padding: 8px 0;
+  padding: 4px 0;
 }
 
 .typing-dots span {
@@ -1150,12 +1150,12 @@
     overflow: auto;
     padding: 16px;
     font-size: 0.85rem;
-    line-height: 1.6;
+    line-height: 1.45;
   }
 
   /* ReactMarkdown styling for notes panel */
   .notes-panel-content p {
-    margin: 0 0 8px 0;
+    margin: 0 0 4px 0;
     color: #2d3748;
   }
 
@@ -1201,7 +1201,7 @@
   .notes-panel-content h1,
   .notes-panel-content h2,
   .notes-panel-content h3 {
-    margin: 12px 0 8px 0;
+    margin: 8px 0 4px 0;
     color: #1a202c;
     font-weight: 600;
   }

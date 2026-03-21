@@ -120,7 +120,7 @@
 .message-row {
   display: flex;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   max-width: 100%;
 }
 
@@ -665,7 +665,7 @@
   
   .message-markdown {
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.45;
   }
 
   .message-markdown__code-wrapper {
