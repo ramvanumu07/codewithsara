@@ -44,18 +44,23 @@ function buildGroqDebugPayload(systemPrompt, conversationMessages) {
 }
 
 // ============ VALIDATION FUNCTIONS ============
+const MAX_MESSAGE_LENGTH = 5000
+
 function validateChatRequest(req, res) {
   const { message, topicId } = req.body
 
-  // topicId is always required
   if (!topicId?.trim?.()) {
     res.status(400).json(createErrorResponse('topicId is required'))
     return false
   }
 
-  // message is required but can be empty string for session initialization
   if (message === undefined || message === null) {
     res.status(400).json(createErrorResponse('message is required'))
+    return false
+  }
+
+  if (typeof message === 'string' && message.length > MAX_MESSAGE_LENGTH) {
+    res.status(400).json(createErrorResponse(`Message is too long. Maximum ${MAX_MESSAGE_LENGTH} characters allowed.`))
     return false
   }
 
@@ -365,8 +370,15 @@ router.post('/session', authenticateToken, rateLimitMiddleware, async (req, res)
 
 // ============ CHAT HISTORY MANAGEMENT ============
 
+function blockDebugInProduction(req, res, next) {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ success: false, message: 'Not found' })
+  }
+  next()
+}
+
 // Debug: Get raw chat history from database
-router.get('/debug/history/:topicId', authenticateToken, async (req, res) => {
+router.get('/debug/history/:topicId', authenticateToken, blockDebugInProduction, async (req, res) => {
   try {
     const { topicId } = req.params
     const userId = req.user.userId
@@ -468,7 +480,7 @@ router.delete('/history/:topicId', authenticateToken, async (req, res) => {
 })
 
 // Manual completion endpoint (testing / dev)
-router.post('/complete/:topicId', authenticateToken, async (req, res) => {
+router.post('/complete/:topicId', authenticateToken, blockDebugInProduction, async (req, res) => {
   try {
     const { topicId } = req.params
     const userId = req.user.userId

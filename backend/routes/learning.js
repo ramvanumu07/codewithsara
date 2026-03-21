@@ -172,11 +172,21 @@ router.get('/unlocked-courses', authenticateToken, async (req, res) => {
 router.post('/unlock-course', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId
-    const { courseId } = req.body || {}
+    const { courseId, paymentToken } = req.body || {}
     if (!courseId || typeof courseId !== 'string') {
       return res.status(400).json(createErrorResponse('courseId is required'))
     }
-    // In production: verify payment (Stripe/Razorpay webhook or server-side confirmation) before unlocking
+
+    if (process.env.NODE_ENV === 'production' && !paymentToken) {
+      return res.status(402).json(createErrorResponse(
+        'Payment is required to unlock this course. Please complete payment first.',
+        'PAYMENT_REQUIRED'
+      ))
+    }
+
+    // TODO: In production, validate paymentToken with your payment provider (Stripe/Razorpay)
+    // before calling unlockCourseForUser. For now, block unlock without a token in production.
+
     await unlockCourseForUser(userId, courseId.trim())
     res.json(createSuccessResponse({ message: 'Course unlocked', courseId: courseId.trim() }))
   } catch (error) {
@@ -832,8 +842,15 @@ router.get('/certificate/download', authenticateToken, rateLimitMiddleware, asyn
   }
 })
 
+function blockDebugInProduction(req, res, next) {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ success: false, message: 'Not found' })
+  }
+  next()
+}
+
 // Debug endpoint to check progress table
-router.get('/debug/progress', authenticateToken, async (req, res) => {
+router.get('/debug/progress', authenticateToken, blockDebugInProduction, async (req, res) => {
   try {
     const userId = req.user.userId
 
@@ -860,7 +877,7 @@ router.get('/debug/progress', authenticateToken, async (req, res) => {
 })
 
 // Reset all progress for current user (for testing)
-router.delete('/debug/reset-progress', authenticateToken, async (req, res) => {
+router.delete('/debug/reset-progress', authenticateToken, blockDebugInProduction, async (req, res) => {
   try {
     const userId = req.user.userId
 
@@ -886,7 +903,7 @@ router.delete('/debug/reset-progress', authenticateToken, async (req, res) => {
 })
 
 // Clear all caches (for debugging)
-router.post('/debug/clear-cache', authenticateToken, async (req, res) => {
+router.post('/debug/clear-cache', authenticateToken, blockDebugInProduction, async (req, res) => {
   try {
     const { progressCache } = await import('../middleware/performance.js')
 
@@ -906,7 +923,7 @@ router.post('/debug/clear-cache', authenticateToken, async (req, res) => {
 })
 
 // Debug current progress state for a specific topic
-router.get('/debug/progress/:topicId', authenticateToken, async (req, res) => {
+router.get('/debug/progress/:topicId', authenticateToken, blockDebugInProduction, async (req, res) => {
   try {
     const { topicId } = req.params
     const userId = req.user.userId
@@ -934,7 +951,7 @@ router.get('/debug/progress/:topicId', authenticateToken, async (req, res) => {
 })
 
 // Comprehensive debug - check ALL data sources
-router.get('/debug/all-data-sources', authenticateToken, async (req, res) => {
+router.get('/debug/all-data-sources', authenticateToken, blockDebugInProduction, async (req, res) => {
   try {
     const userId = req.user.userId
 
@@ -1159,7 +1176,7 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
 // ============ DEBUG ENDPOINTS ============
 
 // Debug: List all available topics
-router.get('/debug/topics', (req, res) => {
+router.get('/debug/topics', blockDebugInProduction, (req, res) => {
   try {
     const allTopics = courses.flatMap(course =>
       course.topics.map(topic => ({
@@ -1179,9 +1196,8 @@ router.get('/debug/topics', (req, res) => {
   }
 })
 
-// Debug: Raw topic from curriculum (no auth, no progress) – use to compare with GET /topic/:id response
-// If GET /topic/:id returns topic_notes or different outcome_messages, the source is outside this curriculum.
-router.get('/debug/topic/:topicId', (req, res) => {
+// Debug: Raw topic from curriculum (no auth, no progress)
+router.get('/debug/topic/:topicId', blockDebugInProduction, (req, res) => {
   try {
     const { topicId } = req.params
     const topic = findTopicById(courses, topicId)

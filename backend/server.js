@@ -9,6 +9,15 @@ import { logInfo, logError } from './services/logger.js'
 import { query, isDatabaseConfigured } from './services/db.js'
 import app from './app.js'
 
+process.on('unhandledRejection', (reason, promise) => {
+  logError('Unhandled promise rejection', { reason: reason?.message || reason, stack: reason?.stack })
+})
+
+process.on('uncaughtException', (error) => {
+  logError('Uncaught exception', { error: error.message, stack: error.stack })
+  process.exit(1)
+})
+
 const PREFERRED_PORT = parseInt(process.env.PORT) || 5000
 
 async function testDatabaseConnection() {

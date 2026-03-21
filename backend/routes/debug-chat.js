@@ -11,8 +11,15 @@ import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 
 const router = express.Router()
 
+function blockInProduction(req, res, next) {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ success: false, message: 'Not found' })
+  }
+  next()
+}
+
 // Debug chat history storage format (DEV: pass ?userId=... or uses first session).
-router.get('/chat-history/:topicId', async (req, res) => {
+router.get('/chat-history/:topicId', blockInProduction, async (req, res) => {
   try {
     const { topicId } = req.params
     const userId = req.query.userId || req.headers['x-debug-user-id'] || null
@@ -107,7 +114,7 @@ router.get('/chat-history/:topicId', async (req, res) => {
 })
 
 // Proxy to test GET /api/chat/history/:topicId; forward your Authorization header.
-router.get('/test-frontend-api/:topicId', async (req, res) => {
+router.get('/test-frontend-api/:topicId', blockInProduction, async (req, res) => {
   try {
     const { topicId } = req.params
     const authHeader = req.headers.authorization

@@ -89,12 +89,15 @@ export const initializeCache = () => {
 // Fallback in-memory cache
 const memoryCache = new Map()
 const memoryExpiry = new Map()
+let memoryCacheInitialized = false
 
 const initializeMemoryCache = () => {
+  if (memoryCacheInitialized) return
+  memoryCacheInitialized = true
+
   logWarn('Using in-memory cache (not suitable for production scaling)')
   isConnected = false
   
-  // Clean expired entries every 5 minutes
   setInterval(() => {
     const now = Date.now()
     for (const [key, expiry] of memoryExpiry.entries()) {
@@ -103,7 +106,7 @@ const initializeMemoryCache = () => {
         memoryExpiry.delete(key)
       }
     }
-  }, 5 * 60 * 1000)
+  }, 5 * 60 * 1000).unref()
 }
 
 // Cache operations

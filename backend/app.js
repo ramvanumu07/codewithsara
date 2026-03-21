@@ -104,14 +104,14 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development',
-    version: '2.0.1',
-    memory: process.memoryUsage()
+    version: '2.0.1'
   })
 })
 
 app.get('/metrics', (req, res) => {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ success: false, message: 'Not found' })
+  }
   res.json({
     status: 'success',
     data: getPerformanceStats(),

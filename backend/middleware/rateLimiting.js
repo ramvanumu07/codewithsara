@@ -5,9 +5,22 @@
 
 const RATE_LIMIT = Math.max(1, parseInt(process.env.RATE_LIMIT_PER_MINUTE, 10) || 20)
 const RATE_WINDOW = 60 * 1000 // 1 minute
+const MAX_TRACKED_KEYS = 10000
+const EVICTION_INTERVAL = 5 * 60 * 1000 // 5 minutes
 
-// In-memory store for rate limiting (use Redis in production)
 const rateLimiter = new Map()
+
+setInterval(() => {
+  const now = Date.now()
+  for (const [key, requests] of rateLimiter.entries()) {
+    const valid = requests.filter(ts => now - ts < RATE_WINDOW)
+    if (valid.length === 0) {
+      rateLimiter.delete(key)
+    } else {
+      rateLimiter.set(key, valid)
+    }
+  }
+}, EVICTION_INTERVAL).unref()
 
 /**
  * Check if user has exceeded rate limit
@@ -18,22 +31,22 @@ export function checkRateLimit(userId) {
   const now = Date.now()
   const userRequests = rateLimiter.get(userId) || []
   
-  // Filter out requests older than the rate window
   const validRequests = userRequests.filter(timestamp => now - timestamp < RATE_WINDOW)
   
-  // Update the rate limiter with valid requests
+  if (rateLimiter.size > MAX_TRACKED_KEYS && !rateLimiter.has(userId)) {
+    return true
+  }
+
   rateLimiter.set(userId, validRequests)
   
-  // Check if user has exceeded the rate limit
   if (validRequests.length >= RATE_LIMIT) {
-    return false // Rate limit exceeded
+    return false
   }
   
-  // Add current request timestamp
   validRequests.push(now)
   rateLimiter.set(userId, validRequests)
   
-  return true // Within rate limit
+  return true
 }
 
 /**

@@ -84,9 +84,14 @@ const ForgotPassword = () => {
       })
 
       if (response.data.success) {
-        setUserInfo(response.data.data)
-        setStep(2)
-        setErrors({})
+        const data = response.data.data
+        if (data.notFound || !data.securityQuestion) {
+          setErrors({ general: 'No account found with that username or email, or no security question is set.' })
+        } else {
+          setUserInfo(data)
+          setStep(2)
+          setErrors({})
+        }
       }
     } catch (error) {
       let errorMessage = 'Something went wrong. Please try again.'
@@ -96,9 +101,6 @@ const ForgotPassword = () => {
         const serverMessage = error.response.data?.error || error.response.data?.message
 
         switch (status) {
-          case 404:
-            errorMessage = 'Account with this username does not exist'
-            break
           case 400:
             errorMessage = 'Please check your input and try again'
             break

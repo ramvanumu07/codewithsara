@@ -3,7 +3,7 @@
  * Success, error, warning, and info notifications
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 
 const Toast = ({ 
   type = 'info', 
@@ -14,24 +14,28 @@ const Toast = ({
 }) => {
   const [isVisible, setIsVisible] = useState(true)
   const [isExiting, setIsExiting] = useState(false)
+  const exitTimerRef = useRef(null)
 
-  useEffect(() => {
-    if (duration > 0) {
-      const timer = setTimeout(() => {
-        handleClose()
-      }, duration)
-
-      return () => clearTimeout(timer)
-    }
-  }, [duration])
-
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsExiting(true)
-    setTimeout(() => {
+    exitTimerRef.current = setTimeout(() => {
       setIsVisible(false)
       onClose?.()
     }, 300)
-  }
+  }, [onClose])
+
+  useEffect(() => {
+    if (duration > 0) {
+      const timer = setTimeout(handleClose, duration)
+      return () => clearTimeout(timer)
+    }
+  }, [duration, handleClose])
+
+  useEffect(() => {
+    return () => {
+      if (exitTimerRef.current) clearTimeout(exitTimerRef.current)
+    }
+  }, [])
 
   if (!isVisible) return null
 

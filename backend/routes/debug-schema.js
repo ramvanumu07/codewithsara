@@ -9,8 +9,15 @@ import { query } from '../services/db.js'
 const router = express.Router()
 const TABLES = ['users', 'progress', 'chat_sessions', 'admins', 'user_course_unlocks']
 
+function blockInProduction(req, res, next) {
+  if (process.env.NODE_ENV === 'production') {
+    return res.status(404).json({ success: false, message: 'Not found' })
+  }
+  next()
+}
+
 // Get current database schema information
-router.get('/schema', async (req, res) => {
+router.get('/schema', blockInProduction, async (req, res) => {
   try {
     if (getSupabaseClient() === 'DEV_MODE') {
       return res.json({
@@ -52,7 +59,7 @@ router.get('/schema', async (req, res) => {
 })
 
 // Test database connectivity
-router.get('/test-db', async (req, res) => {
+router.get('/test-db', blockInProduction, async (req, res) => {
   try {
     if (getSupabaseClient() === 'DEV_MODE') {
       return res.json({

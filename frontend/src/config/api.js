@@ -96,7 +96,7 @@ export const learning = {
     api.post('/chat/session', { topicId, message }),
 
   // Session chat with streaming - calls onChunk(content) for each token, onDone(data) when complete, onError(err) on failure
-  sessionChatStream: async (topicId, message, { onChunk, onDone, onError }) => {
+  sessionChatStream: async (topicId, message, { onChunk, onDone, onError, signal }) => {
     const token = localStorage.getItem('sara_token')
     const url = `${baseURL || '/api'}/chat/session/stream`
     const res = await fetch(url, {
@@ -105,7 +105,8 @@ export const learning = {
         'Content-Type': 'application/json',
         ...(token && { Authorization: `Bearer ${token}` })
       },
-      body: JSON.stringify({ topicId, message })
+      body: JSON.stringify({ topicId, message }),
+      signal
     })
     if (!res.ok) {
       const errData = await res.json().catch(() => ({}))
@@ -119,6 +120,7 @@ export const learning = {
     let buffer = ''
     try {
       while (true) {
+        if (signal?.aborted) break
         const { done, value } = await reader.read()
         if (done) break
         buffer += decoder.decode(value, { stream: true })
@@ -205,8 +207,13 @@ export const removeToken = () => localStorage.removeItem('sara_token')
 
 // User management
 export const getUser = () => {
-  const user = localStorage.getItem('sara_user')
-  return user ? JSON.parse(user) : null
+  try {
+    const user = localStorage.getItem('sara_user')
+    return user ? JSON.parse(user) : null
+  } catch {
+    localStorage.removeItem('sara_user')
+    return null
+  }
 }
 export const setUser = (user) => localStorage.setItem('sara_user', JSON.stringify(user))
 export const removeUser = () => localStorage.removeItem('sara_user')

@@ -1,11 +1,35 @@
 /**
  * Admin page.
  * Payment flow: Users click Pay on Dashboard to get access. Payment integration coming soon.
+ * Protected by server-side admin check via /api/auth/admin-check.
  */
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, Navigate } from 'react-router-dom'
+import api from '../config/api'
 
 const Admin = () => {
+  const [authorized, setAuthorized] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+    api.get('/auth/admin-check')
+      .then(res => {
+        if (!cancelled) setAuthorized(res.data?.data?.isAdmin === true)
+      })
+      .catch(() => {
+        if (!cancelled) setAuthorized(false)
+      })
+    return () => { cancelled = true }
+  }, [])
+
+  if (authorized === null) {
+    return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--sara-font)' }}>Checking access...</div>
+  }
+
+  if (!authorized) {
+    return <Navigate to="/dashboard" replace />
+  }
+
   const containerStyle = {
     minHeight: '100vh',
     background: '#f9fafb',

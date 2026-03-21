@@ -18,7 +18,8 @@ import {
   bumpTokenVersion,
   upsertProgress,
   getAllProgress,
-  initializeDatabase
+  initializeDatabase,
+  isAdmin
 } from '../services/database.js'
 import { getAllTopics } from '../utils/curriculum.js'
 import { courses } from '../data/curriculum.js'
@@ -157,16 +158,28 @@ async function generateToken(user) {
 
 // ============ AUTHENTICATION ROUTES ============
 
-// Lightweight rate limiter for username checking (more lenient)
 const usernameCheckLimiter = new Map()
+
+setInterval(() => {
+  const now = Date.now()
+  for (const [key, requests] of usernameCheckLimiter.entries()) {
+    const valid = requests.filter(ts => now - ts < 60_000)
+    if (valid.length === 0) usernameCheckLimiter.delete(key)
+    else usernameCheckLimiter.set(key, valid)
+  }
+}, 5 * 60 * 1000).unref()
 
 function checkUsernameRateLimit(identifier) {
   const now = Date.now()
-  const LIMIT = 60 // 60 requests per minute (more lenient)
-  const WINDOW = 60 * 1000 // 1 minute
+  const LIMIT = 60
+  const WINDOW = 60 * 1000
 
   const userRequests = usernameCheckLimiter.get(identifier) || []
   const validRequests = userRequests.filter(timestamp => now - timestamp < WINDOW)
+
+  if (usernameCheckLimiter.size > 10000 && !usernameCheckLimiter.has(identifier)) {
+    return true
+  }
 
   if (validRequests.length >= LIMIT) {
     return false
@@ -536,7 +549,18 @@ router.post('/login-legacy', rateLimitMiddleware, async (req, res) => {
   }
 })
 
+// Admin role check
+router.get('/admin-check', authenticateToken, async (req, res) => {
+  try {
+    const admin = await isAdmin(req.user.userId)
+    res.json(createSuccessResponse({ isAdmin: admin }))
+  } catch (error) {
+    handleErrorResponse(res, error, 'admin check')
+  }
+})
+
 // Get Security Question endpoint (forgot password - username or email)
+// Returns a generic message for unknown accounts to prevent user enumeration.
 router.post('/get-security-question', rateLimitMiddleware, async (req, res) => {
   try {
     const { username } = req.body
@@ -548,15 +572,15 @@ router.post('/get-security-question', rateLimitMiddleware, async (req, res) => {
 
     const user = await getUserByUsernameOrEmail(input)
 
-    if (!user) {
-      return res.status(404).json(createErrorResponse('Account with this username or email does not exist'))
+    if (!user || !user.security_question) {
+      return res.status(200).json(createSuccessResponse({
+        username: null,
+        securityQuestion: null,
+        notFound: true,
+        message: 'If an account exists with that username or email, the security question will be shown.'
+      }))
     }
 
-    if (!user.security_question) {
-      return res.status(400).json(createErrorResponse('This account does not have a security question set up'))
-    }
-
-    // Return user info and security question (but not the answer)
     res.json(createSuccessResponse({
       username: user.username,
       securityQuestion: user.security_question
@@ -569,6 +593,7 @@ router.post('/get-security-question', rateLimitMiddleware, async (req, res) => {
 
 // Verify Security Answer Only endpoint (for step validation)
 router.post('/verify-security-answer-only', rateLimitMiddleware, async (req, res) => {
+  const GENERIC_FAIL = 'Incorrect security answer or account not found'
   try {
     const { username, securityAnswer } = req.body
     const input = (username != null && typeof username === 'string') ? username.trim() : ''
@@ -579,22 +604,16 @@ router.post('/verify-security-answer-only', rateLimitMiddleware, async (req, res
 
     const user = await getUserByUsernameOrEmail(input)
 
-    if (!user) {
-      return res.status(404).json(createErrorResponse('Account not found'))
+    if (!user || !user.security_answer) {
+      return res.status(401).json(createErrorResponse(GENERIC_FAIL))
     }
 
-    if (!user.security_answer) {
-      return res.status(400).json(createErrorResponse('No security answer set for this account'))
-    }
-
-    // Verify security answer
     const isAnswerCorrect = await bcrypt.compare(securityAnswer.toLowerCase().trim(), user.security_answer)
 
     if (!isAnswerCorrect) {
-      return res.status(401).json(createErrorResponse('Incorrect security answer'))
+      return res.status(401).json(createErrorResponse(GENERIC_FAIL))
     }
 
-    // Security answer is correct
     res.json(createSuccessResponse({
       message: 'Security answer verified successfully',
       username: user.username
@@ -607,6 +626,7 @@ router.post('/verify-security-answer-only', rateLimitMiddleware, async (req, res
 
 // Verify Security Answer and Reset Password endpoint
 router.post('/verify-security-answer', rateLimitMiddleware, async (req, res) => {
+  const GENERIC_FAIL = 'Incorrect security answer or account not found'
   try {
     const { username, securityAnswer, newPassword, confirmPassword } = req.body
     const input = (username != null && typeof username === 'string') ? username.trim() : ''
@@ -619,36 +639,27 @@ router.post('/verify-security-answer', rateLimitMiddleware, async (req, res) => 
       return res.status(400).json(createErrorResponse('Passwords do not match'))
     }
 
-    const user = await getUserByUsernameOrEmail(input)
-
-    if (!user) {
-      return res.status(404).json(createErrorResponse('Account not found'))
-    }
-
-    if (!user.security_answer) {
-      return res.status(400).json(createErrorResponse('No security answer set for this account'))
-    }
-
-    // Validate new password
     const passwordValidation = validatePassword(newPassword)
     if (!passwordValidation.isValid) {
       return res.status(400).json(createErrorResponse(passwordValidation.errors[0]))
     }
 
-    // Verify security answer
+    const user = await getUserByUsernameOrEmail(input)
+
+    if (!user || !user.security_answer) {
+      return res.status(401).json(createErrorResponse(GENERIC_FAIL))
+    }
+
     const isAnswerCorrect = await bcrypt.compare(securityAnswer.toLowerCase().trim(), user.security_answer)
 
     if (!isAnswerCorrect) {
-      return res.status(401).json(createErrorResponse('Incorrect security answer'))
+      return res.status(401).json(createErrorResponse(GENERIC_FAIL))
     }
 
-    // Hash the new password
     const saltRounds = parseInt(process.env.BCRYPT_ROUNDS || '12')
     const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds)
 
-    // Update user's password in database
     await updateUserPassword(user.id, hashedNewPassword)
-    // Password successfully reset
     res.json(createSuccessResponse({
       message: 'Password reset successfully. You can now login with your new password.'
     }))

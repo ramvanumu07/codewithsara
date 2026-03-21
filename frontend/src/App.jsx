@@ -9,6 +9,60 @@ import { createPortal } from 'react-dom'
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false, error: null }
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('React ErrorBoundary caught:', error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+          background: '#f9fafb',
+          padding: 24
+        }}>
+          <div style={{ textAlign: 'center', maxWidth: 480 }}>
+            <h1 style={{ fontSize: '1.5rem', color: '#111827', marginBottom: 8 }}>Something went wrong</h1>
+            <p style={{ color: '#6b7280', marginBottom: 24, fontSize: '0.9375rem' }}>
+              An unexpected error occurred. Please reload the page to continue.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                padding: '10px 24px',
+                background: '#10a37f',
+                color: 'white',
+                border: 'none',
+                borderRadius: 8,
+                fontSize: '0.9375rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
 // Import Pages
 import Welcome from './pages/Welcome'
 import Login from './pages/Login'
@@ -30,13 +84,15 @@ import './index.css'
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="app">
-          <AppRoutes />
-        </div>
-      </Router>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <div className="app">
+            <AppRoutes />
+          </div>
+        </Router>
+      </AuthProvider>
+    </ErrorBoundary>
   )
 }
 

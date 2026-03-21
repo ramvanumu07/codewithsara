@@ -80,7 +80,6 @@ const Dashboard = () => {
         window.clearCache()
       }
 
-      // Call continue first, then courses and progress (so new users get a progress row before we fetch the list)
       let continueRes = { data: { success: false, data: {} } }
       let coursesRes = { data: { success: false, data: {} } }
       let progressRes = { data: { success: false, data: {} } }
@@ -88,15 +87,19 @@ const Dashboard = () => {
       try {
         continueRes = await learning.getContinueLearning()
       } catch (e) {
+        console.warn('Failed to load continue learning:', e?.message)
       }
       try {
         coursesRes = await learning.getCourses()
       } catch (e) {
+        console.warn('Failed to load courses:', e?.message)
       }
       let unlockedRes = { data: { success: false, data: {} } }
       try {
         unlockedRes = await learning.getUnlockedCourses()
-      } catch (e) { }
+      } catch (e) {
+        console.warn('Failed to load unlocked courses:', e?.message)
+      }
       try {
         progressRes = await progress.getAll()
       } catch (e) {

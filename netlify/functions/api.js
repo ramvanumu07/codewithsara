@@ -51,9 +51,7 @@ async function handleLoadDebug(event) {
       ok: false,
       message: err?.message || 'Load failed',
       name: err?.name,
-      code: err?.code,
-      stack: err?.stack,
-      cause: err?.cause?.message
+      code: err?.code
     })
   }
 }
