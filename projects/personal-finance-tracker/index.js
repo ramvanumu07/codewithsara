@@ -106,55 +106,69 @@ const main = async () => {
     prompt = createBufferedPrompt(lines);
   }
 
+  const ask = async (question) => {
+    const v = await prompt(question);
+    if (v === null) {
+      const e = new Error("End of input");
+      e.code = "EOF";
+      throw e;
+    }
+    return v;
+  };
+
   menu: while (true) {
     showMenu();
-    const rawChoice = await prompt("➤ Select an option: ");
-    if (rawChoice === null) {
-      console.log("\n👋 End of input — exiting.\n");
-      break menu;
+    let choice;
+    try {
+      choice = normalizeWhitespace(await ask("➤ Select an option: "));
+    } catch (err) {
+      if (err && err.code === "EOF") {
+        console.log("\n👋 End of input — exiting.\n");
+        break menu;
+      }
+      throw err;
     }
-    const choice = normalizeWhitespace(rawChoice);
 
     try {
       if (choice === "1") {
-        const amountRaw = await prompt("  Income amount (₹): ");
+        const amountRaw = await ask("  Income amount (₹): ");
         const parsed = parsePositiveAmount(amountRaw);
         if (!parsed.ok) {
           console.log(`\n❌ ${parsed.message}\n`);
         } else {
-          const catRaw = await prompt("  Category: ");
+          const catRaw = await ask("  Category: ");
           const category = normalizeWhitespace(catRaw);
           if (category === "") {
             console.log("\n❌ Category is required.\n");
           } else {
-            const descRaw = await prompt("  Description (optional): ");
-            const description = String(descRaw ?? "").trim();
+            const descRaw = await ask("  Description (optional): ");
+            const description = String(descRaw).trim();
             await tracker.addIncome(parsed.value, category, description);
           }
         }
       } else if (choice === "2") {
-        const amountRaw = await prompt("  Expense amount (₹): ");
+        const amountRaw = await ask("  Expense amount (₹): ");
         const parsed = parsePositiveAmount(amountRaw);
         if (!parsed.ok) {
           console.log(`\n❌ ${parsed.message}\n`);
         } else {
-          const catRaw = await prompt("  Category: ");
+          const catRaw = await ask("  Category: ");
           const category = normalizeWhitespace(catRaw);
           if (category === "") {
             console.log("\n❌ Category is required.\n");
           } else {
-            const descRaw = await prompt("  Description (optional): ");
-            const description = String(descRaw ?? "").trim();
+            const descRaw = await ask("  Description (optional): ");
+            const description = String(descRaw).trim();
             await tracker.addExpense(parsed.value, category, description);
           }
         }
       } else if (choice === "3") {
-        const catRaw = await prompt("  Budget category: ");
+        const catRaw = await ask("  Budget category: ");
         const category = normalizeWhitespace(catRaw);
         if (category === "") {
           console.log("\n❌ Category is required.\n");
         } else {
-          const limitRaw = await prompt("  Monthly limit (₹): ");
+          const limitRaw = await ask("  Monthly limit (₹): ");
           const lim = parsePositiveAmount(limitRaw);
           if (!lim.ok) {
             console.log(`\n❌ ${lim.message}\n`);
@@ -169,8 +183,8 @@ const main = async () => {
       } else if (choice === "6") {
         tracker.printMonthlySummary();
       } else if (choice === "7") {
-        const nRaw = await prompt("  How many to show? (default 5): ");
-        const nStr = String(nRaw ?? "").trim();
+        const nRaw = await ask("  How many to show? (default 5): ");
+        const nStr = String(nRaw).trim();
         const n = nStr === "" ? 5 : Number(nStr);
         if (!Number.isInteger(n) || n < 1) {
           console.log("\n❌ Enter a whole number ≥ 1, or leave blank for 5.\n");
@@ -180,15 +194,15 @@ const main = async () => {
       } else if (choice === "8") {
         tracker.printBudgetStatus();
       } else if (choice === "9") {
-        const pat = await prompt("  Regex pattern (description/category): ");
-        const pattern = String(pat ?? "").trim();
+        const pat = await ask("  Regex pattern (description/category): ");
+        const pattern = String(pat).trim();
         if (pattern === "") {
           console.log("\n❌ Pattern cannot be empty.\n");
         } else {
           try {
             tracker.printSearchResults(pattern);
-          } catch (err) {
-            console.log(`\n❌ ${err.message}\n`);
+          } catch (searchErr) {
+            console.log(`\n❌ ${searchErr.message}\n`);
           }
         }
       } else if (choice === "0") {
@@ -201,6 +215,10 @@ const main = async () => {
         console.log(`\n❌ Unknown option: "${choice}"\n`);
       }
     } catch (err) {
+      if (err && err.code === "EOF") {
+        console.log("\n👋 End of input — exiting.\n");
+        break menu;
+      }
       console.log(`\n❌ ${err.message}\n`);
     }
 
