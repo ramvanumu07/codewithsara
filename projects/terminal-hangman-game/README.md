@@ -88,7 +88,7 @@ No external dependencies required — uses only Node.js built-in modules.
 ## File Structure
 
 ```
-terminal-wordle-game/
+terminal-hangman-game/
 ├── index.js       # Interactive CLI (menus, game loop, display)
 ├── Game.js        # Core engine (stickman art, scoring, hints, stats)
 ├── words.js       # Word banks (150 words across 6 categories)
