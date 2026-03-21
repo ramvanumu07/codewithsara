@@ -1,0 +1,8 @@
+{
+  "name": "personal-finance-tracker",
+  "version": "1.0.0",
+  "description": "Interactive CLI personal finance tracker (Node.js + readline)",
+  "main": "index.js",
+  "type": "commonjs",
+  "private": true
+}

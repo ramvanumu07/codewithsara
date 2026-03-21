@@ -1,0 +1,12 @@
+{
+  "name": "terminal-wordle-game",
+  "version": "1.0.0",
+  "description": "Terminal Wordle-style game with readline (course demo project)",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["wordle", "cli", "nodejs"],
+  "license": "MIT"
+}
