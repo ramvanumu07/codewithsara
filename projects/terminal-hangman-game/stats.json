@@ -1,0 +1,32 @@
+{
+  "played": 2,
+  "won": 1,
+  "currentStreak": 0,
+  "maxStreak": 1,
+  "categoryWins": {
+    "sports": 1
+  },
+  "difficultyWins": {
+    "easy": 1,
+    "medium": 0,
+    "hard": 0
+  },
+  "history": [
+    {
+      "word": "KARATE",
+      "category": "sports",
+      "difficulty": "easy",
+      "won": true,
+      "wrongGuesses": 0,
+      "date": "2026-03-21T09:26:52.987Z"
+    },
+    {
+      "word": "CHEETAH",
+      "category": "animals",
+      "difficulty": "medium",
+      "won": false,
+      "wrongGuesses": 7,
+      "date": "2026-03-21T09:28:07.340Z"
+    }
+  ]
+}

@@ -48,12 +48,6 @@ ${CYAN}${BOLD}  ╔════════════════════�
   ║    ─────────────────────────                       ║
   ║    Save the stickman — guess the word!             ║
   ║                                                    ║
-  ║    ${WHITE}♥${CYAN}${BOLD} = lives remaining                            ║
-  ║    ${GREEN}A${CYAN}${BOLD} = correct letter    ${RED}X${CYAN}${BOLD} = wrong letter          ║
-  ║    ${YELLOW}?${CYAN}${BOLD} = hint (limited per game)                    ║
-  ║                                                    ║
-  ║    ${DIM}${getTotalWordCount()} words across ${CATEGORY_NAMES.length} categories${RESET}${CYAN}${BOLD}            ║
-  ║                                                    ║
   ╚════════════════════════════════════════════════════╝${RESET}
   `);
 };
@@ -66,9 +60,9 @@ const showMainMenu = () => {
   console.log(`${BOLD}${MAGENTA}  ├──────────────────────────────────┤${RESET}`);
   console.log(`${MAGENTA}  │                                  │${RESET}`);
   console.log(`${GREEN}  │   1.  New Game                   │${RESET}`);
-  console.log(`${CYAN}  │   2.  View Statistics             │${RESET}`);
-  console.log(`${CYAN}  │   3.  How to Play                 │${RESET}`);
-  console.log(`${DIM}  │   0.  Exit                        │${RESET}`);
+  console.log(`${CYAN}  │   2.  View Statistics            │${RESET}`);
+  console.log(`${CYAN}  │   3.  How to Play                │${RESET}`);
+  console.log(`${DIM}  │   0.  Exit                       │${RESET}`);
   console.log(`${MAGENTA}  │                                  │${RESET}`);
   console.log(`${BOLD}${MAGENTA}  └──────────────────────────────────┘${RESET}\n`);
 };
