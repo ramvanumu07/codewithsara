@@ -8,7 +8,7 @@ import './Checkout.css'
 
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID
 
-function loadRazorpayScript () {
+function loadRazorpayScript() {
   return new Promise((resolve, reject) => {
     if (typeof window === 'undefined') {
       reject(new Error('Window is not available'))
@@ -34,7 +34,7 @@ function loadRazorpayScript () {
   })
 }
 
-function formatInr (rupees) {
+function formatInr(rupees) {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
@@ -42,7 +42,7 @@ function formatInr (rupees) {
   }).format(rupees)
 }
 
-export default function Checkout () {
+export default function Checkout() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { toasts, error: showPayErrorToast } = useToast()
@@ -313,7 +313,7 @@ export default function Checkout () {
               )}
               {appliedCoupon && !couponError ? (
                 <p className="checkout-coupon-success" role="status">
-                  Coupon applied — your discounted total is shown on the right.
+                  Coupon applied — you save {formatInr(appliedCoupon.discountRupees)}!
                 </p>
               ) : null}
             </div>
