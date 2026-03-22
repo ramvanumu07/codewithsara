@@ -126,21 +126,31 @@
   max-width: 100%;
 }
 
+/* Do not use flex: 1 on all messages — flex-basis 0% + min-height chain can create a nested vertical scroll on the first/long assistant bubble. Size to content; assistant row still uses full width via width: 100%. */
 .message-content {
-  flex: 1;
+  flex: 0 1 auto;
   min-width: 0;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
+.message-row--assistant .message-content {
+  width: 100%;
+  max-width: 100%;
+}
+
 .message-text {
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .message-markdown {
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 /* Input form improvements */
@@ -680,6 +690,8 @@
     width: 100% !important;
     max-width: 100% !important;
     overflow-x: auto !important;
+    overflow-y: hidden !important;
+    max-height: none !important;
     -webkit-overflow-scrolling: touch !important;
     font-size: 0.85rem;
     padding: 10px 12px;
