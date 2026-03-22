@@ -3,9 +3,11 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { auth, payments, handleApiError } from '../config/api'
 import { getUnlockOfferForDashboardCourse } from '../data/welcomeCourseOffers'
 import OfferPricePromo from '../components/OfferPricePromo'
+import { copyToClipboard } from '../utils/copyToClipboard'
 import './Checkout.css'
 
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID
+const CHECKOUT_DISPLAY_COUPON = String(import.meta.env.VITE_CHECKOUT_PROMO_CODE || 'WELCOMESARA').trim().toUpperCase()
 
 function loadRazorpayScript () {
   return new Promise((resolve, reject) => {
@@ -59,6 +61,7 @@ export default function Checkout () {
   const [payError, setPayError] = useState('')
   const [applyingCoupon, setApplyingCoupon] = useState(false)
   const [payBusy, setPayBusy] = useState(false)
+  const [copyLabel, setCopyLabel] = useState('Copy')
 
   useEffect(() => {
     let cancelled = false
@@ -206,12 +209,13 @@ export default function Checkout () {
 
   const busy = applyingCoupon || payBusy
 
-  const includedItems = [
-    'Full JavaScript curriculum — every topic and learning path',
-    'AI tutoring sessions tailored to what you are learning',
-    'In-browser code playground to run and experiment with JavaScript',
-    'Progress tracking and completion certificate when you finish the course'
-  ]
+  const handleCopyPromo = async () => {
+    const ok = await copyToClipboard(CHECKOUT_DISPLAY_COUPON)
+    if (ok) {
+      setCopyLabel('Copied!')
+      window.setTimeout(() => setCopyLabel('Copy'), 2000)
+    }
+  }
 
   return (
     <div className="checkout-page">
@@ -242,20 +246,36 @@ export default function Checkout () {
           <div className="checkout-card__split" aria-hidden="true" />
 
           <div className="checkout-card__panel checkout-card__panel--middle">
-            <div className="checkout-included">
-              <h3 className="checkout-included__title">What&apos;s included</h3>
-              <ul className="checkout-included__list">
-                {includedItems.map((line) => (
-                  <li key={line}>{line}</li>
-                ))}
-              </ul>
-            </div>
-
             {profileReady && !emailOk && (
               <p className="checkout-profile-hint" role="status">
                 Add a valid email to your account to complete payment. Contact support if you need help updating your profile.
               </p>
             )}
+
+            <div className="checkout-promo-banner" aria-label="Featured coupon code">
+              <div className="checkout-promo-banner__main">
+                {appliedCoupon && !couponError ? (
+                  <span className="checkout-promo-banner__tick" aria-hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  </span>
+                ) : null}
+                <span className="checkout-promo-banner__code">{CHECKOUT_DISPLAY_COUPON}</span>
+                <button
+                  type="button"
+                  className="checkout-promo-banner__copy"
+                  onClick={handleCopyPromo}
+                >
+                  {copyLabel}
+                </button>
+              </div>
+              {appliedCoupon && !couponError ? (
+                <p className="checkout-promo-banner__off">
+                  Flat <strong>{formatInr(appliedCoupon.discountRupees)}</strong> off your order
+                </p>
+              ) : null}
+            </div>
 
             <div className="checkout-coupon">
               <label htmlFor="checkout-coupon">Coupon code</label>
@@ -265,7 +285,7 @@ export default function Checkout () {
                   type="text"
                   value={couponInput}
                   onChange={onCouponChange}
-                  placeholder="Enter code"
+                  placeholder="Paste code and apply"
                   autoComplete="off"
                   disabled={applyingCoupon}
                 />
@@ -286,21 +306,6 @@ export default function Checkout () {
                 <p className="checkout-inline-error" role="alert">
                   {couponError}
                 </p>
-              )}
-              {appliedCoupon && !couponError && (
-                <div className="checkout-coupon-success" role="status">
-                  <span className="checkout-coupon-success__icon" aria-hidden>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                  </span>
-                  <div className="checkout-coupon-success__body">
-                    <p className="checkout-coupon-success__code">{appliedCoupon.code.toUpperCase()}</p>
-                    <p className="checkout-coupon-success__discount">
-                      Flat <strong>{formatInr(appliedCoupon.discountRupees)}</strong> off your order
-                    </p>
-                  </div>
-                </div>
               )}
             </div>
           </div>
