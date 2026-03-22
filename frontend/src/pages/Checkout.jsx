@@ -206,6 +206,13 @@ export default function Checkout () {
 
   const busy = applyingCoupon || payBusy
 
+  const includedItems = [
+    'Full JavaScript curriculum — every topic and learning path',
+    'AI tutoring sessions tailored to what you are learning',
+    'In-browser code playground to run and experiment with JavaScript',
+    'Progress tracking and completion certificate when you finish the course'
+  ]
+
   return (
     <div className="checkout-page">
       <header className="checkout-page__header">
@@ -217,108 +224,131 @@ export default function Checkout () {
 
       <main className="checkout-page__main">
         <div className="checkout-card">
-          <h1 className="checkout-card__heading">Checkout</h1>
-          <h2 className="checkout-card__product-title">JavaScript with Sara — Full Access</h2>
-          <p className="checkout-card__subtitle">
-            One-time payment for the full curriculum, AI sessions, playground, and assignments.
-          </p>
-
-          {offer && (
-            <div className="checkout-card__price-row">
-              <span className="checkout-card__price-label">Your price</span>
-              <OfferPricePromo offer={offer} variant="welcome" />
-            </div>
-          )}
-
-          {profileReady && !emailOk && (
-            <p className="checkout-profile-hint" role="status">
-              Add a valid email to your account to complete payment. Contact support if you need help updating your profile.
+          <div className="checkout-card__panel checkout-card__panel--product">
+            <h1 className="checkout-card__heading">Checkout</h1>
+            <h2 className="checkout-card__product-title">JavaScript with Sara — Full Access</h2>
+            <p className="checkout-card__subtitle">
+              One-time payment for full access to the curriculum, AI tutoring, and the code playground — plus your certificate when you complete the course.
             </p>
-          )}
 
-          <div className="checkout-coupon">
-            <label htmlFor="checkout-coupon">Coupon code</label>
-            <div className="checkout-coupon__row">
-              <input
-                id="checkout-coupon"
-                type="text"
-                value={couponInput}
-                onChange={onCouponChange}
-                placeholder="Enter code"
-                autoComplete="off"
-                disabled={applyingCoupon}
-              />
-              <button
-                type="button"
-                className="checkout-coupon__apply"
-                onClick={handleApplyCoupon}
-                disabled={applyingCoupon || busy}
-              >
-                {applyingCoupon ? (
-                  <span className="checkout-spinner checkout-spinner--inline" aria-hidden />
-                ) : (
-                  'Apply'
-                )}
-              </button>
-            </div>
-            {couponError && (
-              <p className="checkout-inline-error" role="alert">
-                {couponError}
-              </p>
-            )}
-            {appliedCoupon && !couponError && (
-              <div className="checkout-coupon-reward" role="status">
-                <span className="checkout-coupon-reward__code">{appliedCoupon.code.toUpperCase()}</span>
-                <span className="checkout-coupon-reward__accent" aria-hidden />
-                <span className="checkout-coupon-reward__off">
-                  Flat <strong>{formatInr(appliedCoupon.discountRupees)}</strong> off
-                </span>
+            {offer && (
+              <div className="checkout-card__price-row">
+                <span className="checkout-card__price-label">Your price</span>
+                <OfferPricePromo offer={offer} variant="checkout" />
               </div>
             )}
           </div>
 
-          <div className="checkout-summary">
-            <div className="checkout-summary__row checkout-summary__row--total">
-              <span>Amount to pay</span>
-              <strong>{formatInr(finalRupees)}</strong>
+          <div className="checkout-card__split" aria-hidden="true" />
+
+          <div className="checkout-card__panel checkout-card__panel--middle">
+            <div className="checkout-included">
+              <h3 className="checkout-included__title">What&apos;s included</h3>
+              <ul className="checkout-included__list">
+                {includedItems.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            </div>
+
+            {profileReady && !emailOk && (
+              <p className="checkout-profile-hint" role="status">
+                Add a valid email to your account to complete payment. Contact support if you need help updating your profile.
+              </p>
+            )}
+
+            <div className="checkout-coupon">
+              <label htmlFor="checkout-coupon">Coupon code</label>
+              <div className="checkout-coupon__row">
+                <input
+                  id="checkout-coupon"
+                  type="text"
+                  value={couponInput}
+                  onChange={onCouponChange}
+                  placeholder="Enter code"
+                  autoComplete="off"
+                  disabled={applyingCoupon}
+                />
+                <button
+                  type="button"
+                  className="checkout-coupon__apply"
+                  onClick={handleApplyCoupon}
+                  disabled={applyingCoupon || busy}
+                >
+                  {applyingCoupon ? (
+                    <span className="checkout-spinner checkout-spinner--apply" aria-hidden />
+                  ) : (
+                    'Apply'
+                  )}
+                </button>
+              </div>
+              {couponError && (
+                <p className="checkout-inline-error" role="alert">
+                  {couponError}
+                </p>
+              )}
+              {appliedCoupon && !couponError && (
+                <div className="checkout-coupon-success" role="status">
+                  <span className="checkout-coupon-success__icon" aria-hidden>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  </span>
+                  <div className="checkout-coupon-success__body">
+                    <p className="checkout-coupon-success__code">{appliedCoupon.code.toUpperCase()}</p>
+                    <p className="checkout-coupon-success__discount">
+                      Flat <strong>{formatInr(appliedCoupon.discountRupees)}</strong> off your order
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {payError && (
-            <p className="checkout-inline-error checkout-inline-error--pay" role="alert">
-              {payError}
-            </p>
-          )}
+          <div className="checkout-card__panel checkout-card__panel--summary">
+            <div className="checkout-summary">
+              <div className="checkout-summary__row checkout-summary__row--total">
+                <span className="checkout-summary__label">Amount to pay</span>
+                <strong className="checkout-summary__amount">{formatInr(finalRupees)}</strong>
+              </div>
+            </div>
 
-          <button
-            type="button"
-            className="checkout-pay-btn"
-            disabled={!canPay || busy}
-            onClick={openRazorpay}
-          >
-            {payBusy ? (
-              <>
-                <span className="checkout-spinner checkout-spinner--btn" aria-hidden />
-                Processing…
-              </>
-            ) : (
-              'Proceed to Pay'
+            {payError && (
+              <p className="checkout-inline-error checkout-inline-error--pay" role="alert">
+                {payError}
+              </p>
             )}
-          </button>
 
-          <div className="checkout-secure">
-            <svg className="checkout-secure__lock" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-            <span>Secured by Razorpay</span>
+            <button
+              type="button"
+              className="checkout-pay-btn"
+              disabled={!canPay || busy}
+              onClick={openRazorpay}
+            >
+              {payBusy ? (
+                <>
+                  <span className="checkout-spinner checkout-spinner--btn" aria-hidden />
+                  Processing…
+                </>
+              ) : (
+                'Proceed to Pay'
+              )}
+            </button>
+
+            <div className="checkout-secure">
+              <svg className="checkout-secure__lock" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <span>Secured by Razorpay</span>
+            </div>
+
+            <p className="checkout-footnote">
+              Questions? See{' '}
+              <Link to="/products">Products &amp; Services</Link>
+              {' '}or contact support.
+            </p>
           </div>
-
-          <p className="checkout-footnote">
-            Questions? See{' '}
-            <Link to="/products">Products &amp; Services</Link>
-            {' '}or contact support.
-          </p>
         </div>
       </main>
     </div>
