@@ -9,7 +9,7 @@ import LegalPageFooter from '../components/LegalPageFooter'
 import { welcomeCourseOffers } from '../data/welcomeCourseOffers'
 import { SUPPORT_EMAIL } from '../constants/support'
 
-const Products = () => {
+export default function Services () {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -80,9 +80,9 @@ const Products = () => {
           </section>
 
           <section className="terms-section">
-            <h2>Refunds &amp; cancellation</h2>
+            <h2>Refund policy</h2>
             <p>
-              See our <Link to="/refund-cancellation">Refund &amp; Cancellation Policy</Link>. Digital access is generally non-refundable once granted; we describe limited exceptions there.
+              See our <Link to="/refund">Refund Policy</Link>. Digital access is generally non-refundable once granted; we describe limited exceptions there.
             </p>
           </section>
 
@@ -101,5 +101,3 @@ const Products = () => {
     </div>
   )
 }
-
-export default Products

@@ -154,7 +154,7 @@ const Welcome = () => {
                     Get started
                   </button>
                   <Link
-                    to={course.detailHref || '/products'}
+                    to={course.detailHref || '/services'}
                     className="welcome-pricing-card__cta-secondary"
                   >
                     Full product details

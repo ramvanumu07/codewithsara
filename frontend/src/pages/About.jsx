@@ -63,7 +63,7 @@ const About = () => {
               Questions or partnerships:{' '}
               <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
             </p>
-            <p>For product details and pricing, see <Link to="/products" style={{ color: '#10a37f' }}>Products &amp; Services</Link>.</p>
+            <p>For product details and pricing, see <Link to="/services" style={{ color: '#10a37f' }}>Products &amp; Services</Link>.</p>
           </section>
         </div>
       </main>

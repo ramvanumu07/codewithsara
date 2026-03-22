@@ -1,5 +1,6 @@
 /**
- * Copy repo root /projects → frontend/public/course-projects for Vite static hosting.
+ * Optional: copy repo root /projects → frontend/public/course-projects.
+ * Course bundles can also live only under public/course-projects (committed).
  * Run from frontend: npm run sync:projects
  */
 import fs from 'fs'
@@ -12,8 +13,8 @@ const src = path.join(repoRoot, 'projects')
 const dest = path.join(repoRoot, 'frontend', 'public', 'course-projects')
 
 if (!fs.existsSync(src)) {
-  console.error('Missing source folder:', src)
-  process.exit(1)
+  console.log('No repo root projects/ folder — skipping sync (using frontend/public/course-projects if present).')
+  process.exit(0)
 }
 
 fs.rmSync(dest, { recursive: true, force: true })

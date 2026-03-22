@@ -6,7 +6,7 @@
  * @property {string} id — stable slug (e.g. for analytics or future checkout)
  * @property {string} title
  * @property {string} [subtitle] — one line under the title
- * @property {string} priceFormatted — current sale price display, e.g. "₹999" (keep in sync with /products)
+ * @property {string} priceFormatted — current sale price display, e.g. "₹999" (keep in sync with /services)
  * @property {string} [compareAtPriceFormatted] — strikethrough list price, e.g. "₹1599"
  * @property {number} [priceAmount] — numeric sale price (for % off); pair with compareAtAmount
  * @property {number} [compareAtAmount] — numeric list price before discount
@@ -14,7 +14,7 @@
  * @property {string} [promoLabel] — e.g. "Limited time offer" (compact label above price row)
  * @property {string[]} highlights — short bullets (3–5 recommended)
  * @property {boolean} [featured] — visual emphasis
- * @property {string} [detailHref] — link for full legal / product copy (default /products)
+ * @property {string} [detailHref] — link for full legal / product copy (default /services)
  * @property {string[]} [forCourseIds] — API course ids (e.g. "javascript") for dashboard unlock card
  */
 
@@ -36,7 +36,7 @@ export const welcomeCourseOffers = [
       'Certificate + 3 portfolio projects on completion',
     ],
     featured: true,
-    detailHref: '/products',
+    detailHref: '/services',
   },
 ]
 

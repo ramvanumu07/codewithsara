@@ -35,13 +35,13 @@ export default function LegalPageFooter () {
         >
           <Link to="/about" style={linkStyle}>About Us</Link>
           <span style={{ color: '#8e8e8e' }}>•</span>
-          <Link to="/products" style={linkStyle}>Products &amp; Services</Link>
+          <Link to="/services" style={linkStyle}>Products &amp; Services</Link>
           <span style={{ color: '#8e8e8e' }}>•</span>
           <Link to="/terms" style={linkStyle}>Terms</Link>
           <span style={{ color: '#8e8e8e' }}>•</span>
           <Link to="/privacy" style={linkStyle}>Privacy</Link>
           <span style={{ color: '#8e8e8e' }}>•</span>
-          <Link to="/refund-cancellation" style={linkStyle}>Refund &amp; Cancellation</Link>
+          <Link to="/refund" style={linkStyle}>Refund Policy</Link>
           <span style={{ color: '#8e8e8e' }}>•</span>
           <Link to="/contact" style={linkStyle}>Contact</Link>
         </nav>

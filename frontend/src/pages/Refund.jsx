@@ -1,5 +1,5 @@
 /**
- * Refund & Cancellation Policy — digital products (Razorpay / compliance)
+ * Refund Policy — digital products (Razorpay / compliance)
  */
 
 import React, { useEffect } from 'react'
@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import LegalPageFooter from '../components/LegalPageFooter'
 import { SUPPORT_EMAIL, BUSINESS_NAME } from '../constants/support'
 
-const RefundCancellation = () => {
+export default function Refund () {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -35,7 +35,7 @@ const RefundCancellation = () => {
 
       <main className="terms-main" style={{ flex: 1, padding: '1rem 0' }}>
         <div className="terms-content" style={{ maxWidth: 800, margin: '0 auto', padding: '1.25rem 2rem 3rem 2rem', background: '#ffffff' }}>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#10a37f' }}>Refund &amp; Cancellation Policy</h1>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#10a37f' }}>Refund Policy</h1>
           <p className="last-updated">Last updated: March 2026</p>
 
           <section className="terms-section">
@@ -96,5 +96,3 @@ const RefundCancellation = () => {
     </div>
   )
 }
-
-export default RefundCancellation

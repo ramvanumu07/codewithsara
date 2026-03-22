@@ -392,7 +392,7 @@ export default function Checkout () {
 
             <p className="checkout-footnote">
               Questions? See{' '}
-              <Link to="/products">Products &amp; Services</Link>
+              <Link to="/services">Products &amp; Services</Link>
               {' '}or contact support.
             </p>
           </div>

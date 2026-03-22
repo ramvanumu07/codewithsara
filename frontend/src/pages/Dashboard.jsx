@@ -720,7 +720,7 @@ const Dashboard = () => {
                       Upgrade to Full Access
                     </Link>
                     <Link
-                      to={unlockOffer.detailHref || '/products'}
+                      to={unlockOffer.detailHref || '/services'}
                       className="dashboard-unlock-card__secondary"
                     >
                       Pricing &amp; product details

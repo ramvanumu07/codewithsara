@@ -106,10 +106,10 @@ import Dashboard from './pages/Dashboard'
 import Learn from './pages/Learn'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
-import RefundCancellation from './pages/RefundCancellation'
+import Refund from './pages/Refund'
 import Contact from './pages/Contact'
 import About from './pages/About'
-import Products from './pages/Products'
+import Services from './pages/Services'
 import Checkout from './pages/Checkout'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFailed from './pages/PaymentFailed'
@@ -188,13 +188,15 @@ const AppRoutes = () => {
       {/* Legal & Info Pages - Always accessible */}
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy" element={<Privacy />} />
-      <Route path="/refund-cancellation" element={<RefundCancellation />} />
+      <Route path="/refund" element={<Refund />} />
       <Route path="/contact" element={<Contact />} />
-      <Route path="/return-refund" element={<Navigate to="/refund-cancellation" replace />} />
-      <Route path="/cancellation" element={<Navigate to="/refund-cancellation" replace />} />
-      <Route path="/shipping" element={<Navigate to="/products" replace />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/products" element={<Navigate to="/services" replace />} />
+      <Route path="/refund-cancellation" element={<Navigate to="/refund" replace />} />
+      <Route path="/return-refund" element={<Navigate to="/refund" replace />} />
+      <Route path="/cancellation" element={<Navigate to="/refund" replace />} />
+      <Route path="/shipping" element={<Navigate to="/services" replace />} />
       <Route path="/about" element={<About />} />
-      <Route path="/products" element={<Products />} />
       
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><RouteErrorBoundary><Dashboard /></RouteErrorBoundary></ProtectedRoute>} />
