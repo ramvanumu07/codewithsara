@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { welcomeCourseOffers } from '../data/welcomeCourseOffers'
 import OfferPricePromo from '../components/OfferPricePromo'
+import LegalPageFooter from '../components/LegalPageFooter'
 import './Welcome.css'
 
 const Welcome = () => {
@@ -166,27 +167,7 @@ const Welcome = () => {
 
       </main>
 
-      {/* Footer */}
-      <footer className="welcome-footer">
-        <div className="footer-content">
-          <div className="footer-main">
-            <p>&copy; 2026 Sara Learning Platform. Empowering learners worldwide.</p>
-          </div>
-          <div className="footer-links">
-            <Link to="/about" className="footer-link">About Us</Link>
-            <span className="footer-separator">•</span>
-            <Link to="/products" className="footer-link">Products &amp; Services</Link>
-            <span className="footer-separator">•</span>
-            <Link to="/terms" className="footer-link">Terms &amp; Conditions</Link>
-            <span className="footer-separator">•</span>
-            <Link to="/privacy" className="footer-link">Privacy Policy</Link>
-            <span className="footer-separator">•</span>
-            <Link to="/refund-cancellation" className="footer-link">Refund &amp; Cancellation</Link>
-            <span className="footer-separator">•</span>
-            <Link to="/contact" className="footer-link">Contact</Link>
-          </div>
-        </div>
-      </footer>
+      <LegalPageFooter />
     </div>
   )
 }

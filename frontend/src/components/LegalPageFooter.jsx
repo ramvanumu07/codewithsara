@@ -15,7 +15,7 @@ export default function LegalPageFooter () {
       }}
     >
       <div
-        className="footer-content"
+        className="legal-page-footer__inner"
         style={{
           maxWidth: 1200,
           margin: '0 auto',
@@ -27,7 +27,7 @@ export default function LegalPageFooter () {
           gap: '1rem'
         }}
       >
-        <p style={{ margin: 0 }}>&copy; 2026 Sara Learning Platform. All rights reserved.</p>
+        <p style={{ margin: 0, color: '#6b7280', fontSize: '0.9rem' }}>&copy; 2026 Sara Learning Platform. All rights reserved.</p>
         <nav
           className="footer-links"
           aria-label="Legal and information"
