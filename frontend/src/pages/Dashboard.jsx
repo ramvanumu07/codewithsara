@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { learning, progress, handleApiError } from '../config/api'
 import { computeCourseProgressSummary, isTopicFullyComplete } from '../utils/courseProgress'
@@ -14,7 +14,6 @@ import './Dashboard.css'
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  const location = useLocation()
   const { user, logout } = useAuth()
   const { toasts, success: showSuccessToast } = useToast()
 
@@ -47,15 +46,6 @@ const Dashboard = () => {
       navigate(`/checkout?course=${encodeURIComponent(unlockCourseId)}`, { replace: true })
     }
   }, [courses, navigate])
-
-  useEffect(() => {
-    if (!location.state?.paymentSuccess) return
-    showSuccessToast('Payment successful! You now have full access.')
-    loadDashboardData()
-    navigate('.', { replace: true, state: {} })
-    // loadDashboardData is stable enough for this one-shot; omit from deps to avoid extra runs
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state?.paymentSuccess, navigate, showSuccessToast])
 
   // Handle ESC key to close mobile menu
   useEffect(() => {

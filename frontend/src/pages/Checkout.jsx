@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { auth, payments, handleApiError } from '../config/api'
 import { getUnlockOfferForDashboardCourse } from '../data/welcomeCourseOffers'
@@ -62,6 +62,13 @@ export default function Checkout () {
   const [applyingCoupon, setApplyingCoupon] = useState(false)
   const [payBusy, setPayBusy] = useState(false)
   const [copyLabel, setCopyLabel] = useState('Copy')
+  /** idle | open | verifying | settled — avoids treating modal dismiss as cancel after pay flow advances */
+  const payPhaseRef = useRef('idle')
+
+  const unlockTitle = useMemo(() => {
+    const base = (offer?.title || 'JavaScript with Sara').replace(/\s*—\s*Full Access$/i, '').trim()
+    return `${base} — Full Access`
+  }, [offer?.title])
 
   useEffect(() => {
     let cancelled = false
@@ -137,6 +144,7 @@ export default function Checkout () {
     if (!canPay) return
 
     setPayBusy(true)
+    payPhaseRef.current = 'idle'
     try {
       const payload = {
         amount: finalPaise,
@@ -167,6 +175,7 @@ export default function Checkout () {
         },
         theme: { color: '#10b981' },
         handler: async (response) => {
+          payPhaseRef.current = 'verifying'
           try {
             const verifyRes = await payments.verifyPayment({
               razorpay_order_id: response.razorpay_order_id,
@@ -175,15 +184,38 @@ export default function Checkout () {
               courseId
             })
             if (!verifyRes.data?.success) {
-              setPayError('Payment verification failed. Contact support if you were charged.')
+              payPhaseRef.current = 'settled'
+              navigate('/payment/failed', {
+                replace: true,
+                state: {
+                  reason: 'verify_error',
+                  courseId,
+                  detail: 'Verification returned unsuccessful. If you were charged, contact support with your Razorpay order ID.'
+                }
+              })
               return
             }
-            navigate('/dashboard', {
-              replace: false,
-              state: { paymentSuccess: true }
+            payPhaseRef.current = 'settled'
+            navigate('/payment/success', {
+              replace: true,
+              state: {
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                amountRupees: finalRupees,
+                courseId,
+                unlockTitle
+              }
             })
           } catch (e) {
-            setPayError(handleApiError(e, 'Payment verification failed. Contact support if you were charged.'))
+            payPhaseRef.current = 'settled'
+            navigate('/payment/failed', {
+              replace: true,
+              state: {
+                reason: 'verify_error',
+                courseId,
+                detail: handleApiError(e, 'Payment verification failed. Contact support if you were charged.')
+              }
+            })
           } finally {
             setPayBusy(false)
           }
@@ -191,21 +223,34 @@ export default function Checkout () {
         modal: {
           ondismiss: () => {
             setPayBusy(false)
+            if (payPhaseRef.current === 'settled' || payPhaseRef.current === 'verifying') {
+              return
+            }
+            payPhaseRef.current = 'idle'
+            navigate('/payment/failed', {
+              replace: true,
+              state: { reason: 'cancelled', courseId }
+            })
           }
         }
       }
 
+      payPhaseRef.current = 'open'
       const rzp = new RazorpayCtor(options)
       rzp.on('payment.failed', () => {
-        setPayError('Payment failed. You can try again or use a different method.')
+        payPhaseRef.current = 'settled'
         setPayBusy(false)
+        navigate('/payment/failed', {
+          replace: true,
+          state: { reason: 'failed', courseId }
+        })
       })
       rzp.open()
     } catch (e) {
       setPayError(handleApiError(e, 'Could not start payment. Try again.'))
       setPayBusy(false)
     }
-  }, [appliedCoupon, canPay, courseId, finalPaise, navigate, payerEmail, payerName])
+  }, [appliedCoupon, canPay, courseId, finalPaise, finalRupees, navigate, payerEmail, payerName, unlockTitle])
 
   const busy = applyingCoupon || payBusy
 
@@ -231,7 +276,7 @@ export default function Checkout () {
           <div className="checkout-card__panel checkout-card__panel--product">
             <h1 className="checkout-card__heading">Checkout</h1>
             <p className="checkout-card__course-label">
-              {(offer?.title || 'JavaScript with Sara').replace(/\s*—\s*Full Access$/i, '')} — Full Access
+              {unlockTitle}
             </p>
           </div>
 

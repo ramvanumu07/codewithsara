@@ -1,0 +1,43 @@
+.payment-result-card--failed {
+  border-top: 4px solid #ef4444;
+}
+
+.payment-result-icon--failed {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.payment-result-card--failed h1 {
+  color: #991b1b;
+}
+
+.payment-result-failed-body {
+  margin: 0 0 1.15rem;
+  font-size: 0.9375rem;
+  color: #374151;
+  line-height: 1.55;
+}
+
+.payment-result-failed-detail {
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.45;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  border-left: 3px solid #f97316;
+}
+
+.payment-result-cta--secondary {
+  margin-top: 0.75rem;
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.payment-result-cta--secondary:hover {
+  background: #f9fafb;
+  color: #111827;
+}
