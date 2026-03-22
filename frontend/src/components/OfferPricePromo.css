@@ -51,6 +51,14 @@
   letter-spacing: -0.03em;
 }
 
+.offer-price__current-suffix {
+  font-size: 0.55em;
+  font-weight: 600;
+  color: #4b5563;
+  letter-spacing: 0;
+  margin-left: 0.05em;
+}
+
 .offer-price__pct-inline {
   font-size: 0.8125rem;
   font-weight: 600;
@@ -63,8 +71,18 @@
   font-size: clamp(1.75rem, 4vw, 2.25rem);
 }
 
+.offer-price--dashboard {
+  gap: 0.75rem;
+}
+
 .offer-price--dashboard .offer-price__limited {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+
+.offer-price--dashboard .offer-price__amounts {
+  gap: 0.65rem 1rem;
 }
 
 .offer-price--dashboard .offer-price__current {

@@ -7,7 +7,7 @@ import crypto from 'crypto'
 import Razorpay from 'razorpay'
 import { authenticateToken } from './auth.js'
 import { createSuccessResponse, createErrorResponse, handleErrorResponse } from '../utils/responses.js'
-import { unlockCourseForUser } from '../services/database.js'
+import { unlockCourseForUser, getUserById } from '../services/database.js'
 import { courses } from '../data/curriculum.js'
 import {
   JS_FULL_ACCESS_PRICE_RUPEES,
@@ -62,11 +62,27 @@ router.post('/create-order', authenticateToken, async (req, res) => {
     const userId = req.user.userId
     const { amount, name, email, courseId = 'javascript', couponCode } = req.body || {}
 
-    if (!name || typeof name !== 'string' || !name.trim()) {
+    let resolvedName = typeof name === 'string' ? name.trim() : ''
+    let resolvedEmail = typeof email === 'string' ? email.trim() : ''
+    if (!resolvedName || !resolvedEmail) {
+      const row = await getUserById(userId)
+      if (!row) {
+        return res.status(400).json(createErrorResponse('User not found'))
+      }
+      if (!resolvedName) {
+        resolvedName = (row.name || row.username || '').trim()
+      }
+      if (!resolvedEmail) {
+        resolvedEmail = (row.email || '').trim()
+      }
+    }
+    if (!resolvedName) {
       return res.status(400).json(createErrorResponse('name is required'))
     }
-    if (!email || typeof email !== 'string' || !email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      return res.status(400).json(createErrorResponse('A valid email is required'))
+    if (!resolvedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resolvedEmail)) {
+      return res.status(400).json(createErrorResponse(
+        'A valid email is required on your account to pay. Update your email in account settings or contact support.'
+      ))
     }
     if (typeof amount !== 'number' || !Number.isFinite(amount) || amount < 100) {
       return res.status(400).json(createErrorResponse('Invalid amount'))
@@ -100,8 +116,8 @@ router.post('/create-order', authenticateToken, async (req, res) => {
       notes: {
         userId: String(userId),
         courseId: cid,
-        name: name.trim().slice(0, 120),
-        email: email.trim().slice(0, 120)
+        name: resolvedName.slice(0, 120),
+        email: resolvedEmail.slice(0, 120)
       }
     })
 

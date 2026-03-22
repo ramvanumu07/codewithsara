@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useAuth } from '../contexts/AuthContext'
-import { payments, handleApiError } from '../config/api'
+import { auth, payments, handleApiError } from '../config/api'
 import { getUnlockOfferForDashboardCourse } from '../data/welcomeCourseOffers'
 import OfferPricePromo from '../components/OfferPricePromo'
 import './Checkout.css'
@@ -45,48 +44,57 @@ function formatInr (rupees) {
 export default function Checkout () {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { user } = useAuth()
 
   const courseId = (searchParams.get('course') || 'javascript').trim() || 'javascript'
   const offer = useMemo(() => getUnlockOfferForDashboardCourse(courseId), [courseId])
   const baseRupees = offer?.priceAmount ?? 999
 
-  const [name, setName] = useState(() => (user?.name || '').trim())
-  const [email, setEmail] = useState(() => (user?.email || '').trim())
+  const [payerName, setPayerName] = useState('')
+  const [payerEmail, setPayerEmail] = useState('')
+  const [profileReady, setProfileReady] = useState(false)
+
   const [couponInput, setCouponInput] = useState('')
   const [appliedCoupon, setAppliedCoupon] = useState(null)
-  const [couponSuccess, setCouponSuccess] = useState(null)
-  const [discountLine, setDiscountLine] = useState(null)
   const [couponError, setCouponError] = useState('')
   const [payError, setPayError] = useState('')
   const [applyingCoupon, setApplyingCoupon] = useState(false)
   const [payBusy, setPayBusy] = useState(false)
 
   useEffect(() => {
-    if (user?.name) setName((n) => n || String(user.name).trim())
-    if (user?.email) setEmail((e) => e || String(user.email).trim())
-  }, [user?.name, user?.email])
+    let cancelled = false
+    auth.getProfile()
+      .then((res) => {
+        if (cancelled) return
+        const u = res.data?.data?.user
+        if (u) {
+          setPayerName((u.name || u.username || '').trim())
+          setPayerEmail((u.email || '').trim())
+        }
+      })
+      .catch(() => { /* keep empty; pay will surface API error */ })
+      .finally(() => {
+        if (!cancelled) setProfileReady(true)
+      })
+    return () => { cancelled = true }
+  }, [])
 
   const finalRupees = appliedCoupon != null ? appliedCoupon.finalRupees : baseRupees
   const finalPaise = Math.round(finalRupees * 100)
 
-  const canPay = Boolean(name.trim() && email.trim() && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()))
+  const emailOk = payerEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payerEmail)
+  const canPay = profileReady && emailOk
 
   const onCouponChange = (e) => {
     setCouponInput(e.target.value)
     setCouponError('')
     if (appliedCoupon && e.target.value.trim().toUpperCase() !== (appliedCoupon.code || '').toUpperCase()) {
       setAppliedCoupon(null)
-      setCouponSuccess(null)
-      setDiscountLine(null)
     }
   }
 
   const handleApplyCoupon = async () => {
     const code = couponInput.trim()
     setCouponError('')
-    setCouponSuccess(null)
-    setDiscountLine(null)
     setAppliedCoupon(null)
     if (!code) {
       setCouponError('Invalid or expired coupon')
@@ -104,11 +112,6 @@ export default function Checkout () {
         code,
         finalRupees: d.finalRupees,
         discountRupees: d.discountRupees
-      })
-      setCouponSuccess(d.message || 'Coupon applied')
-      setDiscountLine({
-        label: d.discountLabel || `Coupon (${code.toUpperCase()})`,
-        amount: d.discountRupees
       })
     } catch (err) {
       const msg = err.response?.data?.message || ''
@@ -134,8 +137,8 @@ export default function Checkout () {
     try {
       const payload = {
         amount: finalPaise,
-        name: name.trim(),
-        email: email.trim(),
+        name: payerName,
+        email: payerEmail,
         courseId,
         ...(appliedCoupon ? { couponCode: appliedCoupon.code } : {})
       }
@@ -156,8 +159,8 @@ export default function Checkout () {
         name: 'Sara Learning Platform',
         description: 'JavaScript with Sara — Full Access',
         prefill: {
-          name: name.trim(),
-          email: email.trim()
+          name: payerName,
+          email: payerEmail
         },
         theme: { color: '#10b981' },
         handler: async (response) => {
@@ -199,23 +202,23 @@ export default function Checkout () {
       setPayError(handleApiError(e, 'Could not start payment. Try again.'))
       setPayBusy(false)
     }
-  }, [appliedCoupon, canPay, courseId, email, finalPaise, name, navigate])
+  }, [appliedCoupon, canPay, courseId, finalPaise, navigate, payerEmail, payerName])
 
   const busy = applyingCoupon || payBusy
 
   return (
     <div className="checkout-page">
       <header className="checkout-page__header">
-        <Link to="/dashboard" className="checkout-page__back">
-          ← Back to dashboard
-        </Link>
         <span className="checkout-page__brand">Sara</span>
+        <Link to="/dashboard" className="checkout-page__back">
+          Back to dashboard
+        </Link>
       </header>
 
       <main className="checkout-page__main">
         <div className="checkout-card">
-          <p className="checkout-card__eyebrow">Checkout</p>
-          <h1 className="checkout-card__title">JavaScript with Sara — Full Access</h1>
+          <h1 className="checkout-card__heading">Checkout</h1>
+          <h2 className="checkout-card__product-title">JavaScript with Sara — Full Access</h2>
           <p className="checkout-card__subtitle">
             One-time payment for the full curriculum, AI sessions, playground, and assignments.
           </p>
@@ -223,33 +226,15 @@ export default function Checkout () {
           {offer && (
             <div className="checkout-card__price-row">
               <span className="checkout-card__price-label">Your price</span>
-              <OfferPricePromo offer={offer} variant="dashboard" />
+              <OfferPricePromo offer={offer} variant="welcome" />
             </div>
           )}
 
-          <div className="checkout-field">
-            <label htmlFor="checkout-name">Full name</label>
-            <input
-              id="checkout-name"
-              type="text"
-              autoComplete="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-            />
-          </div>
-
-          <div className="checkout-field">
-            <label htmlFor="checkout-email">Email</label>
-            <input
-              id="checkout-email"
-              type="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-            />
-          </div>
+          {profileReady && !emailOk && (
+            <p className="checkout-profile-hint" role="status">
+              Add a valid email to your account to complete payment. Contact support if you need help updating your profile.
+            </p>
+          )}
 
           <div className="checkout-coupon">
             <label htmlFor="checkout-coupon">Coupon code</label>
@@ -281,20 +266,18 @@ export default function Checkout () {
                 {couponError}
               </p>
             )}
-            {couponSuccess && !couponError && (
-              <p className="checkout-inline-success" role="status">
-                {couponSuccess}
-              </p>
+            {appliedCoupon && !couponError && (
+              <div className="checkout-coupon-reward" role="status">
+                <span className="checkout-coupon-reward__code">{appliedCoupon.code.toUpperCase()}</span>
+                <span className="checkout-coupon-reward__accent" aria-hidden />
+                <span className="checkout-coupon-reward__off">
+                  Flat <strong>{formatInr(appliedCoupon.discountRupees)}</strong> off
+                </span>
+              </div>
             )}
           </div>
 
           <div className="checkout-summary">
-            {discountLine && (
-              <div className="checkout-summary__row checkout-summary__row--discount">
-                <span>{discountLine.label}</span>
-                <span>−{formatInr(discountLine.amount)}</span>
-              </div>
-            )}
             <div className="checkout-summary__row checkout-summary__row--total">
               <span>Amount to pay</span>
               <strong>{formatInr(finalRupees)}</strong>

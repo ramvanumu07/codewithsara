@@ -468,12 +468,14 @@ router.post('/logout', authenticateToken, async (req, res) => {
 
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
+    const row = await getUserById(req.user.userId)
     const user = req.user
     res.json(createSuccessResponse({
       user: {
         id: user.userId,
         username: user.username,
-        name: user.name
+        name: row?.name || user.name,
+        email: row?.email || null
       }
     }))
   } catch (error) {

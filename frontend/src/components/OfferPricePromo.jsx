@@ -27,7 +27,10 @@ export default function OfferPricePromo ({ offer, variant = 'welcome' }) {
           </span>
         )}
         <span className="offer-price__sale-group">
-          <span className="offer-price__current">{offer.priceFormatted}</span>
+          <span className="offer-price__current">
+            {offer.priceFormatted}
+            {variant === 'dashboard' && <span className="offer-price__current-suffix">/-</span>}
+          </span>
           {hasCompare && (
             <span className="offer-price__pct-inline">{pct}% off</span>
           )}
