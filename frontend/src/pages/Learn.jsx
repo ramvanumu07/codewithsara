@@ -1103,7 +1103,8 @@ const Learn = () => {
       right: 0,
       bottom: 0,
       width: '100vw',
-      height: '100vh',
+      maxHeight: '100dvh',
+      height: '100dvh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -1239,7 +1240,7 @@ const Learn = () => {
   if (!topic) {
     return (
       <div style={{
-        height: '100vh',
+        minHeight: '100dvh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1329,7 +1330,7 @@ const Learn = () => {
       li: ({ children }) => <li>{children}</li>
     }
     return (
-      <div className="learn-container topic-notes-view" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <div className="learn-container topic-notes-view" style={{ display: 'flex', flexDirection: 'column' }}>
         <header className="learn-header" style={{ flexShrink: 0 }}>
           <button
             type="button"
