@@ -25,42 +25,4 @@
   font-family: inherit;
 }
 
-/* Optional: tune token colors to match common editor look (keywords, strings, etc.) */
-.syntax-highlight-pre .token.comment,
-.syntax-highlight-pre .token.prolog,
-.syntax-highlight-pre .token.doctype,
-.syntax-highlight-pre .token.cdata {
-  color: #6b7280;
-}
-
-.syntax-highlight-pre .token.keyword {
-  color: #c084fc;
-}
-
-.syntax-highlight-pre .token.string {
-  color: #86efac;
-}
-
-.syntax-highlight-pre .token.number {
-  color: #fbbf24;
-}
-
-.syntax-highlight-pre .token.function {
-  color: #38bdf8;
-}
-
-.syntax-highlight-pre .token.operator {
-  color: #e2e8f0;
-}
-
-.syntax-highlight-pre .token.punctuation {
-  color: #e2e8f0;
-}
-
-.syntax-highlight-pre .token.boolean {
-  color: #c084fc;
-}
-
-.syntax-highlight-pre .token.regex {
-  color: #f472b6;
-}
+/* Token colors: see prismTokenColors.js + inline styles in SyntaxHighlightedCode.jsx */

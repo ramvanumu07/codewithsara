@@ -390,9 +390,9 @@
   box-sizing: border-box;
 }
 
+/* Do not set color: inherit — it can flatten token highlight in some builds; spans use inline colors */
 .message-markdown__code-block code {
   background: none;
-  color: inherit;
   padding: 0;
   border: none;
   font-size: inherit;
