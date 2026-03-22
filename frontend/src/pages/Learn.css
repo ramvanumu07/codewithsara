@@ -712,11 +712,13 @@
   flex: 1;
   border: none;
   outline: none;
+}
 
-  .code-textarea::placeholder {
-    color: #6c757d;
-    font-style: italic;
-  }
+/* Flattened from invalid nesting (was breaking production CSS bundle / Checkout styles) */
+.code-textarea::placeholder {
+  color: #6c757d;
+  font-style: italic;
+}
 
   .code-textarea:focus {
     background: #ffffff;
