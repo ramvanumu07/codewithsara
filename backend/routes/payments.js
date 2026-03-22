@@ -1,5 +1,13 @@
 /**
- * Checkout: coupons, Razorpay orders, payment verification + course unlock.
+ * Razorpay checkout (razorpay npm package).
+ *
+ * Routes (mounted at /api in app.js):
+ *   POST /api/apply-coupon   — validate coupon vs catalog price (no Razorpay call)
+ *   POST /api/create-order   — create Razorpay order (amount from server-side pricing)
+ *   POST /api/verify-payment — HMAC signature check + Razorpay order fetch, then DB unlock
+ *
+ * Env (never hardcode): RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET
+ * Optional: CHECKOUT_COUPONS_JSON — see checkoutPricing.js
  */
 
 import express from 'express'
@@ -30,6 +38,18 @@ function validateOriginalAmount (originalAmount) {
   if (typeof originalAmount !== 'number' && typeof originalAmount !== 'string') return false
   const n = Number(originalAmount)
   return Number.isFinite(n) && Math.round(n) === JS_FULL_ACCESS_PRICE_RUPEES
+}
+
+function razorpaySignaturesMatch (expectedHex, receivedHex) {
+  if (typeof expectedHex !== 'string' || typeof receivedHex !== 'string') return false
+  const a = expectedHex.toLowerCase()
+  const b = receivedHex.toLowerCase()
+  if (a.length !== b.length || a.length < 32) return false
+  try {
+    return crypto.timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))
+  } catch {
+    return false
+  }
 }
 
 router.post('/apply-coupon', authenticateToken, async (req, res) => {
@@ -155,24 +175,27 @@ router.post('/verify-payment', authenticateToken, async (req, res) => {
     }
 
     const body = `${orderId}|${paymentId}`
-    const expected = crypto.createHmac('sha256', secret).update(body).digest('hex')
-    if (expected !== signature) {
+    const expectedSig = crypto.createHmac('sha256', secret).update(body).digest('hex')
+    if (!razorpaySignaturesMatch(expectedSig, String(signature))) {
       return res.status(400).json(createErrorResponse('Payment verification failed', 'SIGNATURE_MISMATCH'))
     }
 
     const client = getRazorpayClient()
-    if (client) {
-      try {
-        const order = await client.orders.fetch(orderId)
-        const paid = Number(order.amount_paid)
-        const ok = order.status === 'paid' && Number.isFinite(paid) && paid >= 100
-        if (!ok) {
-          return res.status(400).json(createErrorResponse('Order was not paid successfully.'))
-        }
-      } catch (fetchErr) {
-        handleErrorResponse(res, fetchErr, 'verify payment order fetch')
-        return
+    if (!client) {
+      return res.status(503).json(createErrorResponse(
+        'Payment verification requires Razorpay API access. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.'
+      ))
+    }
+    try {
+      const order = await client.orders.fetch(orderId)
+      const paid = Number(order.amount_paid)
+      const ok = order.status === 'paid' && Number.isFinite(paid) && paid >= 100
+      if (!ok) {
+        return res.status(400).json(createErrorResponse('Order was not paid successfully.'))
       }
+    } catch (fetchErr) {
+      handleErrorResponse(res, fetchErr, 'verify payment order fetch')
+      return
     }
 
     await unlockCourseForUser(userId, cid)
