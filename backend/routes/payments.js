@@ -32,7 +32,7 @@ function validateOriginalAmount (originalAmount) {
   return Number.isFinite(n) && Math.round(n) === JS_FULL_ACCESS_PRICE_RUPEES
 }
 
-router.post('/apply-coupon', authenticateToken, (req, res) => {
+router.post('/apply-coupon', authenticateToken, async (req, res) => {
   try {
     const { code, originalAmount } = req.body || {}
     if (!validateOriginalAmount(originalAmount)) {
@@ -41,7 +41,7 @@ router.post('/apply-coupon', authenticateToken, (req, res) => {
     if (!code || typeof code !== 'string' || !code.trim()) {
       return res.status(400).json(createErrorResponse('Invalid or expired coupon', 'COUPON_INVALID'))
     }
-    const result = applyCoupon(JS_FULL_ACCESS_PRICE_RUPEES, code)
+    const result = await applyCoupon(JS_FULL_ACCESS_PRICE_RUPEES, code)
     if (!result.valid) {
       return res.status(400).json(createErrorResponse('Invalid or expired coupon', 'COUPON_INVALID'))
     }
@@ -76,7 +76,7 @@ router.post('/create-order', authenticateToken, async (req, res) => {
       return res.status(400).json(createErrorResponse('Invalid course'))
     }
 
-    const expectedPaise = getExpectedAmountPaise(
+    const expectedPaise = await getExpectedAmountPaise(
       typeof couponCode === 'string' && couponCode.trim() ? couponCode : ''
     )
     if (expectedPaise == null) {

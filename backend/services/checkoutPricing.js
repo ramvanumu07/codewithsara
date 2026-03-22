@@ -1,12 +1,15 @@
 /**
  * Checkout pricing for JavaScript full access — keep in sync with frontend welcomeCourseOffers (₹999 sale).
- * Coupon map: CHECKOUT_COUPONS_JSON env, e.g. {"WELCOME100":100} for flat ₹100 off (values in rupees).
+ * Coupons: primary source is table `public.coupons` (code + discount_rupees).
+ * Optional fallback: CHECKOUT_COUPONS_JSON env e.g. {"WELCOME100":100} when no DB row matches.
  */
+
+import { getCouponDiscountRupeesFromDb } from './coupons.js'
 
 export const JS_FULL_ACCESS_PRICE_RUPEES = 999
 export const JS_FULL_ACCESS_PAISE = JS_FULL_ACCESS_PRICE_RUPEES * 100
 
-function parseCouponMap () {
+function parseCouponMapFromEnv () {
   const raw = process.env.CHECKOUT_COUPONS_JSON
   if (!raw || typeof raw !== 'string') return {}
   try {
@@ -19,12 +22,13 @@ function parseCouponMap () {
 }
 
 /**
+ * Env-only lookup (fallback).
  * @param {string} code
- * @returns {number | null} discount in rupees, or null if unknown / not configured
+ * @returns {number | null} discount in rupees
  */
-export function getCouponDiscountRupees (code) {
+export function getCouponDiscountFromEnv (code) {
   if (!code || typeof code !== 'string') return null
-  const map = parseCouponMap()
+  const map = parseCouponMapFromEnv()
   if (Object.keys(map).length === 0) return null
   const key = code.trim().toUpperCase()
   const v = map[key]
@@ -33,22 +37,32 @@ export function getCouponDiscountRupees (code) {
 }
 
 /**
- * @param {number} originalRupees — expected sale price before coupon (e.g. 999)
- * @param {string} [couponCode]
- * @returns {{ valid: boolean, discountRupees?: number, finalRupees?: number, message?: string }}
+ * DB first, then env fallback.
+ * @param {string} code
+ * @returns {Promise<number | null>}
  */
-export function applyCoupon (originalRupees, couponCode) {
+export async function resolveCouponDiscountRupees (code) {
+  const fromDb = await getCouponDiscountRupeesFromDb(code)
+  if (fromDb != null) return fromDb
+  return getCouponDiscountFromEnv(code)
+}
+
+/**
+ * @param {number} originalRupees
+ * @param {string} couponCode
+ * @param {number | null} discountRupees — from resolveCouponDiscountRupees
+ */
+export function applyCouponWithDiscount (originalRupees, couponCode, discountRupees) {
   if (typeof originalRupees !== 'number' || !Number.isFinite(originalRupees) || originalRupees <= 0) {
     return { valid: false }
   }
   if (!couponCode || typeof couponCode !== 'string' || !couponCode.trim()) {
     return { valid: false }
   }
-  const discountRupees = getCouponDiscountRupees(couponCode)
-  if (discountRupees == null) {
+  if (discountRupees == null || !Number.isFinite(discountRupees) || discountRupees <= 0) {
     return { valid: false }
   }
-  const finalRupees = Math.max(1, Math.round(originalRupees) - discountRupees)
+  const finalRupees = Math.max(1, Math.round(originalRupees) - Math.floor(discountRupees))
   const appliedDiscount = Math.round(originalRupees) - finalRupees
   return {
     valid: true,
@@ -59,14 +73,23 @@ export function applyCoupon (originalRupees, couponCode) {
 }
 
 /**
+ * @param {number} originalRupees
+ * @param {string} couponCode
+ */
+export async function applyCoupon (originalRupees, couponCode) {
+  const discountRupees = await resolveCouponDiscountRupees(couponCode)
+  return applyCouponWithDiscount(originalRupees, couponCode, discountRupees)
+}
+
+/**
  * Server-side expected amount in paise for checkout (with optional coupon).
  * @param {string} [couponCode]
  */
-export function getExpectedAmountPaise (couponCode) {
+export async function getExpectedAmountPaise (couponCode) {
   if (!couponCode || typeof couponCode !== 'string' || !couponCode.trim()) {
     return JS_FULL_ACCESS_PAISE
   }
-  const r = applyCoupon(JS_FULL_ACCESS_PRICE_RUPEES, couponCode)
+  const r = await applyCoupon(JS_FULL_ACCESS_PRICE_RUPEES, couponCode)
   if (!r.valid) return null
   return r.finalRupees * 100
 }
