@@ -111,6 +111,43 @@
   border-radius: 10px;
 }
 
+.checkout-payer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.15rem;
+}
+
+.checkout-payer label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.checkout-payer input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.9375rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-family: inherit;
+  margin-bottom: 0.5rem;
+}
+
+.checkout-payer input:focus {
+  outline: none;
+  border-color: #10a37f;
+  box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.15);
+}
+
+.checkout-coupon-success {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #047857;
+}
+
 .checkout-promo-banner {
   margin-top: 1rem;
   margin-bottom: 0;

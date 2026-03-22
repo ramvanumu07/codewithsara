@@ -89,10 +89,10 @@ export default function Checkout () {
   }, [])
 
   const finalRupees = appliedCoupon != null ? appliedCoupon.finalRupees : baseRupees
-  const finalPaise = Math.round(finalRupees * 100)
 
   const emailOk = payerEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payerEmail)
-  const canPay = profileReady && emailOk
+  const nameOk = Boolean(payerName && payerName.trim().length > 0)
+  const canPay = profileReady && nameOk && emailOk
 
   const onCouponChange = (e) => {
     setCouponInput(e.target.value)
@@ -113,14 +113,14 @@ export default function Checkout () {
     setApplyingCoupon(true)
     try {
       const { data } = await payments.applyCoupon(code, baseRupees)
-      if (!data?.success || !data.data) {
+      const d = data?.data
+      if (!data?.success || !d || d.valid === false) {
         setCouponError('Invalid or expired coupon')
         return
       }
-      const d = data.data
       setAppliedCoupon({
         code,
-        finalRupees: d.finalRupees,
+        finalRupees: d.finalRupees ?? d.discountedAmount,
         discountRupees: d.discountRupees
       })
     } catch (err) {
@@ -146,10 +146,11 @@ export default function Checkout () {
     setPayBusy(true)
     payPhaseRef.current = 'idle'
     try {
+      /** Backend expects amount in rupees (converted to paise server-side) */
       const payload = {
-        amount: finalPaise,
-        name: payerName,
-        email: payerEmail,
+        amount: finalRupees,
+        name: payerName.trim(),
+        email: payerEmail.trim(),
         courseId,
         ...(appliedCoupon ? { couponCode: appliedCoupon.code } : {})
       }
@@ -185,37 +186,18 @@ export default function Checkout () {
             })
             if (!verifyRes.data?.success) {
               payPhaseRef.current = 'settled'
-              navigate('/payment/failed', {
-                replace: true,
-                state: {
-                  reason: 'verify_error',
-                  courseId,
-                  detail: 'Verification returned unsuccessful. If you were charged, contact support with your Razorpay order ID.'
-                }
-              })
+              const vm = verifyRes.data?.message || 'Payment verification failed'
+              setPayError(vm)
               return
             }
             payPhaseRef.current = 'settled'
-            navigate('/payment/success', {
+            navigate('/dashboard', {
               replace: true,
-              state: {
-                orderId: response.razorpay_order_id,
-                paymentId: response.razorpay_payment_id,
-                amountRupees: finalRupees,
-                courseId,
-                unlockTitle
-              }
+              state: { paymentSuccess: true }
             })
           } catch (e) {
             payPhaseRef.current = 'settled'
-            navigate('/payment/failed', {
-              replace: true,
-              state: {
-                reason: 'verify_error',
-                courseId,
-                detail: handleApiError(e, 'Payment verification failed. Contact support if you were charged.')
-              }
-            })
+            setPayError(handleApiError(e, 'Payment verification failed. If you were charged, contact support.'))
           } finally {
             setPayBusy(false)
           }
@@ -227,10 +209,7 @@ export default function Checkout () {
               return
             }
             payPhaseRef.current = 'idle'
-            navigate('/payment/failed', {
-              replace: true,
-              state: { reason: 'cancelled', courseId }
-            })
+            setPayError('Payment was not completed. Please try again.')
           }
         }
       }
@@ -240,17 +219,14 @@ export default function Checkout () {
       rzp.on('payment.failed', () => {
         payPhaseRef.current = 'settled'
         setPayBusy(false)
-        navigate('/payment/failed', {
-          replace: true,
-          state: { reason: 'failed', courseId }
-        })
+        setPayError('Payment was not completed. Please try again.')
       })
       rzp.open()
     } catch (e) {
       setPayError(handleApiError(e, 'Could not start payment. Try again.'))
       setPayBusy(false)
     }
-  }, [appliedCoupon, canPay, courseId, finalPaise, finalRupees, navigate, payerEmail, payerName, unlockTitle])
+  }, [appliedCoupon, canPay, courseId, finalRupees, navigate, payerEmail, payerName])
 
   const busy = applyingCoupon || payBusy
 
@@ -283,11 +259,34 @@ export default function Checkout () {
           <div className="checkout-card__split" aria-hidden="true" />
 
           <div className="checkout-card__panel checkout-card__panel--middle">
-            {profileReady && !emailOk && (
+            {profileReady && (!nameOk || !emailOk) && (
               <p className="checkout-profile-hint" role="status">
-                Add a valid email to your account to complete payment. Contact support if you need help updating your profile.
+                Enter your name and a valid email below to continue. These are sent to Razorpay for your receipt.
               </p>
             )}
+
+            <div className="checkout-payer">
+              <label htmlFor="checkout-payer-name">Name</label>
+              <input
+                id="checkout-payer-name"
+                type="text"
+                value={payerName}
+                onChange={(e) => setPayerName(e.target.value)}
+                placeholder="Your name"
+                autoComplete="name"
+                disabled={busy}
+              />
+              <label htmlFor="checkout-payer-email">Email</label>
+              <input
+                id="checkout-payer-email"
+                type="email"
+                value={payerEmail}
+                onChange={(e) => setPayerEmail(e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+                disabled={busy}
+              />
+            </div>
 
             <div className="checkout-coupon">
               <label htmlFor="checkout-coupon">Coupon code</label>
@@ -319,6 +318,11 @@ export default function Checkout () {
                   {couponError}
                 </p>
               )}
+              {appliedCoupon && !couponError ? (
+                <p className="checkout-coupon-success" role="status">
+                  Coupon applied — your discounted total is shown on the right.
+                </p>
+              ) : null}
             </div>
 
             <div className="checkout-promo-banner" aria-label="Featured coupon code">

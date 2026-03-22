@@ -56,21 +56,29 @@ router.post('/apply-coupon', authenticateToken, async (req, res) => {
   try {
     const { code, originalAmount } = req.body || {}
     if (!validateOriginalAmount(originalAmount)) {
-      return res.status(400).json(createErrorResponse('Invalid checkout amount'))
+      return res.status(400).json({ valid: false, ...createErrorResponse('Invalid checkout amount') })
     }
     if (!code || typeof code !== 'string' || !code.trim()) {
-      return res.status(400).json(createErrorResponse('Invalid or expired coupon', 'COUPON_INVALID'))
+      return res.status(400).json({
+        valid: false,
+        ...createErrorResponse('Invalid or expired coupon', 'COUPON_INVALID')
+      })
     }
     const result = await applyCoupon(JS_FULL_ACCESS_PRICE_RUPEES, code)
     if (!result.valid) {
-      return res.status(400).json(createErrorResponse('Invalid or expired coupon', 'COUPON_INVALID'))
+      return res.status(400).json({
+        valid: false,
+        ...createErrorResponse('Invalid or expired coupon', 'COUPON_INVALID')
+      })
     }
     const label = `Coupon (${code.trim().toUpperCase()})`
     return res.json(createSuccessResponse({
+      valid: true,
+      discountedAmount: result.finalRupees,
+      discountLabel: label,
       message: result.message,
       discountRupees: result.discountRupees,
-      finalRupees: result.finalRupees,
-      discountLabel: label
+      finalRupees: result.finalRupees
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'apply coupon')
@@ -104,7 +112,9 @@ router.post('/create-order', authenticateToken, async (req, res) => {
         'A valid email is required on your account to pay. Update your email in account settings or contact support.'
       ))
     }
-    if (typeof amount !== 'number' || !Number.isFinite(amount) || amount < 100) {
+    /** Client sends amount in rupees (whole or decimal); convert to paise for Razorpay */
+    const amountRupees = typeof amount === 'string' ? Number(amount) : amount
+    if (typeof amountRupees !== 'number' || !Number.isFinite(amountRupees) || amountRupees <= 0 || amountRupees > 1e7) {
       return res.status(400).json(createErrorResponse('Invalid amount'))
     }
     const cid = typeof courseId === 'string' ? courseId.trim() : ''
@@ -118,7 +128,8 @@ router.post('/create-order', authenticateToken, async (req, res) => {
     if (expectedPaise == null) {
       return res.status(400).json(createErrorResponse('Invalid or expired coupon', 'COUPON_INVALID'))
     }
-    if (Math.round(amount) !== expectedPaise) {
+    const clientPaise = Math.round(amountRupees * 100)
+    if (clientPaise !== expectedPaise) {
       return res.status(400).json(createErrorResponse('Amount does not match the current offer. Refresh and try again.'))
     }
 
