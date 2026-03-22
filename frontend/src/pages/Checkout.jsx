@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { auth, payments, handleApiError } from '../config/api'
 import { getUnlockOfferForDashboardCourse } from '../data/welcomeCourseOffers'
-import OfferPricePromo from '../components/OfferPricePromo'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import './Checkout.css'
 
@@ -50,6 +49,7 @@ export default function Checkout () {
   const courseId = (searchParams.get('course') || 'javascript').trim() || 'javascript'
   const offer = useMemo(() => getUnlockOfferForDashboardCourse(courseId), [courseId])
   const baseRupees = offer?.priceAmount ?? 999
+  const listRupees = offer?.compareAtAmount ?? 1599
 
   const [payerName, setPayerName] = useState('')
   const [payerEmail, setPayerEmail] = useState('')
@@ -230,17 +230,9 @@ export default function Checkout () {
         <div className="checkout-card">
           <div className="checkout-card__panel checkout-card__panel--product">
             <h1 className="checkout-card__heading">Checkout</h1>
-            <h2 className="checkout-card__product-title">JavaScript with Sara — Full Access</h2>
-            <p className="checkout-card__subtitle">
-              One-time payment for full access to the curriculum, AI tutoring, and the code playground — plus your certificate when you complete the course.
+            <p className="checkout-card__course-label">
+              {offer?.title || 'JavaScript with Sara'}
             </p>
-
-            {offer && (
-              <div className="checkout-card__price-row">
-                <span className="checkout-card__price-label">Your price</span>
-                <OfferPricePromo offer={offer} variant="checkout" />
-              </div>
-            )}
           </div>
 
           <div className="checkout-card__split" aria-hidden="true" />
@@ -251,31 +243,6 @@ export default function Checkout () {
                 Add a valid email to your account to complete payment. Contact support if you need help updating your profile.
               </p>
             )}
-
-            <div className="checkout-promo-banner" aria-label="Featured coupon code">
-              <div className="checkout-promo-banner__main">
-                {appliedCoupon && !couponError ? (
-                  <span className="checkout-promo-banner__tick" aria-hidden>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                  </span>
-                ) : null}
-                <span className="checkout-promo-banner__code">{CHECKOUT_DISPLAY_COUPON}</span>
-                <button
-                  type="button"
-                  className="checkout-promo-banner__copy"
-                  onClick={handleCopyPromo}
-                >
-                  {copyLabel}
-                </button>
-              </div>
-              {appliedCoupon && !couponError ? (
-                <p className="checkout-promo-banner__off">
-                  Flat <strong>{formatInr(appliedCoupon.discountRupees)}</strong> off your order
-                </p>
-              ) : null}
-            </div>
 
             <div className="checkout-coupon">
               <label htmlFor="checkout-coupon">Coupon code</label>
@@ -308,13 +275,43 @@ export default function Checkout () {
                 </p>
               )}
             </div>
+
+            <div className="checkout-promo-banner" aria-label="Featured coupon code">
+              <div className="checkout-promo-banner__main">
+                {appliedCoupon && !couponError ? (
+                  <span className="checkout-promo-banner__tick" aria-hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  </span>
+                ) : null}
+                <span className="checkout-promo-banner__code">{CHECKOUT_DISPLAY_COUPON}</span>
+                <button
+                  type="button"
+                  className="checkout-promo-banner__copy"
+                  onClick={handleCopyPromo}
+                >
+                  {copyLabel}
+                </button>
+              </div>
+              {appliedCoupon && !couponError ? (
+                <p className="checkout-promo-banner__off">
+                  Flat <strong>{formatInr(appliedCoupon.discountRupees)}</strong> off your order
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <div className="checkout-card__panel checkout-card__panel--summary">
             <div className="checkout-summary">
               <div className="checkout-summary__row checkout-summary__row--total">
                 <span className="checkout-summary__label">Amount to pay</span>
-                <strong className="checkout-summary__amount">{formatInr(finalRupees)}</strong>
+                <div className="checkout-summary__amount-block">
+                  {listRupees > finalRupees ? (
+                    <span className="checkout-summary__list-price">{formatInr(listRupees)}</span>
+                  ) : null}
+                  <strong className="checkout-summary__amount">{formatInr(finalRupees)}</strong>
+                </div>
               </div>
             </div>
 
