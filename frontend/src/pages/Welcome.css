@@ -232,6 +232,218 @@
 }
 
 /* ============================================================================
+   COURSES & PRICING (data-driven from welcomeCourseOffers.js)
+   ============================================================================ */
+
+.welcome-pricing-section {
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto 3rem auto;
+  padding-top: 0.5rem;
+}
+
+.welcome-pricing-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sara-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.welcome-pricing-title {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 600;
+  color: var(--sara-text-primary);
+  margin: 0 0 2rem 0;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.welcome-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 1.5rem;
+  justify-items: stretch;
+  align-items: stretch;
+  text-align: left;
+}
+
+.welcome-pricing-card {
+  position: relative;
+  background: var(--sara-surface);
+  border: 1px solid var(--sara-border);
+  border-radius: 0.75rem;
+  padding: 1.75rem 1.75rem 1.5rem 1.75rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.welcome-pricing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sara-shadow-hover);
+  border-color: var(--sara-primary);
+}
+
+.welcome-pricing-card--featured {
+  border-color: rgba(16, 163, 127, 0.35);
+  box-shadow: 0 4px 20px rgba(16, 163, 127, 0.08);
+}
+
+.welcome-pricing-card--featured:hover {
+  border-color: var(--sara-primary);
+}
+
+.welcome-pricing-card__badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: white;
+  background: var(--sara-primary);
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+}
+
+.welcome-pricing-card__head {
+  padding-right: 4.5rem;
+  margin-bottom: 1rem;
+}
+
+.welcome-pricing-card__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--sara-text-primary);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+.welcome-pricing-card__subtitle {
+  font-size: 0.875rem;
+  color: var(--sara-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.welcome-pricing-card__price-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--sara-border);
+}
+
+.welcome-pricing-card__price {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: var(--sara-text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.welcome-pricing-card__price-note {
+  font-size: 0.8rem;
+  color: var(--sara-text-muted);
+  font-weight: 500;
+}
+
+.welcome-pricing-card__highlights {
+  list-style: none;
+  margin: 0 0 1.5rem 0;
+  padding: 0;
+  flex: 1 1 auto;
+}
+
+.welcome-pricing-card__highlights li {
+  position: relative;
+  padding-left: 1.35rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--sara-text-secondary);
+}
+
+.welcome-pricing-card__highlights li:last-child {
+  margin-bottom: 0;
+}
+
+.welcome-pricing-card__highlights li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background: var(--sara-primary);
+  opacity: 0.85;
+}
+
+.welcome-pricing-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: auto;
+}
+
+.welcome-pricing-card__cta-primary {
+  flex: 1 1 auto;
+  min-width: 8rem;
+  background: var(--sara-primary);
+  color: white;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.65rem 1.25rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--sara-shadow);
+}
+
+.welcome-pricing-card__cta-primary:hover,
+.welcome-pricing-card__cta-primary:focus {
+  background: var(--sara-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--sara-shadow-hover);
+  outline: 2px solid var(--sara-text-primary);
+  outline-offset: 2px;
+}
+
+.welcome-pricing-card__cta-secondary {
+  flex: 1 1 auto;
+  min-width: 8rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--sara-primary);
+  text-decoration: none;
+  padding: 0.65rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(16, 163, 127, 0.45);
+  background: var(--sara-background);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.welcome-pricing-card__cta-secondary:hover,
+.welcome-pricing-card__cta-secondary:focus {
+  background: rgba(16, 163, 127, 0.06);
+  border-color: var(--sara-primary);
+  color: var(--sara-primary-hover);
+  outline: none;
+}
+
+/* ============================================================================
    CALL TO ACTION
    ============================================================================ */
 
@@ -403,6 +615,34 @@
     gap: 1.5rem;
     max-width: 600px;
     margin-bottom: 2.5rem;
+  }
+
+  .welcome-pricing-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .welcome-pricing-card {
+    padding: 1.5rem 1.35rem 1.35rem 1.35rem;
+  }
+
+  .welcome-pricing-card__head {
+    padding-right: 0;
+  }
+
+  .welcome-pricing-card__badge {
+    position: static;
+    display: inline-block;
+    margin-bottom: 0.75rem;
+  }
+
+  .welcome-pricing-card__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .welcome-pricing-card__cta-primary,
+  .welcome-pricing-card__cta-secondary {
+    width: 100%;
   }
   
   .feature-card {

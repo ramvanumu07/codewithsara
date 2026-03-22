@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { learning, progress, handleApiError } from '../config/api'
 import { computeCourseProgressSummary, isTopicFullyComplete } from '../utils/courseProgress'
-import EditorToggle from '../components/EditorToggle'
-import SessionPlayground from '../components/SessionPlayground'
 import './Dashboard.css'
 
 const Dashboard = () => {
@@ -26,9 +24,6 @@ const Dashboard = () => {
   const [unlocking, setUnlocking] = useState(false)
   const [downloadingCert, setDownloadingCert] = useState(false)
   const [showHowToRunSteps, setShowHowToRunSteps] = useState(false)
-  // Always show dashboard on load/reload; editor toggle state is not persisted for this page
-  const [editorToggleOn, setEditorToggleOn] = useState(false)
-  const [playgroundCode, setPlaygroundCode] = useState('')
 
   const cancelledRef = useRef(false)
   useEffect(() => {
@@ -485,13 +480,7 @@ const Dashboard = () => {
   const hideCurrentlyLearningAndContinue =
     selectedCourseComplete && !!progressSummary.certificate_eligible
 
-  const courseTopicIds = selectedCourseData?.topics?.map(t => t.id) || []
   const allTopicsForCourse = selectedCourseData?.topics || []
-
-  const hasSessionCompleted = (topicId) => {
-    const p = userProgress.find(pr => pr.topic_id === topicId)
-    return !!p && (p.phase === 'assignment' || p.phase === 'playtime' || isTopicFullyComplete(p))
-  }
 
   const formatTopicTitle = (title) => {
     if (!title || typeof title !== 'string') return title
@@ -499,34 +488,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className={`dashboard ${showMobileMenu && !editorToggleOn ? 'mobile-menu-open' : ''}`}>
-      {/* Fixed code-editor toggle (shared with Learn session) */}
-      <EditorToggle isOn={editorToggleOn} onToggle={setEditorToggleOn} />
-      {editorToggleOn ? (
-        /* Full-screen playground only — same layout as Learn session (no sidebar, no menu) */
-        <div
-          className="dashboard-playground-fullscreen"
-          style={{
-            position: 'fixed',
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: 0,
-            backgroundColor: '#fff'
-          }}
-        >
-          <SessionPlayground
-            code={playgroundCode}
-            onCodeChange={setPlaygroundCode}
-            placeholder="Practice here or try something from your lessons!"
-          />
-        </div>
-      ) : (
-        <>
+    <div className={`dashboard ${showMobileMenu ? 'mobile-menu-open' : ''}`}>
           {/* Mobile Menu Toggle */}
           <button
             className="mobile-menu-toggle"
@@ -678,7 +640,7 @@ const Dashboard = () => {
                   <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>In Sara</p>
                   <ol style={{ margin: '0 0 20px', paddingLeft: 20, color: '#374151', fontSize: '0.875rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
                     <li style={{ marginBottom: 8 }}>Complete the <strong>Session</strong> for a topic (chat with Sara to learn).</li>
-                    <li style={{ marginBottom: 8 }}>Turn on the <strong>code editor</strong> (toggle at the left) to open the Playground, or go to <strong>Assignments</strong> for a topic.</li>
+                    <li style={{ marginBottom: 8 }}>On the <strong>Learn</strong> page, use the <strong>code editor</strong> toggle to open the Playground, or open <strong>Assignments</strong> for that topic.</li>
                     <li style={{ marginBottom: 8 }}>Write or paste JavaScript in the editor and click <strong>Run</strong>. Output appears in the terminal panel.</li>
                   </ol>
                   <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>Without Sara (outside this app)</p>
@@ -844,47 +806,55 @@ const Dashboard = () => {
                 </>
               )}
 
-              {/* All topics under Continue – notes and assignment icons for all */}
+              {/* All topics — notes & assignment shortcuts only after topic is fully complete */}
               {allTopicsForCourse.length > 0 && (
                 <div className="session-completed-section">
                   <h4 className="session-completed-heading">All topics</h4>
                   <ul className="session-completed-list">
-                    {allTopicsForCourse.map((topic) => (
+                    {allTopicsForCourse.map((topic) => {
+                      const rowProgress = userProgress.find(
+                        (p) => String(p.topic_id) === String(topic.id)
+                      )
+                      const topicComplete = rowProgress && isTopicFullyComplete(rowProgress)
+                      return (
                         <li key={topic.id} className="session-completed-row">
                           <span className="session-completed-title">
                             {formatTopicTitle(topic.title)}
                           </span>
-                          <div className="session-completed-actions">
-                            <button
-                              type="button"
-                              className="session-completed-icon-btn"
-                              onClick={() => navigate(`/learn/${topic.id}?view=notes&ref=1`)}
-                              title="Topic notes"
-                              aria-label={`View notes for ${formatTopicTitle(topic.title)}`}
-                            >
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                <polyline points="14,2 14,8 20,8" />
-                                <line x1="16" y1="13" x2="8" y2="13" />
-                                <line x1="16" y1="17" x2="8" y2="17" />
-                                <polyline points="10,9 9,9 8,9" />
-                              </svg>
-                            </button>
-                            <button
-                              type="button"
-                              className="session-completed-icon-btn"
-                              onClick={() => navigate(`/learn/${topic.id}?phase=assignment&start=1&ref=1`)}
-                              title="Try assignments (from task 1)"
-                              aria-label={`Assignments for ${formatTopicTitle(topic.title)}`}
-                            >
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="9,11 12,14 22,4" />
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                              </svg>
-                            </button>
-                          </div>
+                          {topicComplete ? (
+                            <div className="session-completed-actions">
+                              <button
+                                type="button"
+                                className="session-completed-icon-btn"
+                                onClick={() => navigate(`/learn/${topic.id}?view=notes&ref=1`)}
+                                title="Topic notes"
+                                aria-label={`View notes for ${formatTopicTitle(topic.title)}`}
+                              >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                  <polyline points="14,2 14,8 20,8" />
+                                  <line x1="16" y1="13" x2="8" y2="13" />
+                                  <line x1="16" y1="17" x2="8" y2="17" />
+                                  <polyline points="10,9 9,9 8,9" />
+                                </svg>
+                              </button>
+                              <button
+                                type="button"
+                                className="session-completed-icon-btn"
+                                onClick={() => navigate(`/learn/${topic.id}?phase=assignment&start=1&ref=1`)}
+                                title="Try assignments (from task 1)"
+                                aria-label={`Assignments for ${formatTopicTitle(topic.title)}`}
+                              >
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                  <polyline points="9,11 12,14 22,4" />
+                                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                                </svg>
+                              </button>
+                            </div>
+                          ) : null}
                         </li>
-                      ))}
+                      )
+                    })}
                   </ul>
                 </div>
               )}
@@ -956,8 +926,6 @@ const Dashboard = () => {
             </div>
           )}
 
-        </>
-      )}
     </div>
   )
 }

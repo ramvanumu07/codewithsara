@@ -289,7 +289,7 @@ const Privacy = () => {
             </p>
             <div className="contact-info">
               <p><strong>Legal name:</strong> Vanumu Lakshmi Sai Ram</p>
-              <p><strong>Registered address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
+              <p><strong>Contact address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
               <p><strong>Email:</strong> <a href="mailto:codewithsara@proton.me">codewithsara@proton.me</a></p>
               <p><strong>Subject Line:</strong> Privacy Policy Inquiry</p>
             </div>

@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { welcomeCourseOffers } from '../data/welcomeCourseOffers'
 import './Welcome.css'
 
 const Welcome = () => {
@@ -111,6 +112,58 @@ const Welcome = () => {
               <p>Track your journey with smart progress tracking that adapts to your pace</p>
             </div>
           </div>
+
+          {/* Courses & pricing — data from welcomeCourseOffers.js */}
+          <section className="welcome-pricing-section" aria-labelledby="welcome-pricing-heading">
+            <p className="welcome-pricing-eyebrow">Courses &amp; pricing</p>
+            <h2 id="welcome-pricing-heading" className="welcome-pricing-title">
+              Invest in structured, mentor-style learning
+            </h2>
+            <div className="welcome-pricing-grid">
+              {welcomeCourseOffers.map((course) => (
+                <article
+                  key={course.id}
+                  className={`welcome-pricing-card${course.featured ? ' welcome-pricing-card--featured' : ''}`}
+                >
+                  {course.featured && (
+                    <span className="welcome-pricing-card__badge">Popular</span>
+                  )}
+                  <div className="welcome-pricing-card__head">
+                    <h3 className="welcome-pricing-card__title">{course.title}</h3>
+                    {course.subtitle && (
+                      <p className="welcome-pricing-card__subtitle">{course.subtitle}</p>
+                    )}
+                  </div>
+                  <div className="welcome-pricing-card__price-block" aria-label={`Price ${course.priceFormatted}`}>
+                    <span className="welcome-pricing-card__price">{course.priceFormatted}</span>
+                    {course.priceNote && (
+                      <span className="welcome-pricing-card__price-note">{course.priceNote}</span>
+                    )}
+                  </div>
+                  <ul className="welcome-pricing-card__highlights">
+                    {course.highlights.map((line, idx) => (
+                      <li key={`${course.id}-${idx}`}>{line}</li>
+                    ))}
+                  </ul>
+                  <div className="welcome-pricing-card__actions">
+                    <button
+                      type="button"
+                      className="welcome-pricing-card__cta-primary"
+                      onClick={handleGetStarted}
+                    >
+                      Get started
+                    </button>
+                    <Link
+                      to={course.detailHref || '/products'}
+                      className="welcome-pricing-card__cta-secondary"
+                    >
+                      Full product details
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
         </div>
 
       </main>

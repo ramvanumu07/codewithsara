@@ -206,7 +206,7 @@ const Terms = () => {
               If you have any questions about these Terms &amp; Conditions, please contact us at:
             </p>
             <p><strong>Legal name:</strong> Vanumu Lakshmi Sai Ram</p>
-            <p><strong>Registered address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
+            <p><strong>Contact address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
             <p><strong>Email:</strong> <a href="mailto:codewithsara@proton.me">codewithsara@proton.me</a></p>
           </section>
         </div>

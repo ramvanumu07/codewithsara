@@ -35,8 +35,8 @@ const Products = () => {
           <p className="last-updated">All prices are in Indian Rupees (INR). Last updated: February 2026.</p>
 
           <section className="terms-section">
-            <h2>Sara Learning Course</h2>
-            <p><strong>Description:</strong> Full access to the Sara learning platform. Includes AI-powered tutoring sessions (chat with Sara to learn concepts), an interactive code playground to run and try code, and coding assignments with run-and-test and AI feedback. Progress is saved so you can continue from where you left off. Topics are structured so you learn step by step.</p>
+            <h2>JavaScript with Sara</h2>
+            <p><strong>Description:</strong> Full access to the Sara learning platform for our JavaScript track. Includes AI-powered tutoring sessions (chat with Sara to learn concepts), an interactive code playground to run and try JavaScript, and coding assignments with run-and-test and AI feedback. Progress is saved so you can continue from where you left off. Topics are structured so you learn step by step.</p>
             <p><strong>Price (INR):</strong> ₹499</p>
           </section>
 
@@ -44,7 +44,7 @@ const Products = () => {
             <h2>Contact</h2>
             <p>For pricing or custom requirements: <a href="mailto:codewithsara@proton.me">codewithsara@proton.me</a></p>
             <p><strong>Legal name:</strong> Vanumu Lakshmi Sai Ram</p>
-            <p><strong>Registered address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
+            <p><strong>Contact address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
           </section>
         </div>
       </main>
