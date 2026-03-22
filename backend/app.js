@@ -104,12 +104,7 @@ app.use('/api/debug', asMiddleware(debugSchemaRoutes))
 app.use('/api/debug', asMiddleware(debugChatRoutes))
 
 app.get('/health', (req, res) => {
-  const isProd = process.env.NODE_ENV === 'production'
-  res.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    ...(isProd ? {} : { version: '2.0.1' })
-  })
+  res.status(200).json({ status: 'ok' })
 })
 
 app.get('/metrics', (req, res) => {
