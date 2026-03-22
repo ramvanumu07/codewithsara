@@ -41,6 +41,17 @@ const CheckIcon = () => (
   </svg>
 )
 
+/** react-markdown v9+ does not pass `inline`; fenced blocks use className like language-javascript */
+function isMarkdownFencedCodeClass(className) {
+  const s = Array.isArray(className) ? className.filter(Boolean).join(' ') : className
+  return typeof s === 'string' && /language-[\w-]+/.test(s)
+}
+
+function markdownCodeClassName(className) {
+  if (Array.isArray(className)) return className.filter(Boolean).join(' ') || undefined
+  return className
+}
+
 /**
  * Renders chat/outcome message content as Markdown.
  * One render path, one set of CSS classes (.message-markdown).
@@ -68,9 +79,20 @@ const MessageContent = ({ content, role }) => {
     h1: ({ children }) => <h1>{children}</h1>,
     h2: ({ children }) => <h2>{children}</h2>,
     h3: ({ children }) => <h3>{children}</h3>,
-    code: ({ node, inline, className, children, ...props }) => {
-      if (inline) return <code className="message-markdown__inline-code" {...props}>{children}</code>
-      return <code {...props}>{children}</code>
+    code: ({ className, children, ...props }) => {
+      const cn = markdownCodeClassName(className)
+      if (isMarkdownFencedCodeClass(className)) {
+        return (
+          <code className={cn} {...props}>
+            {children}
+          </code>
+        )
+      }
+      return (
+        <code className={`message-markdown__inline-code${cn ? ` ${cn}` : ''}`.trim()} {...props}>
+          {children}
+        </code>
+      )
     },
     pre: ({ node, children }) => {
       // Extract code string for copy button; support mdast (node.children[0].value) or children props
@@ -143,8 +165,18 @@ function AssignmentReviewMarkdown({ text }) {
     })
   }
   const components = {
-    code: ({ node, inline, children, ...props }) =>
-      inline ? <code className="message-markdown__inline-code" {...props}>{children}</code> : <code {...props}>{children}</code>,
+    code: ({ className, children, ...props }) => {
+      const cn = markdownCodeClassName(className)
+      return isMarkdownFencedCodeClass(className) ? (
+        <code className={cn} {...props}>
+          {children}
+        </code>
+      ) : (
+        <code className={`message-markdown__inline-code${cn ? ` ${cn}` : ''}`.trim()} {...props}>
+          {children}
+        </code>
+      )
+    },
     pre: ({ node, children }) => {
       let code = ''
       const first = node?.children?.[0]
@@ -1265,15 +1297,26 @@ const Learn = () => {
       topic.outcomes &&
       topic.outcome_messages.length === topic.outcomes.length
     const notesMarkdownComponents = {
-      code: ({ node, inline, className, children, ...props }) =>
-        inline ? (
-          <code {...props}>{children}</code>
-        ) : (
+      code: ({ className, children, ...props }) => {
+        const cn = markdownCodeClassName(className)
+        const fence = cn ? /language-(\w+)/.exec(cn) : null
+        if (!fence) {
+          return (
+            <code className={`message-markdown__inline-code${cn ? ` ${cn}` : ''}`.trim()} {...props}>
+              {children}
+            </code>
+          )
+        }
+        const raw =
+          typeof children === 'string' ? children : String(React.Children.toArray(children).join(''))
+        return (
           <SyntaxHighlightedCode
-            code={typeof children === 'string' ? children : String(React.Children.toArray(children).join(''))}
+            code={raw.replace(/\n$/, '')}
+            language={fence[1] === 'js' ? 'javascript' : fence[1]}
             preClassName="notes-code-block"
           />
-        ),
+        )
+      },
       pre: ({ children }) => {
         const childArray = React.Children.toArray(children)
         if (childArray.length === 1 && childArray[0]?.type === 'pre') return <>{childArray[0]}</>

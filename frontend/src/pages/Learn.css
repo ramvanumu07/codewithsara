@@ -318,14 +318,16 @@
   margin: 0.1em 0;
 }
 
+.message-markdown .message-markdown__inline-code,
 .message-markdown__inline-code {
-  background: #e5e7eb;
-  color: #1e293b;
-  padding: 0.2em 0.45em;
+  background: #ecfdf5;
+  color: #065f46;
+  padding: 0.15em 0.5em;
   border-radius: 6px;
   font-size: 0.9em;
   font-family: 'SF Mono', Monaco, Consolas, monospace;
   font-weight: 500;
+  border: 1px solid #a7f3d0;
 }
 
 .message-markdown__code-wrapper {
