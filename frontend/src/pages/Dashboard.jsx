@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { learning, progress, handleApiError } from '../config/api'
 import { computeCourseProgressSummary, isTopicFullyComplete } from '../utils/courseProgress'
+import { getUnlockOfferForDashboardCourse } from '../data/welcomeCourseOffers'
 import './Dashboard.css'
 
 const Dashboard = () => {
@@ -487,6 +488,19 @@ const Dashboard = () => {
     return title.charAt(0).toUpperCase() + title.slice(1)
   }
 
+  /** Selected course is not purchased — show paywall only (no progress / topics / learn CTAs). */
+  const selectedCourseLocked = Boolean(
+    selectedCourseData && !unlockedCourseIds.includes(selectedCourseData.id)
+  )
+
+  const unlockOffer = selectedCourseLocked
+    ? getUnlockOfferForDashboardCourse(selectedCourseData.id)
+    : null
+
+  const unlockModalOffer = unlockModalCourse
+    ? getUnlockOfferForDashboardCourse(unlockModalCourse.id)
+    : null
+
   return (
     <div className={`dashboard ${showMobileMenu ? 'mobile-menu-open' : ''}`}>
           {/* Mobile Menu Toggle */}
@@ -571,14 +585,16 @@ const Dashboard = () => {
             aria-hidden="true"
           />
 
-          {/* Main Content - Single flowing page */}
-          <div className="main-content">
+          {/* Main Content - Single flowing page (paywall mode hides learner dashboard chrome) */}
+          <div className={`main-content${selectedCourseLocked ? ' main-content--paywall' : ''}`}>
             {/* Course Header */}
             <div className="course-header">
               <h2>{selectedCourseData?.title || 'Course'}</h2>
               <p>{selectedCourseData?.description || 'Master programming concepts step by step with Sara'}</p>
             </div>
 
+            {!selectedCourseLocked && (
+            <>
             {/* How to run JS code - help link */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
               <span style={{ fontSize: '0.875rem', color: '#6b7280', fontFamily: 'var(--sara-font)' }}>How to run JS code</span>
@@ -668,32 +684,71 @@ const Dashboard = () => {
                 </div>
               </div>
             )}
+            </>
+            )}
 
-            {/* Course locked: show unlock CTA */}
-            {selectedCourseData && !unlockedCourseIds.includes(selectedCourseData.id) && (
-              <div className="course-locked-banner">
-                <div className="course-locked-banner-inner">
-                  <span className="course-locked-icon" aria-hidden>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b45309" strokeWidth="2">
-                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                    </svg>
-                  </span>
-                  <div className="course-locked-text">
-                    <strong>Full access requires purchase</strong>
-                    <p>Purchase once for full access to all topics and assignments.</p>
+            {/* Course locked: focused upgrade card only (pricing from welcomeCourseOffers) */}
+            {selectedCourseLocked && unlockOffer && (
+              <section
+                className="dashboard-unlock-card"
+                aria-labelledby="dashboard-unlock-title"
+              >
+                <div className="dashboard-unlock-card__layout">
+                  <div className="dashboard-unlock-card__main">
+                    <p className="dashboard-unlock-card__eyebrow">Upgrade to full access</p>
+                    <h3 id="dashboard-unlock-title" className="dashboard-unlock-card__title">
+                      {unlockOffer.title}
+                    </h3>
+                    {unlockOffer.subtitle && (
+                      <p className="dashboard-unlock-card__subtitle">{unlockOffer.subtitle}</p>
+                    )}
+                    <ul className="dashboard-unlock-card__highlights">
+                      {(unlockOffer.highlights || []).slice(0, 4).map((line, idx) => (
+                        <li key={`${unlockOffer.id}-${idx}`}>{line}</li>
+                      ))}
+                    </ul>
                   </div>
-                  <button
-                    type="button"
-                    className="course-locked-btn"
-                    onClick={() => setUnlockModalCourse(selectedCourseData)}
-                  >
-                    Pay
-                  </button>
+                  <aside className="dashboard-unlock-card__checkout" aria-label="Purchase options">
+                    <div className="dashboard-unlock-card__price-block">
+                      <span className="dashboard-unlock-card__price-label">One-time payment</span>
+                      <span className="dashboard-unlock-card__price">{unlockOffer.priceFormatted}</span>
+                      {unlockOffer.priceNote && (
+                        <span className="dashboard-unlock-card__price-note">{unlockOffer.priceNote}</span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      className="dashboard-unlock-card__cta"
+                      onClick={() => setUnlockModalCourse(selectedCourseData)}
+                    >
+                      Unlock now — {unlockOffer.priceFormatted}
+                    </button>
+                    <Link
+                      to={unlockOffer.detailHref || '/products'}
+                      className="dashboard-unlock-card__secondary"
+                    >
+                      Pricing &amp; product details
+                    </Link>
+                  </aside>
                 </div>
+              </section>
+            )}
+            {selectedCourseLocked && !unlockOffer && selectedCourseData && (
+              <div className="dashboard-paywall-fallback" role="status">
+                <p>Pricing for this course is not configured. You can still continue to payment or contact support.</p>
+                <button
+                  type="button"
+                  className="dashboard-unlock-card__cta"
+                  style={{ maxWidth: 280 }}
+                  onClick={() => setUnlockModalCourse(selectedCourseData)}
+                >
+                  Continue to payment
+                </button>
               </div>
             )}
 
+            {!selectedCourseLocked && (
+            <>
             {/* Progress Section */}
             <div className="progress-section">
               <h3>Your Progress</h3>
@@ -859,6 +914,8 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
+            </>
+            )}
 
           </div>
 
@@ -879,32 +936,43 @@ const Dashboard = () => {
               onClick={() => !unlocking && setUnlockModalCourse(null)}
             >
               <div
-                className="unlock-modal"
+                className="unlock-modal dashboard-unlock-modal"
                 style={{
                   background: 'white',
                   borderRadius: 16,
                   padding: 24,
-                  maxWidth: 400,
+                  maxWidth: 420,
                   width: '100%',
                   boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)'
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <h3 style={{ margin: '0 0 8px', fontSize: '1.25rem' }}>Get access to {unlockModalCourse.title}</h3>
-                <p style={{ margin: '0 0 20px', color: '#6b7280', fontSize: '0.875rem' }}>
-                  Purchase once for full access to all topics and assignments.</p>
-                <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+                <p className="dashboard-unlock-modal__eyebrow">Complete purchase</p>
+                <h3 className="dashboard-unlock-modal__title">
+                  {unlockModalOffer?.title || unlockModalCourse.title}
+                </h3>
+                {unlockModalOffer?.priceFormatted && (
+                  <p className="dashboard-unlock-modal__amount">
+                    {unlockModalOffer.priceFormatted}
+                  </p>
+                )}
+                <p className="dashboard-unlock-modal__copy">
+                  {unlockModalOffer?.priceNote ? `${unlockModalOffer.priceNote}. ` : ''}
+                  Includes every topic and assignment in this course.
+                </p>
+                <div className="dashboard-unlock-modal__actions">
                   <button
                     type="button"
                     disabled={unlocking}
+                    className="dashboard-unlock-modal__btn-cancel"
                     onClick={() => setUnlockModalCourse(null)}
-                    style={{ padding: '10px 16px', background: '#f3f4f6', border: 'none', borderRadius: 8, cursor: unlocking ? 'not-allowed' : 'pointer' }}
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     disabled={unlocking}
+                    className="dashboard-unlock-modal__btn-pay"
                     onClick={async () => {
                       setUnlocking(true)
                       try {
@@ -917,9 +985,8 @@ const Dashboard = () => {
                         setUnlocking(false)
                       }
                     }}
-                    style={{ padding: '10px 24px', background: unlocking ? '#9ca3af' : '#059669', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, cursor: unlocking ? 'not-allowed' : 'pointer' }}
                   >
-                    {unlocking ? 'Processing…' : 'Pay'}
+                    {unlocking ? 'Processing…' : (unlockModalOffer?.priceFormatted ? `Pay ${unlockModalOffer.priceFormatted}` : 'Pay now')}
                   </button>
                 </div>
               </div>

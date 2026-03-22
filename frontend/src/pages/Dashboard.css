@@ -279,59 +279,267 @@
   margin: 0;
 }
 
-/* Course locked banner */
-.course-locked-banner {
+.main-content--paywall .course-header {
   margin-bottom: 24px;
-  padding: 20px;
-  background: #fef3c7;
-  border: 1px solid #f59e0b;
-  border-radius: 12px;
 }
 
-.course-locked-banner-inner {
+.main-content--paywall .dashboard-unlock-card {
+  margin-bottom: 0;
+}
+
+.dashboard-paywall-fallback {
+  padding: 24px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.dashboard-paywall-fallback p {
+  margin: 0 0 16px 0;
+  color: #6b7280;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+/* Dashboard upgrade / unlock card (pricing from welcomeCourseOffers via getUnlockOfferForDashboardCourse) */
+.dashboard-unlock-card {
+  margin-bottom: 28px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+.dashboard-unlock-card__layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(220px, 280px);
+  gap: 28px;
+  align-items: stretch;
+  padding: 24px;
+  min-width: 0;
+}
+
+.dashboard-unlock-card__main {
+  min-width: 0;
+}
+
+.dashboard-unlock-card__eyebrow {
+  margin: 0 0 8px 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #10a37f;
+}
+
+.dashboard-unlock-card__title {
+  margin: 0 0 8px 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  font-family: var(--sara-font, inherit);
+}
+
+.dashboard-unlock-card__subtitle {
+  margin: 0 0 16px 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #6b7280;
+}
+
+.dashboard-unlock-card__highlights {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-unlock-card__highlights li {
+  position: relative;
+  padding-left: 1.25rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #4b5563;
+}
+
+.dashboard-unlock-card__highlights li:last-child {
+  margin-bottom: 0;
+}
+
+.dashboard-unlock-card__highlights li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10a37f;
+  opacity: 0.9;
+}
+
+.dashboard-unlock-card__checkout {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  padding: 20px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  gap: 14px;
+}
+
+.dashboard-unlock-card__price-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dashboard-unlock-card__price-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.dashboard-unlock-card__price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.dashboard-unlock-card__price-note {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.dashboard-unlock-card__cta {
+  width: 100%;
+  padding: 14px 20px;
+  background: #10a37f;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(16, 163, 127, 0.35);
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-unlock-card__cta:hover {
+  background: #0d8a6c;
+  box-shadow: 0 4px 14px rgba(16, 163, 127, 0.4);
+}
+
+.dashboard-unlock-card__cta:active {
+  transform: translateY(1px);
+}
+
+.dashboard-unlock-card__cta:focus {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.dashboard-unlock-card__secondary {
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #10a37f;
+  text-decoration: none;
+  padding: 4px 0;
+}
+
+.dashboard-unlock-card__secondary:hover {
+  color: #0d8a6c;
+  text-decoration: underline;
+}
+
+/* Unlock payment modal */
+.dashboard-unlock-modal__eyebrow {
+  margin: 0 0 6px 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #10a37f;
+}
+
+.dashboard-unlock-modal__title {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.dashboard-unlock-modal__amount {
+  margin: 0 0 8px 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.02em;
+}
+
+.dashboard-unlock-modal__copy {
+  margin: 0 0 20px 0;
+  color: #6b7280;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.dashboard-unlock-modal__actions {
+  display: flex;
   gap: 12px;
+  justify-content: flex-end;
   flex-wrap: wrap;
 }
 
-.course-locked-icon {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.dashboard-unlock-modal__btn-cancel {
+  padding: 10px 16px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
 }
 
-.course-locked-text {
-  flex: 1;
-  min-width: 200px;
+.dashboard-unlock-modal__btn-cancel:hover:not(:disabled) {
+  background: #e5e7eb;
 }
 
-.course-locked-text strong {
-  color: #92400e;
-  display: block;
-}
-
-.course-locked-text p {
-  margin: 4px 0 0;
-  font-size: 0.875rem;
-  color: #b45309;
-}
-
-.course-locked-btn {
-  padding: 10px 20px;
-  background: #059669;
+.dashboard-unlock-modal__btn-pay {
+  padding: 12px 24px;
+  background: #10a37f;
   color: white;
   border: none;
   border-radius: 8px;
   font-weight: 600;
-  cursor: pointer;
   font-family: inherit;
-  flex-shrink: 0;
+  min-width: 160px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(16, 163, 127, 0.3);
 }
 
-.course-locked-btn:hover {
-  background: #047857;
+.dashboard-unlock-modal__btn-pay:hover:not(:disabled) {
+  background: #0d8a6c;
+}
+
+.dashboard-unlock-modal__btn-pay:disabled,
+.dashboard-unlock-modal__btn-cancel:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 /* Progress Section */
@@ -767,15 +975,14 @@ button.session-completed-title:hover {
     left: 276px;
   }
 
-  /* Course locked banner - stacked alignment on mobile */
-  .course-locked-banner {
-    padding: 16px;
+  .dashboard-unlock-card__layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
   }
 
-  .course-locked-banner-inner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
+  .dashboard-unlock-card__checkout {
+    padding: 18px;
   }
 
   .certificate-cta-inner {
@@ -787,20 +994,14 @@ button.session-completed-title:hover {
     width: 100%;
   }
 
-  .course-locked-icon {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  .dashboard-unlock-modal__actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
 
-  .course-locked-text {
-    min-width: 0;
-    text-align: left;
-  }
-
-  .course-locked-btn {
+  .dashboard-unlock-modal__btn-pay,
+  .dashboard-unlock-modal__btn-cancel {
     width: 100%;
-    text-align: center;
   }
 
   /* Main content layout unchanged on mobile - same structure as desktop */
