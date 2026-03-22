@@ -627,13 +627,7 @@
   }
 
   .welcome-pricing-card__head {
-    padding-right: 0;
-  }
-
-  .welcome-pricing-card__badge {
-    position: static;
-    display: inline-block;
-    margin-bottom: 0.75rem;
+    padding-right: 4.5rem;
   }
 
   .welcome-pricing-card__actions {
