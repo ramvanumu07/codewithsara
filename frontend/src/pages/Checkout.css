@@ -148,87 +148,6 @@
   color: #047857;
 }
 
-.checkout-promo-banner {
-  margin-top: 1rem;
-  margin-bottom: 0;
-  padding: 0.65rem 0.75rem;
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 10px;
-}
-
-.checkout-promo-banner__main {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.65rem;
-}
-
-.checkout-promo-banner__tick {
-  width: 1.125rem;
-  height: 1.125rem;
-  border-radius: 50%;
-  background: #10b981;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: #ffffff;
-}
-
-.checkout-promo-banner__tick svg {
-  width: 0.5rem;
-  height: 0.5rem;
-  display: block;
-  flex-shrink: 0;
-}
-
-.checkout-promo-banner__code {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #065f46;
-  font-family: ui-monospace, 'Cascadia Code', 'JetBrains Mono', monospace;
-  padding: 0.2rem 0;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.checkout-promo-banner__copy {
-  flex-shrink: 0;
-  padding: 0.35rem 0.65rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: inherit;
-  color: #047857;
-  background: #fff;
-  border: 1px solid #6ee7b7;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.checkout-promo-banner__copy:hover {
-  background: #ecfdf5;
-  border-color: #34d399;
-}
-
-.checkout-promo-banner__off {
-  margin: 0.55rem 0 0;
-  padding-top: 0.5rem;
-  border-top: 1px dashed #86efac;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #047857;
-  line-height: 1.4;
-}
-
-.checkout-promo-banner__off strong {
-  font-weight: 700;
-  color: #065f46;
-}
-
 .checkout-coupon label {
   display: block;
   font-size: 0.8125rem;
@@ -312,11 +231,6 @@
   margin: 8px 0 0;
   font-size: 0.8125rem;
   color: #dc2626;
-}
-
-.checkout-inline-error--pay {
-  margin-top: 12px;
-  margin-bottom: 0;
 }
 
 .checkout-summary {

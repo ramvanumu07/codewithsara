@@ -50,11 +50,18 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!location.state?.paymentSuccess) return
+    const nonce = location.state?.paymentToastNonce
+    const storageKey = nonce ? `sara_payment_ok_${nonce}` : 'sara_payment_ok_legacy'
+    if (sessionStorage.getItem(storageKey)) {
+      navigate('.', { replace: true, state: {} })
+      return
+    }
+    sessionStorage.setItem(storageKey, '1')
     showSuccessToast('Payment successful! Your course is now unlocked.')
     loadDashboardData()
     navigate('.', { replace: true, state: {} })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state?.paymentSuccess, navigate, showSuccessToast])
+  }, [location.state?.paymentSuccess, location.state?.paymentToastNonce, navigate, showSuccessToast])
 
   // Handle ESC key to close mobile menu
   useEffect(() => {

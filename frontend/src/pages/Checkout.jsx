@@ -2,11 +2,11 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { auth, payments, handleApiError } from '../config/api'
 import { getUnlockOfferForDashboardCourse } from '../data/welcomeCourseOffers'
-import { copyToClipboard } from '../utils/copyToClipboard'
+import { useToast } from '../hooks/useToast'
+import { ToastContainer } from '../components/Toast'
 import './Checkout.css'
 
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY_ID
-const CHECKOUT_DISPLAY_COUPON = String(import.meta.env.VITE_CHECKOUT_PROMO_CODE || 'WELCOMESARA').trim().toUpperCase()
 
 function loadRazorpayScript () {
   return new Promise((resolve, reject) => {
@@ -45,6 +45,7 @@ function formatInr (rupees) {
 export default function Checkout () {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { toasts, error: showPayErrorToast } = useToast()
 
   const courseId = (searchParams.get('course') || 'javascript').trim() || 'javascript'
   const offer = useMemo(() => getUnlockOfferForDashboardCourse(courseId), [courseId])
@@ -58,10 +59,8 @@ export default function Checkout () {
   const [couponInput, setCouponInput] = useState('')
   const [appliedCoupon, setAppliedCoupon] = useState(null)
   const [couponError, setCouponError] = useState('')
-  const [payError, setPayError] = useState('')
   const [applyingCoupon, setApplyingCoupon] = useState(false)
   const [payBusy, setPayBusy] = useState(false)
-  const [copyLabel, setCopyLabel] = useState('Copy')
   /** idle | open | verifying | settled — avoids treating modal dismiss as cancel after pay flow advances */
   const payPhaseRef = useRef('idle')
 
@@ -136,9 +135,8 @@ export default function Checkout () {
   }
 
   const openRazorpay = useCallback(async () => {
-    setPayError('')
     if (!RAZORPAY_KEY) {
-      setPayError('Payment could not start: Razorpay key is not configured (VITE_RAZORPAY_KEY_ID).')
+      showPayErrorToast('Payment could not start: Razorpay key is not configured (VITE_RAZORPAY_KEY_ID).')
       return
     }
     if (!canPay) return
@@ -156,7 +154,7 @@ export default function Checkout () {
       }
       const { data } = await payments.createOrder(payload)
       if (!data?.success || !data.data?.orderId) {
-        setPayError(handleApiError({ message: 'Could not create order' }, 'Could not create order. Try again.'))
+        showPayErrorToast(handleApiError({ message: 'Could not create order' }, 'Could not create order. Try again.'))
         setPayBusy(false)
         return
       }
@@ -187,17 +185,20 @@ export default function Checkout () {
             if (!verifyRes.data?.success) {
               payPhaseRef.current = 'settled'
               const vm = verifyRes.data?.message || 'Payment verification failed'
-              setPayError(vm)
+              showPayErrorToast(vm)
               return
             }
             payPhaseRef.current = 'settled'
             navigate('/dashboard', {
               replace: true,
-              state: { paymentSuccess: true }
+              state: {
+                paymentSuccess: true,
+                paymentToastNonce: `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
+              }
             })
           } catch (e) {
             payPhaseRef.current = 'settled'
-            setPayError(handleApiError(e, 'Payment verification failed. If you were charged, contact support.'))
+            showPayErrorToast(handleApiError(e, 'Payment verification failed. If you were charged, contact support.'))
           } finally {
             setPayBusy(false)
           }
@@ -209,7 +210,7 @@ export default function Checkout () {
               return
             }
             payPhaseRef.current = 'idle'
-            setPayError('Payment was not completed. Please try again.')
+            showPayErrorToast('Payment was not completed. Please try again.')
           }
         }
       }
@@ -219,24 +220,16 @@ export default function Checkout () {
       rzp.on('payment.failed', () => {
         payPhaseRef.current = 'settled'
         setPayBusy(false)
-        setPayError('Payment was not completed. Please try again.')
+        showPayErrorToast('Payment was not completed. Please try again.')
       })
       rzp.open()
     } catch (e) {
-      setPayError(handleApiError(e, 'Could not start payment. Try again.'))
+      showPayErrorToast(handleApiError(e, 'Could not start payment. Try again.'))
       setPayBusy(false)
     }
-  }, [appliedCoupon, canPay, courseId, finalRupees, navigate, payerEmail, payerName])
+  }, [appliedCoupon, canPay, courseId, finalRupees, navigate, payerEmail, payerName, showPayErrorToast])
 
   const busy = applyingCoupon || payBusy
-
-  const handleCopyPromo = async () => {
-    const ok = await copyToClipboard(CHECKOUT_DISPLAY_COUPON)
-    if (ok) {
-      setCopyLabel('Copied!')
-      window.setTimeout(() => setCopyLabel('Copy'), 2000)
-    }
-  }
 
   return (
     <div className="checkout-page">
@@ -324,31 +317,6 @@ export default function Checkout () {
                 </p>
               ) : null}
             </div>
-
-            <div className="checkout-promo-banner" aria-label="Featured coupon code">
-              <div className="checkout-promo-banner__main">
-                {appliedCoupon && !couponError ? (
-                  <span className="checkout-promo-banner__tick" aria-hidden>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                  </span>
-                ) : null}
-                <span className="checkout-promo-banner__code">{CHECKOUT_DISPLAY_COUPON}</span>
-                <button
-                  type="button"
-                  className="checkout-promo-banner__copy"
-                  onClick={handleCopyPromo}
-                >
-                  {copyLabel}
-                </button>
-              </div>
-              {appliedCoupon && !couponError ? (
-                <p className="checkout-promo-banner__off">
-                  Flat <strong>{formatInr(appliedCoupon.discountRupees)}</strong> off your order
-                </p>
-              ) : null}
-            </div>
           </div>
 
           <div className="checkout-card__panel checkout-card__panel--summary">
@@ -363,12 +331,6 @@ export default function Checkout () {
                 </div>
               </div>
             </div>
-
-            {payError && (
-              <p className="checkout-inline-error checkout-inline-error--pay" role="alert">
-                {payError}
-              </p>
-            )}
 
             <button
               type="button"
@@ -402,6 +364,7 @@ export default function Checkout () {
           </div>
         </div>
       </main>
+      <ToastContainer toasts={toasts} />
     </div>
   )
 }
