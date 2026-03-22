@@ -28,6 +28,11 @@ jest.mock('../../config/api', () => ({
       Promise.resolve({
         data: { success: true, data: { lastAccessed: null } }
       })
+    ),
+    getUnlockedCourses: jest.fn(() =>
+      Promise.resolve({
+        data: { success: true, data: { courseIds: [] } }
+      })
     )
   },
   progress: {

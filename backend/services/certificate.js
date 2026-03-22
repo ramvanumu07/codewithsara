@@ -99,7 +99,7 @@ export async function generateCertificatePDF({ fullName, completionDate }) {
     doc.fontSize(14)
       .font('Helvetica-Bold')
       .fillColor('#1a1a1a')
-      .text('The Full-Stack JavaScript & Modern Development Course', margin, 198, { width: 420, lineBreak: false })
+      .text('JavaScript Fundamentals to Mastery', margin, 198, { width: 420, lineBreak: false })
 
     // On [Date]
     const formattedDate = completionDate

@@ -111,6 +111,7 @@ import Cancellation from './pages/Cancellation'
 import Shipping from './pages/Shipping'
 import About from './pages/About'
 import Products from './pages/Products'
+import Checkout from './pages/Checkout'
 import Admin from './pages/Admin'
 
 // Import Styles (legal page styles are inlined in index.css so they always load on Vercel)
@@ -194,6 +195,7 @@ const AppRoutes = () => {
       
       {/* Protected Routes */}
       <Route path="/dashboard" element={<ProtectedRoute><RouteErrorBoundary><Dashboard /></RouteErrorBoundary></ProtectedRoute>} />
+      <Route path="/checkout" element={<ProtectedRoute><RouteErrorBoundary><Checkout /></RouteErrorBoundary></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
       <Route path="/learn/:topicId" element={<ProtectedRoute><RouteErrorBoundary><LearnRoute /></RouteErrorBoundary></ProtectedRoute>} />
       

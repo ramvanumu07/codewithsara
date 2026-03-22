@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { welcomeCourseOffers } from '../data/welcomeCourseOffers'
+import OfferPricePromo from '../components/OfferPricePromo'
 import './Welcome.css'
 
 const Welcome = () => {
@@ -134,11 +135,8 @@ const Welcome = () => {
                       <p className="welcome-pricing-card__subtitle">{course.subtitle}</p>
                     )}
                   </div>
-                  <div className="welcome-pricing-card__price-block" aria-label={`Price ${course.priceFormatted}`}>
-                    <span className="welcome-pricing-card__price">{course.priceFormatted}</span>
-                    {course.priceNote && (
-                      <span className="welcome-pricing-card__price-note">{course.priceNote}</span>
-                    )}
+                  <div className="welcome-pricing-card__price-block">
+                    <OfferPricePromo offer={course} variant="welcome" />
                   </div>
                   <ul className="welcome-pricing-card__highlights">
                     {course.highlights.map((line, idx) => (

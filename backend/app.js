@@ -25,6 +25,7 @@ import requestIdMiddleware from './middleware/requestId.js'
 import authRoutes from './routes/auth.js'
 import chatRoutes from './routes/chat.js'
 import learningRoutes from './routes/learning.js'
+import paymentsRoutes from './routes/payments.js'
 import debugSchemaRoutes from './routes/debug-schema.js'
 import debugChatRoutes from './routes/debug-chat.js'
 import { query, isDatabaseConfigured } from './services/db.js'
@@ -98,6 +99,7 @@ app.use(asMiddleware(performanceMonitorExport))
 app.use('/api/auth', asMiddleware(authRoutes))
 app.use('/api/chat', asMiddleware(chatRoutes))
 app.use('/api/learn', asMiddleware(learningRoutes))
+app.use('/api', asMiddleware(paymentsRoutes))
 app.use('/api/debug', asMiddleware(debugSchemaRoutes))
 app.use('/api/debug', asMiddleware(debugChatRoutes))
 

@@ -1,0 +1,117 @@
+/* Limited label + ₹1599 struck (neutral text, red line) + ₹999 + % off */
+
+.offer-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 0.35rem;
+}
+
+.offer-price__limited {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #c2410c;
+  line-height: 1.2;
+}
+
+.offer-price__amounts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  line-height: 1.15;
+}
+
+/* List price: gray text, red strikethrough line (line thicker than hairline) */
+.offer-price__compare-at {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration-line: line-through;
+  text-decoration-style: solid;
+  text-decoration-color: #ef4444;
+  text-decoration-thickness: 1.5px;
+  letter-spacing: -0.02em;
+}
+
+.offer-price__sale-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
+}
+
+.offer-price__current {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.03em;
+}
+
+.offer-price__pct-inline {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #059669;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.offer-price--welcome .offer-price__current {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+}
+
+.offer-price--dashboard .offer-price__limited {
+  font-size: 0.625rem;
+}
+
+.offer-price--dashboard .offer-price__current {
+  font-size: 1.85rem;
+}
+
+.offer-price--dashboard .offer-price__compare-at {
+  font-size: 1rem;
+}
+
+.offer-price--dashboard .offer-price__pct-inline {
+  font-size: 0.75rem;
+}
+
+.offer-price--modal {
+  margin-bottom: 0.25rem;
+}
+
+.offer-price--modal .offer-price__current {
+  font-size: 1.75rem;
+}
+
+.offer-price--modal .offer-price__compare-at {
+  font-size: 1.0625rem;
+}
+
+.offer-price--modal .offer-price__pct-inline {
+  font-size: 0.8125rem;
+}
+
+.offer-price--document {
+  margin: 0.5rem 0 1rem 0;
+  padding: 1rem 1.125rem;
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  max-width: 22rem;
+}
+
+.offer-price--document .offer-price__current {
+  font-size: 1.875rem;
+}
+
+.offer-price--document .offer-price__compare-at {
+  font-size: 1.125rem;
+}
+
+.offer-price--document .offer-price__pct-inline {
+  font-size: 0.875rem;
+}

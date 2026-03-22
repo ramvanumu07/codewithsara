@@ -1,15 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { learning, progress, handleApiError } from '../config/api'
 import { computeCourseProgressSummary, isTopicFullyComplete } from '../utils/courseProgress'
 import { getUnlockOfferForDashboardCourse } from '../data/welcomeCourseOffers'
+import { downloadAllCourseProjectsZip } from '../utils/downloadCourseProjectsZip'
+import OfferPricePromo from '../components/OfferPricePromo'
+import { useToast } from '../hooks/useToast'
+import { ToastContainer } from '../components/Toast'
+import './Auth.css'
 import './Dashboard.css'
 
 const Dashboard = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { user, logout } = useAuth()
+  const { toasts, success: showSuccessToast } = useToast()
 
   const [loading, setLoading] = useState(true)
   const [loggingOut, setLoggingOut] = useState(false)
@@ -21,9 +28,8 @@ const Dashboard = () => {
   const [lastAccessed, setLastAccessed] = useState(null)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
   const [unlockedCourseIds, setUnlockedCourseIds] = useState([])
-  const [unlockModalCourse, setUnlockModalCourse] = useState(null)
-  const [unlocking, setUnlocking] = useState(false)
   const [downloadingCert, setDownloadingCert] = useState(false)
+  const [downloadingProjectsZip, setDownloadingProjectsZip] = useState(false)
   const [showHowToRunSteps, setShowHowToRunSteps] = useState(false)
 
   const cancelledRef = useRef(false)
@@ -33,15 +39,23 @@ const Dashboard = () => {
     return () => { cancelledRef.current = true }
   }, [])
 
-  // Open unlock modal if URL has ?unlock=courseId (e.g. from Learn paywall)
+  // From Learn paywall (?unlock=courseId): send user to Razorpay checkout
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const unlockCourseId = params.get('unlock')
     if (unlockCourseId && courses.length > 0 && courses.some(c => c.id === unlockCourseId)) {
-      setUnlockModalCourse(courses.find(c => c.id === unlockCourseId))
-      window.history.replaceState({}, '', window.location.pathname)
+      navigate(`/checkout?course=${encodeURIComponent(unlockCourseId)}`, { replace: true })
     }
-  }, [courses])
+  }, [courses, navigate])
+
+  useEffect(() => {
+    if (!location.state?.paymentSuccess) return
+    showSuccessToast('Payment successful! You now have full access.')
+    loadDashboardData()
+    navigate('.', { replace: true, state: {} })
+    // loadDashboardData is stable enough for this one-shot; omit from deps to avoid extra runs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state?.paymentSuccess, navigate, showSuccessToast])
 
   // Handle ESC key to close mobile menu
   useEffect(() => {
@@ -497,10 +511,6 @@ const Dashboard = () => {
     ? getUnlockOfferForDashboardCourse(selectedCourseData.id)
     : null
 
-  const unlockModalOffer = unlockModalCourse
-    ? getUnlockOfferForDashboardCourse(unlockModalCourse.id)
-    : null
-
   return (
     <div className={`dashboard ${showMobileMenu ? 'mobile-menu-open' : ''}`}>
           {/* Mobile Menu Toggle */}
@@ -711,18 +721,14 @@ const Dashboard = () => {
                   <aside className="dashboard-unlock-card__checkout" aria-label="Purchase options">
                     <div className="dashboard-unlock-card__price-block">
                       <span className="dashboard-unlock-card__price-label">One-time payment</span>
-                      <span className="dashboard-unlock-card__price">{unlockOffer.priceFormatted}</span>
-                      {unlockOffer.priceNote && (
-                        <span className="dashboard-unlock-card__price-note">{unlockOffer.priceNote}</span>
-                      )}
+                      <OfferPricePromo offer={unlockOffer} variant="dashboard" />
                     </div>
-                    <button
-                      type="button"
+                    <Link
+                      to={`/checkout?course=${encodeURIComponent(selectedCourseData.id)}`}
                       className="dashboard-unlock-card__cta"
-                      onClick={() => setUnlockModalCourse(selectedCourseData)}
                     >
-                      Unlock now — {unlockOffer.priceFormatted}
-                    </button>
+                      Upgrade to Full Access
+                    </Link>
                     <Link
                       to={unlockOffer.detailHref || '/products'}
                       className="dashboard-unlock-card__secondary"
@@ -736,14 +742,13 @@ const Dashboard = () => {
             {selectedCourseLocked && !unlockOffer && selectedCourseData && (
               <div className="dashboard-paywall-fallback" role="status">
                 <p>Pricing for this course is not configured. You can still continue to payment or contact support.</p>
-                <button
-                  type="button"
+                <Link
+                  to={`/checkout?course=${encodeURIComponent(selectedCourseData.id)}`}
                   className="dashboard-unlock-card__cta"
                   style={{ maxWidth: 280 }}
-                  onClick={() => setUnlockModalCourse(selectedCourseData)}
                 >
                   Continue to payment
-                </button>
+                </Link>
               </div>
             )}
 
@@ -773,36 +778,79 @@ const Dashboard = () => {
                 />
               </div>
               {progressSummary.certificate_eligible && (
-                <div className="certificate-cta">
-                  <div className="certificate-cta-inner">
-                    <span className="certificate-icon" aria-hidden>
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <div className="completion-celebration">
+                  <div className="completion-celebration__header">
+                    <span className="completion-celebration__badge" aria-hidden>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M12 15l-4 4h12l-4-4" />
                         <path d="M12 3v12" />
                         <path d="M8 7l4-4 4 4" />
                       </svg>
                     </span>
-                    <div className="certificate-text">
-                      <strong>Congratulations! You&apos;ve completed all {currentProgressSummary.total_topics} topics!</strong>
-                      <p>Download your completion certificate anytime.</p>
+                    <div>
+                      <h4 className="completion-celebration__title">You finished the course</h4>
+                      <p className="completion-celebration__subtitle">
+                        All {currentProgressSummary.total_topics} topics complete — download your certificate and the Portfolio Kit.
+                      </p>
                     </div>
-                    <button
-                      type="button"
-                      className="certificate-download-btn"
-                      onClick={async () => {
-                        setDownloadingCert(true)
-                        try {
-                          await learning.downloadCertificate()
-                        } catch (err) {
-                          alert(err?.message || 'Failed to download certificate')
-                        } finally {
-                          setDownloadingCert(false)
-                        }
-                      }}
-                      disabled={downloadingCert}
-                    >
-                      {downloadingCert ? 'Downloading...' : 'Download Certificate'}
-                    </button>
+                  </div>
+
+                  <div className="completion-celebration__grid">
+                    <div className="completion-card completion-card--certificate">
+                      <div className="completion-card__icon completion-card__icon--cert" aria-hidden>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M12 15l-4 4h12l-4-4" />
+                          <path d="M12 3v12" />
+                          <path d="M8 7l4-4 4 4" />
+                        </svg>
+                      </div>
+                      <h5 className="completion-card__heading">Completion certificate</h5>
+                      <button
+                        type="button"
+                        className="completion-card__btn completion-card__btn--primary"
+                        onClick={async () => {
+                          setDownloadingCert(true)
+                          try {
+                            await learning.downloadCertificate()
+                          } catch (err) {
+                            alert(err?.message || 'Failed to download certificate')
+                          } finally {
+                            setDownloadingCert(false)
+                          }
+                        }}
+                        disabled={downloadingCert}
+                      >
+                        {downloadingCert ? 'Preparing…' : 'Download certificate'}
+                      </button>
+                    </div>
+
+                    <div className="completion-card completion-card--projects">
+                      <div className="completion-card__icon completion-card__icon--code" aria-hidden>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="16 18 22 12 16 6" />
+                          <polyline points="8 6 2 12 8 18" />
+                        </svg>
+                      </div>
+                      <h5 className="completion-card__heading">Portfolio Kit</h5>
+                      <button
+                        type="button"
+                        className="completion-card__btn completion-card__btn--primary"
+                        onClick={async () => {
+                          setDownloadingProjectsZip(true)
+                          try {
+                            await downloadAllCourseProjectsZip()
+                          } catch (err) {
+                            alert(err?.message || 'Failed to build project download. Try again or contact support.')
+                          } finally {
+                            setDownloadingProjectsZip(false)
+                          }
+                        }}
+                        disabled={downloadingProjectsZip}
+                        aria-busy={downloadingProjectsZip}
+                      >
+                        {downloadingProjectsZip ? 'Preparing download…' : 'Download Portfolio Kit'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -919,79 +967,7 @@ const Dashboard = () => {
 
           </div>
 
-          {/* Unlock course modal (payment flow) */}
-          {unlockModalCourse && (
-            <div
-              className="unlock-modal-overlay"
-              style={{
-                position: 'fixed',
-                inset: 0,
-                background: 'rgba(0,0,0,0.5)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 1000,
-                padding: 16
-              }}
-              onClick={() => !unlocking && setUnlockModalCourse(null)}
-            >
-              <div
-                className="unlock-modal dashboard-unlock-modal"
-                style={{
-                  background: 'white',
-                  borderRadius: 16,
-                  padding: 24,
-                  maxWidth: 420,
-                  width: '100%',
-                  boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)'
-                }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <p className="dashboard-unlock-modal__eyebrow">Complete purchase</p>
-                <h3 className="dashboard-unlock-modal__title">
-                  {unlockModalOffer?.title || unlockModalCourse.title}
-                </h3>
-                {unlockModalOffer?.priceFormatted && (
-                  <p className="dashboard-unlock-modal__amount">
-                    {unlockModalOffer.priceFormatted}
-                  </p>
-                )}
-                <p className="dashboard-unlock-modal__copy">
-                  {unlockModalOffer?.priceNote ? `${unlockModalOffer.priceNote}. ` : ''}
-                  Includes every topic and assignment in this course.
-                </p>
-                <div className="dashboard-unlock-modal__actions">
-                  <button
-                    type="button"
-                    disabled={unlocking}
-                    className="dashboard-unlock-modal__btn-cancel"
-                    onClick={() => setUnlockModalCourse(null)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    disabled={unlocking}
-                    className="dashboard-unlock-modal__btn-pay"
-                    onClick={async () => {
-                      setUnlocking(true)
-                      try {
-                        await learning.unlockCourse(unlockModalCourse.id)
-                        setUnlockedCourseIds(prev => (prev.includes(unlockModalCourse.id) ? prev : [...prev, unlockModalCourse.id]))
-                        setUnlockModalCourse(null)
-                      } catch (e) {
-                        console.error('Unlock failed:', e)
-                      } finally {
-                        setUnlocking(false)
-                      }
-                    }}
-                  >
-                    {unlocking ? 'Processing…' : (unlockModalOffer?.priceFormatted ? `Pay ${unlockModalOffer.priceFormatted}` : 'Pay now')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          <ToastContainer toasts={toasts} />
 
     </div>
   )

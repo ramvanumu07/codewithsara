@@ -401,29 +401,16 @@
 }
 
 .dashboard-unlock-card__price-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #9ca3af;
-}
-
-.dashboard-unlock-card__price {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
-
-.dashboard-unlock-card__price-note {
   font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: #6b7280;
-  line-height: 1.4;
 }
 
 .dashboard-unlock-card__cta {
   width: 100%;
+  box-sizing: border-box;
   padding: 14px 20px;
   background: #10a37f;
   color: #ffffff;
@@ -435,6 +422,11 @@
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(16, 163, 127, 0.35);
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .dashboard-unlock-card__cta:hover {
@@ -483,12 +475,8 @@
   line-height: 1.3;
 }
 
-.dashboard-unlock-modal__amount {
-  margin: 0 0 8px 0;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #111827;
-  letter-spacing: -0.02em;
+.dashboard-unlock-modal__pricing {
+  margin: 0 0 12px 0;
 }
 
 .dashboard-unlock-modal__copy {
@@ -605,64 +593,131 @@
   transition: width 0.3s ease;
 }
 
-/* Certificate CTA - shown when 45 topics completed */
-.certificate-cta {
-  margin-top: 20px;
-  padding: 16px;
-  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
-  border: 1px solid #10a37f;
-  border-radius: 10px;
+/* Course completion: certificate + capstone ZIP (certificate_eligible) */
+.completion-celebration {
+  margin-top: 24px;
+  padding: 22px 22px 24px;
+  background: linear-gradient(145deg, #f0fdf4 0%, #ecfdf5 42%, #ffffff 100%);
+  border: 1px solid rgba(16, 163, 127, 0.35);
+  border-radius: 14px;
+  box-shadow: 0 8px 30px rgba(16, 163, 127, 0.08);
 }
 
-.certificate-cta-inner {
+.completion-celebration__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(16, 163, 127, 0.2);
+}
+
+.completion-celebration__badge {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #10a37f;
+  color: #ffffff;
 }
 
-.certificate-icon {
-  flex-shrink: 0;
+.completion-celebration__title {
+  margin: 0 0 6px 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #065f46;
+  letter-spacing: -0.02em;
+  font-family: var(--sara-font, inherit);
+}
+
+.completion-celebration__subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #047857;
+  max-width: 42rem;
+}
+
+.completion-celebration__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+.completion-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.completion-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+}
+
+.completion-card__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.completion-card__icon--cert {
+  background: rgba(16, 163, 127, 0.12);
   color: #10a37f;
 }
 
-.certificate-text {
-  flex: 1;
-  min-width: 180px;
+.completion-card__icon--code {
+  background: rgba(13, 148, 136, 0.12);
+  color: #0f766e;
 }
 
-.certificate-text strong {
-  display: block;
-  color: #065f46;
-  font-size: 1rem;
-  margin-bottom: 4px;
+.completion-card__heading {
+  margin: 0 0 8px 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #111827;
+  font-family: var(--sara-font, inherit);
 }
 
-.certificate-text p {
-  margin: 0;
-  font-size: 0.875rem;
-  color: #047857;
-}
-
-.certificate-download-btn {
-  flex-shrink: 0;
-  padding: 10px 20px;
-  background: #10a37f;
-  color: white;
+.completion-card__btn {
+  width: 100%;
+  padding: 11px 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 9px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  font-family: inherit;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s ease, transform 0.12s ease, opacity 0.2s;
+  margin-top: auto;
 }
 
-.certificate-download-btn:hover:not(:disabled) {
+.completion-card__btn--primary {
+  background: #10a37f;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 163, 127, 0.3);
+}
+
+.completion-card__btn--primary:hover:not(:disabled) {
   background: #0d8a6c;
 }
 
-.certificate-download-btn:disabled {
-  opacity: 0.8;
+.completion-card__btn:disabled {
+  opacity: 0.75;
   cursor: not-allowed;
 }
 
@@ -985,13 +1040,17 @@ button.session-completed-title:hover {
     padding: 18px;
   }
 
-  .certificate-cta-inner {
-    flex-direction: column;
-    align-items: stretch;
+  .completion-celebration__grid {
+    grid-template-columns: 1fr;
   }
 
-  .certificate-download-btn {
-    width: 100%;
+  .completion-celebration {
+    padding: 18px 16px 20px;
+  }
+
+  .completion-celebration__header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .dashboard-unlock-modal__actions {

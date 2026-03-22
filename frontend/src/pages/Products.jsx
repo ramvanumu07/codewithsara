@@ -4,6 +4,8 @@
 
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import OfferPricePromo from '../components/OfferPricePromo'
+import { welcomeCourseOffers } from '../data/welcomeCourseOffers'
 
 const Products = () => {
   useEffect(() => {
@@ -37,7 +39,10 @@ const Products = () => {
           <section className="terms-section">
             <h2>JavaScript with Sara</h2>
             <p><strong>Description:</strong> Full access to the Sara learning platform for our JavaScript track. Includes AI-powered tutoring sessions (chat with Sara to learn concepts), an interactive code playground to run and try JavaScript, and coding assignments with run-and-test and AI feedback. Progress is saved so you can continue from where you left off. Topics are structured so you learn step by step.</p>
-            <p><strong>Price (INR):</strong> ₹499</p>
+            <p style={{ marginBottom: 4 }}><strong>Price (INR)</strong></p>
+            {welcomeCourseOffers[0] && (
+              <OfferPricePromo offer={welcomeCourseOffers[0]} variant="document" />
+            )}
           </section>
 
           <section className="terms-section">

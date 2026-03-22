@@ -3,6 +3,12 @@
  */
 
 export default {
+  // Ignore copied course projects + build output (package.json names collide with Haste map)
+  modulePathIgnorePatterns: [
+    '<rootDir>/public/course-projects',
+    '<rootDir>/dist',
+  ],
+
   // Test environment
   testEnvironment: 'jsdom',
   

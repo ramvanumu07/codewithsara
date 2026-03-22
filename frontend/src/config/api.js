@@ -207,6 +207,18 @@ export const learning = {
   }
 }
 
+/** Razorpay checkout: coupon, order creation, post-payment verify + unlock */
+export const payments = {
+  applyCoupon: (code, originalAmount) =>
+    api.post('/apply-coupon', { code, originalAmount }),
+
+  createOrder: (payload) =>
+    api.post('/create-order', payload),
+
+  verifyPayment: (payload) =>
+    api.post('/verify-payment', payload)
+}
+
 // Progress API
 export const progress = {
   getAll: () => api.get('/learn/progress', { params: { _t: Date.now() } })

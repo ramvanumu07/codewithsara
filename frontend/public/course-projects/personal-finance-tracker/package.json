@@ -1,0 +1,11 @@
+{
+  "name": "personal-finance-tracker",
+  "version": "1.0.0",
+  "description": "Interactive CLI personal finance tracker built with pure JavaScript",
+  "main": "index.js",
+  "type": "commonjs",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  }
+}
