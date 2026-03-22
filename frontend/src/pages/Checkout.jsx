@@ -231,7 +231,7 @@ export default function Checkout () {
           <div className="checkout-card__panel checkout-card__panel--product">
             <h1 className="checkout-card__heading">Checkout</h1>
             <p className="checkout-card__course-label">
-              {offer?.title || 'JavaScript with Sara'}
+              {(offer?.title || 'JavaScript with Sara').replace(/\s*—\s*Full Access$/i, '')} — Full Access
             </p>
           </div>
 

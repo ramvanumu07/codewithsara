@@ -307,19 +307,19 @@
   font-size: 0.9375rem;
   font-weight: 600;
   color: #374151;
-  padding-top: 0.15rem;
 }
 
 .checkout-summary__amount-block {
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.2rem;
-  text-align: right;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 0.35rem 0.6rem;
 }
 
 .checkout-summary__list-price {
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
   font-weight: 600;
   color: #64748b;
   text-decoration-line: line-through;
@@ -327,10 +327,11 @@
   text-decoration-color: #ef4444;
   text-decoration-thickness: 1.5px;
   letter-spacing: -0.02em;
+  line-height: 1;
 }
 
 .checkout-summary__amount {
-  font-size: clamp(1.5rem, 4vw, 1.85rem);
+  font-size: clamp(1.35rem, 3.5vw, 1.65rem);
   font-weight: 800;
   color: #111827;
   letter-spacing: -0.03em;
