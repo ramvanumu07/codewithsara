@@ -4,6 +4,8 @@
 
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import LegalPageFooter from '../components/LegalPageFooter'
+import { SUPPORT_EMAIL } from '../constants/support'
 /* Legal page styles are in index.css so they load on Vercel */
 
 const Privacy = () => {
@@ -51,7 +53,7 @@ const Privacy = () => {
       <main className="privacy-main" style={{ flex: 1, padding: '1rem 0' }}>
         <div className="privacy-content" style={{ maxWidth: 800, margin: '0 auto', padding: '1.25rem 2rem 3rem 2rem', background: '#ffffff' }}>
           <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#10a37f' }}>Privacy Policy</h1>
-            <p className="last-updated">Last updated: February 2026</p>
+            <p className="last-updated">Last updated: March 2026</p>
 
           <section className="privacy-section">
             <h2>1. Introduction</h2>
@@ -72,10 +74,11 @@ const Privacy = () => {
             <h3>Personal Information</h3>
             <p>We collect information you provide directly to us, including:</p>
             <ul>
-              <li><strong>Account Information:</strong> Username, email address, password, and profile details</li>
+              <li><strong>Account Information:</strong> Name, username, email address, password (stored hashed), and profile details</li>
               <li><strong>Learning Data:</strong> Your progress, completed assignments, code submissions, and learning preferences</li>
               <li><strong>Communication Data:</strong> Messages and interactions with our AI tutoring system</li>
               <li><strong>Support Data:</strong> Information you provide when contacting customer support</li>
+              <li><strong>Payment-related data:</strong> When you pay, <strong>Razorpay</strong> processes the transaction. We receive payment status and identifiers (e.g. order ID) so we can unlock your access. <strong>Sara does not store your full card number, CVV, or UPI PIN.</strong> Razorpay&apos;s privacy policy applies to card/bank data you enter on their checkout.</li>
             </ul>
 
             <h3>Automatically Collected Information</h3>
@@ -136,13 +139,22 @@ const Privacy = () => {
           <section className="privacy-section">
             <h2>4. Information Sharing and Disclosure</h2>
             <p>We do not sell, trade, or rent your personal information. We may share information in the following circumstances:</p>
+
+            <h3>Payment processing (Razorpay)</h3>
+            <p>
+              We use <strong>Razorpay</strong> to accept payments. When you pay, you may provide card, UPI, or other payment details directly to Razorpay. We share the minimum information needed to create and verify your order (such as your account email and amount). See Razorpay&apos;s documentation for how they handle payment data.
+            </p>
+
+            <h3>AI mentor (Groq)</h3>
+            <p>
+              Your prompts, code snippets, and related session text may be sent to <strong>Groq</strong> (or similar providers we configure) to generate AI responses. Do not paste secrets, passwords, or highly sensitive personal data into the chat.
+            </p>
             
-            <h3>Service Providers</h3>
+            <h3>Other service providers</h3>
             <p>
               We may share information with trusted third-party service providers who assist us in 
-              operating our platform, such as cloud hosting, analytics, and customer support services. 
-              These providers are bound by confidentiality agreements and may only use your information 
-              to provide services to us.
+              operating our platform, such as cloud hosting, analytics, and email. 
+              These providers may only use your information to provide services to us.
             </p>
 
             <h3>Legal Requirements</h3>
@@ -204,8 +216,8 @@ const Privacy = () => {
             </ul>
 
             <p>
-              To exercise these rights, please contact us at{' '}
-              <a href="mailto:codewithsara@proton.me">codewithsara@proton.me</a>.
+              To exercise these rights (including <strong>data deletion requests</strong>), email{' '}
+              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.
               We will respond within a reasonable timeframe.
             </p>
           </section>
@@ -226,8 +238,11 @@ const Privacy = () => {
           </section>
 
           <section className="privacy-section">
-            <h2>8. Cookies and Tracking Technologies</h2>
+            <h2>8. Cookies and tracking technologies</h2>
             <p>We use cookies and similar technologies to enhance your experience:</p>
+            
+            <h3>Session and authentication</h3>
+            <p>We use cookies (or similar storage) to keep you <strong>logged in</strong> and maintain <strong>session security</strong> (e.g. auth token storage where applicable). These are necessary for the product to work.</p>
             
             <h3>Essential Cookies</h3>
             <p>Required for basic platform functionality, authentication, and security.</p>
@@ -289,9 +304,9 @@ const Privacy = () => {
             </p>
             <div className="contact-info">
               <p><strong>Legal name:</strong> Vanumu Lakshmi Sai Ram</p>
-              <p><strong>Contact address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
-              <p><strong>Email:</strong> <a href="mailto:codewithsara@proton.me">codewithsara@proton.me</a></p>
-              <p><strong>Subject Line:</strong> Privacy Policy Inquiry</p>
+              <p><strong>Contact address:</strong> 1-79, Valasapakala, Kakinada, Andhra Pradesh, India</p>
+              <p><strong>Email:</strong> <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
+              <p><strong>Subject line:</strong> Privacy inquiry</p>
             </div>
             <p>
               We are committed to resolving any privacy concerns you may have and will respond to 
@@ -301,26 +316,7 @@ const Privacy = () => {
         </div>
       </main>
 
-      <footer className="privacy-footer" style={{ background: '#f9f9f9', borderTop: '1px solid #e5e5e5', padding: '2rem 0', marginTop: 'auto' }}>
-        <div className="footer-content" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <p>&copy; 2026 Sara Learning Platform. All rights reserved.</p>
-          <div className="footer-links" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <Link to="/about" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>About</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/products" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Products</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/terms" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Terms</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/return-refund" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Return &amp; Refund</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/cancellation" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Cancellation</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/shipping" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Shipping</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <a href="mailto:codewithsara@proton.me" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Contact</a>
-          </div>
-        </div>
-      </footer>
+      <LegalPageFooter />
     </div>
   )
 }

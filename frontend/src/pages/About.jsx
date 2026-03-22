@@ -1,9 +1,11 @@
 /**
- * About Us Page - Sara Learning Platform
+ * About Us — Sara Learning Platform
  */
 
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import LegalPageFooter from '../components/LegalPageFooter'
+import { SUPPORT_EMAIL } from '../constants/support'
 
 const About = () => {
   useEffect(() => {
@@ -32,45 +34,41 @@ const About = () => {
       <main className="terms-main" style={{ flex: 1, padding: '1rem 0' }}>
         <div className="terms-content" style={{ maxWidth: 800, margin: '0 auto', padding: '1.25rem 2rem 3rem 2rem', background: '#ffffff' }}>
           <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#10a37f' }}>About Us</h1>
+          <p className="last-updated">Last updated: March 2026</p>
 
           <section className="terms-section">
-            <h2>What is Sara</h2>
+            <h2>Who built Sara</h2>
             <p>
-              Sara is your personal AI learning assistant. It is an interactive learning platform that helps you master coding through a simple three-step flow for each topic: <strong>Session</strong> (chat with AI to learn concepts), <strong>Play</strong> (try code in the built-in playground), and <strong>Assignment</strong> (complete coding tasks with run-and-test and AI feedback).
-            </p>
-            <p>
-              Sara uses conversational AI to explain concepts, answer questions, and give feedback on your code. You get real-time code execution, progress tracking, and a structured path through topics. The platform is built to suit learners who want to learn by doing, with guidance from AI.
+              Sara is built by a <strong>solo founder</strong> who cares about how hard it can feel to learn JavaScript on your own—too many tutorials, not enough feedback, and nobody to ask when you&apos;re stuck. Sara exists to give you a structured path and a patient, interactive companion while you actually write code.
             </p>
           </section>
 
           <section className="terms-section">
-            <h2>What We Offer</h2>
+            <h2>What problem we solve</h2>
             <p>
-              AI-powered learning sessions, hands-on coding exercises, a code playground, assignments with automated tests, and progress tracking. For pricing and course details, see our <Link to="/products" style={{ color: '#10a37f', textDecoration: 'underline' }}>Products &amp; Services</Link> page.
+              JavaScript is tough to learn in isolation. Sara combines <strong>guided sessions</strong>, a <strong>live playground</strong>, <strong>assignments</strong> with checks, and <strong>AI explanations</strong> so you learn by doing—not only by watching. The goal is simple: make practice and feedback feel natural, like having a mentor on call.
+            </p>
+          </section>
+
+          <section className="terms-section">
+            <h2>Mission</h2>
+            <p>
+              We want <strong>quality JavaScript education</strong> to be more accessible—especially for students and self-learners who are serious about building real skill. Sara is our way of lowering the barrier between &quot;I read about it&quot; and &quot;I can write it.&quot;
             </p>
           </section>
 
           <section className="terms-section">
             <h2>Contact</h2>
-            <p><strong>Email:</strong> <a href="mailto:codewithsara@proton.me">codewithsara@proton.me</a></p>
-            <p><strong>Legal name:</strong> Vanumu Lakshmi Sai Ram</p>
-            <p><strong>Contact address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
+            <p>
+              Questions or partnerships:{' '}
+              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+            </p>
+            <p>For product details and pricing, see <Link to="/products" style={{ color: '#10a37f' }}>Products &amp; Services</Link>.</p>
           </section>
         </div>
       </main>
 
-      <footer className="terms-footer" style={{ background: '#f9f9f9', borderTop: '1px solid #e5e5e5', padding: '2rem 0', marginTop: 'auto' }}>
-        <div className="footer-content" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <p>&copy; 2026 Sara. All rights reserved.</p>
-          <div className="footer-links" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Link to="/terms" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Terms</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/privacy" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Privacy</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <a href="mailto:codewithsara@proton.me" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Contact</a>
-          </div>
-        </div>
-      </footer>
+      <LegalPageFooter />
     </div>
   )
 }

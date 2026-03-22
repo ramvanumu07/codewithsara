@@ -181,13 +181,9 @@ const Welcome = () => {
             <span className="footer-separator">•</span>
             <Link to="/privacy" className="footer-link">Privacy Policy</Link>
             <span className="footer-separator">•</span>
-            <Link to="/return-refund" className="footer-link">Return &amp; Refund</Link>
+            <Link to="/refund-cancellation" className="footer-link">Refund &amp; Cancellation</Link>
             <span className="footer-separator">•</span>
-            <Link to="/cancellation" className="footer-link">Cancellation</Link>
-            <span className="footer-separator">•</span>
-            <Link to="/shipping" className="footer-link">Shipping &amp; Delivery</Link>
-            <span className="footer-separator">•</span>
-            <a href="mailto:codewithsara@proton.me" className="footer-link">Contact</a>
+            <Link to="/contact" className="footer-link">Contact</Link>
           </div>
         </div>
       </footer>

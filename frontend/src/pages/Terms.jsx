@@ -4,6 +4,8 @@
 
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import LegalPageFooter from '../components/LegalPageFooter'
+import { SUPPORT_EMAIL } from '../constants/support'
 /* Legal page styles are in index.css so they load on Vercel */
 
 const Terms = () => {
@@ -51,7 +53,7 @@ const Terms = () => {
       <main className="terms-main" style={{ flex: 1, padding: '1rem 0' }}>
         <div className="terms-content" style={{ maxWidth: 800, margin: '0 auto', padding: '1.25rem 2rem 3rem 2rem', background: '#ffffff' }}>
           <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#10a37f' }}>Terms &amp; Conditions</h1>
-          <p className="last-updated">Last updated: February 2026</p>
+          <p className="last-updated">Last updated: March 2026</p>
 
           <section className="terms-section" style={{ marginBottom: '2.5rem' }}>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 600, marginBottom: '1rem', color: '#1a1a1a' }}>Operator</h2>
@@ -180,58 +182,59 @@ const Terms = () => {
               without prior notice, for conduct that we believe violates these Terms or is 
               harmful to other users, us, or third parties.
             </p>
+            <p>
+              <strong>Misuse</strong> (including account sharing, abuse of the AI or playground, attempts to break or scrape the service, or fraud) may result in <strong>immediate termination</strong> of access without refund.
+            </p>
           </section>
 
           <section className="terms-section">
-            <h2>11. Changes to Terms</h2>
+            <h2>11. Changes to Terms and content</h2>
             <p>
               We reserve the right to modify these terms at any time. We will notify users of 
               significant changes via email or through the platform. Your continued use of Sara 
               after changes constitutes acceptance of the new terms.
             </p>
-          </section>
-
-          <section className="terms-section">
-            <h2>12. Governing Law</h2>
             <p>
-              As a startup project, these Terms are provided in good faith to establish clear 
-              expectations between users and our development team. Any disputes will be handled 
-              fairly and in accordance with applicable local laws where our team operates.
+              <strong>Course and platform content</strong> may be updated, improved, or reorganized over time. We reserve the right to change lessons, features, or structure where reasonably necessary to keep the product accurate and maintainable.
             </p>
           </section>
 
           <section className="terms-section">
-            <h2>13. Contact Information</h2>
+            <h2>12. Purchases, digital access, and account use</h2>
+            <p>
+              When you pay for <strong>JavaScript with Sara</strong> (or other listed digital products), you receive <strong>digital access</strong> to online learning materials and features for <strong>your account only</strong>. You are <strong>not</strong> purchasing physical goods or a separate piece of installable software.
+            </p>
+            <p>
+              <strong>One-time payment; lifetime access.</strong> Unless we state otherwise at checkout, access is granted as a one-time purchase for the lifetime of the service as defined below—not a subscription, unless explicitly offered as such.
+            </p>
+            <p>
+              <strong>Accounts are non-transferable.</strong> You may not sell, lend, share, or otherwise allow others to use your paid access. One purchase applies to one account.
+            </p>
+            <p>
+              <strong>&quot;Lifetime&quot; access</strong> means access for the <strong>lifetime of the Sara Learning Platform</strong> as operated by us. If the platform is discontinued, we will use reasonable efforts to notify registered users at least <strong>30 days in advance</strong> where practicable. This does not guarantee any minimum period of operation beyond what applicable law may require.
+            </p>
+          </section>
+
+          <section className="terms-section">
+            <h2>13. Governing law</h2>
+            <p>
+              These Terms are governed by the <strong>laws of India</strong>. Courts located in India shall have jurisdiction over disputes arising from or relating to these Terms or your use of Sara, subject to any mandatory consumer protections that apply where you live.
+            </p>
+          </section>
+
+          <section className="terms-section">
+            <h2>14. Contact information</h2>
             <p>
               If you have any questions about these Terms &amp; Conditions, please contact us at:
             </p>
             <p><strong>Legal name:</strong> Vanumu Lakshmi Sai Ram</p>
-            <p><strong>Contact address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
-            <p><strong>Email:</strong> <a href="mailto:codewithsara@proton.me">codewithsara@proton.me</a></p>
+            <p><strong>Contact address:</strong> 1-79, Valasapakala, Kakinada, Andhra Pradesh, India</p>
+            <p><strong>Email:</strong> <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a></p>
           </section>
         </div>
       </main>
 
-      <footer className="terms-footer" style={{ background: '#f9f9f9', borderTop: '1px solid #e5e5e5', padding: '2rem 0', marginTop: 'auto' }}>
-        <div className="footer-content" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <p>&copy; 2026 Sara Learning Platform. All rights reserved.</p>
-          <div className="footer-links" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <Link to="/about" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>About</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/products" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Products</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/privacy" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Privacy</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/return-refund" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Return &amp; Refund</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/cancellation" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Cancellation</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/shipping" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Shipping</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <a href="mailto:codewithsara@proton.me" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Contact</a>
-          </div>
-        </div>
-      </footer>
+      <LegalPageFooter />
     </div>
   )
 }

@@ -1,11 +1,13 @@
 /**
- * Products & Services Page - Sara Learning Platform
+ * Products & Services — Razorpay / compliance clarity
  */
 
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import OfferPricePromo from '../components/OfferPricePromo'
+import LegalPageFooter from '../components/LegalPageFooter'
 import { welcomeCourseOffers } from '../data/welcomeCourseOffers'
+import { SUPPORT_EMAIL } from '../constants/support'
 
 const Products = () => {
   useEffect(() => {
@@ -34,38 +36,68 @@ const Products = () => {
       <main className="terms-main" style={{ flex: 1, padding: '1rem 0' }}>
         <div className="terms-content" style={{ maxWidth: 800, margin: '0 auto', padding: '1.25rem 2rem 3rem 2rem', background: '#ffffff' }}>
           <h1 style={{ fontSize: '2.5rem', fontWeight: 700, marginBottom: '0.5rem', color: '#10a37f' }}>Products &amp; Services</h1>
-          <p className="last-updated">All prices are in Indian Rupees (INR). Last updated: February 2026.</p>
+          <p className="last-updated">All prices are in Indian Rupees (INR). Last updated: March 2026.</p>
 
           <section className="terms-section">
-            <h2>JavaScript with Sara</h2>
-            <p><strong>Description:</strong> Full access to the Sara learning platform for our JavaScript track. Includes AI-powered tutoring sessions (chat with Sara to learn concepts), an interactive code playground to run and try JavaScript, and coding assignments with run-and-test and AI feedback. Progress is saved so you can continue from where you left off. Topics are structured so you learn step by step.</p>
-            <p style={{ marginBottom: 4 }}><strong>Price (INR)</strong></p>
+            <h2>Product name</h2>
+            <p><strong>JavaScript with Sara</strong> — full digital access to our JavaScript learning track on the Sara platform.</p>
+          </section>
+
+          <section className="terms-section">
+            <h2>What&apos;s included</h2>
+            <ul>
+              <li><strong>AI mentor (Sara)</strong> — conversational guidance and explanations during learning sessions</li>
+              <li><strong>Playground</strong> — run and experiment with JavaScript in the browser</li>
+              <li><strong>Assignments</strong> — practice tasks with automated checks and feedback</li>
+              <li><strong>Progress &amp; structure</strong> — organized topics so you learn step by step</li>
+              <li><strong>Certificate</strong> — eligibility for a course completion certificate when you meet the platform criteria</li>
+              <li><strong>Portfolio projects</strong> — downloadable project starters / bundles where offered in the product</li>
+            </ul>
+            <p>You are purchasing <strong>access to online educational content and features</strong>, not a downloadable &quot;software license&quot; in the traditional desktop sense.</p>
+          </section>
+
+          <section className="terms-section">
+            <h2>Pricing</h2>
+            <p>
+              <strong>List pricing starts at ₹1,599</strong> (Indian Rupees). Promotional prices, discounts, and <strong>coupon codes</strong> may reduce the amount you pay at checkout. The price shown at checkout before you pay is the price that applies to your order.
+            </p>
+            <p style={{ marginBottom: 4 }}><strong>Current offer (INR)</strong></p>
             {welcomeCourseOffers[0] && (
               <OfferPricePromo offer={welcomeCourseOffers[0]} variant="document" />
             )}
           </section>
 
           <section className="terms-section">
+            <h2>Access term</h2>
+            <p><strong>Lifetime access</strong> for the account that completes the purchase, as defined in our <Link to="/terms">Terms &amp; Conditions</Link> (lifetime of the Sara Learning Platform).</p>
+          </section>
+
+          <section className="terms-section">
+            <h2>Delivery</h2>
+            <p>
+              <strong>Instant — digital only.</strong> After successful payment, access is granted to your account immediately. <strong>No physical goods</strong> are sold or shipped. There is no delivery address for the core product.
+            </p>
+          </section>
+
+          <section className="terms-section">
+            <h2>Refunds &amp; cancellation</h2>
+            <p>
+              See our <Link to="/refund-cancellation">Refund &amp; Cancellation Policy</Link>. Digital access is generally non-refundable once granted; we describe limited exceptions there.
+            </p>
+          </section>
+
+          <section className="terms-section">
             <h2>Contact</h2>
-            <p>For pricing or custom requirements: <a href="mailto:codewithsara@proton.me">codewithsara@proton.me</a></p>
+            <p>
+              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+            </p>
             <p><strong>Legal name:</strong> Vanumu Lakshmi Sai Ram</p>
-            <p><strong>Contact address:</strong> 1-79, VALASAPAKALA, KAKINADA, ANDHRA PRADESH, INDIA</p>
+            <p><strong>Address:</strong> 1-79, Valasapakala, Kakinada, Andhra Pradesh, India</p>
           </section>
         </div>
       </main>
 
-      <footer className="terms-footer" style={{ background: '#f9f9f9', borderTop: '1px solid #e5e5e5', padding: '2rem 0', marginTop: 'auto' }}>
-        <div className="footer-content" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <p>&copy; 2026 Sara. All rights reserved.</p>
-          <div className="footer-links" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Link to="/terms" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Terms</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <Link to="/privacy" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Privacy</Link>
-            <span style={{ color: '#8e8e8e' }}>•</span>
-            <a href="mailto:codewithsara@proton.me" className="footer-link" style={{ color: '#5a5a5a', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 500 }}>Contact</a>
-          </div>
-        </div>
-      </footer>
+      <LegalPageFooter />
     </div>
   )
 }
