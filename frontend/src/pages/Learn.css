@@ -1851,19 +1851,6 @@
     line-height: 1.8;
   }
 
-  .continue-btn {
-    width: 100%;
-    padding: 16px 32px;
-    background: #10a37f;
-    border: none;
-    border-radius: 12px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 8px;
-  }
-
   /* Completed Phase */
   .completed-container {
     flex: 1;

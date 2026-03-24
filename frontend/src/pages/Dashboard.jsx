@@ -885,7 +885,7 @@ const Dashboard = () => {
                     const isContinueDisabled = currentTopicCourseId && !unlockedCourseIds.includes(currentTopicCourseId)
                     return (
                       <button
-                        className="continue-btn"
+                        className="dashboard-continue-btn"
                         onClick={handleContinueLearning}
                         disabled={isContinueDisabled}
                         title={isContinueDisabled ? 'Purchase this course to continue' : undefined}
