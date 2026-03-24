@@ -27,13 +27,13 @@ export default function PlayEditor({ code, onCodeChange, onRun, placeholder = '/
         const lines = (out || '').split('\n')
         const color = err ? '#ef4444' : '#10a37f'
         outputRef.current.innerHTML = lines
-          .map((line) => `<div style="line-height:1.4;color:${color};white-space:pre;padding-left:2px;font-size:0.875rem;">${escapeHtml(line || ' ')}</div>`)
+          .map((line) => `<div class="terminal-run-line" style="color:${color};white-space:pre;padding-left:2px;">${escapeHtml(line || ' ')}</div>`)
           .join('')
       }
       if (lineNumbersRef.current) {
         const lines = (out || '').split('\n')
         lineNumbersRef.current.innerHTML = lines
-          .map((_, i) => `<div style="line-height:1.4;color:#6b7280;text-align:right;padding-right:8px;font-size:0.875rem;">${i + 1}</div>`)
+          .map((_, i) => `<div class="terminal-run-line" style="color:#6b7280;text-align:right;padding-right:6px;">${i + 1}</div>`)
           .join('')
       }
     } catch (e) {
@@ -41,9 +41,9 @@ export default function PlayEditor({ code, onCodeChange, onRun, placeholder = '/
       setOutput(msg)
       setOutputError(true)
       if (outputRef.current) {
-        outputRef.current.innerHTML = `<div style="line-height:1.4;color:#ef4444;white-space:pre;padding-left:2px;font-size:0.875rem;">${escapeHtml(msg)}</div>`
+        outputRef.current.innerHTML = `<div class="terminal-run-line" style="color:#ef4444;white-space:pre;padding-left:2px;">${escapeHtml(msg)}</div>`
       }
-      if (lineNumbersRef.current) lineNumbersRef.current.innerHTML = '<div style="line-height:1.4;color:#6b7280;text-align:right;padding-right:8px;font-size:0.875rem;">1</div>'
+      if (lineNumbersRef.current) lineNumbersRef.current.innerHTML = '<div class="terminal-run-line" style="color:#6b7280;text-align:right;padding-right:6px;">1</div>'
     } finally {
       setRunning(false)
     }
@@ -77,7 +77,7 @@ export default function PlayEditor({ code, onCodeChange, onRun, placeholder = '/
         </div>
         <div style={{ flex: 1, minHeight: 300, display: 'flex', background: '#fff', border: '1px solid #e5e7eb', borderRadius: 6, overflow: 'hidden' }}>
           <div className="playground-line-numbers" style={{ width: 32, minWidth: 32, background: '#f9fafb', borderRight: '1px solid #e5e7eb', padding: '16px 4px', fontSize: '0.875rem', color: '#9ca3af', fontFamily: 'Monaco, Consolas, monospace', lineHeight: 1.4, textAlign: 'right', userSelect: 'none', overflow: 'hidden', flexShrink: 0 }}>
-            {Array.from({ length: lineCount }, (_, i) => <div key={i} style={{ lineHeight: 1.4, fontSize: '0.875rem' }}>{i + 1}</div>)}
+            {Array.from({ length: lineCount }, (_, i) => <div key={i} className="playground-gutter-line">{i + 1}</div>)}
           </div>
           <textarea value={code} onChange={(e) => onCodeChange(e.target.value)} onKeyDown={handleKeyDown} placeholder={placeholder} style={{ flex: 1, minWidth: 0, padding: 16, border: 'none', outline: 'none', fontFamily: 'Monaco, Consolas, monospace', fontSize: '0.875rem', lineHeight: 1.4, resize: 'none' }} />
         </div>

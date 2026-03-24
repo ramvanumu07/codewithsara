@@ -625,7 +625,7 @@ const Learn = () => {
     if (!outputDiv) return
 
     try {
-      outputDiv.innerHTML = '<div style="color: #10a37f; font-family: Monaco, Consolas, monospace; padding: 8px;">Executing code securely...</div>'
+      outputDiv.innerHTML = '<div class="terminal-run-line" style="color: #10a37f; font-family: Monaco, Consolas, monospace; padding: 8px;">Executing code securely...</div>'
 
       const result = await CodeExecutor.executeForTesting(
         userCode,
@@ -643,7 +643,7 @@ const Learn = () => {
       if (lineNumbersDiv) {
         let lineNumbersHTML = ''
         outputLines.forEach((_, index) => {
-          lineNumbersHTML += `<div style="line-height: 1.4; color: #6b7280; text-align: right; padding-right: 8px; font-size: 0.875rem;">${index + 1}</div>`
+          lineNumbersHTML += `<div class="terminal-run-line" style="color: #6b7280; text-align: right; padding-right: 6px;">${index + 1}</div>`
         })
         lineNumbersDiv.innerHTML = lineNumbersHTML
       }
@@ -653,11 +653,11 @@ const Learn = () => {
         const color = line.includes('Error:') ? '#ef4444' :
           line.includes('Warning') ? '#f59e0b' :
             line.includes('Execution completed') ? '#10a37f' : outputColor
-        formattedOutput += `<div style="line-height: 1.4; color: ${color}; white-space: pre; padding-left: 2px; font-size: 0.875rem;">${escapeHtmlLearn(line) || ' '}</div>`
+        formattedOutput += `<div class="terminal-run-line" style="color: ${color}; white-space: pre; padding-left: 2px;">${escapeHtmlLearn(line) || ' '}</div>`
       })
 
       outputDiv.innerHTML = `
-        <div style="font-family: Monaco, Consolas, 'SF Mono', 'Courier New', monospace; line-height: 1.4;">
+        <div class="terminal-output-block" style="font-family: Monaco, Consolas, 'SF Mono', 'Courier New', monospace;">
           ${formattedOutput}
         </div>
       `
@@ -1824,6 +1824,7 @@ const Learn = () => {
             {/* Editor Content — data attr lets scroll handler find line gutter (sibling of textarea wrapper) */}
             <div
               data-playground-editor-row
+              className="playground-code-metrics"
               style={{
                 flex: 1,
                 minHeight: '300px',
@@ -1836,15 +1837,10 @@ const Learn = () => {
             >
               {/* Line Numbers - match code editor black background */}
               <div className="playground-line-numbers" style={{
-                width: '32px',
-                minWidth: '32px',
                 backgroundColor: '#0d1117',
                 borderRight: '1px solid #30363d',
-                padding: '16px 4px',
-                fontSize: '0.875rem',
                 color: '#8b949e',
                 fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-                lineHeight: '1.4',
                 textAlign: 'right',
                 userSelect: 'none',
                 overflow: 'hidden',
@@ -1852,10 +1848,7 @@ const Learn = () => {
                 position: 'relative'
               }}>
                 {assignmentCode.split('\n').map((_, index) => (
-                  <div key={index} style={{
-                    lineHeight: '1.4',
-                    fontSize: '0.875rem'
-                  }}>
+                  <div key={index} className="playground-gutter-line">
                     {index + 1}
                   </div>
                 ))}
@@ -2196,23 +2189,15 @@ const Learn = () => {
 
               const outputLines = (assignmentOutput || '').split('\n')
               const isError = assignmentOutput && (assignmentOutput.startsWith('Error:') || assignmentOutput.includes('[FAIL]'))
-              const lineHeightPx = 22
-              const padV = 16
-              const padH = 12
               return (
-                <div style={{ flex: 1, display: 'flex', minHeight: 0, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none' }}>
+                <div className="playground-code-metrics" style={{ flex: 1, display: 'flex', minHeight: 0, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none' }}>
                   <div
-                    className="assignment-terminal-line-numbers"
+                    className="assignment-terminal-line-numbers assignment-terminal-gutter"
                     style={{
-                      width: '32px',
-                      minWidth: '32px',
                       backgroundColor: '#0d1117',
                       borderRight: '1px solid #30363d',
-                      padding: `${padV}px 4px`,
-                      fontSize: '0.8125rem',
                       color: '#8b949e',
                       fontFamily: 'Monaco, Consolas, monospace',
-                      lineHeight: `${lineHeightPx}px`,
                       textAlign: 'right',
                       userSelect: 'none',
                       overflow: 'hidden',
@@ -2220,32 +2205,29 @@ const Learn = () => {
                     }}
                   >
                     {outputLines.map((_, i) => (
-                      <div key={i} style={{ height: lineHeightPx, lineHeight: `${lineHeightPx}px` }}>{i + 1}</div>
+                      <div key={i} className="assignment-terminal-gutter-row">{i + 1}</div>
                     ))}
-                    {outputLines.length === 0 && <div style={{ height: lineHeightPx, lineHeight: `${lineHeightPx}px` }}>1</div>}
+                    {outputLines.length === 0 && <div className="assignment-terminal-gutter-row">1</div>}
                   </div>
                   <div
                     id="assignment-output"
-                    className="playground-output"
+                    className="playground-output assignment-terminal-scroll"
                     onScroll={(e) => {
                       const ln = e.target.parentElement.querySelector('.assignment-terminal-line-numbers')
                       if (ln) ln.scrollTop = e.target.scrollTop
                     }}
                     style={{
                       flex: 1,
-                      padding: `${padV}px ${padH}px`,
                       backgroundColor: '#0d1117',
                       color: isError ? '#ff7b72' : '#7ee787',
                       fontFamily: 'Monaco, Consolas, monospace',
-                      fontSize: '0.875rem',
-                      lineHeight: `${lineHeightPx}px`,
                       overflow: 'auto',
                       minHeight: 0
                     }}
                   >
                     {assignmentOutput ? (
                       outputLines.map((line, i) => (
-                        <div key={i} style={{ minHeight: lineHeightPx, lineHeight: `${lineHeightPx}px`, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                        <div key={i} className="assignment-terminal-line-row">
                           {line || ' '}
                         </div>
                       ))

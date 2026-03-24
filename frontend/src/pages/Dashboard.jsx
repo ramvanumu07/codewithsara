@@ -612,28 +612,14 @@ const Dashboard = () => {
             {!selectedCourseLocked && (
             <>
             {/* How to run JS code - help link */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
-              <span style={{ fontSize: '0.875rem', color: '#6b7280', fontFamily: 'var(--sara-font)' }}>How to run JS code</span>
+            <div className="dashboard-howto-run">
+              <span className="dashboard-howto-run__label">How to run JS code</span>
               <button
                 type="button"
+                className="dashboard-howto-run__help"
                 onClick={() => setShowHowToRunSteps(true)}
                 aria-label="View steps to run JavaScript code"
                 title="View steps"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 20,
-                  height: 20,
-                  padding: 0,
-                  border: 'none',
-                  borderRadius: '50%',
-                  background: '#e5e7eb',
-                  color: '#6b7280',
-                  cursor: 'pointer',
-                  fontSize: '0.75rem',
-                  fontWeight: 700
-                }}
               >
                 ?
               </button>

@@ -15,6 +15,7 @@ function normalizeExecutionError(message, fromWorker = false) {
     ? message.slice(14)
     : (message || 'Code execution failed');
   const m = raw.trim();
+  if (!m) return 'Code execution failed';
 
   // Timeout / infinite loop (main-thread timeout or worker timeout)
   if (m === 'INFINITE_LOOP_OR_TIMEOUT' || m === 'Code execution timeout' ||
@@ -121,21 +122,34 @@ class CodeExecutionService {
   }
 
   /**
-   * Execute code for quick testing (frontend only)
+   * Execute code for quick testing (frontend only).
+   * Runs on the main thread using codeExecutorEngine — avoids Web Worker load/CORS/CSP issues
+   * that break `?worker` bundles on some hosts; same sandbox + timeouts as the worker path.
    */
   async executeForTesting(code, testCases, functionName, solutionType) {
     try {
-      const result = await this.executeCode(code, testCases, functionName, solutionType);
+      const { CodeExecutor } = await import('../lib/codeExecutorEngine.js');
+      const executor = new CodeExecutor();
+      const raw = await executor.execute(code, testCases || [], functionName, solutionType);
+      if (!raw || raw.success === false) {
+        return {
+          success: false,
+          error: normalizeExecutionError(raw?.error || 'Code execution failed'),
+          results: raw?.results || [],
+          allPassed: false,
+          executionTime: raw?.executionTime || 0
+        };
+      }
       return {
         success: true,
-        results: result.results,
-        allPassed: result.allPassed,
-        executionTime: result.executionTime || 0
+        results: raw.results || [],
+        allPassed: raw.allPassed,
+        executionTime: raw.executionTime || 0
       };
     } catch (error) {
       return {
         success: false,
-        error: normalizeExecutionError(error.message),
+        error: normalizeExecutionError(error?.message || 'Code execution failed'),
         results: []
       };
     }

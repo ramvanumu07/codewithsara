@@ -2387,6 +2387,16 @@
     flex-shrink: 0 !important;
   }
 
+  /* Empty terminal message — same size as output text (inherits .playground-output) */
+  .playground-output-hint {
+    color: #8b949e;
+    font-style: italic;
+    font-size: inherit;
+    line-height: inherit;
+    font-family: inherit;
+    margin: 0;
+  }
+
   /* Splitter Hover Effects */
   .playground-splitter:hover {
     background-color: #e5e7eb !important;
@@ -2505,20 +2515,23 @@
       border-radius: 1px !important;
     }
 
-    /* Responsive Line Numbers and Content - mobile */
+    /* Responsive Line Numbers and Content - mobile — same font + padding + line-height as textarea/output (caret alignment) */
     .playground-line-numbers,
     .terminal-line-numbers,
     .assignment-terminal-line-numbers {
-      width: 24px !important;
-      min-width: 24px !important;
-      padding: 6px 3px !important;
-      font-size: 0.6rem !important;
+      width: 30px !important;
+      min-width: 30px !important;
+      max-width: 30px !important;
+      padding: 12px 5px !important;
+      font-size: 0.8125rem !important;
+      line-height: 1.45 !important;
     }
 
     .playground-textarea,
     .playground-output {
-      padding: clamp(6px, 1.5vw, 14px) !important;
-      font-size: 0.65rem !important;
+      padding: 12px !important;
+      font-size: 0.8125rem !important;
+      line-height: 1.45 !important;
     }
 
     .playground-run-btn,
@@ -2559,15 +2572,19 @@
     .playground-line-numbers,
     .terminal-line-numbers,
     .assignment-terminal-line-numbers {
-      width: 20px !important;
-      min-width: 20px !important;
-      padding: 5px 2px !important;
-      font-size: 0.55rem !important;
+      width: 28px !important;
+      min-width: 28px !important;
+      max-width: 28px !important;
+      padding: 10px 4px !important;
+      font-size: 0.78rem !important;
+      line-height: 1.45 !important;
     }
 
     .playground-textarea,
     .playground-output {
-      font-size: 0.6rem !important;
+      padding: 10px !important;
+      font-size: 0.78rem !important;
+      line-height: 1.45 !important;
     }
 
     /* Mobile Button Layout - Extra small for mobile */

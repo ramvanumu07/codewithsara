@@ -11,7 +11,7 @@
   margin: 0;
   padding: 16px;
   font-size: 0.875rem;
-  line-height: 1.4;
+  line-height: 1.45;
   font-family: 'Monaco', 'Consolas', 'SF Mono', 'Courier New', monospace;
   white-space: pre;
   word-break: normal;
@@ -21,6 +21,7 @@
 }
 
 .syntax-highlight-editor-pre code {
+  display: block;
   background: none !important;
   padding: 0;
   font-size: inherit;
@@ -75,10 +76,88 @@
   color: #e2e8f0;
 }
 
-/* Ensure caret (cursor) is visible on black background */
+/* Textarea must mirror .syntax-highlight-editor-pre exactly (caret + Prism tokens line up) */
 .syntax-highlight-textarea-wrapper textarea {
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 16px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  font-family: 'Monaco', 'Consolas', 'SF Mono', 'Courier New', monospace;
   caret-color: #ffffff;
 }
+
 .syntax-highlight-textarea-wrapper textarea::placeholder {
   color: #8b949e;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  opacity: 1;
+}
+
+.syntax-highlight-editor-pre code > div {
+  line-height: inherit !important;
+  font-size: inherit !important;
+}
+
+/* Learn: one metric stack for editor gutter, terminal gutter, textarea, Prism, assignment terminal */
+.learn-container .playground-code-metrics {
+  --pg-code-font: 0.875rem;
+  --pg-code-lh: 1.45;
+  --pg-code-pad: 16px;
+  --pg-gutter-inner: 4px;
+  --pg-gutter-w: 32px;
+}
+
+.learn-container .playground-code-metrics .playground-line-numbers,
+.learn-container .playground-code-metrics .terminal-line-numbers {
+  width: var(--pg-gutter-w) !important;
+  min-width: var(--pg-gutter-w) !important;
+  max-width: var(--pg-gutter-w) !important;
+  padding: var(--pg-code-pad) var(--pg-gutter-inner) !important;
+  font-size: var(--pg-code-font) !important;
+  line-height: var(--pg-code-lh) !important;
+}
+
+.learn-container .playground-code-metrics .assignment-terminal-gutter.assignment-terminal-line-numbers {
+  width: var(--pg-gutter-w) !important;
+  min-width: var(--pg-gutter-w) !important;
+  max-width: var(--pg-gutter-w) !important;
+  padding: var(--pg-code-pad) var(--pg-gutter-inner) !important;
+  font-size: var(--pg-code-font) !important;
+  line-height: var(--pg-code-lh) !important;
+}
+
+.learn-container .playground-code-metrics[data-playground-editor-row] .syntax-highlight-textarea-wrapper textarea.playground-textarea,
+.learn-container .playground-code-metrics[data-playground-editor-row] .syntax-highlight-editor-pre {
+  padding: var(--pg-code-pad) !important;
+  font-size: var(--pg-code-font) !important;
+  line-height: var(--pg-code-lh) !important;
+}
+
+.learn-container .playground-code-metrics[data-playground-terminal-row] .playground-output,
+.learn-container .playground-code-metrics .playground-output.assignment-terminal-scroll {
+  padding: var(--pg-code-pad) !important;
+  font-size: var(--pg-code-font) !important;
+  line-height: var(--pg-code-lh) !important;
+}
+
+@media (max-width: 768px) {
+  .learn-container .playground-code-metrics {
+    --pg-code-font: 0.8125rem;
+    --pg-code-pad: 12px;
+    --pg-gutter-inner: 5px;
+    --pg-gutter-w: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .learn-container .playground-code-metrics {
+    --pg-code-font: 0.78rem;
+    --pg-code-pad: 10px;
+    --pg-gutter-inner: 4px;
+    --pg-gutter-w: 28px;
+  }
 }

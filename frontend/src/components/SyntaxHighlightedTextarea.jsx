@@ -21,15 +21,13 @@ const SyntaxHighlightedTextarea = React.forwardRef(function SyntaxHighlightedTex
     onScroll?.(e)
   }
 
+  /* Font metrics live in SyntaxHighlightedTextarea.css so gutter + Prism layer + caret stay aligned on mobile */
   const textareaStyle = {
     flex: 1,
+    minWidth: 0,
     border: 'none',
     outline: 'none',
     resize: 'none',
-    padding: '16px',
-    fontSize: '0.875rem',
-    fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-    lineHeight: '1.4',
     overflow: 'auto',
     whiteSpace: 'pre',
     tabSize: 4,
