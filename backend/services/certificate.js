@@ -99,7 +99,7 @@ export async function generateCertificatePDF({ fullName, completionDate }) {
     doc.fontSize(14)
       .font('Helvetica-Bold')
       .fillColor('#1a1a1a')
-      .text('JavaScript Fundamentals to Mastery', margin, 198, { width: 420, lineBreak: false })
+      .text('JavaScript Core Concepts & Modern Practices', margin, 198, { width: 420, lineBreak: false })
 
     // On [Date]
     const formattedDate = completionDate
@@ -138,11 +138,15 @@ export async function generateCertificatePDF({ fullName, completionDate }) {
     doc.fontSize(10)
       .fillColor('#1a1a1a')
       .font('Helvetica-Bold')
-      .text('DIRECTOR', margin, nameY, { width: 200 })
+      .text('V. L. Sai Ram', margin, nameY, { width: 200 })
+    doc.fontSize(9)
+      .fillColor('#374151')
+      .font('Helvetica')
+      .text('Founder & Instructor', margin, nameY + 12, { width: 200 })
     doc.fontSize(9)
       .fillColor('#6b7280')
       .font('Helvetica')
-      .text('Sara Learning Platform', margin, nameY + 14, { width: 200 })
+      .text('Sara Learning Platform', margin, nameY + 24, { width: 200 })
 
     doc.end()
   })
