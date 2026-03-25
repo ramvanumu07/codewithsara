@@ -3,7 +3,6 @@ import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { EditorView } from '@codemirror/view'
-import '../styles/playgroundAlignment.css'
 
 /** Matches playground / assignment terminal panel (SyntaxHighlightedTextarea.css, Learn.css) */
 const TERMINAL_BG = '#0d1117'
@@ -35,22 +34,8 @@ export default function CodeEditor({
             overflowY: 'auto',
             backgroundColor: TERMINAL_BG
           },
-          '.cm-gutter.cm-foldGutter': {
-            width: 'var(--sara-gutter-fold, 18px)',
-            minWidth: 'var(--sara-gutter-fold, 18px)',
-            maxWidth: 'var(--sara-gutter-fold, 18px)',
-            flexShrink: 0,
-            boxSizing: 'border-box'
-          },
-          '.cm-gutter.cm-lineNumbers': {
-            width: 'var(--sara-gutter-line-numbers, 44px)',
-            minWidth: 'var(--sara-gutter-line-numbers, 44px)',
-            maxWidth: 'var(--sara-gutter-line-numbers, 44px)',
-            flexShrink: 0,
-            boxSizing: 'border-box'
-          },
           '.cm-content': {
-            padding: 'var(--sara-content-padding-x, 16px)',
+            padding: '16px',
             fontFamily: "'Monaco', 'Consolas', 'SF Mono', 'Courier New', monospace",
             fontSize: '14px',
             lineHeight: 1.45,
@@ -62,7 +47,7 @@ export default function CodeEditor({
             color: '#8b949e'
           },
           '.cm-activeLineGutter': { backgroundColor: '#161b22' },
-          '.cm-lineNumbers .cm-gutterElement': { padding: '0 6px 0 10px', minWidth: '28px', boxSizing: 'border-box' }
+          '.cm-lineNumbers .cm-gutterElement': { padding: '0 6px 0 10px', minWidth: '28px' }
         },
         { dark: true }
       )
