@@ -1,27 +1,26 @@
 /**
  * Full session playground: same layout and features as Learn session editor.
  * - Resizable splitter (desktop: side-by-side, mobile: stacked)
- * - Indentation (Tab, Enter, Backspace), auto-closing brackets/quotes
- * - Scroll sync for line numbers, formatted terminal output with error styling
+ * - CodeMirror 6 editor; formatted terminal output with error styling
  * - Run via CodeExecutor, Copy with optional toast
  */
 import React, { useState, useRef, useEffect } from 'react'
 import CodeExecutor from '../services/CodeExecutor'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import { formatTerminalRunResult } from '../lib/formatTerminalOutput'
-import SyntaxHighlightedTextarea from './SyntaxHighlightedTextarea'
+import CodeEditor from './CodeEditor'
 
-const AUTO_CLOSING_PAIRS = { '(': ')', '[': ']', '{': '}', '"': '"', "'": "'", '`': '`' }
+const OUTPUT_PRE_STYLE =
+  'white-space: pre; overflow-x: auto; overflow-y: auto; word-break: normal; word-wrap: normal; margin: 0; padding: 8px; font-family: Monaco, Consolas, "SF Mono", "Courier New", monospace; background: #0d1117; min-height: 100%; box-sizing: border-box;'
 
 export default function SessionPlayground({
   code,
   onCodeChange,
-  placeholder = "Practice what you learned in the session - try out the concepts here!",
+  placeholder = 'Practice what you learned in the session — try out the concepts here!',
   onCopySuccess,
   onRunError
 }) {
   const terminalOutputRef = useRef(null)
-  const editorTextareaRef = useRef(null)
   const [editorHeight, setEditorHeight] = useState(60)
   const [editorWidth, setEditorWidth] = useState(60)
   const [isDesktop, setIsDesktop] = useState(typeof window !== 'undefined' && window.innerWidth >= 768)
@@ -54,14 +53,14 @@ export default function SessionPlayground({
         if (parseErr instanceof SyntaxError) {
           const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
           if (lineNumDiv) lineNumDiv.innerHTML = '<div class="terminal-run-line" style="color: #8b949e; text-align: right; padding-right: 6px;">1</div>'
-          outputDiv.innerHTML = `<div class="terminal-output-block" style="font-family: Monaco, Consolas, monospace;"><div class="terminal-run-line" style="color: #ff7b72; white-space: pre; padding-left: 2px;">Syntax error: ${escapeHtml(parseErr.message)}</div></div>`
+          outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: #ff7b72;"><span style="color: #ff7b72;">Syntax error: ${escapeHtml(parseErr.message)}</span></pre>`
           if (onRunError) onRunError(parseErr.message)
           return
         }
         throw parseErr
       }
 
-      outputDiv.innerHTML = '<div class="terminal-run-line" style="color: #7ee787; font-family: Monaco, Consolas, monospace; padding: 8px;">Executing code securely...</div>'
+      outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: #7ee787;"><span style="color: #7ee787;">Executing code securely...</span></pre>`
       const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
       if (lineNumDiv) lineNumDiv.innerHTML = ''
 
@@ -75,16 +74,22 @@ export default function SessionPlayground({
           `<div class="terminal-run-line" style="color: #8b949e; text-align: right; padding-right: 6px;">${i + 1}</div>`
         ).join('')
       }
-      const formatted = outputLines.map(line => {
-        const color = line.includes('Error:') ? '#ff7b72' : line.includes('Warning') ? '#d29922' : outputColor
-        return `<div class="terminal-run-line" style="color: ${color}; white-space: pre; padding-left: 2px;">${escapeHtml(String(line || ' '))}</div>`
-      }).join('')
-      outputDiv.innerHTML = `<div class="terminal-output-block" style="font-family: Monaco, Consolas, 'SF Mono', 'Courier New', monospace;">${formatted}</div>`
+      const formatted = outputLines
+        .map((line) => {
+          const color = line.includes('Error:')
+            ? '#ff7b72'
+            : line.includes('Warning')
+              ? '#d29922'
+              : outputColor
+          return `<span style="color: ${color};">${escapeHtml(String(line || ' '))}</span>`
+        })
+        .join('\n')
+      outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: ${outputColor};">${formatted}</pre>`
 
       if (!result.success && onRunError) onRunError('Code execution failed. Check the output for details.')
     } catch (err) {
       const msg = err?.message || 'Code execution failed'
-      outputDiv.innerHTML = `<div style="color: #ff7b72; font-family: Monaco, Consolas, monospace; padding: 16px;">Error: ${escapeHtml(msg)}</div>`
+      outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: #ff7b72;"><span style="color: #ff7b72;">Error: ${escapeHtml(msg)}</span></pre>`
       const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
       if (lineNumDiv) lineNumDiv.innerHTML = '<div class="terminal-run-line" style="color: #8b949e; text-align: right; padding-right: 6px;">1</div>'
       if (onRunError) onRunError('Code execution failed. Please check your syntax.')
@@ -178,147 +183,6 @@ export default function SessionPlayground({
       document.addEventListener('touchend', handleTouchEnd)
     }
   }
-
-  // Mobile: many soft keyboards don't fire keydown with correct e.key; beforeInput fires with e.data
-  const handleBeforeInput = (e) => {
-    if (!e.data || e.data.length !== 1) return
-    const ch = e.data
-    if (!AUTO_CLOSING_PAIRS[ch]) return
-    const textarea = e.target
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const value = code || ''
-    // Quotes: skip over if next char is already that quote
-    if (['"', "'", '`'].includes(ch)) {
-      if (value.charAt(start) === ch) {
-        e.preventDefault()
-        requestAnimationFrame(() => {
-          textarea.selectionStart = textarea.selectionEnd = start + 1
-        })
-        return
-      }
-      const beforeCursor = value.substring(0, start)
-      const quoteCount = (beforeCursor.match(new RegExp('\\' + ch, 'g')) || []).length
-      if (quoteCount % 2 === 1) return // closing, let default
-    }
-    e.preventDefault()
-    const closeChar = AUTO_CLOSING_PAIRS[ch]
-    const selectedText = value.substring(start, end)
-    const newValue = selectedText
-      ? value.substring(0, start) + ch + selectedText + closeChar + value.substring(end)
-      : value.substring(0, start) + ch + closeChar + value.substring(start)
-    onCodeChange(newValue)
-    const cursorPos = start + 1 + (selectedText ? selectedText.length : 0)
-    requestAnimationFrame(() => {
-      const ta = editorTextareaRef.current
-      if (ta) {
-        ta.focus()
-        ta.selectionStart = start + 1
-        ta.selectionEnd = selectedText ? cursorPos : start + 1
-      }
-    })
-  }
-
-  const handleKeyDown = (e) => {
-    const textarea = e.target
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const value = code || ''
-
-    if (e.ctrlKey && e.key === 'Enter') {
-      e.preventDefault()
-      runPlayground()
-      return
-    }
-    if (e.key === 'Tab') {
-      e.preventDefault()
-      const newValue = value.substring(0, start) + '    ' + value.substring(end)
-      onCodeChange(newValue)
-      setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 4 }, 0)
-      return
-    }
-    if (AUTO_CLOSING_PAIRS[e.key]) {
-      const nextChar = value.charAt(start)
-      if (['"', "'", '`'].includes(e.key)) {
-        if (nextChar === e.key) {
-          e.preventDefault()
-          setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 }, 0)
-          return
-        }
-        const beforeCursor = value.substring(0, start)
-        const quoteCount = (beforeCursor.match(new RegExp('\\' + e.key, 'g')) || []).length
-        if (quoteCount % 2 === 1) return
-      }
-      e.preventDefault()
-      const openChar = e.key
-      const closeChar = AUTO_CLOSING_PAIRS[e.key]
-      const selectedText = value.substring(start, end)
-      if (selectedText) {
-        const newValue = value.substring(0, start) + openChar + selectedText + closeChar + value.substring(end)
-        onCodeChange(newValue)
-        setTimeout(() => {
-          textarea.selectionStart = start + 1
-          textarea.selectionEnd = start + 1 + selectedText.length
-        }, 0)
-      } else {
-        const newValue = value.substring(0, start) + openChar + closeChar + value.substring(start)
-        onCodeChange(newValue)
-        setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 }, 0)
-      }
-      return
-    }
-    if ([')', ']', '}'].includes(e.key)) {
-      const nextChar = value.charAt(start)
-      if (nextChar === e.key) {
-        e.preventDefault()
-        setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 }, 0)
-      }
-      return
-    }
-    if (e.key === 'Backspace' && start === end) {
-      const beforeCursor = value.substring(0, start)
-      const currentLineStart = beforeCursor.lastIndexOf('\n') + 1
-      const currentLine = beforeCursor.substring(currentLineStart)
-      const isAtIndentEnd = /^\s+$/.test(currentLine) && currentLine.length > 0
-      const hasEnoughSpaces = currentLine.length >= 4 && currentLine.endsWith('    ')
-      if (isAtIndentEnd && hasEnoughSpaces) {
-        e.preventDefault()
-        const newValue = value.substring(0, start - 4) + value.substring(start)
-        onCodeChange(newValue)
-        setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start - 4 }, 0)
-      }
-      return
-    }
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      const beforeCursor = value.substring(0, start)
-      const currentLineStart = beforeCursor.lastIndexOf('\n') + 1
-      const currentLine = beforeCursor.substring(currentLineStart)
-      const currentIndent = (currentLine.match(/^(\s*)/) || ['', ''])[1]
-      let newIndent = currentIndent
-      if (currentLine.trim().endsWith('{') ||
-        /\b(if|else|for|while|do|switch|case|function|try|catch|finally)\s*\([^)]*\)\s*$/.test(currentLine.trim()) ||
-        /\b(else|try|finally)\s*$/.test(currentLine.trim()) ||
-        /\bcase\s+.+:\s*$/.test(currentLine.trim()) ||
-        /\bdefault\s*:\s*$/.test(currentLine.trim())) {
-        newIndent += '    '
-      }
-      const afterCursor = value.substring(start)
-      const nextChar = afterCursor.charAt(0)
-      if (nextChar === '}') {
-        const reducedIndent = newIndent.length >= 4 ? newIndent.substring(4) : ''
-        const newValue = value.substring(0, start) + '\n' + newIndent + '\n' + reducedIndent + value.substring(start)
-        onCodeChange(newValue)
-        setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length }, 0)
-      } else {
-        const newValue = value.substring(0, start) + '\n' + newIndent + value.substring(start)
-        onCodeChange(newValue)
-        setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + 1 + newIndent.length }, 0)
-      }
-    }
-  }
-
-  const lineCount = (code || '').split('\n').length
 
   return (
     <div
@@ -451,70 +315,21 @@ export default function SessionPlayground({
           style={{ flex: 1, minHeight: '300px', display: 'flex', backgroundColor: '#ffffff', border: '1px solid #e5e7eb', borderRadius: '6px', overflow: 'hidden' }}
         >
           <div
-            className="playground-line-numbers"
-            style={{
-              backgroundColor: '#0d1117',
-              borderRight: '1px solid #30363d',
-              color: '#8b949e',
-              fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-              textAlign: 'right',
-              userSelect: 'none',
-              overflow: 'hidden',
-              flexShrink: 0
+            style={{ flex: 1, minWidth: 0, minHeight: 0, display: 'flex', flexDirection: 'column' }}
+            onKeyDown={(e) => {
+              if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault()
+                runPlayground()
+              }
             }}
           >
-            {(code || '').split('\n').map((_, index) => (
-              <div key={index} className="playground-gutter-line">{index + 1}</div>
-            ))}
+            <CodeEditor
+              value={code || ''}
+              onChange={onCodeChange}
+              height="100%"
+              placeholder={placeholder}
+            />
           </div>
-          <SyntaxHighlightedTextarea
-            ref={editorTextareaRef}
-            className="playground-textarea"
-            value={code || ''}
-            onBeforeInput={handleBeforeInput}
-            onChange={(e) => {
-              const newVal = e.target.value
-              const oldVal = code || ''
-              if (newVal.length === oldVal.length + 1) {
-                let insertIndex = -1
-                let insertedChar = ''
-                for (let i = 0; i < newVal.length; i++) {
-                  if (oldVal === newVal.slice(0, i) + newVal.slice(i + 1)) {
-                    insertIndex = i
-                    insertedChar = newVal[i]
-                    break
-                  }
-                }
-                if (insertIndex !== -1 && AUTO_CLOSING_PAIRS[insertedChar]) {
-                  if (['"', "'", '`'].includes(insertedChar) && newVal[insertIndex + 1] === insertedChar) {
-                    onCodeChange(newVal)
-                    requestAnimationFrame(() => {
-                      const ta = editorTextareaRef.current
-                      if (ta) ta.selectionStart = ta.selectionEnd = insertIndex + 1
-                    })
-                    return
-                  }
-                  const closeChar = AUTO_CLOSING_PAIRS[insertedChar]
-                  const finalVal = newVal.slice(0, insertIndex + 1) + closeChar + newVal.slice(insertIndex + 1)
-                  onCodeChange(finalVal)
-                  requestAnimationFrame(() => {
-                    const ta = editorTextareaRef.current
-                    if (ta) { ta.focus(); ta.selectionStart = ta.selectionEnd = insertIndex + 1 }
-                  })
-                  return
-                }
-              }
-              onCodeChange(newVal)
-            }}
-            onScroll={(e) => {
-              const row = e.target.closest?.('[data-playground-editor-row]')
-              const lineNumbers = row?.querySelector('.playground-line-numbers')
-              if (lineNumbers) lineNumbers.scrollTop = e.target.scrollTop
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            spellCheck={false}
-          />
         </div>
       </div>
 
@@ -608,7 +423,11 @@ export default function SessionPlayground({
               backgroundColor: '#0d1117',
               color: '#7ee787',
               fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-              overflow: 'auto',
+              whiteSpace: 'pre',
+              overflowX: 'auto',
+              overflowY: 'auto',
+              wordBreak: 'normal',
+              wordWrap: 'normal',
               minHeight: 0,
               boxSizing: 'border-box'
             }}

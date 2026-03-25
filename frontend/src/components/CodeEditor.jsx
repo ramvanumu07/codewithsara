@@ -1,126 +1,103 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useMemo } from 'react'
 import CodeMirror from '@uiw/react-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 import { oneDark } from '@codemirror/theme-one-dark'
+import { EditorView } from '@codemirror/view'
 
+/** Matches playground / assignment terminal panel (SyntaxHighlightedTextarea.css, Learn.css) */
+const TERMINAL_BG = '#0d1117'
+
+/**
+ * Controlled CodeMirror 6 editor — placeholder is ghost text only (never part of `value`).
+ */
 export default function CodeEditor({
   value,
   onChange,
-  placeholder = "// Write your JavaScript code here...",
+  height = '100%',
   readOnly = false,
-  height = "300px",
-  onRun,
-  showRunButton = false
+  placeholder = ''
 }) {
-  const editorRef = useRef(null)
-
-  const handleKeyDown = useCallback((e) => {
-    // Ctrl/Cmd + Enter to run code
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && onRun) {
-      e.preventDefault()
-      onRun()
-    }
-  }, [onRun])
+  const extensions = useMemo(
+    () => [
+      javascript(),
+      EditorView.theme(
+        {
+          '&': {
+            height: '100%',
+            backgroundColor: TERMINAL_BG,
+            fontSize: '14px'
+          },
+          '.cm-editor': { height: '100%', backgroundColor: TERMINAL_BG },
+          '.cm-scroller': {
+            overflow: 'auto',
+            overflowX: 'auto',
+            overflowY: 'auto',
+            backgroundColor: TERMINAL_BG
+          },
+          '.cm-content': {
+            padding: '16px',
+            fontFamily: "'Monaco', 'Consolas', 'SF Mono', 'Courier New', monospace",
+            fontSize: '14px',
+            lineHeight: 1.45,
+            caretColor: '#ffffff'
+          },
+          '.cm-gutters': {
+            backgroundColor: TERMINAL_BG,
+            borderRight: '1px solid #30363d',
+            color: '#8b949e'
+          },
+          '.cm-activeLineGutter': { backgroundColor: '#161b22' },
+          '.cm-lineNumbers .cm-gutterElement': { padding: '0 6px 0 10px', minWidth: '28px' }
+        },
+        { dark: true }
+      )
+    ],
+    []
+  )
 
   return (
-    <div style={styles.container} onKeyDown={handleKeyDown}>
-      <div style={styles.header}>
-        <span style={styles.headerText}>JavaScript</span>
-        {showRunButton && onRun && (
-          <button onClick={onRun} style={styles.runButton}>
-            ▶ Run (Ctrl+Enter)
-          </button>
-        )}
-      </div>
+    <div
+      style={{
+        height,
+        width: '100%',
+        minHeight: 0,
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        backgroundColor: TERMINAL_BG
+      }}
+    >
       <CodeMirror
-        ref={editorRef}
-        value={value}
-        height={height}
+        value={value ?? ''}
+        height="100%"
         theme={oneDark}
-        extensions={[javascript({ jsx: true })]}
+        extensions={extensions}
         onChange={onChange}
         readOnly={readOnly}
         placeholder={placeholder}
         basicSetup={{
           lineNumbers: true,
-          highlightActiveLineGutter: true,
           highlightActiveLine: true,
+          highlightActiveLineGutter: true,
           foldGutter: true,
           dropCursor: true,
           allowMultipleSelections: true,
           indentOnInput: true,
           bracketMatching: true,
           closeBrackets: true,
-          autocompletion: true,
+          autocompletion: false,
+          highlightSelectionMatches: false,
           rectangularSelection: true,
           crosshairCursor: false,
-          highlightSelectionMatches: true,
-          closeBracketsKeymap: true,
           searchKeymap: true,
           foldKeymap: true,
-          completionKeymap: true,
-          lintKeymap: true,
+          completionKeymap: false,
+          lintKeymap: false,
           tabSize: 2
         }}
-        style={styles.editor}
+        style={{ height: '100%', fontSize: '14px' }}
       />
     </div>
   )
 }
-
-const styles = {
-  container: {
-    borderRadius: 12,
-    overflow: 'hidden',
-    border: '1px solid #2d2d2d',
-    background: '#1e1e1e'
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '8px 16px',
-    background: '#2d2d2d',
-    borderBottom: '1px solid #3d3d3d'
-  },
-  headerText: {
-    color: '#888',
-    fontSize: '0.8rem',
-    fontWeight: 500
-  },
-  runButton: {
-    padding: '4px 12px',
-    background: '#10a37f',
-    border: 'none',
-    borderRadius: 4,
-    color: 'white',
-    fontSize: '0.75rem',
-    fontWeight: 500,
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: 4
-  },
-  editor: {
-    fontSize: '0.9rem'
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
