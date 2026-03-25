@@ -15,6 +15,7 @@ import { formatTerminalRunResult } from '../lib/formatTerminalOutput'
 import { logGroqDebugFromApi } from '../utils/groqDebug'
 import './Learn.css'
 import './Learn-responsive.css'
+import '../styles/playgroundAlignment.css'
 
 const SESSION_COMPLETE_REASON = 'Session completed. You can view the conversation but cannot send new messages.'
 
@@ -1668,7 +1669,7 @@ const Learn = () => {
 
       {/* Assignment Phase - Same Structure as Playground */}
       {phase === 'assignment' && assignments.length > 0 && (
-        <div className="playground-main-content" style={{
+        <div className="playground-main-content sara-playground-align" style={{
           flex: 1,
           display: 'flex',
           flexDirection: isDesktop ? 'row' : 'column',
@@ -1993,7 +1994,7 @@ const Learn = () => {
               return (
                 <div className="playground-code-metrics" style={{ flex: 1, display: 'flex', minHeight: 0, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none' }}>
                   <div
-                    className="assignment-terminal-line-numbers assignment-terminal-gutter"
+                    className="assignment-terminal-line-numbers assignment-terminal-gutter sara-playground-terminal-gutter"
                     style={{
                       backgroundColor: '#0d1117',
                       borderRight: '1px solid #30363d',
@@ -2012,7 +2013,7 @@ const Learn = () => {
                   </div>
                   <pre
                     id="assignment-output"
-                    className="playground-output assignment-terminal-scroll"
+                    className="playground-output assignment-terminal-scroll sara-playground-terminal-output"
                     onScroll={(e) => {
                       const ln = e.target.parentElement?.querySelector('.assignment-terminal-line-numbers')
                       if (ln) ln.scrollTop = e.target.scrollTop
@@ -2031,7 +2032,6 @@ const Learn = () => {
                       wordBreak: 'normal',
                       wordWrap: 'normal',
                       minHeight: 0,
-                      padding: '8px',
                       boxSizing: 'border-box'
                     }}
                   >

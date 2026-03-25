@@ -1,0 +1,32 @@
+/**
+ * CodeMirror ↔ terminal output alignment (SessionPlayground + Learn assignment).
+ * Ancestor must use .sara-playground-align (same metrics as CodeEditor.jsx EditorView.theme).
+ */
+.sara-playground-align {
+  --sara-gutter-fold: 18px;
+  --sara-gutter-line-numbers: 44px;
+  --sara-gutter-total: calc(var(--sara-gutter-fold) + var(--sara-gutter-line-numbers));
+  --sara-content-padding-x: 16px;
+}
+
+.sara-playground-align .terminal-line-numbers.sara-playground-terminal-gutter,
+.sara-playground-align .assignment-terminal-line-numbers.sara-playground-terminal-gutter {
+  width: var(--sara-gutter-total);
+  min-width: var(--sara-gutter-total);
+  max-width: var(--sara-gutter-total);
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 6px;
+}
+
+.sara-playground-align .playground-output.sara-playground-terminal-output {
+  padding: var(--sara-content-padding-x);
+  box-sizing: border-box;
+}
+
+/* Nested <pre> in SessionPlayground (output is padded; pre fills inside) */
+.sara-playground-align .playground-output.sara-playground-terminal-output pre.sara-playground-terminal-pre {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

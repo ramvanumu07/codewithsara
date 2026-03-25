@@ -9,9 +9,10 @@ import CodeExecutor from '../services/CodeExecutor'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import { formatTerminalRunResult } from '../lib/formatTerminalOutput'
 import CodeEditor from './CodeEditor'
+import '../styles/playgroundAlignment.css'
 
 const OUTPUT_PRE_STYLE =
-  'white-space: pre; overflow-x: auto; overflow-y: auto; word-break: normal; word-wrap: normal; margin: 0; padding: 8px; font-family: Monaco, Consolas, "SF Mono", "Courier New", monospace; background: #0d1117; min-height: 100%; box-sizing: border-box;'
+  'white-space: pre; overflow-x: auto; overflow-y: auto; word-break: normal; word-wrap: normal; margin: 0; font-family: Monaco, Consolas, "SF Mono", "Courier New", monospace; background: #0d1117; min-height: 100%; box-sizing: border-box;'
 
 export default function SessionPlayground({
   code,
@@ -53,14 +54,14 @@ export default function SessionPlayground({
         if (parseErr instanceof SyntaxError) {
           const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
           if (lineNumDiv) lineNumDiv.innerHTML = '<div class="terminal-run-line" style="color: #8b949e; text-align: right; padding-right: 6px;">1</div>'
-          outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: #ff7b72;"><span style="color: #ff7b72;">Syntax error: ${escapeHtml(parseErr.message)}</span></pre>`
+          outputDiv.innerHTML = `<pre class="sara-playground-terminal-pre" style="${OUTPUT_PRE_STYLE} color: #ff7b72;"><span style="color: #ff7b72;">Syntax error: ${escapeHtml(parseErr.message)}</span></pre>`
           if (onRunError) onRunError(parseErr.message)
           return
         }
         throw parseErr
       }
 
-      outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: #7ee787;"><span style="color: #7ee787;">Executing code securely...</span></pre>`
+      outputDiv.innerHTML = `<pre class="sara-playground-terminal-pre" style="${OUTPUT_PRE_STYLE} color: #7ee787;"><span style="color: #7ee787;">Executing code securely...</span></pre>`
       const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
       if (lineNumDiv) lineNumDiv.innerHTML = ''
 
@@ -84,12 +85,12 @@ export default function SessionPlayground({
           return `<span style="color: ${color};">${escapeHtml(String(line || ' '))}</span>`
         })
         .join('\n')
-      outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: ${outputColor};">${formatted}</pre>`
+      outputDiv.innerHTML = `<pre class="sara-playground-terminal-pre" style="${OUTPUT_PRE_STYLE} color: ${outputColor};">${formatted}</pre>`
 
       if (!result.success && onRunError) onRunError('Code execution failed. Check the output for details.')
     } catch (err) {
       const msg = err?.message || 'Code execution failed'
-      outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: #ff7b72;"><span style="color: #ff7b72;">Error: ${escapeHtml(msg)}</span></pre>`
+      outputDiv.innerHTML = `<pre class="sara-playground-terminal-pre" style="${OUTPUT_PRE_STYLE} color: #ff7b72;"><span style="color: #ff7b72;">Error: ${escapeHtml(msg)}</span></pre>`
       const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
       if (lineNumDiv) lineNumDiv.innerHTML = '<div class="terminal-run-line" style="color: #8b949e; text-align: right; padding-right: 6px;">1</div>'
       if (onRunError) onRunError('Code execution failed. Please check your syntax.')
@@ -186,7 +187,7 @@ export default function SessionPlayground({
 
   return (
     <div
-      className="playground-main-content"
+      className="playground-main-content sara-playground-align"
       style={{
         flex: 1,
         display: 'flex',
@@ -397,7 +398,7 @@ export default function SessionPlayground({
           style={{ flex: 1, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none', display: 'flex', minHeight: 0 }}
         >
           <div
-            className="terminal-line-numbers"
+            className="terminal-line-numbers sara-playground-terminal-gutter"
             style={{
               backgroundColor: '#0d1117',
               borderRight: '1px solid #30363d',
@@ -412,7 +413,7 @@ export default function SessionPlayground({
           <div
             id="terminal-output"
             ref={terminalOutputRef}
-            className="playground-output"
+            className="playground-output sara-playground-terminal-output"
             onScroll={(e) => {
               const lineNumbers = e.target.parentElement?.querySelector('.terminal-line-numbers')
               if (lineNumbers) lineNumbers.scrollTop = e.target.scrollTop
