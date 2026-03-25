@@ -1,0 +1,122 @@
+/**
+ * SessionPlayground / Learn: editor gutter + terminal gutter share one metric system.
+ * Fold gutter is off in playground — line numbers only.
+ *
+ * The "dark gap" before blue digits was mostly 10px padding-left on .cm-gutterElement
+ * (numbers are right-aligned, so empty space showed on the left). We use a small inset.
+ */
+.playground-main-content {
+  --terminal-gutter-fold: 0px;
+  --terminal-line-numbers-width: 44px;
+  --terminal-gutter-width: calc(var(--terminal-gutter-fold) + var(--terminal-line-numbers-width));
+  --terminal-content-offset: 16px;
+  --terminal-gutter-inset-left: 2px;
+  --terminal-gutter-inset-right: 6px;
+}
+
+/* Editor row: flush to container edge */
+.playground-main-content [data-playground-editor-row] {
+  background-color: #0d1117 !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.playground-main-content [data-playground-editor-row] > div {
+  margin: 0;
+  padding: 0;
+}
+
+.playground-main-content [data-playground-editor-row] .cm-theme,
+.playground-main-content [data-playground-editor-row] [class^='cm-theme'] {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.playground-main-content [data-playground-editor-row] .cm-editor {
+  margin: 0;
+  padding: 0;
+}
+
+.playground-main-content .cm-scroller {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.playground-main-content .cm-gutters {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Match CodeMirror base .cm-line (0 2px 0 6px) so terminal text aligns */
+.playground-main-content .cm-line {
+  padding-left: 0 !important;
+}
+
+/* Line-number gutter (fold gutter width 0 in playground) */
+.playground-main-content .cm-gutter.cm-foldGutter {
+  width: var(--terminal-gutter-fold);
+  min-width: var(--terminal-gutter-fold);
+  max-width: var(--terminal-gutter-fold);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.playground-main-content .cm-gutter.cm-lineNumbers {
+  width: var(--terminal-line-numbers-width);
+  min-width: var(--terminal-line-numbers-width);
+  max-width: var(--terminal-line-numbers-width);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.playground-main-content .cm-lineNumbers .cm-gutterElement {
+  padding: 0 var(--terminal-gutter-inset-right) 0 var(--terminal-gutter-inset-left) !important;
+  min-width: 28px;
+  box-sizing: border-box;
+}
+
+/* Terminal gutter: same inner insets + top/bottom offset to match .cm-content padding */
+.playground-main-content [data-playground-terminal-row] .terminal-line-numbers,
+.playground-main-content .assignment-terminal-line-numbers.assignment-terminal-gutter {
+  width: var(--terminal-gutter-width);
+  min-width: var(--terminal-gutter-width);
+  max-width: var(--terminal-gutter-width);
+  box-sizing: border-box;
+  padding-top: var(--terminal-content-offset);
+  padding-bottom: var(--terminal-content-offset);
+  padding-left: var(--terminal-gutter-inset-left);
+  padding-right: var(--terminal-gutter-inset-right);
+}
+
+.playground-main-content [data-playground-terminal-row] .playground-output {
+  padding: var(--terminal-content-offset);
+  box-sizing: border-box;
+}
+
+.playground-main-content [data-playground-terminal-row] .playground-output .sara-playground-terminal-pre,
+.playground-main-content [data-playground-terminal-row] .playground-output pre {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.playground-main-content pre.playground-output.assignment-terminal-scroll {
+  padding: var(--terminal-content-offset) !important;
+  box-sizing: border-box;
+}
+
+/* Learn: beat SyntaxHighlightedTextarea.css 32px !important on gutters */
+.learn-container .playground-main-content .playground-code-metrics .terminal-line-numbers,
+.learn-container .playground-main-content .playground-code-metrics .assignment-terminal-line-numbers.assignment-terminal-gutter {
+  width: var(--terminal-gutter-width) !important;
+  min-width: var(--terminal-gutter-width) !important;
+  max-width: var(--terminal-gutter-width) !important;
+  padding-top: var(--terminal-content-offset) !important;
+  padding-bottom: var(--terminal-content-offset) !important;
+  padding-left: var(--terminal-gutter-inset-left) !important;
+  padding-right: var(--terminal-gutter-inset-right) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.45 !important;
+}

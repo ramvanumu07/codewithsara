@@ -15,6 +15,7 @@ import { formatTerminalRunResult } from '../lib/formatTerminalOutput'
 import { logGroqDebugFromApi } from '../utils/groqDebug'
 import './Learn.css'
 import './Learn-responsive.css'
+import '../styles/playgroundTerminalAlign.css'
 
 const SESSION_COMPLETE_REASON = 'Session completed. You can view the conversation but cannot send new messages.'
 
@@ -1808,6 +1809,7 @@ const Learn = () => {
                   onChange={setAssignmentCode}
                   height="100%"
                   readOnly={false}
+                  foldGutter={false}
                 />
               </div>
             </div>

@@ -9,9 +9,10 @@ import CodeExecutor from '../services/CodeExecutor'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import { formatTerminalRunResult } from '../lib/formatTerminalOutput'
 import CodeEditor from './CodeEditor'
+import '../styles/playgroundTerminalAlign.css'
 
 const OUTPUT_PRE_STYLE =
-  'white-space: pre; overflow-x: auto; overflow-y: auto; word-break: normal; word-wrap: normal; margin: 0; padding: 8px; font-family: Monaco, Consolas, "SF Mono", "Courier New", monospace; background: #0d1117; min-height: 100%; box-sizing: border-box;'
+  'white-space: pre; overflow-x: auto; overflow-y: auto; word-break: normal; word-wrap: normal; margin: 0; padding: 0; font-family: Monaco, Consolas, "SF Mono", "Courier New", monospace; background: #0d1117; min-height: 100%; box-sizing: border-box;'
 
 export default function SessionPlayground({
   code,
@@ -328,6 +329,7 @@ export default function SessionPlayground({
               onChange={onCodeChange}
               height="100%"
               placeholder={placeholder}
+              foldGutter={false}
             />
           </div>
         </div>

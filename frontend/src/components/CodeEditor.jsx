@@ -15,7 +15,9 @@ export default function CodeEditor({
   onChange,
   height = '100%',
   readOnly = false,
-  placeholder = ''
+  placeholder = '',
+  /** Set false in playground so the fold column does not add a dark strip before line numbers */
+  foldGutter = true
 }) {
   const extensions = useMemo(
     () => [
@@ -32,10 +34,13 @@ export default function CodeEditor({
             overflow: 'auto',
             overflowX: 'auto',
             overflowY: 'auto',
-            backgroundColor: TERMINAL_BG
+            backgroundColor: TERMINAL_BG,
+            paddingLeft: 0,
+            paddingRight: 0,
+            marginLeft: 0
           },
           '.cm-content': {
-            padding: '16px',
+            padding: 'var(--terminal-content-offset, 16px)',
             fontFamily: "'Monaco', 'Consolas', 'SF Mono', 'Courier New', monospace",
             fontSize: '14px',
             lineHeight: 1.45,
@@ -44,10 +49,11 @@ export default function CodeEditor({
           '.cm-gutters': {
             backgroundColor: TERMINAL_BG,
             borderRight: '1px solid #30363d',
-            color: '#8b949e'
+            color: '#8b949e',
+            paddingLeft: 0,
+            marginLeft: 0
           },
-          '.cm-activeLineGutter': { backgroundColor: '#161b22' },
-          '.cm-lineNumbers .cm-gutterElement': { padding: '0 6px 0 10px', minWidth: '28px' }
+          '.cm-activeLineGutter': { backgroundColor: '#161b22' }
         },
         { dark: true }
       )
@@ -80,7 +86,7 @@ export default function CodeEditor({
           lineNumbers: true,
           highlightActiveLine: true,
           highlightActiveLineGutter: true,
-          foldGutter: true,
+          foldGutter,
           dropCursor: true,
           allowMultipleSelections: true,
           indentOnInput: true,
