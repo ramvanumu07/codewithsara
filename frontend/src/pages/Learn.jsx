@@ -1993,20 +1993,8 @@ const Learn = () => {
               const outputLines = (assignmentOutput || '').split('\n')
               const isError = assignmentOutput && (assignmentOutput.startsWith('Error:') || assignmentOutput.includes('[FAIL]'))
               return (
-                <div className="playground-code-metrics" style={{ flex: 1, display: 'flex', minHeight: 0, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none' }}>
-                  <div
-                    className="assignment-terminal-line-numbers assignment-terminal-gutter"
-                    style={{
-                      backgroundColor: '#0d1117',
-                      borderRight: '1px solid #30363d',
-                      color: '#8b949e',
-                      fontFamily: 'Monaco, Consolas, monospace',
-                      textAlign: 'right',
-                      userSelect: 'none',
-                      overflow: 'hidden',
-                      flexShrink: 0
-                    }}
-                  >
+                <div data-playground-terminal-row className="playground-code-metrics" style={{ flex: 1, display: 'flex', minHeight: 0, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none' }}>
+                  <div className="assignment-terminal-line-numbers assignment-terminal-gutter">
                     {outputLines.map((_, i) => (
                       <div key={i} className="assignment-terminal-gutter-row">{i + 1}</div>
                     ))}
@@ -2025,15 +2013,12 @@ const Learn = () => {
                       backgroundColor: '#0d1117',
                       color: isError ? '#ff7b72' : '#7ee787',
                       fontFamily: 'Monaco, Consolas, monospace',
-                      fontSize: '0.875rem',
-                      lineHeight: 1.45,
                       whiteSpace: 'pre',
                       overflowX: 'auto',
                       overflowY: 'auto',
                       wordBreak: 'normal',
                       wordWrap: 'normal',
                       minHeight: 0,
-                      padding: '8px',
                       boxSizing: 'border-box'
                     }}
                   >

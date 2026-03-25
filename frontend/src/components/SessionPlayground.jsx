@@ -53,7 +53,7 @@ export default function SessionPlayground({
       } catch (parseErr) {
         if (parseErr instanceof SyntaxError) {
           const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
-          if (lineNumDiv) lineNumDiv.innerHTML = '<div class="terminal-run-line" style="color: #8b949e; text-align: right; padding-right: 6px;">1</div>'
+          if (lineNumDiv) lineNumDiv.innerHTML = '<div class="terminal-run-line" style="color: #8b949e;">1</div>'
           outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: #ff7b72;"><span style="color: #ff7b72;">Syntax error: ${escapeHtml(parseErr.message)}</span></pre>`
           if (onRunError) onRunError(parseErr.message)
           return
@@ -72,7 +72,7 @@ export default function SessionPlayground({
       const outputLines = outputText.split('\n')
       if (lineNumDiv) {
         lineNumDiv.innerHTML = outputLines.map((_, i) =>
-          `<div class="terminal-run-line" style="color: #8b949e; text-align: right; padding-right: 6px;">${i + 1}</div>`
+          `<div class="terminal-run-line" style="color: #8b949e;">${i + 1}</div>`
         ).join('')
       }
       const formatted = outputLines
@@ -92,7 +92,7 @@ export default function SessionPlayground({
       const msg = err?.message || 'Code execution failed'
       outputDiv.innerHTML = `<pre style="${OUTPUT_PRE_STYLE} color: #ff7b72;"><span style="color: #ff7b72;">Error: ${escapeHtml(msg)}</span></pre>`
       const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
-      if (lineNumDiv) lineNumDiv.innerHTML = '<div class="terminal-run-line" style="color: #8b949e; text-align: right; padding-right: 6px;">1</div>'
+      if (lineNumDiv) lineNumDiv.innerHTML = '<div class="terminal-run-line" style="color: #8b949e;">1</div>'
       if (onRunError) onRunError('Code execution failed. Please check your syntax.')
     }
   }
@@ -398,19 +398,7 @@ export default function SessionPlayground({
           className="playground-code-metrics"
           style={{ flex: 1, backgroundColor: '#0d1117', border: '1px solid #30363d', borderTop: 'none', display: 'flex', minHeight: 0 }}
         >
-          <div
-            className="terminal-line-numbers"
-            style={{
-              backgroundColor: '#0d1117',
-              borderRight: '1px solid #30363d',
-              color: '#8b949e',
-              fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-              textAlign: 'right',
-              userSelect: 'none',
-              overflow: 'hidden',
-              flexShrink: 0
-            }}
-          />
+          <div className="terminal-line-numbers" />
           <div
             id="terminal-output"
             ref={terminalOutputRef}
@@ -422,16 +410,8 @@ export default function SessionPlayground({
             style={{
               flex: 1,
               minWidth: 0,
-              backgroundColor: '#0d1117',
-              color: '#7ee787',
-              fontFamily: 'Monaco, Consolas, "SF Mono", "Courier New", monospace',
-              whiteSpace: 'pre',
-              overflowX: 'auto',
-              overflowY: 'auto',
-              wordBreak: 'normal',
-              wordWrap: 'normal',
               minHeight: 0,
-              boxSizing: 'border-box'
+              color: '#7ee787'
             }}
           >
             <div className="playground-output-hint">
