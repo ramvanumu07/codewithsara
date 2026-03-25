@@ -9,6 +9,8 @@ import { downloadAllCourseProjectsZip } from '../utils/downloadCourseProjectsZip
 import OfferPricePromo from '../components/OfferPricePromo'
 import { useToast } from '../hooks/useToast'
 import { ToastContainer } from '../components/Toast'
+import EditorToggle from '../components/EditorToggle'
+import SessionPlayground from '../components/SessionPlayground'
 import './Auth.css'
 import './Dashboard.css'
 
@@ -31,6 +33,8 @@ const Dashboard = () => {
   const [downloadingCert, setDownloadingCert] = useState(false)
   const [downloadingProjectsZip, setDownloadingProjectsZip] = useState(false)
   const [showHowToRunSteps, setShowHowToRunSteps] = useState(false)
+  const [editorToggleOn, setEditorToggleOn] = useState(false)
+  const [playgroundCode, setPlaygroundCode] = useState('')
 
   const cancelledRef = useRef(false)
   useEffect(() => {
@@ -518,7 +522,32 @@ const Dashboard = () => {
     : null
 
   return (
-    <div className={`dashboard ${showMobileMenu ? 'mobile-menu-open' : ''}`}>
+    <div className={`dashboard ${showMobileMenu && !editorToggleOn ? 'mobile-menu-open' : ''}`}>
+      <EditorToggle isOn={editorToggleOn} onToggle={setEditorToggleOn} />
+      {editorToggleOn ? (
+        <div
+          className="dashboard-playground-fullscreen"
+          style={{
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+            backgroundColor: '#fff'
+          }}
+        >
+          <SessionPlayground
+            code={playgroundCode}
+            onCodeChange={setPlaygroundCode}
+            placeholder="Practice here or try something from your lessons!"
+          />
+        </div>
+      ) : (
+        <>
           {/* Mobile Menu Toggle */}
           <button
             className="mobile-menu-toggle"
@@ -658,7 +687,7 @@ const Dashboard = () => {
                   <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>In Sara</p>
                   <ol style={{ margin: '0 0 20px', paddingLeft: 20, color: '#374151', fontSize: '0.875rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
                     <li style={{ marginBottom: 8 }}>Complete the <strong>Session</strong> for a topic (chat with Sara to learn).</li>
-                    <li style={{ marginBottom: 8 }}>On the <strong>Learn</strong> page, use the <strong>code editor</strong> toggle to open the Playground, or open <strong>Assignments</strong> for that topic.</li>
+                    <li style={{ marginBottom: 8 }}>On the <strong>Dashboard</strong> or <strong>Learn</strong> page, use the <strong>code editor</strong> toggle on the right edge to open the Playground (editor and terminal), or on Learn open <strong>Assignments</strong> for that topic.</li>
                     <li style={{ marginBottom: 8 }}>Write or paste JavaScript in the editor and click <strong>Run</strong>. Output appears in the terminal panel.</li>
                   </ol>
                   <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>Without Sara (outside this app)</p>
@@ -790,10 +819,9 @@ const Dashboard = () => {
                   <div className="completion-celebration__grid">
                     <div className="completion-card completion-card--certificate">
                       <div className="completion-card__icon completion-card__icon--cert" aria-hidden>
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M12 15l-4 4h12l-4-4" />
-                          <path d="M12 3v12" />
-                          <path d="M8 7l4-4 4 4" />
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                          <circle cx="12" cy="8" r="7" />
+                          <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
                         </svg>
                       </div>
                       <h5 className="completion-card__heading">Completion certificate</h5>
@@ -959,7 +987,9 @@ const Dashboard = () => {
 
           </div>
 
-          <ToastContainer toasts={toasts} />
+        </>
+      )}
+      <ToastContainer toasts={toasts} />
 
     </div>
   )
