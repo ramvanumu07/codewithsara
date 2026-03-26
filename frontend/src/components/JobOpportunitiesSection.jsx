@@ -63,7 +63,7 @@ export default function JobOpportunitiesSection () {
       const blobUrl = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = blobUrl
-      a.download = 'SARA_Internship_Opportunities.csv'
+      a.download = 'SARA_Opportunities.csv'
       a.rel = 'noopener'
       document.body.appendChild(a)
       a.click()
@@ -79,7 +79,7 @@ export default function JobOpportunitiesSection () {
   return (
     <section className="job-opps" aria-labelledby="job-opps-heading">
       <div className="job-opps__head">
-        <h4 id="job-opps-heading" className="job-opps__title">Internship opportunities</h4>
+        <h4 id="job-opps-heading" className="job-opps__title">Opportunities</h4>
         <p className="job-opps__sub">
           Curated roles — download the full list or filter below.
         </p>
