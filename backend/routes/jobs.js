@@ -111,6 +111,13 @@ function parseCsvLine (line) {
   return out
 }
 
+/** First row cell values as in the published CSV (before alias mapping). For debug only. */
+function rawCsvFirstLineHeaders (text) {
+  const t = text.charCodeAt(0) === 0xfeff ? text.slice(1) : text
+  const line = t.split(/\r?\n/)[0] || ''
+  return parseCsvLine(line).map((h) => h.replace(/^"|"$/g, '').trim())
+}
+
 function parseCsv (text) {
   const rows = []
   let line = ''
@@ -267,6 +274,7 @@ router.get('/jobs-json', async (req, res) => {
     if (wantDebug) {
       const { text, rows, filtered, httpStatus } = await fetchSheetJobsRaw()
       const expiredCount = rows.filter((row) => isExpiredRow(row.valid_until)).length
+      const rawCsvHeaders = rawCsvFirstLineHeaders(text)
       const headerKeys = rows.length > 0 ? Object.keys(rows[0]) : []
       res.json({
         success: true,
@@ -275,6 +283,8 @@ router.get('/jobs-json', async (req, res) => {
           httpStatus,
           csvBytes: text.length,
           csvStartsWith: text.slice(0, 120).replace(/\r?\n/g, ' '),
+          rawCsvHeaders,
+          normalizedHeaderKeys: rawCsvHeaders.map((h) => normalizeHeaderKey(h)),
           parsedRowCount: rows.length,
           filteredRowCount: filtered.length,
           expiredFilteredCount: expiredCount,
