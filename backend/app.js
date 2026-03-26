@@ -28,6 +28,7 @@ import learningRoutes from './routes/learning.js'
 import paymentsRoutes from './routes/payments.js'
 import debugSchemaRoutes from './routes/debug-schema.js'
 import debugChatRoutes from './routes/debug-chat.js'
+import jobsRoutes from './routes/jobs.js'
 import { query, isDatabaseConfigured } from './services/db.js'
 
 import { performanceMonitor as performanceMonitorExport } from './middleware/performance.js'
@@ -60,6 +61,7 @@ app.use(cors({
       'http://localhost:5178',
       'http://localhost:3000'
     ]
+    // Include Netlify / production frontends (comma-separated in FRONTEND_URL)
     if (process.env.FRONTEND_URL) {
       allowedOrigins.push(...process.env.FRONTEND_URL.split(',').map(s => s.trim()).filter(Boolean))
     }
@@ -106,6 +108,8 @@ app.use('/api/debug', asMiddleware(debugChatRoutes))
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' })
 })
+
+app.use(jobsRoutes)
 
 app.get('/metrics', (req, res) => {
   if (process.env.NODE_ENV === 'production') {

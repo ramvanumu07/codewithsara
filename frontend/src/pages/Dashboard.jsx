@@ -11,6 +11,7 @@ import { useToast } from '../hooks/useToast'
 import { ToastContainer } from '../components/Toast'
 import EditorToggle from '../components/EditorToggle'
 import SessionPlayground from '../components/SessionPlayground'
+import JobOpportunitiesSection from '../components/JobOpportunitiesSection'
 import './Auth.css'
 import './Dashboard.css'
 
@@ -872,6 +873,8 @@ const Dashboard = () => {
                       </button>
                     </div>
                   </div>
+
+                  <JobOpportunitiesSection />
                 </div>
               )}
             </div>
