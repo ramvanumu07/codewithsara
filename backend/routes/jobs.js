@@ -7,6 +7,86 @@ import express from 'express'
 
 const router = express.Router()
 
+/** Lowercase, spaces/hyphens → underscores, strip non [a-z0-9_] so "Company Name" → company_name */
+function normalizeHeaderKey (s) {
+  return String(s)
+    .toLowerCase()
+    .trim()
+    .replace(/["']/g, '')
+    .replace(/[-–—]/g, '_')
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_]/g, '')
+}
+
+/**
+ * Canonical job columns + common Google Sheet header aliases (after normalizeHeaderKey).
+ */
+const FIELD_ALIASES = {
+  company: [
+    'company', 'company_name', 'employer', 'organization', 'organisation', 'org',
+    'firm', 'employer_name'
+  ],
+  role: [
+    'role', 'job_title', 'title', 'position', 'job', 'internship', 'internship_role',
+    'role_name', 'opening'
+  ],
+  location: [
+    'location', 'loc', 'work_location', 'city', 'office', 'site', 'where'
+  ],
+  skills: [
+    'skills', 'skill', 'tech_stack', 'technologies', 'tech', 'requirements'
+  ],
+  stipend: [
+    'stipend', 'stipend_amount', 'salary', 'pay', 'compensation', 'stipend_rs', 'stipend_inr'
+  ],
+  posted: [
+    'posted', 'posted_date', 'date_posted', 'posted_on', 'date'
+  ],
+  valid_until: [
+    'valid_until', 'valid_until_date', 'valid_till', 'expiry', 'deadline', 'apply_by',
+    'closes', 'end_date', 'last_date', 'closing_date'
+  ],
+  apply_link: [
+    'apply_link', 'apply', 'link', 'url', 'application_link', 'application_url',
+    'apply_here', 'website', 'form_link'
+  ]
+}
+
+function buildAliasToCanonical () {
+  const m = new Map()
+  for (const [canonical, list] of Object.entries(FIELD_ALIASES)) {
+    for (const a of list) {
+      const nk = normalizeHeaderKey(a)
+      if (!m.has(nk)) m.set(nk, canonical)
+    }
+  }
+  return m
+}
+
+const ALIAS_TO_CANONICAL = buildAliasToCanonical()
+
+function mapRowToCanonical (row) {
+  const out = {
+    company: '',
+    role: '',
+    location: '',
+    skills: '',
+    stipend: '',
+    posted: '',
+    valid_until: '',
+    apply_link: ''
+  }
+  for (const [key, val] of Object.entries(row)) {
+    const nk = normalizeHeaderKey(key)
+    const canon = ALIAS_TO_CANONICAL.get(nk)
+    if (canon == null) continue
+    const cur = String(out[canon] ?? '').trim()
+    if (cur) continue
+    out[canon] = val == null ? '' : String(val)
+  }
+  return out
+}
+
 function parseCsvLine (line) {
   const out = []
   let cur = ''
@@ -51,17 +131,20 @@ function parseCsv (text) {
   }
   if (line.length) rows.push(line)
   if (rows.length === 0) return []
-  const header = parseCsvLine(rows[0]).map((h) => h.replace(/^"|"$/g, '').trim().toLowerCase())
+  const header = parseCsvLine(rows[0]).map((h) =>
+    normalizeHeaderKey(h.replace(/^"|"$/g, '').trim())
+  )
   const data = []
   for (let r = 1; r < rows.length; r++) {
     const cells = parseCsvLine(rows[r])
     const obj = {}
     header.forEach((key, j) => {
+      if (!key) return
       let val = cells[j] ?? ''
       if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1).replace(/""/g, '"')
       obj[key] = val
     })
-    data.push(obj)
+    data.push(mapRowToCanonical(obj))
   }
   return data
 }
