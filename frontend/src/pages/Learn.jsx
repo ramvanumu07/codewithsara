@@ -53,8 +53,8 @@ function markdownCodeClassName(className) {
   return className
 }
 
-/** ~20ms per character (18–22ms range) */
-const TYPEWRITER_MS = 20
+/** 5ms per character */
+const TYPEWRITER_MS = 5
 
 /**
  * Shared markdown component map for chat. When plainFencedCode is true, fenced blocks use plain pre/code
@@ -217,7 +217,6 @@ function AssistantMessageWithTypewriter ({ fullContent, onTypingChunk, onTypingC
 
   blockIdRef.current = 0
   const showDots = !typingDone && displayed.length === 0
-  const showCursor = !typingDone && displayed.length > 0
 
   return (
     <div className="message-content message-content--plain" style={{ minWidth: 0, maxWidth: '100%' }}>
@@ -233,11 +232,6 @@ function AssistantMessageWithTypewriter ({ fullContent, onTypingChunk, onTypingC
             <ReactMarkdown key={typingDone ? 'md-done' : 'md-typing'} components={mdComponents}>
               {displayed.trim()}
             </ReactMarkdown>
-            {showCursor && (
-              <span className="message-typewriter-cursor" aria-hidden>
-                |
-              </span>
-            )}
           </div>
         )}
       </div>
