@@ -8,7 +8,8 @@ const GROQ_BASE = 'https://api.groq.com/openai/v1'
 
 /** Ordered list of models to try. First available wins; fallback on 404/deprecated. */
 const GROQ_MODELS = [
-  'llama-3.1-8b-instant',      // fallback: faster / cheaper if primary unavailable
+  'llama-3.1-8b-instant',
+  'llama-3.3-70b-versatile',
 ]
 
 function getDefaultModel() {
