@@ -378,18 +378,10 @@ const Learn = () => {
   const [assistantTyping, setAssistantTyping] = useState(false)
   /** Only the assistant message with this timestamp uses typewriter; cleared when user sends or history loads. */
   const [typewriterAssistantTimestamp, setTypewriterAssistantTimestamp] = useState(null)
-  const [typewriterScrollTick, setTypewriterScrollTick] = useState(0)
   const [sessionComplete, setSessionComplete] = useState(false)
-  const messagesEndRef = useRef(null)
   const messagesScrollContainerRef = useRef(null)
-  const lastMessageRef = useRef(null)
-  const stickToBottomRef = useRef(true)
   // Prevent double sessionChat('') from React StrictMode / effect re-run (race causes different AI responses, then visibilitychange overwrites UI)
   const sessionStartInProgressRef = useRef(null)
-
-  const bumpTypewriterScroll = useCallback(() => {
-    setTypewriterScrollTick((t) => t + 1)
-  }, [])
 
   const handleAssistantTypingDone = useCallback(() => {
     setAssistantTyping(false)
@@ -443,33 +435,6 @@ const Learn = () => {
     boxSizing: 'border-box',
     boxShadow: '0 1px 3px rgba(16, 163, 127, 0.22)'
   }
-
-  // Track whether user is near the bottom; only auto-scroll while "stuck" to bottom
-  useEffect(() => {
-    if (phase !== 'session') return
-    const el = messagesScrollContainerRef.current
-    if (!el) return
-    const threshold = 80
-    const onScroll = () => {
-      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < threshold
-      stickToBottomRef.current = nearBottom
-    }
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
-  }, [phase])
-
-  // Scroll so newest message is at top of view (user scrolls up to read previous)
-  useEffect(() => {
-    if (phase !== 'session') return
-    if (!stickToBottomRef.current) return
-    const el = lastMessageRef.current
-    const container = messagesScrollContainerRef.current
-    if (!el || !container) return
-    const raf = requestAnimationFrame(() => {
-      container.scrollTop = el.offsetTop
-    })
-    return () => cancelAnimationFrame(raf)
-  }, [messages, isTyping, assistantTyping, phase, typewriterScrollTick])
 
   // Handle window resize for responsive layout
   useEffect(() => {
@@ -747,7 +712,6 @@ const Learn = () => {
       timestamp: new Date().toISOString()
     }
 
-    stickToBottomRef.current = true
     setTypewriterAssistantTimestamp(null)
     setMessages(prev => [...prev, userMessage])
     setInputValue('')
@@ -1755,14 +1719,12 @@ const Learn = () => {
               return (
                 <div
                   key={`${index}-${message.timestamp || ''}`}
-                  ref={index === messages.length - 1 && !isTyping ? lastMessageRef : null}
                   className={`message-row message-row--${message.role}`}
                   style={{ justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start' }}
                 >
                   {useTypewriter ? (
                     <AssistantMessageWithTypewriter
                       fullContent={message.content}
-                      onTypingChunk={bumpTypewriterScroll}
                       onTypingComplete={handleAssistantTypingDone}
                     />
                   ) : (
@@ -1773,7 +1735,7 @@ const Learn = () => {
             })}
 
             {isTyping && (
-              <div ref={lastMessageRef} className="message-row message-row--assistant" style={{ justifyContent: 'flex-start' }}>
+              <div className="message-row message-row--assistant" style={{ justifyContent: 'flex-start' }}>
                 <div className="message-content message-content--plain">
                   <div className="typing-dots">
                     <span></span>
@@ -1783,7 +1745,6 @@ const Learn = () => {
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </div>
 
           {sessionComplete && (
