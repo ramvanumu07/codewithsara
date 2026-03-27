@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
@@ -53,24 +53,15 @@ function markdownCodeClassName(className) {
   return className
 }
 
-/**
- * Renders chat/outcome message content as Markdown.
- * One render path, one set of CSS classes (.message-markdown).
- */
-const MessageContent = ({ content, role }) => {
-  const [copiedId, setCopiedId] = useState(null)
-  const blockIdRef = useRef(0)
-  blockIdRef.current = 0
-  const onCopy = (id, code) => {
-    copyToClipboard(code).then((ok) => {
-      if (ok) {
-        setCopiedId(id)
-        setTimeout(() => setCopiedId(null), 2000)
-      }
-    })
-  }
+/** ~20ms per character (18–22ms range) */
+const TYPEWRITER_MS = 20
 
-  const mdComponents = {
+/**
+ * Shared markdown component map for chat. When plainFencedCode is true, fenced blocks use plain pre/code
+ * (used while typewriter is in progress); when false, SyntaxHighlightedCode runs after typing completes.
+ */
+function buildMarkdownComponents ({ copiedId, setCopiedId, blockIdRef, onCopy, plainFencedCode }) {
+  return {
     p: ({ children }) => <p>{children}</p>,
     strong: ({ children }) => <strong>{children}</strong>,
     em: ({ children }) => <em>{children}</em>,
@@ -96,7 +87,6 @@ const MessageContent = ({ content, role }) => {
       )
     },
     pre: ({ node, children }) => {
-      // Extract code string for copy button; support mdast (node.children[0].value) or children props
       let code = ''
       const first = node?.children?.[0]
       if (first && typeof first.value === 'string') code = first.value
@@ -120,11 +110,162 @@ const MessageContent = ({ content, role }) => {
           >
             {copiedId === id ? <CheckIcon /> : <CopyIcon />}
           </button>
-          <SyntaxHighlightedCode code={code} preClassName="message-markdown__code-block" />
+          {plainFencedCode ? (
+            <pre className="message-markdown__code-block message-markdown__code-block--plain">
+              <code>{code}</code>
+            </pre>
+          ) : (
+            <SyntaxHighlightedCode code={code} preClassName="message-markdown__code-block" />
+          )}
         </div>
       )
     }
   }
+}
+
+/**
+ * Session assistant message: typewriter reveal + cursor; syntax highlight only after typing completes.
+ */
+function AssistantMessageWithTypewriter ({ fullContent, onTypingChunk, onTypingComplete }) {
+  const [displayed, setDisplayed] = useState('')
+  const [typingDone, setTypingDone] = useState(false)
+  const [copiedId, setCopiedId] = useState(null)
+  const blockIdRef = useRef(0)
+  const intervalRef = useRef(null)
+  const fullRef = useRef(undefined)
+  const indexRef = useRef(0)
+
+  const onCopy = (id, code) => {
+    copyToClipboard(code).then((ok) => {
+      if (ok) {
+        setCopiedId(id)
+        setTimeout(() => setCopiedId(null), 2000)
+      }
+    })
+  }
+
+  const plainFenced = !typingDone
+  const mdComponents = useMemo(
+    () => buildMarkdownComponents({ copiedId, setCopiedId, blockIdRef, onCopy, plainFencedCode: plainFenced }),
+    [copiedId, plainFenced]
+  )
+
+  const clearTimer = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
+    }
+  }
+
+  const runTypewriter = (full) => {
+    indexRef.current = 0
+    clearTimer()
+    if (!full || full.length === 0) {
+      setDisplayed('')
+      setTypingDone(true)
+      onTypingComplete?.()
+      return
+    }
+    intervalRef.current = setInterval(() => {
+      indexRef.current += 1
+      const slice = full.slice(0, indexRef.current)
+      setDisplayed(slice)
+      if (indexRef.current === 1) onTypingChunk?.()
+      if (indexRef.current >= full.length) {
+        clearTimer()
+        setTypingDone(true)
+        onTypingComplete?.()
+      }
+    }, TYPEWRITER_MS)
+  }
+
+  useEffect(() => {
+    const next = typeof fullContent === 'string' ? fullContent : ''
+    const prev = fullRef.current
+    fullRef.current = next
+    clearTimer()
+
+    const midAnimation =
+      typeof prev === 'string' &&
+      prev.length > 0 &&
+      indexRef.current > 0 &&
+      indexRef.current < prev.length
+
+    if (prev !== next && midAnimation) {
+      setDisplayed(prev)
+      setTypingDone(true)
+      queueMicrotask(() => {
+        indexRef.current = 0
+        setDisplayed('')
+        setTypingDone(false)
+        runTypewriter(next)
+      })
+      return () => clearTimer()
+    }
+
+    indexRef.current = 0
+    setDisplayed('')
+    setTypingDone(false)
+    if (!next) {
+      onTypingComplete?.()
+      return () => clearTimer()
+    }
+    runTypewriter(next)
+    return () => clearTimer()
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- tick only when fullContent changes; callbacks are stable
+  }, [fullContent])
+
+  blockIdRef.current = 0
+  const showDots = !typingDone && displayed.length === 0
+  const showCursor = !typingDone && displayed.length > 0
+
+  return (
+    <div className="message-content message-content--plain" style={{ minWidth: 0, maxWidth: '100%' }}>
+      <div className="message-text">
+        {showDots ? (
+          <div className="typing-dots" aria-hidden>
+            <span />
+            <span />
+            <span />
+          </div>
+        ) : (
+          <div className="message-markdown message-markdown--typewriter">
+            <ReactMarkdown key={typingDone ? 'md-done' : 'md-typing'} components={mdComponents}>
+              {displayed.trim()}
+            </ReactMarkdown>
+            {showCursor && (
+              <span className="message-typewriter-cursor" aria-hidden>
+                |
+              </span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Renders chat/outcome message content as Markdown.
+ * One render path, one set of CSS classes (.message-markdown).
+ */
+const MessageContent = ({ content, role }) => {
+  const [copiedId, setCopiedId] = useState(null)
+  const blockIdRef = useRef(0)
+  blockIdRef.current = 0
+  const onCopy = (id, code) => {
+    copyToClipboard(code).then((ok) => {
+      if (ok) {
+        setCopiedId(id)
+        setTimeout(() => setCopiedId(null), 2000)
+      }
+    })
+  }
+
+  const mdComponents = useMemo(
+    () => buildMarkdownComponents({ copiedId, setCopiedId, blockIdRef, onCopy, plainFencedCode: false }),
+    [copiedId]
+  )
 
   const isUser = role === 'user'
   if (!content || typeof content !== 'string') {
@@ -239,12 +380,26 @@ const Learn = () => {
   const [messages, setMessages] = useState([])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  /** True while the last assistant message is typewriting (including before first character). Disables input. */
+  const [assistantTyping, setAssistantTyping] = useState(false)
+  /** Only the assistant message with this timestamp uses typewriter; cleared when user sends or history loads. */
+  const [typewriterAssistantTimestamp, setTypewriterAssistantTimestamp] = useState(null)
+  const [typewriterScrollTick, setTypewriterScrollTick] = useState(0)
   const [sessionComplete, setSessionComplete] = useState(false)
   const messagesEndRef = useRef(null)
   const messagesScrollContainerRef = useRef(null)
   const lastMessageRef = useRef(null)
+  const stickToBottomRef = useRef(true)
   // Prevent double sessionChat('') from React StrictMode / effect re-run (race causes different AI responses, then visibilitychange overwrites UI)
   const sessionStartInProgressRef = useRef(null)
+
+  const bumpTypewriterScroll = useCallback(() => {
+    setTypewriterScrollTick((t) => t + 1)
+  }, [])
+
+  const handleAssistantTypingDone = useCallback(() => {
+    setAssistantTyping(false)
+  }, [])
 
   // Session: code editor visibility — synced with fixed toggle and localStorage
   // Always show chat on load/reload; editor toggle state is not persisted for session phase
@@ -295,9 +450,24 @@ const Learn = () => {
     boxShadow: '0 1px 3px rgba(16, 163, 127, 0.22)'
   }
 
+  // Track whether user is near the bottom; only auto-scroll while "stuck" to bottom
+  useEffect(() => {
+    if (phase !== 'session') return
+    const el = messagesScrollContainerRef.current
+    if (!el) return
+    const threshold = 80
+    const onScroll = () => {
+      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < threshold
+      stickToBottomRef.current = nearBottom
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [phase])
+
   // Scroll so newest message is at top of view (user scrolls up to read previous)
   useEffect(() => {
     if (phase !== 'session') return
+    if (!stickToBottomRef.current) return
     const el = lastMessageRef.current
     const container = messagesScrollContainerRef.current
     if (!el || !container) return
@@ -305,7 +475,7 @@ const Learn = () => {
       container.scrollTop = el.offsetTop
     })
     return () => cancelAnimationFrame(raf)
-  }, [messages, isTyping, phase])
+  }, [messages, isTyping, assistantTyping, phase, typewriterScrollTick])
 
   // Handle window resize for responsive layout
   useEffect(() => {
@@ -380,6 +550,8 @@ const Learn = () => {
             if (topicIdRef.current !== requestedTopicId) return
 
             if (historyResponse.data.data.messages && historyResponse.data.data.messages.length > 0) {
+              setTypewriterAssistantTimestamp(null)
+              setAssistantTyping(false)
               setMessages(historyResponse.data.data.messages)
               // Check if session is complete based on message content
               const lastMessage = historyResponse.data.data.messages[historyResponse.data.data.messages.length - 1]
@@ -404,19 +576,34 @@ const Learn = () => {
                 if (data?.response != null) {
                   const apiMessages = data.messages
                   if (apiMessages && Array.isArray(apiMessages) && apiMessages.length > 0) {
-                    setMessages(apiMessages.map(m => ({ role: m.role, content: (m.content || '').trim(), timestamp: m.timestamp || new Date().toISOString() })))
+                    const mapped = apiMessages.map(m => ({ role: m.role, content: (m.content || '').trim(), timestamp: m.timestamp || new Date().toISOString() }))
+                    setMessages(mapped)
+                    const last = mapped[mapped.length - 1]
+                    if (last?.role === 'assistant') {
+                      setTypewriterAssistantTimestamp(last.timestamp)
+                      setAssistantTyping(true)
+                    }
                   } else {
-                    setMessages([{ role: 'assistant', content: data.response, timestamp: new Date().toISOString() }])
+                    const ts = new Date().toISOString()
+                    setMessages([{ role: 'assistant', content: data.response, timestamp: ts }])
+                    setTypewriterAssistantTimestamp(ts)
+                    setAssistantTyping(true)
                   }
                   if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
                     setSessionComplete(true)
                   }
                 } else {
-                  setMessages([{ role: 'assistant', content: data?.message || 'No response from AI. Please try again.', timestamp: new Date().toISOString() }])
+                  const ts = new Date().toISOString()
+                  setMessages([{ role: 'assistant', content: data?.message || 'No response from AI. Please try again.', timestamp: ts }])
+                  setTypewriterAssistantTimestamp(ts)
+                  setAssistantTyping(true)
                 }
               } catch (err) {
                 const msg = handleApiError(err, 'Sorry, Sara could not respond. Please try again.')
-                setMessages([{ role: 'assistant', content: msg, timestamp: new Date().toISOString() }])
+                const ts = new Date().toISOString()
+                setMessages([{ role: 'assistant', content: msg, timestamp: ts }])
+                setTypewriterAssistantTimestamp(ts)
+                setAssistantTyping(true)
               } finally {
                 sessionStartInProgressRef.current = null
               }
@@ -436,19 +623,34 @@ const Learn = () => {
                 if (data?.response != null) {
                   const apiMessages = data.messages
                   if (apiMessages && Array.isArray(apiMessages) && apiMessages.length > 0) {
-                    setMessages(apiMessages.map(m => ({ role: m.role, content: (m.content || '').trim(), timestamp: m.timestamp || new Date().toISOString() })))
+                    const mapped = apiMessages.map(m => ({ role: m.role, content: (m.content || '').trim(), timestamp: m.timestamp || new Date().toISOString() }))
+                    setMessages(mapped)
+                    const last = mapped[mapped.length - 1]
+                    if (last?.role === 'assistant') {
+                      setTypewriterAssistantTimestamp(last.timestamp)
+                      setAssistantTyping(true)
+                    }
                   } else {
-                    setMessages([{ role: 'assistant', content: data.response, timestamp: new Date().toISOString() }])
+                    const ts = new Date().toISOString()
+                    setMessages([{ role: 'assistant', content: data.response, timestamp: ts }])
+                    setTypewriterAssistantTimestamp(ts)
+                    setAssistantTyping(true)
                   }
                   if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
                     setSessionComplete(true)
                   }
                 } else {
-                  setMessages([{ role: 'assistant', content: data?.message || 'No response from AI. Please try again.', timestamp: new Date().toISOString() }])
+                  const ts = new Date().toISOString()
+                  setMessages([{ role: 'assistant', content: data?.message || 'No response from AI. Please try again.', timestamp: ts }])
+                  setTypewriterAssistantTimestamp(ts)
+                  setAssistantTyping(true)
                 }
               } catch (err) {
                 const msg = handleApiError(err, 'Sorry, Sara could not respond. Please try again.')
-                setMessages([{ role: 'assistant', content: msg, timestamp: new Date().toISOString() }])
+                const ts = new Date().toISOString()
+                setMessages([{ role: 'assistant', content: msg, timestamp: ts }])
+                setTypewriterAssistantTimestamp(ts)
+                setAssistantTyping(true)
               } finally {
                 sessionStartInProgressRef.current = null
               }
@@ -525,6 +727,8 @@ const Learn = () => {
         const historyResponse = await chat.getHistory(topicId)
         if (topicIdRef.current !== topicId) return
         if (historyResponse?.data?.data?.messages?.length > 0) {
+          setTypewriterAssistantTimestamp(null)
+          setAssistantTyping(false)
           setMessages(historyResponse.data.data.messages)
         }
       } catch (_) { /* ignore */ }
@@ -541,7 +745,7 @@ const Learn = () => {
       showInfo(SESSION_COMPLETE_REASON, 4000)
       return
     }
-    if (!inputValue.trim() || isTyping) return
+    if (!inputValue.trim() || isTyping || assistantTyping) return
 
     const userMessage = {
       role: 'user',
@@ -549,6 +753,8 @@ const Learn = () => {
       timestamp: new Date().toISOString()
     }
 
+    stickToBottomRef.current = true
+    setTypewriterAssistantTimestamp(null)
     setMessages(prev => [...prev, userMessage])
     setInputValue('')
     setIsTyping(true)
@@ -566,17 +772,26 @@ const Learn = () => {
           // Use full messages from API when available (keeps UI in sync with Neon DB)
           const apiMessages = data.messages
           if (apiMessages && Array.isArray(apiMessages) && apiMessages.length > 0) {
-            setMessages(apiMessages.map(m => ({
+            const mapped = apiMessages.map(m => ({
               role: m.role,
               content: (m.content || '').trim(),
               timestamp: m.timestamp || new Date().toISOString()
-            })))
+            }))
+            setMessages(mapped)
+            const last = mapped[mapped.length - 1]
+            if (last?.role === 'assistant') {
+              setTypewriterAssistantTimestamp(last.timestamp)
+              setAssistantTyping(true)
+            }
           } else {
             const content = (data.response ?? '').trim() || 'The AI returned an empty response. Please try again.'
+            const ts = new Date().toISOString()
             setMessages(prev => {
               const withoutPlaceholder = prev.slice(0, -1)
-              return [...withoutPlaceholder, { role: 'assistant', content, timestamp: new Date().toISOString() }]
+              return [...withoutPlaceholder, { role: 'assistant', content, timestamp: ts }]
             })
+            setTypewriterAssistantTimestamp(ts)
+            setAssistantTyping(true)
           }
           if (data.sessionComplete || data.response?.includes('ready for the playground') || data.response?.includes('Congratulations')) {
             setSessionComplete(true)
@@ -592,15 +807,18 @@ const Learn = () => {
       const status = err.response?.status
       if ((status === 400 || status === 403) && code === 'SESSION_ALREADY_COMPLETE') {
         setMessages(prev => prev.slice(0, -1))
+        setTypewriterAssistantTimestamp(null)
+        setAssistantTyping(false)
         setSessionComplete(true)
         showInfo(SESSION_COMPLETE_REASON, 4000)
         return
       }
       const actualError = handleApiError(err, 'Something went wrong. Please try again.')
+      const errTs = new Date().toISOString()
       const errorMessage = {
         role: 'assistant',
         content: actualError,
-        timestamp: new Date().toISOString()
+        timestamp: errTs
       }
       setMessages(prev => {
         const last = prev[prev.length - 1]
@@ -609,6 +827,8 @@ const Learn = () => {
         }
         return [...prev, errorMessage]
       })
+      setTypewriterAssistantTimestamp(errTs)
+      setAssistantTyping(true)
     } finally {
       setIsTyping(false)
     }
@@ -1531,16 +1751,32 @@ const Learn = () => {
       {phase === 'session' && !showEditorInSession && (
         <div className="session-container" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <div ref={messagesScrollContainerRef} className="messages-area" style={{ flex: 1, minHeight: 0, padding: '12px 16px' }}>
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                ref={!isTyping && index === messages.length - 1 ? lastMessageRef : null}
-                className={`message-row message-row--${message.role}`}
-                style={{ justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start' }}
-              >
-                <MessageContent content={message.content} role={message.role} />
-              </div>
-            ))}
+            {messages.map((message, index) => {
+              const useTypewriter =
+                message.role === 'assistant' &&
+                index === messages.length - 1 &&
+                message.timestamp === typewriterAssistantTimestamp &&
+                typeof message.content === 'string' &&
+                message.content.length > 0
+              return (
+                <div
+                  key={`${index}-${message.timestamp || ''}`}
+                  ref={index === messages.length - 1 && !isTyping ? lastMessageRef : null}
+                  className={`message-row message-row--${message.role}`}
+                  style={{ justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start' }}
+                >
+                  {useTypewriter ? (
+                    <AssistantMessageWithTypewriter
+                      fullContent={message.content}
+                      onTypingChunk={bumpTypewriterScroll}
+                      onTypingComplete={handleAssistantTypingDone}
+                    />
+                  ) : (
+                    <MessageContent content={message.content} role={message.role} />
+                  )}
+                </div>
+              )
+            })}
 
             {isTyping && (
               <div ref={lastMessageRef} className="message-row message-row--assistant" style={{ justifyContent: 'flex-start' }}>
@@ -1578,14 +1814,14 @@ const Learn = () => {
               }}
               placeholder={sessionComplete ? 'Session completed' : 'Type your message...'}
               rows="1"
-              disabled={isTyping || sessionComplete}
+              disabled={isTyping || assistantTyping || sessionComplete}
               readOnly={sessionComplete}
               style={sessionComplete ? { cursor: 'not-allowed', opacity: 0.8 } : undefined}
             />
             <button
               type="submit"
               className="send-btn"
-              disabled={!inputValue.trim() || isTyping || sessionComplete}
+              disabled={!inputValue.trim() || isTyping || assistantTyping || sessionComplete}
               style={sessionComplete ? { cursor: 'not-allowed', opacity: 0.8 } : undefined}
             >
               Send
