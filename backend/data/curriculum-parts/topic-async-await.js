@@ -18,6 +18,38 @@ export default {
     "Let's use async with arrow functions.\n\nYou can use **async** with **arrow functions**: **const f = async () => { };** or **async (x) => { return await g(x); }**. Same rules: the function **returns a promise**; you can **await** inside it. Use async arrow functions when you need an **async callback** (e.g. event handler, or .map() that does async work). Note: if you pass an async callback to something that **doesn't wait** for promises (e.g. forEach), the caller won't wait for your async work—use async callbacks where the caller awaits or uses the returned promises (e.g. **Promise.all(arr.map(async (x) => ...))**).\n\n## Example\n\n```javascript\nconst double = async function(n) {\n  return (await Promise.resolve(n)) * 2;\n};\ndouble(5).then(function(v) {\n  console.log(v);\n});\n```\n\n## Output\n\n```\n10\n```\n\n## What happens\n\n- double is an async function; double(5) returns a promise. Inside, await Promise.resolve(n) gives 5, then we return 10, so the promise fulfills with 10.\n- The caller uses .then() to get 10. When called, an async function always returns a promise, not the raw value.\n\n## Practice\n\nIn the example, what does double(5) return—the number 10 or a promise?",
     "Let's see how errors propagate in async code.\n\nIf you **throw** or **await a rejected promise** inside an async function and **don't catch**, the function's **returned promise rejects**. The **caller** can handle it: with **.catch()** on the returned promise, or by **awaiting** inside a **try/catch** in another async function. So errors **bubble up**: async f calls await g(), g throws → g's promise rejects → if f doesn't have try/catch around await g(), f's promise rejects → f's caller can catch. Same idea as promise chains: rejection propagates until a .catch() or try/catch handles it. Use try/catch (or .catch()) at the level where you can handle the error (e.g. show a message, retry); let others bubble if they can't.\n\n## Example\n\n```javascript\nasync function g() {\n  throw new Error('fail');\n}\nasync function f() {\n  await g();\n}\nf().catch(function(e) {\n  console.log(e.message);\n});\n```\n\n## Output\n\n```\nfail\n```\n\n## What happens\n\n- g() throws; g's returned promise rejects. f() awaits g(), so the rejection propagates and f's promise rejects. f() has no try/catch, so the error bubbles to the caller.\n- The caller's .catch() receives the error and logs the message. So: g → f → caller's .catch().\n\n## Practice\n\nIn the example, who catches the error—g, f, or the code that called f()?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, what does run() return—a value or a promise? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does the caller use .then() instead of just using the return value of getValue()?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, when the awaited promise rejects, where does execution go?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we use Promise.all instead of two separate await lines?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what does double(5) return—the number 10 or a promise?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, who catches the error—g, f, or the code that called f()?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that returns a Promise that resolves with the given value using async and await.\n  Examples:\n    simulateAsyncValue(\"Hello\") => \"Hello\"\n    simulateAsyncValue(\"World\") => \"World\"\n    simulateAsyncValue(\"Test\") => \"Test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nasync function simulateAsyncValue(value) {\n  // Implementation here\n}",

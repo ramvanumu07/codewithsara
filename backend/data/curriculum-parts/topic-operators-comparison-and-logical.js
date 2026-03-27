@@ -12,6 +12,23 @@ export default {
     "Let's use logical operators: AND, OR, and NOT.\n\n**Truthy** values are treated as true in logical checks (e.g. non-zero numbers, non-empty strings, true). **Falsy** values are treated as false: false, 0, \"\" (empty string), null, undefined, and NaN.\n\n`&&` (AND) is true only when both sides are truthy. `||` (OR) is true when at least one side is truthy. `!` (NOT) flips truthy to false and falsy to true.\n\n## Example\n\n```javascript\nconsole.log(true && true);\nconsole.log(true && false);\nconsole.log(true || false);\nconsole.log(!true);\nconsole.log(!0);\n```\n\n## Output\n\n```\ntrue\nfalse\ntrue\nfalse\ntrue\n```\n\nAND needs both true; OR needs one true; NOT inverts. They work with boolean values and truthy/falsy values.\n\n## Practice\n\nWhat does (5 > 3) && (10 > 7) evaluate to?",
     "Let's see how short-circuiting works.\n\nWith `&&`, if the left side is falsy, the right side is not evaluated (result is the left value). With `||`, if the left side is truthy, the right side is not evaluated (result is the left value). That saves work and allows patterns like fallbacks.\n\n## Example\n\n```javascript\nconsole.log(\"\" || \"Default\");\nconsole.log(\"Hi\" || \"Default\");\nconsole.log(0 && 100);\nconsole.log(5 && 10);\n```\n\n## Output\n\n```\nDefault\nHi\n0\n10\n```\n\nOR returns the first truthy value (or the last if all falsy). AND returns the first falsy value (or the last if all truthy). Useful for defaults and guards.\n\n## Practice\n\nWhat is the value of (null || \"fallback\")?"
   ],
+  "practise_tasks": [
+    {
+      "question": "What does 15 > 10 evaluate to?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What does (5 > 3) && (10 > 7) evaluate to?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What is the value of (null || \"fallback\")?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Use a and b as input.\n// Print the result of (a == b) followed by (a === b).\nconst a = 10;\nconst b = \"10\";\n// For a = 10, b = \"10\", output:\n// true\n// false",

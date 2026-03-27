@@ -22,6 +22,48 @@ export default {
     "Let's combine all elements.\n\nTo get one value from the whole array (sum, product, or a single string), **initialize a variable** before the loop, **update it inside** the loop using each element, then use the result after the loop. Same idea for total, average, or \"all items joined.\"\n\n## Example\n\n```javascript\nconst nums = [1, 2, 3, 4];\nlet sum = 0;\nfor (let i = 0; i < nums.length; i++) {\n  sum += nums[i];\n}\nconsole.log(sum);\n```\n\n## Output\n\n```\n10\n```\n\n## Practice\n\nIn the example, why do we initialize `sum` to 0 before the loop?",
     "Let's find one thing in an array.\n\nTo find a single value (largest, first match, etc.), loop and **compare**. For \"largest\": keep a variable (e.g. `max`), start with the first element, then update it whenever you see a larger one. For \"first that matches\": loop and stop (e.g. `break` or `return`) when you find it.\n\n## Example\n\n```javascript\nconst vals = [12, 5, 8, 21, 3];\nlet max = vals[0];\nfor (let i = 1; i < vals.length; i++) {\n  if (vals[i] > max) max = vals[i];\n}\nconsole.log(max);\n```\n\n## Output\n\n```\n21\n```\n\n## Practice\n\nIn the max example, why do we start with `max = vals[0]` instead of 0?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, how many elements does `scores` have, and at what index is 78?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "If `arr = [\"a\", \"b\", \"c\", \"d\"]`, what does `arr[2]` evaluate to?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "If `nums = [10, 20, 30, 40]`, what is `nums.length`?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "For an array with 4 elements, what index is the last element?",
+      "type": "straightforward",
+      "validation_hint": "Check syntax and behaviour match the exercise; use the rules from this outcome when judging correctness."
+    },
+    {
+      "question": "If `arr = [5, 10, 15]`, what does `arr` look like after `arr[0] = 0`?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, what is the range of index values (first and last) that the loop uses to visit every element?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we initialize `sum` to 0 before the loop?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the max example, why do we start with `max = vals[0]` instead of 0?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename numbers, use it as input for your program.\n// While testing we will change its value.\nconst numbers = [10, 20, 30, 40, 50];\n// Print the first and last elements of the array\n// Each on a new line\n// For numbers = [10, 20, 30, 40, 50], your output should be:\n// 10\n// 50",

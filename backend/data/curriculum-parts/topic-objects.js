@@ -22,6 +22,48 @@ export default {
     "Let's loop over an object's keys with **for...in**.\n\n**for (const key in obj)** loops over the object's enumerable property names. Each time you get one key (a string); use **obj[key]** to get the value. For \"own\" properties only, use `Object.keys(obj)` and a regular for loop, or check `obj.hasOwnProperty(key)` inside the loop.\n\n## Example\n\n```javascript\nconst animal = { type: \"dog\", age: 3 };\nfor (const k in animal) {\n  console.log(k, animal[k]);\n}\n```\n\n## Output\n\n```\ntype dog\nage 3\n```\n\n## Practice\n\nIn the example, what does `animal[k]` give you on each iteration—the key or the value?",
     "Let's check whether a property exists using **\"key\" in obj** or **hasOwnProperty**.\n\n**\"key\" in obj** is true if the object has that property (own or inherited). **obj.hasOwnProperty(\"key\")** is true only if the property exists on the object itself. Use these before reading a property when you're not sure it exists.\n\n## Example\n\n```javascript\nconst o = { a: 1 };\nconsole.log(\"a\" in o);\nconsole.log(\"b\" in o);\nconsole.log(o.hasOwnProperty(\"a\"));\n```\n\n## Output\n\n```\ntrue\nfalse\ntrue\n```\n\n## Practice\n\nIn the example, for a plain object with only own properties, would \"a\" in o and o.hasOwnProperty(\"a\") give the same result? What about \"b\" in o?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, what are the two property names in the `user` object?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "If `obj = { x: 1, y: 2 }`, what does `obj.x + obj[\"y\"]` evaluate to?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, why do we use `data[k]` instead of `data.k`?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "If `o = { a: 1, b: 2 }`, what does `o` look like after `o.c = 3` and `delete o.b`?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, how many levels of nesting does `config` have before we reach the number 5432?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "If `obj = { x: 10, y: 20 }`, what does `Object.keys(obj).length` evaluate to?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, what does `animal[k]` give you on each iteration—the key or the value?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, for a plain object with only own properties, would \"a\" in o and o.hasOwnProperty(\"a\") give the same result? What about \"b\" in o?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename person, use it as input for your program.\n// While testing we will change its value.\nconst person = { name: \"Alice\", age: 25, city: \"New York\" };\n// Print the name and age properties using dot notation\n// Each on a new line\n// For the given person object, your output should be:\n// Alice\n// 25",

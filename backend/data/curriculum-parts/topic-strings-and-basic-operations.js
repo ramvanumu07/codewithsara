@@ -20,6 +20,43 @@ export default {
     "Let's change string case.\n\n`.toLowerCase()` returns the string in lowercase. `.toUpperCase()` returns it in uppercase. The original string is unchanged; these methods return a new string.\n\n## Example\n\n```javascript\nconst word = \"Hello\";\nconsole.log(word.toLowerCase());\nconsole.log(word.toUpperCase());\nconsole.log(word);\n```\n\n## Output\n\n```\nhello\nHELLO\nHello\n```\n\nMethods are called with parentheses. Use them when you need to compare or display in a specific case.\n\n## Practice\n\nWrite code that prints \"WORLD\" in lowercase.",
     "Let's chain string methods.\n\nYou can call one method on the result of another: `str.method1().method2()`. Each method returns a string, so you can keep calling methods on the result. Execution flows left to right.\n\n## Example\n\n```javascript\nconst text = \"  Hello World  \";\nconsole.log(text.trim().toUpperCase());\n```\n\n## Output\n\n```\nHELLO WORLD\n```\n\nStep 1 — `text.trim()` removes spaces at the start and end, so the result is `\"Hello World\"`.\n\nStep 2 — `.toUpperCase()` is called on that result and returns `\"HELLO WORLD\"`. So the final output is HELLO WORLD. Each step works on the result of the previous one.\n\n## Practice\n\nWrite code that takes \"  abc  \" and prints it trimmed and in uppercase."
   ],
+  "practise_tasks": [
+    {
+      "question": "Write code that stores your name in a variable and prints it.",
+      "type": "personalised",
+      "validation_hint": "Learner-specific values are acceptable; verify correct syntax (variables, console.log, const/let) for this outcome."
+    },
+    {
+      "question": "Write code that creates a string with your city name and prints it.",
+      "type": "personalised",
+      "validation_hint": "Learner-specific values are acceptable; verify correct syntax (variables, console.log, const/let) for this outcome."
+    },
+    {
+      "question": "Write code that prints the length of the string \"hello\".",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints the first and last character of the string \"JavaScript\".",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that joins \"Good\" and \"morning\" with a space and prints the result.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints \"WORLD\" in lowercase.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that takes \"  abc  \" and prints it trimmed and in uppercase.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename str, use it as input for your program.\n// While testing we will change its value.\nconst str = \"Function\";\n// Print characters at positions 0, 2, 4, and 6\n// For example, if str = \"Function\", your output should be:\n// F\n// n\n// t\n// o",

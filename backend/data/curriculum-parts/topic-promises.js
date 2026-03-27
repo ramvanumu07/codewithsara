@@ -20,6 +20,43 @@ export default {
     "Let's wait for multiple promises with Promise.all() and Promise.allSettled().\n\n**Promise.all(array)** returns a promise that **fulfills** when **all** promises in the array fulfill, with an **array of results in the same order**. If **any** promise rejects, Promise.all **rejects** with that reason (fail fast). Use it when you need every result and want to wait for all. **Promise.allSettled(array)** waits for **all** to **settle** (fulfill or reject) and returns an array of **{ status, value }** or **{ status, reason }** for each. Use it when you want every outcome and don't want one rejection to stop the rest.\n\n## Example\n\n```javascript\nPromise.all([Promise.resolve(1), Promise.resolve(2)]).then(function(arr) {\n  console.log(arr);\n});\n```\n\n## Output\n\n```\n[ 1, 2 ]\n```\n\n## What happens\n\n- Both promises fulfill; Promise.all fulfills with [1, 2] in order. If one had rejected, Promise.all would reject with that reason.\n- Promise.allSettled([Promise.resolve(1), Promise.reject('e')]) would fulfill with [{ status: 'fulfilled', value: 1 }, { status: 'rejected', reason: 'e' }].\n\n## Practice\n\nIn the example, why does Promise.all give us [1, 2] in that order?",
     "Let's use Promise.race() to settle with the first result.\n\n**Promise.race(array)** returns a promise that **settles** (fulfills or rejects) as soon as the **first** promise in the array settles. You get that first result; the others are ignored. Use it for **timeouts** (race between a fetch and a timer that rejects after 5 seconds) or when you want the **first** of several sources to win. The result can be fulfillment or rejection—whatever settles first.\n\n## Example\n\n```javascript\nconst fast = Promise.resolve('first');\nconst slow = new Promise(function(r) {\n  setTimeout(function() {\n    r('second');\n  }, 100);\n});\nPromise.race([fast, slow]).then(function(v) {\n  console.log(v);\n});\n```\n\n## Output\n\n```\nfirst\n```\n\n## What happens\n\n- fast is already fulfilled; slow will fulfill in 100 ms. The first to settle is fast, so Promise.race fulfills with 'first'. The slow promise still runs but its result is ignored.\n\n## Practice\n\nIn the example, why does the output show 'first' and not 'second'?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, can the promise go from fulfilled back to pending once resolve(42) is called? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, when is resolve('done') called?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we use .catch() for the second line?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does the second .then() receive 6 and not 2?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, does the .finally() callback receive the value 'data'? Why or why not?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does Promise.all give us [1, 2] in that order?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does the output show 'first' and not 'second'?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that returns a Promise that resolves with the given value.\n  Return that promise so the caller can .then() or await the value.\n  Examples:\n    simulatePromiseResolve(\"Success\") => promise that resolves to \"Success\"\n    simulatePromiseResolve(\"Done\") => promise that resolves to \"Done\"\n    simulatePromiseResolve(\"Complete\") => promise that resolves to \"Complete\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction simulatePromiseResolve(value) {\n  // Implementation here\n}",

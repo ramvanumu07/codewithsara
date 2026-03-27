@@ -16,6 +16,33 @@ export default {
     "Let's control the loop by choosing the **start** value, the **step** (how much to add or subtract each time), and the **stop** condition.\n\n**In a for loop**\n\n- Start goes in init, step in the update (e.g. `i++` or `i += 2`), and stop in the condition (e.g. `i <= 10`).\n- You can use the loop variable inside the body as a counter or as an **index** to access each character in a string (e.g. `str[i]`).\n\nA common pattern is to loop over a string by index: start at 0, stop when `i < str.length`, and use `str[i]` in the body.\n\n## Example\n\n```javascript\nconst str = \"Hi\";\nfor (let i = 0; i < str.length; i++) {\n  console.log(str[i]);\n}\n```\n\n## Output\n\n```\nH\ni\n```\n\n## Practice\n\nIn the example, what is the value of i in the first iteration?",
     "Let's decide when to use for vs while.\n\n- Use **for** when you have a clear range or count: \"from 1 to 10\", \"for each index of this string.\" The start, condition, and update are in one place, so it is easy to read and hard to forget the update.\n- Use **while** when the number of runs is not a simple counter: \"until the user quits\", \"until we find a match.\"\n\nBoth can do the same job. Choose the one that makes your intent clearer.\n\n## Practice\n\nIn one sentence, when do you prefer a for loop over a while loop?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In one sentence, what is a loop and what is one iteration?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What would happen if you forgot to update the variable used in the while condition (e.g. never did n--)?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the for loop example, what runs first—the init, the condition, or the body?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, what is the value of i in the first iteration?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In one sentence, when do you prefer a for loop over a while loop?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Print numbers from 1 to 5 using a while loop\n// Each number should be on a new line\n// Your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5",

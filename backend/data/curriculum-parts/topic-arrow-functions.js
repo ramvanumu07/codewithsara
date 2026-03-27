@@ -12,6 +12,23 @@ export default {
     "Let's look at parameters and body.\n\n**Parameters**\n\n- **No parameters:** use empty parentheses: **() =>**.\n- **One parameter:** parentheses are **optional**. You can write **x =>** or **(x) =>**—both are valid.\n- **Two or more parameters:** parentheses are **required**. You must write **(a, b) =>**. Without parentheses, the comma between parameters would be unclear to JavaScript.\n\nSo in the example, `id` has one parameter, so we can write `(x)` or just `x`. `sum` has two parameters, so we must write `(a, b)`.\n\n**Body**\n\n- **One expression, no braces:** the value of that expression is returned automatically (**implicit return**).\n- **Braces `{ }`:** you must use **return** to send a value back.\n\n## Example\n\n```javascript\nconst zero = () => {\n  return 0;\n};\nconst id = (x) => {\n  return x;\n};\nconst sum = (a, b) => {\n  return a + b;\n};\nconsole.log(zero(), id(5), sum(1, 2));\n```\n\n## Output\n\n```\n0 5 3\n```\n\n## Practice\n\nIn the example, why does `sum` use parentheses `(a, b)` but `id` could use just `x` without parentheses?",
     "Let's return an object from a short arrow—wrap `{ }` in `( )` so JavaScript doesn't treat `{` as a function body.\n\nTo return an **object** with the short form, **wrap it in parentheses**: **() => ({ name: \"Ali\" })**. Without `( )`, the `{ }` is read as the function body, not the object. So use **() => ({ ... })** when you want to return an object in one expression.\n\n## Example\n\n```javascript\nconst point = () => ({\n  x: 0,\n  y: 0\n});\nconsole.log(point());\n```\n\n## Output\n\n```\n{ x: 0, y: 0 }\n```\n\n## Practice\n\nIn the example, why do we need parentheses around `{ x: 0, y: 0 }`? What would happen without them?",
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does `double` have no braces and no return keyword but still return a value?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does `sum` use parentheses `(a, b)` but `id` could use just `x` without parentheses?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we need parentheses around `{ x: 0, y: 0 }`? What would happen without them?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below arrow function that takes no parameters and returns \"Hello!\".\n  Examples:\n    greet() => \"Hello!\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nconst greet = () => {\n  // Implementation here\n};",

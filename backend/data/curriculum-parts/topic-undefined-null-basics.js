@@ -14,6 +14,28 @@ export default {
     "Let's compare undefined and null.\n\nBoth mean \"no value\" in a loose sense, but they are different. `undefined` is the default for missing or unset; `null` is a value you assign to mean \"intentionally empty.\" They are not equal in strict comparison.\n\n## Example\n\n```javascript\nconsole.log(undefined == null);\nconsole.log(undefined === null);\n```\n\n## Output\n\n```\ntrue\nfalse\n```\n\nUse `===` to tell them apart. Loose equality treats them as equal; strict does not.\n\n## Practice\n\nAre undefined and null equal when you use strict equality (===)? Why or why not?",
     "Let's use the typeof operator.\n\n`typeof value` returns a string naming the type: \"number\", \"string\", \"boolean\", \"undefined\", \"object\", \"function\". It is useful to check what kind of value you have.\n\n## Example\n\n```javascript\nconsole.log(typeof 42);\nconsole.log(typeof \"hi\");\nconsole.log(typeof undefined);\nconsole.log(typeof null);\n```\n\n## Output\n\n```\nnumber\nstring\nundefined\nobject\n```\n\nNote: typeof null is \"object\" (a known quirk). For null, check with `value === null`.\n\n## Practice\n\nWrite code that prints the type of true and the type of null."
   ],
+  "practise_tasks": [
+    {
+      "question": "Write code that declares a variable without assigning a value and prints it.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that sets a variable to null and prints it.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Are undefined and null equal when you use strict equality (===)? Why or why not?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "Write code that prints the type of true and the type of null.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename a, b, c, d, use them as input for your program.\n// While testing we will change their values.\nconst a = undefined;\nconst b = null;\nconst c = 42;\nconst d = \"hello\";\n// Print the type of each variable using typeof\n// For example, if a = undefined, b = null, c = 42, d = \"hello\", your output should be:\n// undefined\n// object\n// number\n// string",

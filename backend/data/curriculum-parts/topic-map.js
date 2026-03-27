@@ -14,6 +14,28 @@ export default {
     "Let's remember same length in, same length out.\n\nmap **always** returns an array with the **same length** as the original. Every element gets one callback call, and every return value becomes one element. You can't skip elements or add extra ones with map—if you need a shorter or longer array, you use a different method. With map, 3 elements in → 3 elements out.\n\n## Example\n\n```javascript\nconst a = [5, 10, 15];\nconst b = a.map(function(x) {\n  return x + 1;\n});\nconsole.log(a.length, b.length);\n```\n\n## Output\n\n```\n3 3\n```\n\n## What happens\n\n- a has 3 elements. map runs the callback 3 times and collects 3 return values.\n- b has 3 elements (6, 11, 16). Same length as a.\n\n## Practice\n\nIn the example, why does b have the same length as a?",
     "Let's remember the original array is not changed.\n\nmap does **not** change the array you call it on. It **returns** a new array. So the original stays the same—you can use it again, pass it elsewhere, or compare before and after. If you want to \"update\" an array, you assign the result: myArray = myArray.map(...).\n\n## Example\n\n```javascript\nconst orig = [1, 2, 3];\nconst updated = orig.map(function(x) {\n  return x * 10;\n});\nconsole.log(orig);\nconsole.log(updated);\n```\n\n## Output\n\n```\n[ 1, 2, 3 ]\n[ 10, 20, 30 ]\n```\n\n## What happens\n\n- orig is still [1, 2, 3].\n- updated is a new array [10, 20, 30]. We did not change orig.\n\n## Practice\n\nYou have an array items. You want a new array where each item has an extra property done: true. Should you use map and return new objects, or change each object in a forEach? Which keeps the original items unchanged?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, where do the values 2, 4, and 6 in doubled come from?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what does the callback return for \"hi\" and for \"bye\"? How do those become the new array?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does b have the same length as a?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "You have an array items. You want a new array where each item has an extra property done: true. Should you use map and return new objects, or change each object in a forEach? Which keeps the original items unchanged?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses map to double numbers.\n  Use map to create a new array with each number doubled.\n  Examples:\n    doubleNumbers([1, 2, 3, 4, 5]) => [2,4,6,8,10]\n    doubleNumbers([10, 20, 30]) => [20,40,60]\n    doubleNumbers([0]) => [0]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction doubleNumbers(arr) {\n  // Implementation here\n}",

@@ -14,6 +14,28 @@ export default {
     "Let's declare mutable variables with `let`.\n\n`let` creates a name for a value you can change. You can assign a new value later with `=`.\n\n## Example\n\n```javascript\nlet count = 0;\ncount = 1;\nconsole.log(count);\n```\n\n## Output\n\n```\n1\n```\n\nWe assign 0, then assign again. The name now refers to the new value. Use `let` when the value will change.\n\n## Practice\n\nWrite code that stores your nickname in a variable and prints it, then changes it to your real name and prints again.",
     "Let's see why `const` cannot be reassigned.\n\nWith `const`, you bind the name to a value once. Assigning a new value to that name causes an error.\n\n## Example\n\n```javascript\nconst x = 5;\nconsole.log(x);\nx = 10;\n```\n\n## Output\n\n```\n5\nTypeError: Assignment to constant variable.\n```\n\nWe print 5 with `console.log(x)`. The reassignment `x = 10` then throws the error. Use `const` for values that won't change; use `let` when you need to reassign.\n\n## Practice\n\nWhat happens if you assign a new value to a variable declared with const?"
   ],
+  "practise_tasks": [
+    {
+      "question": "Write code that stores your age in a variable and prints it.",
+      "type": "personalised",
+      "validation_hint": "Any plausible year or age is valid; must use const/let and console.log as in the lesson."
+    },
+    {
+      "question": "Write code that declares a constant for your birth year and prints it.",
+      "type": "personalised",
+      "validation_hint": "Any plausible year or age is valid; must use const/let and console.log as in the lesson."
+    },
+    {
+      "question": "Write code that stores your nickname in a variable and prints it, then changes it to your real name and prints again.",
+      "type": "personalised",
+      "validation_hint": "Any nickname and real name are valid; must use let, reassign, and print twice as taught."
+    },
+    {
+      "question": "What happens if you assign a new value to a variable declared with const?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename a and b, use them as input for your program.\n// While testing we will change their values.\nconst a = 15;\nconst b = 27;\n// Create 3 let variables: two for storing a and b, one for swapping\n// Swap the values using the third variable, then print both values after swapping\n// For example, if a = 15 and b = 27, your output should be:\n// 27\n// 15",

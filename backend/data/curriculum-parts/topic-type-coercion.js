@@ -22,6 +22,48 @@ export default {
     "Let's compare == and ===.\n\n`==` (loose equality) coerces types before comparing: \"5\" == 5 is true. `===` (strict equality) does not coerce: \"5\" === 5 is false. Same value and same type are required for ===.\n\n## Example\n\n```javascript\nconsole.log(\"5\" == 5);\nconsole.log(\"5\" === 5);\nconsole.log(0 == false);\nconsole.log(0 === false);\n```\n\n## Output\n\n```\ntrue\nfalse\ntrue\nfalse\n```\n\nPrefer === to avoid surprise coercions. Use == only when you intentionally want type coercion.\n\n## Practice\n\nAre \"10\" and 10 strictly equal (===)? Are they loosely equal (==)? Why?",
     "Let's write safer code around coercion.\n\nTo avoid bugs:\n\n1. Prefer === over ==.\n2. Convert explicitly with Number() or String() when mixing types.\n3. Check for NaN with Number.isNaN() after operations that can fail.\n4. Be aware that + with a string concatenates; use Number() first when you want numeric addition.\n\n## Example\n\n```javascript\nconst input = \"42\";\nconst num = Number(input);\nconsole.log(num + 10);\n```\n\n## Output\n\n```\n52\n```\n\nConverting with Number(input) first makes it clear we want a number. Without it, input + 10 would be \"4210\". Explicit conversion and strict equality reduce surprises from implicit coercion.\n\n## Practice\n\nIf you have a string \"7\" and want to add 3 to get 10, what should you do first and why?"
   ],
+  "practise_tasks": [
+    {
+      "question": "What is the output of 10 + \"5\"? What is the output of 10 - \"5\"? Why are they different?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What is the output of Number(\"10\") + 5? What is the output of \"10\" + 5? Which one is explicit conversion and which is implicit?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What is the output of 20 + \"4\"? Why is it not 24?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What is the output of \"50\" - 10 and \"50\" * 2? Why do these give numbers and not strings?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What does Boolean(0) return? What does Boolean(\"hello\") return? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What is the result of Number(\"xyz\")? How would you check in code whether a value is NaN?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "Are \"10\" and 10 strictly equal (===)? Are they loosely equal (==)? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "If you have a string \"7\" and want to add 3 to get 10, what should you do first and why?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename a, b, c, use them as input for your program.\n// While testing we will change their values.\nconst a = \"5\";\nconst b = 5;\nconst c = 0;\n// Calculate a == b, a === b, c == false, c === false\n// Print all four boolean results\n// For example, if a = \"5\", b = 5, c = 0, your output should be:\n// true\n// false\n// true\n// false",

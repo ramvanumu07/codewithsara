@@ -28,6 +28,63 @@ export default {
     "Let's compare two moments by comparing their getTime() values.\n\nTo know if one date is before or after another, compare them as numbers.\n\nCall `getTime()` on each Date and use <, >, or === on those numbers. Don't rely on comparing the Date objects themselves with == or ===—that compares references, not the actual moments. So: a.getTime() < b.getTime() means \"a is earlier than b.\"\n\n## Example\n\n```javascript\nconst a = new Date(\"2024-06-01\");\nconst b = new Date(\"2024-06-15\");\nconsole.log(a.getTime() < b.getTime());\n```\n\n## Output\n\n```\ntrue\n```\n\nYou can also subtract: b.getTime() - a.getTime() gives the difference in milliseconds.\n\n## Practice\n\nTo check if date d1 is before d2, should you use d1 < d2 or d1.getTime() < d2.getTime()?",
     "Let's add or subtract time by adding or subtracting milliseconds from getTime().\n\nTo get a date that is N days before or after another, work with milliseconds.\n\nGet the timestamp with getTime(), add or subtract the right number of milliseconds (e.g. one day = 24 * 60 * 60 * 1000), then create a new Date from that number: `new Date(d.getTime() + oneDayMs)`. That gives you a new Date without changing the original.\n\n## Example\n\n```javascript\nconst d = new Date(\"2024-01-15\");\nconst oneDayMs = 24 * 60 * 60 * 1000;\nconst tomorrow = new Date(d.getTime() + oneDayMs);\nconsole.log(tomorrow.toDateString());\n```\n\n## Output\n\n```\nTue Jan 16 2024\n```\n\nAdding milliseconds is predictable. For \"7 days later,\" add 7 * oneDayMs.\n\n## Practice\n\nTo get a Date 7 days after d, do you add 7 to d directly or use new Date(d.getTime() + 7 * oneDayMs)?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In one line, what does `new Date()` with no arguments give you?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "When you call new Date() with no arguments, what moment in time does the Date represent?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What month index do you pass for January? For December?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What output do you get when you run toDateString() on new Date(\"2025-01-10\")?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What does getMonth() return for July—the number 7 or the number 6?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What does getDay() return for a Wednesday?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "When would you use toISOString() instead of toDateString()?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "After calling d.setMonth(5) on a Date, does d refer to a new Date or the same Date changed in place?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "What does getTime() return—a number or a string?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "To check if date d1 is before d2, should you use d1 < d2 or d1.getTime() < d2.getTime()?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "To get a Date 7 days after d, do you add 7 to d directly or use new Date(d.getTime() + 7 * oneDayMs)?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Create a Date for January 1, 2025 using new Date(year, monthIndex, day).\n// January = monthIndex 0; December = 11.\n// Print the date with toDateString().\n// Expected output: Wed Jan 01 2025",

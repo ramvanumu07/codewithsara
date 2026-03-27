@@ -14,6 +14,28 @@ export default {
     "Let's split into single characters with split(\"\").\n\n**str.split(\"\")** splits the string into an array of **single characters**. Each character (including spaces) becomes one element. Use this when you need to work with each character—e.g. count, reverse, or transform. **arr.join(\"\")** does the opposite: it concatenates the array with nothing between, so you can go from string → characters → back to string after changes.\n\n## Example\n\n```javascript\nconsole.log(\"abc\".split(\"\"));\n```\n\n## Output\n\n```\n[ 'a', 'b', 'c' ]\n```\n\n## What happens\n\n- Splitting with \"\" cuts between every character, so you get one element per character.\n- For normal text (letters, numbers, spaces), this is fine. For emoji or other complex characters, one \"character\" might take more than one array element.\n\n## Practice\n\nIn the example, why does split(\"\") give one element per character?",
     "Let's split, modify, then join.\n\nA common pattern: **split** a string into an array, **change** the array (with map, filter, etc.), then **join** back to a string. That way you use array methods on text—uppercase each word, remove empty parts, reorder, and so on.\n\n## Example\n\n```javascript\nconst s = \"one two three\";\nconst out = s.split(\" \").map(function(w) {\n  return w.toUpperCase();\n}).join(\" \");\nconsole.log(out);\n```\n\n## Output\n\n```\nONE TWO THREE\n```\n\n## What happens\n\n- split(\" \") → [\"one\", \"two\", \"three\"].\n- map: each word becomes uppercase → [\"ONE\", \"TWO\", \"THREE\"].\n- join(\" \") → \"ONE TWO THREE\".\n\n## Practice\n\nIn the example, why do we split by \" \" first, then join by \" \" at the end?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why do we get three elements? Where do the hyphens go?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does join(\"\") give \"xyz\" but join(\", \") gives \"x, y, z\"?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does split(\"\") give one element per character?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we split by \" \" first, then join by \" \" at the end?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses split() to convert string to array.\n  Use split() to convert it into an array using comma as separator.\n  Examples:\n    splitByComma(\"apple,banana,cherry\") => [\"apple\",\"banana\",\"cherry\"]\n    splitByComma(\"one,two,three\") => [\"one\",\"two\",\"three\"]\n    splitByComma(\"hello\") => [\"hello\"]\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction splitByComma(str) {\n  // Implementation here\n}",

@@ -18,6 +18,38 @@ export default {
     "Let's avoid callback hell.\n\nWhen you have **multiple async steps** in a row (e.g. get user, then get orders, then get details), you end up **nesting callbacks**: a callback that calls the next step, which has a callback that calls the next, and so on. That leads to **deep indentation**, hard-to-read code, and **error handling** repeated at every level. That's often called \"**callback hell**.\" Callbacks work, but they don't scale well for long sequential async flows. The solution is to use **Promises** (or async/await), which let you write sequential steps in a flatter, chainable way and handle errors in one place.\n\n## Example\n\n```javascript\nstep1(function(err, a) {\n  if (err) return;\n  step2(a, function(err, b) {\n    if (err) return;\n    step3(b, function(err, c) { });\n  });\n});\n```\n\n## What happens\n\n- Each step takes a callback; the next step is inside that callback. The code \"pyramid\" grows with each step.\n- Reading order and error handling become messy. Promises (next topic) replace this with .then() chains and .catch().\n\n## Practice\n\nYou need to do A, then B, then C (each async). With callbacks only, what happens to indentation and error handling as you add steps?",
     "Let's see why Promises are next.\n\n**Promises** represent a **future value** (or error). Instead of passing a callback into a function, you get back a Promise and call **.then()** or **.catch()** on it. You can **chain** .then().then() instead of nesting callbacks, so async flow looks more **linear**. Errors can be handled in **one** .catch() instead of at every nesting level. Promises are the foundation for **async/await** (syntax that makes async code look like sync code). For new async code with several steps, prefer Promises or async/await over raw callbacks. The next topic covers Promise syntax in detail.\n\n## Example\n\n```javascript\nconst p = new Promise(function(resolve) {\n  setTimeout(function() {\n    resolve('done');\n  }, 100);\n});\np.then(function(result) {\n  console.log(result);\n});\n```\n\n## Output\n\n```\n(about 100 ms later)\ndone\n```\n\n## What happens\n\n- The Promise wraps the setTimeout; when the timer fires, resolve('done') is called. That fulfills the Promise with the value 'done'.\n- .then() runs when the Promise is fulfilled and receives that value. One chain instead of nested callbacks.\n\n## Practice\n\nIn the example, when does the .then() callback run—immediately or after the Promise is fulfilled?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does B print after C even though the setTimeout call appears before console.log('C')?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does 'done' appear about one second later and not immediately?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we need to keep the id returned by setInterval?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does 'now' print before 'later'?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "You need to do A, then B, then C (each async). With callbacks only, what happens to indentation and error handling as you add steps?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, when does the .then() callback run—immediately or after the Promise is fulfilled?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  ## Delayed result with a Promise\n\n  Real timers don’t return a value immediately—they run a **callback** later. Here you model that: return a **Promise** that **resolves to `message`** after **`delay` milliseconds** using **setTimeout**.\n\n  ## Example (pattern)\n\n  ```javascript\n  function later(msg, ms) {\n    return new Promise((resolve) => {\n      setTimeout(() => resolve(msg), ms);\n    });\n  }\n  // await later(\"Hi\", 500) → eventually \"Hi\"\n  ```\n\n  ## What happens\n\n  - `new Promise` gives the caller something they can **await**.\n  - When the timer fires, `resolve(message)` fulfills the Promise with that string.\n\n  ## Test cases (grader)\n\n  | Call | Result |\n  |------|--------|\n  | simulateTimeout(\"Hello\", 0) | \"Hello\" |\n  | simulateTimeout(\"World\", 0) | \"World\" |\n  | simulateTimeout(\"Test\", 0) | \"Test\" |\n\n  **You must return a Promise** (tests await it).\n*/\n\nfunction simulateTimeout(message, delay) {\n  // Implementation here\n}",

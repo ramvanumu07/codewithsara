@@ -20,6 +20,43 @@ export default {
     "Let's remember rest must be last.\n\n**...rest** means \"all remaining,\" so it only makes sense at the **end**. In array destructuring you can't write `[a, ...rest, b]` — the parser wouldn't know where \"remaining\" stops. Rule: **one rest per pattern, and it must come last.** Same for object destructuring: `const { a, ...rest } = obj` — rest is last.\n\n## Example\n\n```javascript\nconst [x, ...tail] = [1, 2, 3, 4];\nconsole.log(x, tail);\n```\n\n## Output\n\n```\n1 [ 2, 3, 4 ]\n```\n\n## Practice\n\nIn the example, why can't we put ...tail in the middle of the pattern?",
     "Let's compare spread vs rest.\n\nSame **`...`** syntax, different **place**. **Spread** appears where you're **giving** values: inside array literals `[...arr]`, object literals `{ ...obj }`. It **expands** one value into many. **Rest** appears where you're **receiving** values: in destructuring `[x, ...y] = arr` or `{ a, ...rest } = obj`. It **gathers** the rest into one variable. Rule: **spread expands out; rest gathers in.**\n\n## Example\n\n```javascript\nconst [a, ...r] = [1, 2, 3];   // rest: r = [2, 3]\nconst b = [...r, 4];            // spread: r expands into new array\nconsole.log(b);\n```\n\n## Output\n\n```\n[ 2, 3, 4 ]\n```\n\n## Practice\n\nIn the example, when we use ... in `[...r, 4]`, are we expanding `r` or gathering into something? Why?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does `b` end up with 1, 2, 3, and then 4?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does `orig[0]` still show 1 after we changed `copy[0]` to 99?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, how do we get one array that has both u's and v's elements?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does `next` have count: 1 but `state` still has count: 0?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does `rest` get [20, 30] and not include 10?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why can't we put ...tail in the middle of the pattern?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, when we use ... in `[...r, 4]`, are we expanding `r` or gathering into something? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename arr1 and arr2, use them as input for your program.\n// While testing we will change their values.\nconst arr1 = [1, 2, 3];\nconst arr2 = [4, 5, 6];\n// Use the spread operator to combine arr1 and arr2 into a new array\n// Print each element of the combined array on a new line\n// For arr1 = [1, 2, 3] and arr2 = [4, 5, 6], your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5\n// 6",

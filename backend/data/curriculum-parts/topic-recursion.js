@@ -16,6 +16,33 @@ export default {
     "Let's use recursion on an array.\n\nWe can do the same idea with a list: **first element** plus **result for the rest**. Base case: empty array (e.g. return 0 for sum).\n\n## Example\n\n```javascript\nfunction sumArr(arr) {\n  if (arr.length === 0) return 0;\n  return arr[0] + sumArr(arr.slice(1));\n}\nconsole.log(sumArr([2, 3]));\n```\n\n## Output\n\n```\n5\n```\n\n## What happens\n\n- sumArr([2, 3]) → 2 + sumArr([3])\n- sumArr([3]) → 3 + sumArr([])\n- sumArr([]) → returns 0\n- So: 2 + 3 = **5**\n\n**Diagram**\n\n```text\nsumArr([2, 3])  →  2 + sumArr([3])\nsumArr([3])     →  3 + sumArr([])  →  0\nSo: 2 + 3 = 5\n```\n\n## Practice\n\nIn sumArr, why do we need the check arr.length === 0?",
     "Let's see when recursion goes wrong.\n\nIf we **never reach the base case**, the function keeps calling itself. Each call uses memory. Soon the program runs out of memory and crashes (a **stack overflow** error). So we must have a stop condition and we must pass a value that gets us closer to it (e.g. n - 1, not n).\n\n**Example (wrong)**\n\n```javascript\nfunction bad(n) {\n  return bad(n);\n}\n```\n\nCalling bad(1) would call bad(1) again and again until the program crashes.\n\n## Practice\n\nIn the bad example, why does calling bad(1) eventually crash? What is missing?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does countdown(2) eventually stop?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In sumToN, why do we pass n - 1 and not n when we call sumToN again?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, how does the value 0 from the base case end up in the final answer 3? In other words, how does the return value \"travel back up\"?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In sumArr, why do we need the check arr.length === 0?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the bad example, why does calling bad(1) eventually crash? What is missing?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below recursive function to count down from n to 1.\n  Print each number on a new line. Stop when n reaches 0 or less.\n  Examples:\n    countdown(5) => prints \"5\\n4\\n3\\n2\\n1\"\n    countdown(3) => prints \"3\\n2\\n1\"\n    countdown(0) => prints nothing\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction countdown(n) {\n  // Implementation here\n}",

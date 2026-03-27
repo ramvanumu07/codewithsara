@@ -14,6 +14,28 @@ export default {
     "Let's check if a string contains a substring with includes().\n\n**str.includes(searchValue)** returns **true** if the substring exists **anywhere** in the string, **false** otherwise. Optional second argument: **includes(searchValue, fromIndex)** starts the search from that index. Use includes when you only need a **yes/no** answer—\"does this string contain X?\"—without caring about the position. Clearer than writing indexOf(...) !== -1. Case-sensitive.\n\n## Example\n\n```javascript\nconst s = \"JavaScript\";\nconsole.log(s.includes(\"Script\"));\nconsole.log(s.includes(\"python\"));\n```\n\n## Output\n\n```\ntrue\nfalse\n```\n\n## What happens\n\n- \"Script\" appears in the string → true.\n- \"python\" does not → false.\n- Good for conditionals: if (str.includes(\"@\")) { ... }\n\n## Practice\n\nIn the example, when would you use includes instead of indexOf?",
     "Let's check prefixes and suffixes with startsWith() and endsWith().\n\n**str.startsWith(searchValue)** returns **true** if the string **begins** with searchValue; **str.endsWith(searchValue)** returns **true** if it **ends** with searchValue. Otherwise **false**. Use them for **prefixes and suffixes**—e.g. \"https://\" for URLs, \".txt\" or \".json\" for file extensions, or simple validation. Case-sensitive. Optional second arguments let you check from a given position or treat the string as a different length.\n\n## Example\n\n```javascript\nconst s = \"https://example.com\";\nconsole.log(s.startsWith(\"https\"));\nconsole.log(s.endsWith(\".com\"));\n```\n\n## Output\n\n```\ntrue\ntrue\n```\n\n## What happens\n\n- The string starts with \"https\" → true.\n- The string ends with \".com\" → true.\n- No need to use slice or indexOf for simple start/end checks.\n\n## Practice\n\nIn the example, why use startsWith and endsWith instead of slice or indexOf for these checks?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does indexOf(\"xyz\") return -1?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does lastIndexOf(\"na\") return 4 and not 2?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, when would you use includes instead of indexOf?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why use startsWith and endsWith instead of slice or indexOf for these checks?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses indexOf() to find position of substring.\n  Use indexOf() to find the position of the search term.\n  Examples:\n    findPosition(\"Hello World\", \"World\") => 6\n    findPosition(\"JavaScript\", \"Script\") => 4\n    findPosition(\"testing\", \"ing\") => 4\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findPosition(str, search) {\n  // Implementation here\n}",

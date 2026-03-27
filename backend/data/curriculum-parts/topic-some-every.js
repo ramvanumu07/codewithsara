@@ -14,6 +14,28 @@ export default {
     "Let's see how some and every stop early.\n\n**some** stops as soon as the callback returns true—one match is enough. **every** stops as soon as the callback returns false—one failure is enough. So the callback might not run for every element. That keeps things efficient and matches how we think: once you know the answer, you don't need to check the rest.\n\n## Example\n\n```javascript\nconst arr = [1, 2, 3, 4, 5];\nconst hasTwo = arr.some(function(x) {\n  return x === 2;\n});\nconst allSmall = arr.every(function(x) {\n  return x < 10;\n});\nconsole.log(hasTwo, allSmall);\n```\n\n## Output\n\n```\ntrue true\n```\n\n## What happens\n\n- some: 1 === 2? No. 2 === 2? Yes → true, stop. 3, 4, 5 are not checked.\n- every: checks 1, 2, 3, 4, 5; all are < 10, so true.\n\n## Practice\n\nIn the example, for some, why does the callback not run for every element in the array?",
     "Let's see how some() and every() behave on empty arrays.\n\nFor an **empty array**: **some()** returns **false** (there is no element that passes—there are no elements). **every()** returns **true** (no element fails—so \"all\" pass). This is easy to forget: an empty list \"has no one that…\" so some says false; \"every one …\" with no ones is treated as true.\n\n## Example\n\n```javascript\nconsole.log([].some(function(x) {\n  return x > 0;\n}));\nconsole.log([].every(function(x) {\n  return x > 0;\n}));\n```\n\n## Output\n\n```\nfalse\ntrue\n```\n\n## What happens\n\n- Empty array. some: no element makes the callback true → false.\n- every: no element fails the callback → true. Always consider empty arrays when you use some or every.\n\n## Practice\n\nIn the example, why does some return false and every return true for an empty array?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does hasEven become true?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what would need to happen for allEven to be false?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, for some, why does the callback not run for every element in the array?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does some return false and every return true for an empty array?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses some to check if at least one number is even.\n  Use some to check if at least one number is even.\n  Examples:\n    hasAnyEven([1, 3, 5, 7, 9]) => false\n    hasAnyEven([1, 2, 3]) => true\n    hasAnyEven([2, 4, 6]) => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction hasAnyEven(arr) {\n  // Implementation here\n}",

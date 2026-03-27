@@ -26,6 +26,58 @@ export default {
     "Let's capture parts of a match with parentheses and reuse them in replace ($1, $2, …).\n\n**Parentheses ( )** in the pattern create a **capture group**. The matched text is available as **match[1]**, **match[2]**, ... (**match[0]** is the full match). In **replace**, use **$1**, **$2**, ... in the replacement to insert captured text. Use groups to **extract** parts (e.g. year, month, day) or **reuse** them.\n\n```\n  Syntax              Meaning              One-line example\n  (pattern)           Capture this part    (\\d{4}) captures 4-digit year\n  match[0]            Full match            match[1], match[2] = 1st, 2nd group\n  $1, $2 in replace   Insert captured text \"2024-05\".replace(/(\\d{4})-(\\d{2})/, \"$2/$1\") → \"05/2024\"\n```\n\n## Example\n\n```javascript\nconst m = \"2024-05-15\".match(/(\\d{4})-(\\d{2})-(\\d{2})/);\nconsole.log(m[1], m[2], m[3]);\n```\n\n## Output\n\n```\n2024 05 15\n```\n\n## Practice\n\nIn the example, what do m[1], m[2], and m[3] contain?",
     "Let's choose between a /pattern/ literal and new RegExp() when the pattern comes from a variable.\n\n**Literal** **/pattern/flags** (e.g. **/\\\\d+/g**) — use when the pattern is **fixed** in code. **Constructor** **new RegExp('pattern', 'flags')** — use when the pattern is in a **variable** or built from strings. In the constructor, **double** backslashes in the string: **new RegExp('\\\\d+')** for \\d, because the string parser consumes one.\n\n```\n  Form                          When to use              Example\n  /pattern/flags                Pattern fixed in code     /\\d+/g\n  new RegExp('pattern', 'flags') Pattern in variable       new RegExp(search)\n```\n\n## Example\n\n```javascript\nconst literal = /ab/;\nconst search = \"ab\";\nconst dynamic = new RegExp(search);\nconsole.log(literal.test(\"abc\"), dynamic.test(\"abc\"));\n```\n\n## Output\n\n```\ntrue true\n```\n\n(Both match \"ab\" in \"abc\". You can't do `/search/` and have it use the variable—use the constructor.)\n\n## Practice\n\nIn the example, why can't we use /search/ to test with the variable?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does the first test return true and the second false?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we use \\. to match a dot instead of just .?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does /\\\\d/.test(\"x9\") return true?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what does the + in \\\\d+ mean?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does /^hi/.test(\"say hi\") return false?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, when would you use test() instead of match()?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does the first match give one value but the second gives an array of two?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we use the g flag in the regex?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what do m[1], m[2], and m[3] contain?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why can't we use /search/ to test with the variable?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses regex to test if string contains digits.\n  Create a regex pattern to test if the string contains any digit.\n  Use the test() method.\n  Examples:\n    containsDigit(\"hello123\") => true\n    containsDigit(\"hello\") => false\n    containsDigit(\"test456\") => true\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction containsDigit(str) {\n  // Implementation here\n}",

@@ -22,6 +22,48 @@ export default {
     "Let's make a deep clone with JSON.\n\n**JSON.parse(JSON.stringify(obj))** creates a **full copy** of an object: serialize to a string, then parse back. The result has no shared references with the original — change the clone, the original is unchanged. Limits: no functions or undefined (they're lost); special objects (e.g. Date) become plain objects. Use it for **data-only** objects when you need a full copy.\n\n## Example\n\n```javascript\nconst orig = { a: 1, b: { c: 2 } };\nconst clone = JSON.parse(JSON.stringify(orig));\nclone.b.c = 99;\nconsole.log(orig.b.c);\n```\n\n## Output\n\n```\n2\n```\n\n## Practice\n\nIn the example, why does orig.b.c still show 2 after we changed clone.b.c to 99?",
     "Let's distinguish JSON string from JavaScript object.\n\n**JSON** is **text** (a string). A **JavaScript object** is a value in memory. You convert between them: **stringify** turns an object into a JSON string; **parse** turns a JSON string into an object. APIs usually return JSON strings; you **parse** them before you can use `.property` or `[key]` in code.\n\n## Example\n\n```javascript\nconst literal = { name: \"Ali\" };\nconst json = JSON.stringify(literal);   // string\nconst back = JSON.parse(json);\nconsole.log(typeof json, back.name);\n```\n\n## Output\n\n```\nstring Ali\n```\n\n## Practice\n\nIf an API gives you a JSON string, why can't you use .property on it directly? What do you do first?"
   ],
+  "practise_tasks": [
+    {
+      "question": "Is `'{\"x\":1,\"y\":2}'` valid JSON? Is `'{x:1,y:2}'` valid JSON? Which one and why?",
+      "type": "context_dependent",
+      "validation_hint": "Should mention double-quoted keys/strings for JSON; second form is invalid if keys are unquoted or single-quoted."
+    },
+    {
+      "question": "If you stringify an object that has a property with value `undefined`, does that property appear in the JSON string? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, what does JSON.stringify turn the object into—a string or an object? Why does that help when sending or saving data?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we need JSON.parse before we can use obj.x and obj.y?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what does the third argument (2) to JSON.stringify do?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "What does `JSON.stringify({ x: undefined, y: null })` produce? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, why does orig.b.c still show 2 after we changed clone.b.c to 99?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "If an API gives you a JSON string, why can't you use .property on it directly? What do you do first?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename user, use it as input for your program.\n// While testing we will change its value.\nconst user = { name: \"Alice\", age: 25, city: \"Paris\" };\n// Convert the user object to a JSON string using JSON.stringify()\n// Print the JSON string\n// For the given user, your output should be:\n// {\"name\":\"Alice\",\"age\":25,\"city\":\"Paris\"}",

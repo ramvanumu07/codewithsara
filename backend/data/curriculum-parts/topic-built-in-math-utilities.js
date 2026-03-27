@@ -24,6 +24,53 @@ export default {
     "Let's scale Math.random() to a range.\n\nTo get a random integer from min to max (inclusive): multiply random by the range size, add min, then use Math.floor. Formula: `Math.floor(Math.random() * (max - min + 1)) + min`.\n\n## Example\n\n```javascript\n// Random integer from 1 to 6 (dice)\nconsole.log(Math.floor(Math.random() * 6) + 1);\n// Random integer from 10 to 20\nconsole.log(Math.floor(Math.random() * 11) + 10);\n```\n\n## Output\n\n```\n4\n15\n```\n\n(Values vary each run. Above are examples.) Random gives 0 to 1; multiply by how many values you want, then shift by the minimum.\n\n## Practice\n\nWrite code that prints a random integer from 1 to 10.",
     "Let's use Math constants: Math.PI and Math.E.\n\n`Math.PI` is the number π (about 3.14159). `Math.E` is the number e (about 2.718). They are read-only constants—use them in formulas, don't assign to them.\n\n## Example\n\n```javascript\nconsole.log(Math.PI);\nconsole.log(Math.E);\nconsole.log(2 * Math.PI * 5);\n```\n\n## Output\n\n```\n3.141592653589793\n2.718281828459045\n31.41592653589793\n```\n\nUse PI for circles and angles; E appears in growth and log formulas. Names are in uppercase by convention.\n\n## Practice\n\nWrite code that prints the area of a circle with radius 7 (area = π * r * r)."
   ],
+  "practise_tasks": [
+    {
+      "question": "Math in JavaScript is like using a calculator—you get answers without doing the work on paper. Do you understand the use case?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "Write code that prints Math.round(9.7) and Math.trunc(9.7).",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints Math.floor of 12.9 and Math.ceil of 12.1.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints the absolute value of -15.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints 3 to the power of 4 and the square root of 16.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints the smaller of 20 and 35, then the larger.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints two random numbers (call Math.random() twice).",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints a random integer from 1 to 10.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints the area of a circle with radius 7 (area = π * r * r).",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename x1, y1, x2, y2, use them as input for your program.\n// While testing we will change their values.\nconst x1 = 3;\nconst y1 = 4;\nconst x2 = 7;\nconst y2 = 1;\n// Calculate the distance between points (x1, y1) and (x2, y2)\n// Distance formula: √[(x2-x1)² + (y2-y1)²]\n// Print the distance\n// For example, if points are (3,4) and (7,1), your output should be:\n// 5",

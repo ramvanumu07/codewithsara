@@ -18,6 +18,38 @@ export default {
     "Let's combine strings with the `+` operator.\n\nYou join strings with `+`. The result is one longer string.\n\n## Example\n\n```javascript\nconsole.log(\"Hello\" + \" \" + \"World\");\nconsole.log(\"The answer is\" + 42);\n```\n\n## Output\n\n```\nHello World\nThe answer is42\n```\n\nThe `+` operator joins strings with no automatic space between them. The first line adds `\" \"` for a space; the second has no space before 42 because none was added. Add a space yourself when you need one.\n\n## Practice\n\nWrite code that prints your first name and last name with one space between them.",
     "Let's use comma-separated arguments for auto-spacing.\n\nYou can pass several values to `console.log()` with commas between them. Each value is printed with one space between them.\n\n## Example\n\n```javascript\nconsole.log(100, \"items\", 50 * 2);\n```\n\n## Output\n\n```\n100 items 100\n```\n\nComma-separated values are printed with a single space between each. You don't need to add spaces yourself.\n\n## Practice\n\nWrite code that prints 10, the word items, and the number 20 using commas."
   ],
+  "practise_tasks": [
+    {
+      "question": "Write code that uses `console.log()` to print your name to the console.",
+      "type": "personalised",
+      "validation_hint": "Learner-specific values are acceptable; verify correct syntax (variables, console.log, const/let) for this outcome."
+    },
+    {
+      "question": "Write code that prints your name in single quotes.",
+      "type": "personalised",
+      "validation_hint": "Any name or text is valid; string must use single quotes as required by the task."
+    },
+    {
+      "question": "Write code that prints your age.",
+      "type": "personalised",
+      "validation_hint": "Any plausible age is valid; must print a numeric value with console.log (no quotes around the number)."
+    },
+    {
+      "question": "Write code that prints 10 plus 5.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints your first name and last name with one space between them.",
+      "type": "personalised",
+      "validation_hint": "Any first and last names are valid; must concatenate with a single space between (e.g. + \" \" +)."
+    },
+    {
+      "question": "Write code that prints 10, the word items, and the number 20 using commas.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    }
+  ],
   "tasks": [
     {
       "description": "// Print two lines: first line the number 7, second line the result of 20 minus 3.\n// Use console.log for each line.\n// Your output should be exactly:\n// 7\n// 17",

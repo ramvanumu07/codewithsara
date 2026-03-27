@@ -12,6 +12,23 @@ export default {
     "Let's use substring().\n\n**str.substring(start, end)** returns the substring from start up to but not including end—same **exclusive end** idea as slice. If **start > end**, substring **swaps** them for you. **Negative** or invalid indices are treated as 0. **substring(start)** with one argument returns from start to the end. The original string is unchanged. In new code, **prefer slice**—it matches array.slice and supports negative indices. substring is still common in existing code.\n\n## Example\n\n```javascript\nconst s = \"Hello\";\nconsole.log(s.substring(1, 4));\nconsole.log(s.substring(4, 1));\n```\n\n## Output\n\n```\nell\nell\n```\n\n## What happens\n\n- substring(1, 4): indices 1, 2, 3 → \"ell\".\n- substring(4, 1): start > end, so they are swapped → same as (1, 4) → \"ell\".\n\n## Practice\n\nIn the example, why does substring(4, 1) give the same result as substring(1, 4)?",
     "Let's use negative indices with slice().\n\nWith **slice**, a **negative** index counts from the **end**: **-1** is the last character, **-2** is the second-to-last, and so on. So **str.slice(-3)** gives the **last 3 characters**; **str.slice(1, -1)** gives from index 1 up to (but not including) the last character—it drops the first and last. **substring** does not support negative indices; it treats them as 0. Use slice when you need \"last n characters\" or \"everything except the ends.\"\n\n## Example\n\n```javascript\nconst s = \"abcdef\";\nconsole.log(s.slice(-2));\nconsole.log(s.slice(1, -1));\n```\n\n## Output\n\n```\nef\nbcde\n```\n\n## What happens\n\n- slice(-2): start 2 positions from the end → \"ef\".\n- slice(1, -1): from index 1 to one before the last → \"bcde\" (first and last dropped).\n\n## Practice\n\nIn the example, why does slice(-2) give the last two characters?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does slice(0, 4) return \"Java\" and not include the character at index 4?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does substring(4, 1) give the same result as substring(1, 4)?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does slice(-2) give the last two characters?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses slice() to extract substring.\n  Use slice() to extract characters from start to end (exclusive).\n  Examples:\n    sliceString(\"JavaScript\", 0, 4) => \"Java\"\n    sliceString(\"Hello World\", 0, 5) => \"Hello\"\n    sliceString(\"testing\", 0, 4) => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sliceString(str, start, end) {\n  // Implementation here\n}",

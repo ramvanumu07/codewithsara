@@ -16,6 +16,33 @@ export default {
     "Let's understand operator precedence.\n\nMultiplication and division happen before addition and subtraction. Use parentheses to change the order or make it clear.\n\n## Example\n\n```javascript\nconsole.log(2 + 3 * 4);\nconsole.log((2 + 3) * 4);\n```\n\n## Output\n\n```\n14\n20\n```\n\nIn the first line, 3 * 4 is done first, then 2 + 12. In the second, the parentheses force 2 + 3 first.\n\n## Practice\n\nCan you tell the values of (10 + 5) * 2 and 10 + (5 * 2)? Why are they different?",
     "Let's use compound assignment.\n\nYou can combine an operator with `=`: `+=`, `-=`, `*=`, `/=`. For example, `x += 5` means \"add 5 to x\" and is the same as `x = x + 5`.\n\n## Example\n\n```javascript\nlet n = 10;\nn += 3;\nconsole.log(n);\nn *= 2;\nconsole.log(n);\n```\n\n## Output\n\n```\n13\n26\n```\n\nThe variable is updated in place. Shorter and clear when you're changing a value by an amount.\n\n## Practice\n\nStart with a variable set to 10, use += to add 5, then print the value."
   ],
+  "practise_tasks": [
+    {
+      "question": "Write code that stores 42 and 3.14 and prints both.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints the result of 20 minus 7.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Write code that prints the remainder when 23 is divided by 4.",
+      "type": "straightforward",
+      "validation_hint": "Must satisfy the written instructions; output or structure should match what the task asks for."
+    },
+    {
+      "question": "Can you tell the values of (10 + 5) * 2 and 10 + (5 * 2)? Why are they different?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "Start with a variable set to 10, use += to add 5, then print the value.",
+      "type": "straightforward",
+      "validation_hint": "Check syntax and behaviour match the exercise; use the rules from this outcome when judging correctness."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename obtained and total, use them as input for your program.\n// While testing we will change their values.\nconst obtained = 427;\nconst total = 500;\n// Calculate the percentage: (obtained / total) * 100\n// Print the percentage value\n// For example, if obtained = 427 and total = 500, your output should be:\n// Percentage: 85.4",

@@ -14,6 +14,28 @@ export default {
     "Let's build strings and other values with reduce.\n\nThe **accumulator** is the result so far; the **current** element is the one being processed. Reduce runs your callback once per element in order. You combine acc and the current value however you need—for a sum you add, for a string you concatenate. Same pattern for other single values (e.g. finding a max: return the larger of acc and current).\n\n## Example\n\n```javascript\nconst joined = [\"a\", \"b\", \"c\"].reduce(function(acc, s) {\n  return acc + s;\n}, \"\");\nconsole.log(joined);\n```\n\n## Output\n\n```\nabc\n```\n\n## What happens\n\n- Start: acc = \"\".\n- Step 1: acc=\"\", s=\"a\" → \"a\". Step 2: acc=\"a\", s=\"b\" → \"ab\". Step 3: acc=\"ab\", s=\"c\" → \"abc\".\n- reduce returns \"abc\".\n\n## Practice\n\nIn the example, why do we start with acc = \"\"?",
     "Let's build arrays and objects with reduce.\n\nReduce can produce **any single value**—including an **array** or **object**. Use an initial value of [] or {} and in the callback update that value (e.g. push to the array or set a property), then return it. You can collect only elements that pass a test (like filter) or transform and collect (like map). In practice, use map or filter when they fit; use reduce when you need a custom single value or when building an object.\n\n## Example\n\n```javascript\nconst evens = [1, 2, 3, 4, 5].reduce(function(acc, n) {\n  if (n % 2 === 0) acc.push(n);\n  return acc;\n}, []);\nconsole.log(evens);\n```\n\n## Output\n\n```\n[ 2, 4 ]\n```\n\n## What happens\n\n- Start: acc = [].\n- Step 1: n=1, odd → don't push. Step 2: n=2, even → push 2. Step 3: n=3, odd → don't push. Step 4: n=4, even → push 4. Step 5: n=5, odd → don't push.\n- reduce returns [2, 4].\n\n## Practice\n\nIn the example, why is the initial value []?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why do we pass 0 as the second argument to reduce?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we pass 1 as the initial value?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we start with acc = \"\"?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why is the initial value []?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses reduce to calculate the sum of all numbers.\n  Use reduce to calculate the sum of all numbers.\n  Examples:\n    sumNumbers([1, 2, 3, 4, 5]) => 15\n    sumNumbers([10, 20, 30]) => 60\n    sumNumbers([5]) => 5\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction sumNumbers(arr) {\n  // Implementation here\n}",

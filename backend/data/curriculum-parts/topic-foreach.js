@@ -14,6 +14,28 @@ export default {
     "Let's remember forEach returns undefined.\n\nforEach is for **doing an action** for each element. It does **not** return a new array or a single value. If you assign the result of forEach to a variable, you get **undefined**. So don't use forEach when you need to build a new array from the elements—use a different method for that.\n\n## Example\n\n```javascript\nconst a = [1, 2, 3];\nconst b = a.forEach(function(x) {\n  return x * 2;\n});\nconsole.log(b);\n```\n\n## Output\n\n```\nundefined\n```\n\n## What happens\n\n- forEach runs the callback for each element, but it ignores the callback's return value.\n- forEach itself returns undefined, so b is undefined.\n\n## Practice\n\nYou want a new array with each number doubled. Is forEach the right choice? Why or why not?",
     "Let's do something for each item.\n\nUse forEach when you want to **do something** with each element: log it, push it into another array, or update a variable. Declare the variable (or array) **outside** the callback, then use it **inside** the callback. After forEach finishes, that variable holds the result of your actions.\n\n## Example\n\n```javascript\nconst items = [10, 20, 30];\nlet sum = 0;\nitems.forEach(function(n) {\n  sum += n;\n});\nconsole.log(sum);\n```\n\n## Output\n\n```\n60\n```\n\n## What happens\n\n- sum starts at 0.\n- forEach runs the callback for 10, 20, 30. Each time we add the element to sum.\n- After the loop, sum is 10 + 20 + 30 = 60.\n\n## Practice\n\nIn the example, why do we declare sum outside the callback instead of inside it?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, how many times does the callback run, and why?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what do the three parameters (item, i, arr) represent on the first call?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "You want a new array with each number doubled. Is forEach the right choice? Why or why not?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, why do we declare sum outside the callback instead of inside it?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses forEach to process an array of numbers.\n  Use forEach to collect each number into a result string, separated by newlines.\n  Examples:\n    printNumbers([1, 2, 3, 4, 5]) => \"1\\n2\\n3\\n4\\n5\"\n    printNumbers([10, 20, 30]) => \"10\\n20\\n30\"\n    printNumbers([7]) => \"7\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction printNumbers(arr) {\n  // Implementation here\n}",

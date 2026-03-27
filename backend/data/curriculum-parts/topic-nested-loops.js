@@ -14,6 +14,28 @@ export default {
     "Let's see how total iterations add up.\n\nIf the outer loop runs **N** times and the inner runs **M** times (for each outer step), the inner loop body runs **N × M** times in total. So 3 outer and 4 inner → 12 runs. Two loops of 10 each → 100. That grows fast, so use nested loops only when you really need \"for each A, for each B.\"\n\n## Example\n\n```javascript\nlet count = 0;\nfor (let i = 0; i < 3; i++) {\n  for (let j = 0; j < 2; j++) {\n    count++;\n  }\n}\nconsole.log(count);\n```\n\n## Output\n\n```\n6\n```\n\n3 × 2 = 6. Use N×M when you need to reason about how often something runs or how expensive the loop is.\n\n## Practice\n\nA grid has 5 rows and 7 columns. Outer loop = rows, inner = columns. How many times does the inner body run?",
     "Let's use nested loops for grids: rows and columns.\n\nFor a grid (rectangle of stars, multiplication table, etc.), use the **outer loop for rows** and the **inner loop for columns**. In the inner loop you build **one row** (e.g. a string by appending one character per column). After the inner loop finishes, you print that row. So each outer iteration produces one line.\n\n## Example\n\n```javascript\nfor (let r = 0; r < 3; r++) {\n  let line = \"\";\n  for (let c = 0; c < 4; c++) {\n    line += \"*\";\n  }\n  console.log(line);\n}\n```\n\n## Output\n\n```\n****\n****\n****\n```\n\nOuter = row: we do 3 rows. Inner = column: we add 4 stars to `line`, then print. Result: 3×4 grid.\n\n## Practice\n\nIn the example, which loop (outer or inner) controls how many stars are on one row, and which controls how many rows are printed? Why?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, how many (i, j) pairs are printed, and why?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "If the outer runs 3 times and the inner 4 times, how many times does the inner loop body run in total?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "A grid has 5 rows and 7 columns. Outer loop = rows, inner = columns. How many times does the inner body run?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, which loop (outer or inner) controls how many stars are on one row, and which controls how many rows are printed? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename rows and cols, use them as input for your program.\n// While testing we will change their values.\nconst rows = 3;\nconst cols = 4;\n// Print a grid of stars (*) with the given dimensions\n// Each row should be on a new line\n// For rows = 3 and cols = 4, your output should be:\n// ****\n// ****\n// ****",

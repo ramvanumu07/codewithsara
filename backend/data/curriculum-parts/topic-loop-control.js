@@ -14,6 +14,28 @@ export default {
     "Let's use **break** to stop a search as soon as you find what you need—no wasted iterations.\n\nWhen you're searching for something (e.g. the first number that meets a condition), you loop until you find it, then break so you don't keep looking. That avoids unnecessary iterations. Break makes the intent clear: \"we're done.\"\n\n## Example\n\n```javascript\nlet found = 0;\nfor (let i = 1; i <= 10; i++) {\n  if (i % 7 === 0) {\n    found = i;\n    break;\n  }\n}\nconsole.log(found);\n```\n\n## Output\n\n```\n7\n```\n\nWe stop as soon as we find the first number from 1 to 10 that is divisible by 7 (that's 7). Without break, the loop would run for 8, 9, 10 too.\n\n## Practice\n\nWhy do we use break in the example instead of letting the loop run to the end?",
     "Let's use **continue** to skip some iterations while the loop keeps running (filtered execution).\n\nWhen you want to process \"only when X is true\" (e.g. only odd numbers), you can check the opposite inside the loop and continue to skip the rest. The loop still runs for every iteration; you just skip the body for the ones you don't care about.\n\n## Example\n\n```javascript\nfor (let i = 1; i <= 6; i++) {\n  if (i % 2 === 0) continue;\n  console.log(i);\n}\n```\n\n## Output\n\n```\n1\n3\n5\n```\n\nWe only print when i is odd. For even i we continue and don't print.\n\n## Practice\n\nIn the example, what does continue do when i is 2?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, does the loop run for i = 4 and i = 5 after the break? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why is 3 not printed?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "Why do we use break in the example instead of letting the loop run to the end?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what does continue do when i is 2?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "// Print numbers from 1 to 20, but stop when you reach 10\n// Use a for loop with break statement\n// Your output should be:\n// 1\n// 2\n// 3\n// 4\n// 5\n// 6\n// 7\n// 8\n// 9\n// 10",

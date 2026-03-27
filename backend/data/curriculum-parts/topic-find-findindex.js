@@ -12,6 +12,23 @@ export default {
     "Let's see what findIndex() does.\n\n**array.findIndex(callback)** works like find, but it returns the **index** of the first matching element (0-based), not the element itself. It also stops at the first match. If no element passes, findIndex returns **-1**. Use findIndex when you need to know **where** the match is—for example to update or remove that slot. Use arr[i] to get the value at that index.\n\n## Example\n\n```javascript\nconst arr = [10, 20, 30, 40];\nconst i = arr.findIndex(function(x) {\n  return x > 25;\n});\nconsole.log(i);\n```\n\n## Output\n\n```\n2\n```\n\n## What happens\n\n- 10 > 25? No. 20 > 25? No. 30 > 25? Yes → return the index of 30, which is 2.\n- findIndex returns 2 (the index), not 30. The value at that index is arr[2] = 30.\n\n## Practice\n\nIn the example, why does findIndex return 2 and not the value 30?",
     "Let's handle when nothing matches.\n\nIf **no element** makes the callback return true:\n\n- **find** returns **undefined**.\n- **findIndex** returns **-1**.\n\nAlways **check** before using the result. For find: if (item !== undefined) { ... }. For findIndex: if (i !== -1) { ... arr[i] ... }. Don't use -1 as an array index—it means \"not found.\"\n\n## Example\n\n```javascript\nconst a = [1, 2, 3];\nconst b = a.find(function(n) {\n  return n > 10;\n});\nconst c = a.findIndex(function(n) {\n  return n === 99;\n});\nconsole.log(b, c);\n```\n\n## Output\n\n```\nundefined -1\n```\n\n## What happens\n\n- No element is > 10, so find returns undefined.\n- No element equals 99, so findIndex returns -1.\n- Code that uses b or c should handle these \"not found\" cases.\n\n## Practice\n\nIn the example, what do b and c mean? When would you need to check before using them?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does find return 15 and not 20?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does findIndex return 2 and not the value 30?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what do b and c mean? When would you need to check before using them?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses find to get first number greater than 12.\n  Use find to get the first number greater than 12.\n  Examples:\n    findFirstGreaterThan12([5, 10, 15, 20, 25]) => 15\n    findFirstGreaterThan12([1, 2, 3]) => undefined\n    findFirstGreaterThan12([13, 14, 15]) => 13\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction findFirstGreaterThan12(arr) {\n  // Implementation here\n}",

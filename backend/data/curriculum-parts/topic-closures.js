@@ -16,6 +16,39 @@ export default {
     "Let's keep state between calls.\n\nYou can keep a variable inside the outer function and return an object whose methods **read and update** that variable. Because the variable lives in the closure, it is not reset when you call the methods—it persists. So you get something like a counter: each call to increment() changes the same count, and getValue() reads it.\n\n## Example\n\n```javascript\nfunction createCounter() {\n  let count = 0;\n  return {\n    increment: function() {\n      count++;\n    },\n    getValue: function() {\n      return count;\n    }\n  };\n}\nconst c = createCounter();\nc.increment();\nc.increment();\nconsole.log(c.getValue());\n```\n\n## Output\n\n```\n2\n```\n\n## What happens\n\n- createCounter() runs. count is 0 and stays in the closure.\n- c.increment() runs twice, so count becomes 1 then 2.\n- c.getValue() returns the current count, which is 2.\n\n## Practice\n\nIn the example, why does count still show 2 when we call getValue() instead of going back to 0?",
     "Let's use let for closures in a loop.\n\nIf you create a function inside a loop and that function uses the loop variable, it \"closes over\" that variable. With **var**, there is only one variable for the whole loop, so by the time the function runs, the loop may have finished and the variable has its final value for all of them. With **let**, each iteration has its own variable, so each function remembers the right value.\n\n## Example\n\n```javascript\nconst fns = [];\nfor (let i = 0; i < 3; i++) {\n  fns.push(function() {\n    return i;\n  });\n}\nconsole.log(fns[0](), fns[1](), fns[2]());\n```\n\n## Output\n\n```\n0 1 2\n```\n\n## What happens\n\n- With **let i**, each time through the loop we have a different i (0, 1, 2). Each function we push remembers its own i.\n- So fns[0]() returns 0, fns[1]() returns 1, fns[2]() returns 2.\n- If we had used **var i**, all three would return 3, because they would share one variable that ends at 3.\n\n## Practice\n\nIn the example, why do we use let instead of var for the loop variable i?"
   ],
+  practise_tasks: [
+    {
+      question: 'In the example, why does add5(3) return 8?',
+      type: 'context_dependent',
+      validation_hint:
+        'Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary.'
+    },
+    {
+      question: 'In the example, why does double(5) give 10 and triple(5) give 15?',
+      type: 'context_dependent',
+      validation_hint:
+        'Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary.'
+    },
+    {
+      question: "In the example, why can't we access secret from outside?",
+      type: 'context_dependent',
+      validation_hint:
+        'Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary.'
+    },
+    {
+      question:
+        'In the example, why does count still show 2 when we call getValue() instead of going back to 0?',
+      type: 'context_dependent',
+      validation_hint:
+        'Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary.'
+    },
+    {
+      question: 'In the example, why do we use let instead of var for the loop variable i?',
+      type: 'context_dependent',
+      validation_hint:
+        'Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary.'
+    }
+  ],
   tasks: [
     {
       description:

@@ -18,6 +18,38 @@ export default {
     "Let's map and flatten in one step with flatMap().\n\n**arr.flatMap(callback)** does **map** and then **flat(1)** in one step: the callback can return an **array**, and those arrays are flattened into a single list. Use flatMap when you want \"map each item to an array, then get one flat list\"—e.g. split each string into words and get one array of all words, or expand each number into several values.\n\n## Example\n\n```javascript\nconst words = [\"hello world\", \"hi there\"];\nconsole.log(words.flatMap(function(s) {\n  return s.split(\" \");\n}));\n```\n\n## Output\n\n```\n[ 'hello', 'world', 'hi', 'there' ]\n```\n\n## What happens\n\n- map would give [[\"hello\",\"world\"], [\"hi\",\"there\"]].\n- flatMap maps and then flattens one level → one array of all words.\n\n## Practice\n\nIn the example, why does flatMap give one array of words instead of an array of arrays?",
     "Let's see when to use which method.\n\n**map** when you transform each element one-to-one. **filter** when you want a subset. **reduce** when you need one value (or a custom structure). **flat** when you have nested arrays and want one level (or more with depth). **flatMap** when you map to arrays and want them flattened in one step. **Chain** when you have a clear pipeline (e.g. filter → map → slice). Use **loops** when you need indices, early exit, or more control. Pick the method that matches what you want and keeps the code clear.\n\n## Example\n\n```javascript\nconst nums = [1, 2, 3, 4, 5];\nconsole.log(nums.reduce(function(a, b) {\n  return a + b;\n}, 0));\nconsole.log(nums.filter(function(n) {\n  return n % 2 === 0;\n}));\nconsole.log(nums.map(function(n) {\n  return n * 2;\n}));\n```\n\n## Output\n\n```\n15\n[ 2, 4 ]\n[ 2, 4, 6, 8, 10 ]\n```\n\n## What happens\n\n- reduce: one number (sum). filter: subset (evens). map: transform (doubled).\n- Each method has a clear role; chain them when you need several steps.\n\n## Practice\n\nIn the example, when would you choose reduce instead of map or filter?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why do we filter first and then map?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what do the two indexes in grid[0][1] represent?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, in what order are the cells visited?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why is the result one level flatter than nested?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does flatMap give one array of words instead of an array of arrays?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, when would you choose reduce instead of map or filter?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that chains filter and map.\n  Chain filter and map to: filter even numbers, then double them.\n  Examples:\n    filterAndDouble([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) => [4,8,12,16,20]\n    filterAndDouble([5, 10, 15, 20]) => [20,40]\n    filterAndDouble([1, 3, 5]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterAndDouble(arr) {\n  // Implementation here\n}",

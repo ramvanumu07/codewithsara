@@ -14,6 +14,28 @@ export default {
     "Let's repeat a string with repeat().\n\n**str.repeat(count)** returns a new string made by repeating str **count** times. count must be 0 or a positive integer. Use repeat for simple patterns—dashes, asterisks, or a repeated word. The original string is unchanged. \"\".repeat(n) is still \"\".\n\n## Example\n\n```javascript\nconsole.log(\"ab\".repeat(3));\nconsole.log(\"-\".repeat(5));\n```\n\n## Output\n\n```\nababab\n-----\n```\n\n## What happens\n\n- \"ab\" is concatenated three times → \"ababab\".\n- \"-\" is concatenated five times → \"-----\".\n\n## Practice\n\nIn the example, why does \"ab\".repeat(3) give \"ababab\" and not \"ab3\"?",
     "Let's pad strings with padStart() and padEnd().\n\n**str.padStart(targetLength, padString)** pads the **start** of the string until its length is targetLength, using padString (default is a space) repeated as needed. **str.padEnd(targetLength, padString)** pads the **end**. If the string is already at or longer than targetLength, no padding is added and you get the original string. Use them for fixed-width display, zero-padding numbers, or aligning output.\n\n## Example\n\n```javascript\nconsole.log(\"5\".padStart(3, \"0\"));\nconsole.log(\"hi\".padEnd(5, \".\"));\n```\n\n## Output\n\n```\n005\nhi...\n```\n\n## What happens\n\n- \"5\" has length 1; padStart(3, \"0\") adds two \"0\"s at the start → \"005\".\n- \"hi\" has length 2; padEnd(5, \".\") adds three \".\"s at the end → \"hi...\".\n\n## Practice\n\nIn the example, why does padStart(3, \"0\") add two zeros to \"5\" and not three?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does s still show spaces after we call s.trim()?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does replace give a different result than replaceAll?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does \"ab\".repeat(3) give \"ababab\" and not \"ab3\"?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does padStart(3, \"0\") add two zeros to \"5\" and not three?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses trim() to remove whitespace.\n  Use trim() to remove leading and trailing whitespace.\n  Examples:\n    trimString(\"  Hello World  \") => \"Hello World\"\n    trimString(\"   JavaScript   \") => \"JavaScript\"\n    trimString(\"test\") => \"test\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction trimString(str) {\n  // Implementation here\n}",

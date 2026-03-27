@@ -14,6 +14,28 @@ export default {
     "Let's see how the result can be shorter or empty.\n\nUnlike map, filter can produce an array with **fewer** elements than the original. Only elements that pass the test (return true) are included. So the result can have 0, 1, or up to the same length as the original—never more. Use filter when you want to **shrink** the list by a condition; use map when you want one new value per element.\n\n## Example\n\n```javascript\nconst a = [1, 2, 3, 4, 5];\nconst b = a.filter(function(x) {\n  return x > 3;\n});\nconsole.log(a.length, b.length);\n```\n\n## Output\n\n```\n5 2\n```\n\n## What happens\n\n- a has 5 elements. Only 4 and 5 pass the test (x > 3).\n- b has 2 elements: [4, 5]. Result is shorter than the original.\n\n## Practice\n\nIn the example, why does b have fewer elements than a?",
     "Let's remember the original array is not changed.\n\nfilter does **not** change the array you call it on. It **returns** a new array. The original stays the same—you can use it again or filter it differently. If you need to keep only certain items, assign the result to a variable: filtered = arr.filter(...).\n\n## Example\n\n```javascript\nconst orig = [5, 10, 15, 20];\nconst subset = orig.filter(function(x) {\n  return x >= 10;\n});\nconsole.log(orig);\nconsole.log(subset);\n```\n\n## Output\n\n```\n[ 5, 10, 15, 20 ]\n[ 10, 15, 20 ]\n```\n\n## What happens\n\n- orig is still [5, 10, 15, 20].\n- subset is a new array [10, 15, 20]. We did not remove anything from orig.\n\n## Practice\n\nYou have an array items and want only items where item.active is true. Should you use filter and assign to a new variable, or a loop that removes items from the array? Which keeps the original array unchanged?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why are 2 and 4 in evens but 1, 3, and 5 are not?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why is \"hi\" not in long but \"hello\" and \"hey\" are?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does b have fewer elements than a?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "You have an array items and want only items where item.active is true. Should you use filter and assign to a new variable, or a loop that removes items from the array? Which keeps the original array unchanged?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that uses filter to get even numbers.\n  Use filter to create a new array containing only even numbers.\n  Examples:\n    filterEvenNumbers([1, 2, 3, 4, 5, 6, 7, 8]) => [2,4,6,8]\n    filterEvenNumbers([10, 15, 20, 25]) => [10,20]\n    filterEvenNumbers([1, 3, 5]) => []\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction filterEvenNumbers(arr) {\n  // Implementation here\n}",

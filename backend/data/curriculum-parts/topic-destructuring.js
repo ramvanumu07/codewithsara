@@ -18,6 +18,38 @@ export default {
     "Let's read values that sit **inside** nested objects or arrays by **matching the shape** of the data in your pattern.\n\nFor an object inside an object: `const { level1: { level2 } } = obj`. For an array as an element: `const [first, [a, b]] = arr`. You're \"going one level deeper\" in one assignment.\n\n## Example\n\n```javascript\nconst data = { config: { theme: \"dark\", size: 12 } };\nconst { config: { theme } } = data;\nconsole.log(theme);\n```\n\n## Output\n\n```\ndark\n```\n\n## Practice\n\nWhy do we need two levels of curly braces in `{ config: { theme } }` to get `theme` from `data`?",
     "Let's swap two variables in one line—**`[a, b] = [b, a]`**—without a temporary variable.\n\nThe right side builds an array of the **current** values; the left side assigns them back in the **new** order.\n\n## Example\n\n```javascript\nlet x = 5, y = 10;\n[x, y] = [y, x];\nconsole.log(x, y);\n```\n\n## Output\n\n```\n10 5\n```\n\n## Practice\n\nIf `a = 1` and `b = 2`, what are `a` and `b` after `[a, b] = [b, a]`?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why does `a` get 10 and `b` get 20?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does `tail` get [4, 5] and not the first few numbers?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In object destructuring, does the order of variable names in the braces (e.g. `name` before `role`) matter? Why or why not?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, why does `beta` get 10 even though `o` has no property `b`?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "Why do we need two levels of curly braces in `{ config: { theme } }` to get `theme` from `data`?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "If `a = 1` and `b = 2`, what are `a` and `b` after `[a, b] = [b, a]`?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename person, use it as input for your program.\n// While testing we will change its value.\nconst person = { name: \"Alice\", age: 25, city: \"Paris\" };\n// Use object destructuring to extract name and age\n// Print them on separate lines\n// For the given person object, your output should be:\n// Alice\n// 25",

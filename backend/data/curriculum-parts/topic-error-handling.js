@@ -18,6 +18,38 @@ export default {
     "Let's see how errors bubble up the call stack.\n\nWhen code **throws**, the error **propagates** to the **caller**. If the caller doesn't have try-catch, it propagates to **its** caller, and so on—until a try-catch **handles** it or the script crashes. So the error \"bubbles up\" from the inner function outward. You can catch at any level: near the throw (fine-grained) or higher up (e.g. one place that handles all errors). Uncaught errors eventually reach the environment (browser, Node) and may be reported or stop the process.\n\n## Example\n\n```javascript\nfunction a() { b(); }\nfunction b() { throw new Error(\"oops\"); }\ntry {\n  a();\n} catch (e) {\n  console.log(e.message);\n}\n```\n\n## Output\n\n```\noops\n```\n\n## What happens\n\n- a() calls b(); b() throws.\n- b has no try-catch, so the error goes to a; a has none, so it goes to the try that called a().\n- That try-catch catches the error and logs the message.\n\n## Practice\n\nIn the example, b() throws but there’s no try-catch inside b(). Who actually catches the error—b, or the code that called a()?",
     "Let's decide when to catch errors and when to let them propagate.\n\n**Catch** when you can **handle** the failure: return a fallback value, show a user-friendly message, or retry. **Don't** catch just to ignore the error—that hides bugs. **Let errors propagate** when the **caller** (or a higher layer) should handle them—e.g. an API route catches and returns a 500. Catch at **boundaries**: user input, parsing, I/O. Deeper inside, **throw** with a clear message and let a boundary catch. Use **finally** for cleanup that must run either way.\n\n## Example\n\n```javascript\nfunction parseUserInput(str) {\n  try {\n    return JSON.parse(str);\n  } catch (e) {\n    return null;\n  }\n}\nconsole.log(parseUserInput(\"{ bad\"));\nconsole.log(parseUserInput('{\"x\":1}'));\n```\n\n## Output\n\n```\nnull\n{ x: 1 }\n```\n\n## What happens\n\n- Invalid JSON: we catch and return null instead of crashing.\n- Valid JSON: we return the parsed object. We handle at the boundary (user input) with a safe fallback.\n\n## Practice\n\nWhy does parseUserInput return null for bad input instead of letting the error crash?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, when JSON.parse throws, which block runs next?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, what is the difference between e.name and e.message?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we throw inside divide instead of just returning a value when b is 0?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, when does the finally block run?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, b() throws but there’s no try-catch inside b(). Who actually catches the error—b, or the code that called a()?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "Why does parseUserInput return null for bad input instead of letting the error crash?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that demonstrates try-catch with undefined variable.\n  Create a try-catch block that attempts to access an undefined variable.\n  In the catch block, return the error message.\n  Examples:\n    catchUndefinedVariable() => \"undefinedVariable is not defined\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction catchUndefinedVariable() {\n  // Implementation here\n}",

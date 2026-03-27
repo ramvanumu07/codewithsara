@@ -106,6 +106,30 @@ function validateTopic(topic, index) {
   if (!Array.isArray(topic.tasks)) {
     throw new Error(`${prefix} "tasks" must be an array.`)
   }
+  if (!Array.isArray(topic.practise_tasks)) {
+    throw new Error(`${prefix} "practise_tasks" must be an array.`)
+  }
+  if (topic.practise_tasks.length !== topic.outcomes.length) {
+    throw new Error(
+      `${prefix} "practise_tasks" length (${topic.practise_tasks.length}) must match "outcomes" (${topic.outcomes.length}).`
+    )
+  }
+  for (let i = 0; i < topic.practise_tasks.length; i++) {
+    const pt = topic.practise_tasks[i]
+    if (!pt || typeof pt !== 'object') {
+      throw new Error(`${prefix} practise_tasks[${i}] must be an object.`)
+    }
+    if (!pt.question || typeof pt.question !== 'string') {
+      throw new Error(`${prefix} practise_tasks[${i}] missing or invalid "question".`)
+    }
+    const allowed = new Set(['personalised', 'straightforward', 'context_dependent'])
+    if (!allowed.has(pt.type)) {
+      throw new Error(`${prefix} practise_tasks[${i}] "type" must be personalised, straightforward, or context_dependent.`)
+    }
+    if (!pt.validation_hint || typeof pt.validation_hint !== 'string') {
+      throw new Error(`${prefix} practise_tasks[${i}] missing or invalid "validation_hint".`)
+    }
+  }
   if (topic.outcome_messages != null) {
     if (!Array.isArray(topic.outcome_messages) || topic.outcome_messages.length !== topic.outcomes.length) {
       throw new Error(

@@ -20,5 +20,42 @@ export default {
     "Let's understand module scope.\n\nIn a module, **top-level** declarations (const, let, function, class) are in the **module's scope**, not the global scope. So **variables in one file are not visible in another** unless they are **exported**. That's \"private by default\"—you explicitly export what you want to share. It avoids accidental globals and makes dependencies clear: if you don't import it, you don't have it.\n\n## Example\n\n```javascript\n// secret.js\nconst key = 'abc123';\nexport function getKey() {\n  return key;\n}\n\n// other file: import { getKey } from './secret.js';\n// getKey() returns 'abc123'; key is not accessible directly.\n```\n\n## What happens\n\n- key is module-scoped; it is not exported. Other files cannot read key.\n- Only getKey is exported; other files get the value only through getKey().\n\n## Practice\n\nIn the example, can another file access key directly? Why or why not?",
     "Let's load modules on demand with dynamic import().\n\n**import('./m.js')** returns a **Promise** that resolves to the **module's namespace object** (with default at .default and named exports as properties). Use it when you want to **load a module only when needed**—e.g. after a user action or when a condition is true. That can reduce initial load time. Use **await import('./m.js')** inside an async function, or .then() on the promise. **Static** import (at top of file) always loads before the script runs; **dynamic** import loads when the call runs.\n\n## Example\n\n```javascript\nasync function loadFeature() {\n  const mod = await import('./feature.js');\n  return mod.helper();\n}\n```\n\n## Output\n\n```\n(Loads feature.js when loadFeature() runs; returns whatever mod.helper() returns.)\n```\n\n## What happens\n\n- feature.js is loaded only when loadFeature() is called. The result mod has the module's exports; mod.default is the default export, mod.helper would be a named export.\n- Use dynamic import for code-splitting or lazy loading.\n\n## Practice\n\nIn the example, when is feature.js loaded—when the script starts or when loadFeature() is called?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, what would happen if utils.js didn't export add?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do the import names add and sub have to match the names in math.js?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, who chooses the name log—the module or the file that imports?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we use 'as' when importing add from both math.js and strings.js?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why do we call MathUtils.add instead of just add?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, can another file access key directly? Why or why not?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, when is feature.js loaded—when the script starts or when loadFeature() is called?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": []
 };

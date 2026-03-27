@@ -14,6 +14,28 @@ export default {
     "Let's add else if branches.\n\nWhen you have more than two cases, chain conditions with `else if`.\n\n## Syntax\n\n```text\nif (cond1) {\n  ...\n} else if (cond2) {\n  ...\n} else {\n  ...\n}\n```\n\nConditions are checked from top to bottom; the first one that is true runs, and the rest are skipped. Only one block runs.\n\n## Example\n\n```javascript\nconst score = 75;\nif (score >= 90) {\n  console.log(\"A\");\n} else if (score >= 80) {\n  console.log(\"B\");\n} else if (score >= 70) {\n  console.log(\"C\");\n} else if (score >= 60) {\n  console.log(\"D\");\n} else {\n  console.log(\"F\");\n}\n```\n\n## Output\n\n```\nC\n```\n\nScore 75 hits the third condition (score >= 70), so only \"C\" prints. The chain stops at the first true condition.\n\n## Practice\n\nFor score 75, what gets printed?",
     "Let's put an if inside an if.\n\nYou can place an if (or if/else) inside the block of another if. That is a nested condition: the inner condition is only checked when the outer condition is true. Use nesting when the second check only makes sense after the first passes (e.g. \"if old enough, then check if has license\").\n\n## Example\n\n```javascript\nconst age = 20;\nconst hasLicense = true;\nif (age >= 18) {\n  if (hasLicense) {\n    console.log(\"Can drive\");\n  } else {\n    console.log(\"Has age but no license\");\n  }\n} else {\n  console.log(\"Too young to drive\");\n}\n```\n\n## Output\n\n```\nCan drive\n```\n\nWith age 20 and hasLicense true, the outer condition is true, so we enter the block and check the inner if; hasLicense is true, so \"Can drive\" prints. The inner if runs only when the outer condition is true.\n\n## Practice\n\nFor age 20 and hasLicense true, what is printed?",
   ],
+  "practise_tasks": [
+    {
+      "question": "If num is -3, would the block inside `if (num > 0)` run?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "If age is 16, which block runs—the if or the else?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "For score 75, what gets printed?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "For age 20 and hasLicense true, what is printed?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "// Do not rename age, use it as input for your program.\n// While testing we will change its value.\nconst age = 20;\n// Check if age is 18 or greater\n// If true, print: \"You are eligible to vote\"\n// If false, print nothing",

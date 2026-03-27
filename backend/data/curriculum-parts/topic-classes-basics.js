@@ -14,6 +14,28 @@ export default {
     "Let's give each instance its own data using the constructor and **this**.\n\nThe **constructor** is a special method that runs when you create an instance with **new**. Use it to give each instance its **own data** (e.g. each Person has their own name).\n\n## Syntax\n\n```\nclass MyClass {\n  constructor(param1, param2) {\n    this.prop1 = param1;\n    this.prop2 = param2;\n  }\n}\nconst obj = new MyClass(a, b);\n```\n\n- **constructor(...)** — runs when **new MyClass(...)** is called; parameters are what you pass in.\n- **this** — inside the class, **this** is the instance being created. Assign to **this.propName** to give the instance properties. In methods, **this** is the instance the method was called on. Don't return from constructor; the new object is returned automatically.\n\n## Example\n\n```javascript\nclass Point {\n  constructor(x, y) {\n    this.x = x;\n    this.y = y;\n  }\n}\nconst pt = new Point(3, 4);\nconsole.log(pt.x, pt.y);\n```\n\n## Output\n\n```\n3 4\n```\n\n## What happens\n\n- new Point(3, 4) runs the constructor with x=3, y=4.\n- this.x and this.y set properties on the new instance; pt gets those values.\n\n## Practice\n\nAdd a constructor to a class Person that takes name and sets this.name. What does new Person(\"Ali\").name return? In a method, how do you access a property named value set in the constructor?",
     "Let's give instances actions by defining methods.\n\n**Methods** are actions that each instance can do. They are functions on the class that every instance can call.\n\n## Syntax\n\n```\nclass MyClass {\n  constructor() {\n    this.x = 0;\n  }\n  methodName() {\n    return this.x;\n  }\n  otherMethod(a, b) {\n    /* ... */\n  }\n}\nconst obj = new MyClass();\nobj.methodName();\n```\n\n- Define a method like **methodName() { }** (or with parameters) inside the class.\n- Call with **instance.methodName()**. Inside the method, **this** is that instance, so you can read and update **this.prop** set in the constructor.\n\n## Example\n\n```javascript\nclass Greeter {\n  constructor(name) {\n    this.name = name;\n  }\n  greet() {\n    return \"Hi, \" + this.name;\n  }\n}\nconst g = new Greeter(\"Alice\");\nconsole.log(g.greet());\n```\n\n## Output\n\n```\nHi, Alice\n```\n\n## What happens\n\n- g is an instance; g.name is \"Alice\" (set in constructor).\n- g.greet() runs with this = g, so this.name is \"Alice\" and the return is \"Hi, Alice\".\n\n## Practice\n\nIn the example, why does greet() use this.name?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In one sentence: what is the difference between a class and an instance?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, what does new Person() create?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "Add a constructor to a class Person that takes name and sets this.name. What does new Person(\"Ali\").name return? In a method, how do you access a property named value set in the constructor?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, why does greet() use this.name?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that creates a Person class and returns introduction.\n  Create a class named Person with a constructor that takes name and age.\n  Add a method introduce() that returns \"Hi, I'm {name} and I'm {age} years old\".\n  Create an instance and call introduce().\n  Examples:\n    createPersonAndIntroduce(\"Alice\", 25) => \"Hi, I'm Alice and I'm 25 years old\"\n    createPersonAndIntroduce(\"Bob\", 30) => \"Hi, I'm Bob and I'm 30 years old\"\n    createPersonAndIntroduce(\"Charlie\", 22) => \"Hi, I'm Charlie and I'm 22 years old\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createPersonAndIntroduce(name, age) {\n  // Implementation here\n}",

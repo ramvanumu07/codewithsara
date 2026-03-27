@@ -24,6 +24,53 @@ export default {
     "Let's name functions well.\n\nName functions so they describe **what they do**, usually with a **verb**: `getTotal`, `isValid`, `calculateAverage`. That makes code readable. Avoid vague names like `doStuff`. For yes/no results, names like `isEven`, `hasValue` help. Good names reduce the need for comments.\n\n## Example\n\n```javascript\nfunction isEven(n) {\n  return n % 2 === 0;\n}\nfunction getGreeting(name) {\n  return \"Hello, \" + name;\n}\n```\n\n## Practice\n\nA function takes an array and returns its first element. Give one good name and one bad name for it.",
     "Let's give each function one job.\n\n**Reuse:** write functions that work for different inputs so you can call them from many places instead of copying code. **Single responsibility:** each function does **one clear thing**. If a function does too much, split it into smaller functions. Small, focused functions are easier to test and change. Compose them to build bigger behavior.\n\n## Example\n\n```javascript\nfunction double(n) {\n  return n * 2;\n}\nfunction add(a, b) {\n  return a + b;\n}\nconsole.log(add(double(3), double(4)));\n```\n\n## Output\n\n```\n14\n```\n\n## Practice\n\nA block of code (1) reads user input, (2) validates it, (3) saves to a file. Would you put all three in one function? Why or why not?"
   ],
+  "practise_tasks": [
+    {
+      "question": "Write a function `greet` that takes no parameters and returns the string `\"Hello, World!\"`. What does `greet()` evaluate to?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "If `main()` calls `a()` and `a()` calls `b()`, which function finishes first (returns first)?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "Write a function that takes one parameter `num` and returns `num + 10`. What does it return when called with `3`?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "If `function f(a, b) { return a - b; }`, what does `f(10, 3)` return? What about `f(5)`?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "Write a function that takes two numbers and returns the larger one. If called with `7` and `12`, what does it return?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "A function should give the caller the length of a string. Should it use **return** or **console.log**? Why?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "Write a function that takes three numbers and returns their sum. What does it return for `1`, `2`, and `3`?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "A function takes an array and returns its first element. Give one good name and one bad name for it.",
+      "type": "straightforward",
+      "validation_hint": "Check syntax and behaviour match the exercise; use the rules from this outcome when judging correctness."
+    },
+    {
+      "question": "A block of code (1) reads user input, (2) validates it, (3) saves to a file. Would you put all three in one function? Why or why not?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that takes no parameters and returns \"Hello, World!\".\n  Examples:\n    greet() => \"Hello, World!\"\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction greet() {\n  // Implementation here.\n}",

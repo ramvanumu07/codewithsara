@@ -16,6 +16,33 @@ export default {
     "Let's put methods on the class itself with static.\n\n**static** puts a method or property on the **class**, not on instances. You call it as **ClassName.methodName()** — no **new**, no instance.\n\n- Declare with **static methodName() { }** or **static propName = value**.\n- Call or read with **ClassName.methodName()** or **ClassName.propName** — no **new** and no instance. Use for utilities, constants, or factory methods. Inside a static method, **this** is the class. Static members cannot use instance state unless you pass it in.\n\n## Example\n\n```javascript\nclass MathUtil {\n  static double(n) {\n    return n * 2;\n  }\n}\nconsole.log(MathUtil.double(5));\n```\n\n## Output\n\n```\n10\n```\n\n## What happens\n\ndouble is on the class. We call **MathUtil.double(5)** without creating an instance.\n\n## Practice\n\nAdd a static method createDefault() to a class Config that returns new Config() with default values. How do you call it—on an instance or on the class?",
     "Let's run code when a property is read or written using getters and setters.\n\nGetters and setters let you run code when a property is **read** or **written**.\n\n- **get propName() { return ... }** — runs when someone reads **obj.propName**.\n- **set propName(value) { }** — runs when someone writes **obj.propName = x**. Use to validate, compute on read, or hide internal storage (e.g. store in **this._name**, expose as **name**). You can have only a getter (read-only) or only a setter.\n\n## Example\n\n```javascript\nclass Box {\n  get value() {\n    return this._v;\n  }\n  set value(x) {\n    if (typeof x !== 'number') throw new Error('number only');\n    this._v = x;\n  }\n}\n\nconst b = new Box();\nb.value = 42;\nconsole.log(b.value);\n```\n\n## Output\n\n```\n42\n```\n\n## What happens\n\nAssigning **b.value = 42** runs the setter (it checks type); reading **b.value** runs the getter.\n\n## Practice\n\nIn the example, why does assigning b.value = 42 run code instead of just storing 42?"
   ],
+  "practise_tasks": [
+    {
+      "question": "In the example, why do we call super(n) in Dog's constructor?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why does d.speak() return \"Rex barks\" and not \"Rex says hi\"?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "In the example, why is b instanceof A true even though we created b with new B()?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    },
+    {
+      "question": "Add a static method createDefault() to a class Config that returns new Config() with default values. How do you call it—on an instance or on the class?",
+      "type": "context_dependent",
+      "validation_hint": "Grade on conceptual correctness using vocabulary from this outcome; exact phrasing is not required."
+    },
+    {
+      "question": "In the example, why does assigning b.value = 42 run code instead of just storing 42?",
+      "type": "context_dependent",
+      "validation_hint": "Answer should reference the example in the lesson (behaviour, order, or values shown); wording may vary."
+    }
+  ],
   "tasks": [
     {
       "description": "/*\n  Implement the below function that creates a Circle class with static PI.\n  Create a class named Circle with constructor taking radius.\n  Add a static property PI with value 3.14159.\n  Add methods getArea() and getCircumference() using Circle.PI.\n  Examples:\n    createCircleAndCalculate(5, \"getArea\") => 78.53975\n    createCircleAndCalculate(5, \"getCircumference\") => 31.4159\n    createCircleAndCalculate(10, \"getArea\") => 314.159\n\n  YOUR FUNCTION MUST RETURN THE ANSWER\n  TO TEST YOUR FUNCTION YOU ARE FREE TO PRINT THE RESULT\n*/\n\nfunction createCircleAndCalculate(radius, method) {\n  // Implementation here\n}",
