@@ -14,6 +14,7 @@ import { getTopicOrRespond } from '../utils/topicHelper.js'
 import {
   getFirstOutcomeMessage,
   extractPracticeTaskFromOutcomeMessage,
+  extractFirstCodeBlockFromOutcomeMessage,
   sliceMessagesAfterCurrentOutcomeIntro
 } from '../utils/outcomeMessages.js'
 import { processSessionAssistantReply } from '../utils/sessionOutcome.js'
@@ -89,14 +90,33 @@ function buildSessionSystemPrompt(topicId, completedTopics = [], teachingOutcome
   }
   const outcomes = topic.outcomes || []
   const msgs = topic.outcome_messages || []
+  const practiseTasks = topic.practise_tasks || []
   const total = Math.max(outcomes.length, msgs.length, 1)
   const idx = Math.min(Math.max(0, teachingOutcomeIndex), Math.max(0, total - 1))
   const singleObjective = outcomes[idx] || `Learning objective ${idx + 1}`
-  const currentPracticeTask = extractPracticeTaskFromOutcomeMessage(msgs[idx])
+  const rawOutcomeMsg = typeof msgs[idx] === 'string' ? msgs[idx] : ''
+  const pt = practiseTasks[idx]
+  const taskQuestion =
+    pt && typeof pt.question === 'string' && pt.question.trim()
+      ? pt.question.trim()
+      : extractPracticeTaskFromOutcomeMessage(rawOutcomeMsg)
+  const taskType =
+    pt && (pt.type === 'personalised' || pt.type === 'straightforward' || pt.type === 'context_dependent')
+      ? pt.type
+      : 'straightforward'
+  const validationHint = pt && typeof pt.validation_hint === 'string' ? pt.validation_hint : ''
+  const referenceCodeSnippet = extractFirstCodeBlockFromOutcomeMessage(rawOutcomeMsg) || null
+  const fullLessonOutcomeText =
+    taskType === 'context_dependent' && rawOutcomeMsg.trim() ? rawOutcomeMsg : null
+
   return buildSessionPromptFromShared({
     topicTitle: topic.title,
     currentOutcomeObjective: singleObjective,
-    currentPracticeTask
+    taskQuestion,
+    taskType,
+    validationHint,
+    referenceCodeSnippet,
+    fullLessonOutcomeText
   })
 }
 

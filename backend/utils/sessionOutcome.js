@@ -72,9 +72,18 @@ export function composeOutcomeTransition(topic, correctnessPart, currentOutcomeI
   }
 }
 
+/** Optional end marker from validator prompts; stripped for display only (advancement uses mastery phrase). */
+const OUTCOME_COMPLETE_MARKER = '##OUTCOME_COMPLETE##'
+
 function stripLegacyMarkers(s) {
   if (typeof s !== 'string') return ''
-  return s.split(LEGACY_OUTCOME_MARKER).join('').trim()
+  let t = s.split(LEGACY_OUTCOME_MARKER).join('')
+  const lower = t.toLowerCase()
+  const idx = lower.lastIndexOf(OUTCOME_COMPLETE_MARKER.toLowerCase())
+  if (idx >= 0) {
+    t = t.slice(0, idx) + t.slice(idx + OUTCOME_COMPLETE_MARKER.length)
+  }
+  return t.trim()
 }
 
 /**

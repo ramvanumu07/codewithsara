@@ -24,6 +24,17 @@ export function extractPracticeTaskFromOutcomeMessage(markdown) {
   return m[1].trim()
 }
 
+/**
+ * First fenced code block from an outcome message (usually the main lesson example).
+ * @param {string} markdown
+ * @returns {string}
+ */
+export function extractFirstCodeBlockFromOutcomeMessage(markdown) {
+  if (typeof markdown !== 'string' || !markdown.trim()) return ''
+  const m = markdown.match(/```(?:javascript|js|ts)?\s*\n([\s\S]*?)```/i)
+  return m ? m[1].trim() : ''
+}
+
 function normalizeForOutcomeMatch(s) {
   return (typeof s === 'string' ? s : '').replace(/\r\n/g, '\n').trim()
 }
