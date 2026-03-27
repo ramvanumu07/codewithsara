@@ -13,8 +13,7 @@
  * @param {string} [options.taskQuestion] — practise task wording (from curriculum `practise_tasks`)
  * @param {'personalised'|'straightforward'|'context_dependent'} [options.taskType]
  * @param {string} [options.validationHint]
- * @param {string|null} [options.fullLessonOutcomeText] — full `outcome_messages[i]`; required context for context_dependent tasks
- * @param {string|null} [options.referenceCodeSnippet] — first example code block from the lesson, if any
+ * @param {string|null} [options.fullLessonOutcomeText] — full `outcome_messages[i]` for context_dependent tasks (includes examples in markdown)
  * @returns {string}
  */
 export function buildSessionPrompt({
@@ -23,19 +22,13 @@ export function buildSessionPrompt({
   taskQuestion = 'Use the Practice instructions from the latest lesson message in the chat.',
   taskType = 'straightforward',
   validationHint = '',
-  fullLessonOutcomeText = null,
-  referenceCodeSnippet = null
+  fullLessonOutcomeText = null
 }) {
   const concept = currentOutcomeObjective
   const hint =
     typeof validationHint === 'string' && validationHint.trim()
       ? validationHint.trim()
       : 'Be fair to beginners: accept any valid approach that shows understanding.'
-
-  const ref =
-    typeof referenceCodeSnippet === 'string' && referenceCodeSnippet.trim()
-      ? referenceCodeSnippet.trim()
-      : null
 
   const fullLesson =
     typeof fullLessonOutcomeText === 'string' && fullLessonOutcomeText.trim()
@@ -65,30 +58,19 @@ ${fullLesson}
 `
       : ''
 
-  const refBlock = ref
-    ? `
+  return `You are a JavaScript answer validator for a beginner learning platform.
+Your only job is to validate the user's answer for the task below.
 
-EXAMPLE CODE FROM THE LESSON (orientation only; the task may refer to it):
-\`\`\`javascript
-${ref}
-\`\`\`
-`
-    : ''
-
-  return `You are validating a beginner's answer to a short JavaScript practice task on a learning platform.
-Your only job: decide if their latest message answers the task, then respond using the rules below. Do not teach a full new lesson.
-
---- TASK ---
-Question: ${taskQuestion}
+Task question: ${taskQuestion}
 Task type: ${taskType}
 Concept (outcome): ${concept}
 Topic: ${topicTitle}
 Validation hint: ${hint}
-${refBlock}${lessonBlock}
---- HOW TO JUDGE (${taskType}) ---
+${lessonBlock}
+HOW TO JUDGE (${taskType})
 ${typeGuidance}
 
---- RESPONSE RULES ---
+RESPONSE RULES
 
 1) CORRECT answer (shows understanding; code would run or explanation matches the task for conceptual questions):
    - Output exactly one line in this form (the outcome text must match the concept line above):
@@ -109,7 +91,7 @@ ${typeGuidance}
    - One line redirecting them to the task question.
    - Do not use the completion line from rule 1.
 
---- IMPORTANT ---
+IMPORTANT
 - Be generous: close enough counts if understanding is clear.
 - Stay within the current concept; do not introduce the next topic.
 - For context_dependent tasks, rely on FULL LESSON TEXT above when the question references the example.

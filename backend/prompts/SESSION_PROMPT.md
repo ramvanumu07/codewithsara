@@ -11,10 +11,9 @@
 | `taskQuestion` | `topic.practise_tasks[i].question`, or fallback: `extractPracticeTaskFromOutcomeMessage(topic.outcome_messages[i])` |
 | `taskType` | `topic.practise_tasks[i].type` (`personalised` \| `straightforward` \| `context_dependent`) |
 | `validationHint` | `topic.practise_tasks[i].validation_hint` |
-| `referenceCodeSnippet` | `extractFirstCodeBlockFromOutcomeMessage(topic.outcome_messages[i])` — first fenced JS block, when present |
-| `fullLessonOutcomeText` | **Only when `taskType === 'context_dependent'`:** full `topic.outcome_messages[i]` so the model can grade “in the example” and conceptual questions |
+| `fullLessonOutcomeText` | **Only when `taskType === 'context_dependent'`:** full `topic.outcome_messages[i]` (includes markdown, examples, practice) so the model can grade “in the example” and conceptual questions |
 
-For **context_dependent** tasks, the full outcome message is included in the system prompt as **FULL LESSON TEXT** (not only the `## Practice` line). Other types still receive the task question, concept, validation hint, and optional example code block.
+For **context_dependent** tasks, the full outcome message is included in the system prompt as **FULL LESSON TEXT**. Other task types rely on task question, concept, validation hint, and chat history (no duplicate code excerpt in the system prompt).
 
 **Completion (server):** If the assistant reply contains **`Congratulations! You've mastered`** (case-insensitive), the API treats it like a completion signal: text **before** that phrase is kept as feedback, the mastery tail is stripped for merging, and the server appends the next `outcome_messages[i]` (or the full-topic mastery line on the last outcome), updates `current_outcome_index`, and saves one assistant message. Legacy `[[OUTCOME_COMPLETE]]` is stripped if present. The optional end marker `##OUTCOME_COMPLETE##` is stripped from displayed text when present; advancement still depends on the mastery phrase.
 

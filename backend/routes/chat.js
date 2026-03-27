@@ -14,7 +14,6 @@ import { getTopicOrRespond } from '../utils/topicHelper.js'
 import {
   getFirstOutcomeMessage,
   extractPracticeTaskFromOutcomeMessage,
-  extractFirstCodeBlockFromOutcomeMessage,
   sliceMessagesAfterCurrentOutcomeIntro
 } from '../utils/outcomeMessages.js'
 import { processSessionAssistantReply } from '../utils/sessionOutcome.js'
@@ -105,7 +104,6 @@ function buildSessionSystemPrompt(topicId, completedTopics = [], teachingOutcome
       ? pt.type
       : 'straightforward'
   const validationHint = pt && typeof pt.validation_hint === 'string' ? pt.validation_hint : ''
-  const referenceCodeSnippet = extractFirstCodeBlockFromOutcomeMessage(rawOutcomeMsg) || null
   const fullLessonOutcomeText =
     taskType === 'context_dependent' && rawOutcomeMsg.trim() ? rawOutcomeMsg : null
 
@@ -115,7 +113,6 @@ function buildSessionSystemPrompt(topicId, completedTopics = [], teachingOutcome
     taskQuestion,
     taskType,
     validationHint,
-    referenceCodeSnippet,
     fullLessonOutcomeText
   })
 }
