@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS public.coupons (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   code TEXT NOT NULL,
   discount_rupees INTEGER NOT NULL CHECK (discount_rupees > 0),
+  successful_enrollments INTEGER NOT NULL DEFAULT 0 CHECK (successful_enrollments >= 0),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

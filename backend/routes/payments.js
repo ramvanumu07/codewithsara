@@ -22,6 +22,7 @@ import {
   applyCoupon,
   getExpectedAmountPaise
 } from '../services/checkoutPricing.js'
+import { incrementCouponSuccessfulEnrollments } from '../services/coupons.js'
 
 const router = express.Router()
 
@@ -140,6 +141,9 @@ router.post('/create-order', authenticateToken, async (req, res) => {
       ))
     }
 
+    const couponTrim =
+      typeof couponCode === 'string' && couponCode.trim() ? couponCode.trim().slice(0, 64) : ''
+
     const order = await client.orders.create({
       amount: expectedPaise,
       currency: 'INR',
@@ -148,7 +152,8 @@ router.post('/create-order', authenticateToken, async (req, res) => {
         userId: String(userId),
         courseId: cid,
         name: resolvedName.slice(0, 120),
-        email: resolvedEmail.slice(0, 120)
+        email: resolvedEmail.slice(0, 120),
+        ...(couponTrim ? { couponCode: couponTrim } : {})
       }
     })
 
@@ -197,6 +202,7 @@ router.post('/verify-payment', authenticateToken, async (req, res) => {
         'Payment verification requires Razorpay API access. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.'
       ))
     }
+    let orderNotesCoupon = ''
     try {
       const order = await client.orders.fetch(orderId)
       const paid = Number(order.amount_paid)
@@ -204,12 +210,25 @@ router.post('/verify-payment', authenticateToken, async (req, res) => {
       if (!ok) {
         return res.status(400).json(createErrorResponse('Order was not paid successfully.'))
       }
+      const n = order.notes
+      if (n && typeof n === 'object' && n.couponCode != null) {
+        orderNotesCoupon = String(n.couponCode).trim()
+      }
     } catch (fetchErr) {
       handleErrorResponse(res, fetchErr, 'verify payment order fetch')
       return
     }
 
     await unlockCourseForUser(userId, cid)
+
+    if (orderNotesCoupon) {
+      try {
+        await incrementCouponSuccessfulEnrollments(orderNotesCoupon)
+      } catch (incErr) {
+        console.error('[payments] coupon enrollment increment failed:', incErr?.message || incErr)
+      }
+    }
+
     return res.json(createSuccessResponse({
       message: 'Payment successful. Your course is unlocked.',
       courseId: cid

@@ -8,7 +8,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import api, { handleApiError } from '../config/api'
 import { validatePassword } from '../utils/passwordValidation'
-import PasswordStrengthMeter from '../components/PasswordStrengthMeter'
 import { getAllSecurityQuestions } from '../utils/securityQuestions'
 import './Auth.css'
 
@@ -37,7 +36,7 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [passwordValidation, setPasswordValidation] = useState(null)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [usernameAvailable, setUsernameAvailable] = useState(null)
   const [submitAttempts, setSubmitAttempts] = useState(0)
   const [lastSubmitTime, setLastSubmitTime] = useState(0)
@@ -69,12 +68,6 @@ const Signup = () => {
         ...prev,
         [name]: ''
       }))
-    }
-
-    // Real-time password validation
-    if (name === 'password') {
-      const validation = validatePassword(value)
-      setPasswordValidation(validation)
     }
 
     // Username real-time validation and availability check
@@ -425,7 +418,7 @@ const Signup = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`form-input ${errors.password ? 'error' : (passwordValidation?.isValid ? 'success' : '')}`}
+                  className={`form-input ${errors.password ? 'error' : ''}`}
                   placeholder="Create a secure password"
                   disabled={isLoading}
                   autoComplete="new-password"
@@ -462,38 +455,54 @@ const Signup = () => {
                   <span className="status-taken">{errors.password}</span>
                 </div>
               )}
-              
-              {/* Password Strength */}
-              {formData.password && passwordValidation && (
-                <PasswordStrengthMeter 
-                  password={formData.password}
-                  validationResult={passwordValidation}
-                />
-              )}
             </div>
 
             <div className="form-group">
               <label htmlFor="confirmPassword" className="form-label">
                 Confirm Password
               </label>
-              <input
-                type="text"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`form-input ${errors.confirmPassword ? 'error' : (formData.password && formData.confirmPassword && formData.password === formData.confirmPassword ? 'success' : '')}`}
-                placeholder="Confirm your password"
-                disabled={isLoading}
-                autoComplete="new-password"
-                required
-              />
+              <div className="password-input-wrapper">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className={`form-input ${errors.confirmPassword ? 'error' : (formData.password && formData.confirmPassword && formData.password === formData.confirmPassword ? 'success' : '')}`}
+                  placeholder="Confirm your password"
+                  disabled={isLoading}
+                  autoComplete="new-password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  disabled={isLoading}
+                  aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                  aria-pressed={showConfirmPassword}
+                  tabIndex={0}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    {showConfirmPassword ? (
+                      <>
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                        <line x1="1" y1="1" x2="23" y2="23"/>
+                      </>
+                    ) : (
+                      <>
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                      </>
+                    )}
+                  </svg>
+                </button>
+              </div>
               {errors.confirmPassword && (
                 <div className="username-status">
                   <span className="status-taken">{errors.confirmPassword}</span>
                 </div>
               )}
-              
             </div>
 
             {/* Security Question */}

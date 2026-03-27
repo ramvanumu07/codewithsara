@@ -30,3 +30,29 @@ export async function getCouponDiscountRupeesFromDb (code) {
     throw e
   }
 }
+
+/**
+ * Increment successful checkout count for a coupon (call only after payment verified and course unlocked).
+ * Matches codes case-insensitively like the rest of checkout.
+ * @param {string} code
+ * @returns {Promise<boolean>} true if a row was updated
+ */
+export async function incrementCouponSuccessfulEnrollments (code) {
+  if (!isDatabaseConfigured()) return false
+  if (!code || typeof code !== 'string') return false
+  const key = code.trim().toUpperCase()
+  if (!key) return false
+  try {
+    const { rowCount } = await query(
+      `UPDATE public.coupons
+       SET successful_enrollments = successful_enrollments + 1
+       WHERE UPPER(TRIM(code)) = $1`,
+      [key]
+    )
+    return (rowCount ?? 0) > 0
+  } catch (e) {
+    const codePg = e && e.code
+    if (codePg === '42P01' || codePg === '42703') return false
+    throw e
+  }
+}
