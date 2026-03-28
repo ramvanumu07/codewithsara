@@ -376,28 +376,7 @@ export class CodeExecutor {
   }
 
   addProtections(code) {
-    let protectedCode = code;
-    protectedCode = protectedCode.replace(/for\s*\([^)]*\)\s*{/g, (match) => {
-      return `${match}
-          let __loopCount_${Date.now()} = 0;
-          const __checkLoop_${Date.now()} = () => {
-            if (++__loopCount_${Date.now()} > ${this.maxIterations}) {
-              throw new Error('Loop exceeded maximum iterations');
-            }
-          };
-        `;
-    });
-    protectedCode = protectedCode.replace(/while\s*\([^)]*\)\s*{/g, (match) => {
-      return `${match}
-          let __loopCount_${Date.now()} = 0;
-          const __checkLoop_${Date.now()} = () => {
-            if (++__loopCount_${Date.now()} > ${this.maxIterations}) {
-              throw new Error('Loop exceeded maximum iterations');
-            }
-          };
-        `;
-    });
-    const codeWithoutStringLiterals = this.stripStringLiteralsForCheck(protectedCode);
+    const strippedForBlock = this.stripStringLiteralsForCheck(code)
     const blockedPatterns = [
       /\bimportScripts\b/g,
       /\bpostMessage\b/g,
@@ -407,13 +386,28 @@ export class CodeExecutor {
       /\bWebSocket\b/g,
       /\bfetch\b/g,
       /\bXMLHttpRequest\b/g
-    ];
-    blockedPatterns.forEach((pattern) => {
-      if (pattern.test(codeWithoutStringLiterals)) {
-        throw new Error('Blocked operation detected in code');
+    ]
+    for (const pattern of blockedPatterns) {
+      pattern.lastIndex = 0
+      if (pattern.test(strippedForBlock)) {
+        throw new Error('Blocked operation detected in code')
       }
-    });
-    return protectedCode;
+    }
+
+    const suf = Math.random().toString(36).slice(2, 11)
+    const budgetVar = `__saraB_${suf}`
+    const maxVar = `__saraM_${suf}`
+    const tickFn = `__saraT_${suf}`
+    const max = this.maxIterations
+    const header =
+      `var ${budgetVar}=0;var ${maxVar}=${max};function ${tickFn}(){if(++${budgetVar}>${maxVar})throw new Error('Loop exceeded maximum iterations');}\n`
+
+    let body = code
+    body = body.replace(/\bfor\s*\([^)]*\)\s*\{/g, (match) => `${match} ${tickFn}();`)
+    body = body.replace(/\bwhile\s*\([^)]*\)\s*\{/g, (match) => `${match} ${tickFn}();`)
+    body = body.replace(/\bdo\s*\{/g, () => `do { ${tickFn}();`)
+
+    return header + body
   }
 
   compareOutput(actual, expected) {

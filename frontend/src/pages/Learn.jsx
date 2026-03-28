@@ -805,7 +805,7 @@ const Learn = () => {
     try {
       outputDiv.innerHTML = '<div class="terminal-run-line" style="color: #10a37f; font-family: Monaco, Consolas, monospace; padding: 8px;">Executing code securely...</div>'
 
-      const result = await CodeExecutor.executeForTesting(
+      const result = await CodeExecutor.runUserCode(
         userCode,
         [],
         null,
@@ -974,7 +974,7 @@ const Learn = () => {
 
     try {
       // Run = same as playground: always script mode (console.log only). Test still uses function mode when needed.
-      const result = await CodeExecutor.executeForTesting(
+      const result = await CodeExecutor.runUserCode(
         assignmentCode,
         [],
         null,
@@ -1057,7 +1057,7 @@ const Learn = () => {
 
       // 1. Run tests and display test case results in a clear structured format
       if (testCases.length > 0) {
-        const localResult = await CodeExecutor.executeForTesting(
+        const localResult = await CodeExecutor.runUserCode(
           assignmentCode,
           testCases,
           functionName,

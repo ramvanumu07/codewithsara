@@ -65,7 +65,7 @@ export default function SessionPlayground({
       const lineNumDiv = outputDiv.parentElement?.querySelector('.terminal-line-numbers')
       if (lineNumDiv) lineNumDiv.innerHTML = ''
 
-      const result = await CodeExecutor.executeForTesting(code, [], null, 'script')
+      const result = await CodeExecutor.runUserCode(code, [], null, 'script')
       const { text: outputText, isError } = formatTerminalRunResult(result)
       const outputColor = isError ? '#ff7b72' : '#7ee787'
 

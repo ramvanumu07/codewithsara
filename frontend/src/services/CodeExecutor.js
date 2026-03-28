@@ -61,7 +61,7 @@ class CodeExecutionService {
   constructor() {
     this.worker = null;
     this.pendingExecutions = new Map();
-    this.executionTimeout = 20000; // 20 seconds (covers slow worker load + execution)
+    this.executionTimeout = 15000; // Worker can be terminated on timeout; loop guard limits sync work
   }
 
   /**
@@ -156,6 +156,44 @@ class CodeExecutionService {
   }
 
   /**
+   * Run user code in the Web Worker when possible (timeouts terminate the worker so the UI stays responsive).
+   * Falls back to main-thread execution only if the worker fails to load (CSP/bundle issues on some hosts).
+   * Same return shape as executeForTesting for formatTerminalRunResult / assignment flows.
+   */
+  async runUserCode(code, testCases, functionName, solutionType) {
+    try {
+      const data = await this.executeCode(code, testCases || [], functionName, solutionType);
+      if (!data || data.success === false) {
+        return {
+          success: false,
+          error: normalizeExecutionError(data?.error || 'Code execution failed'),
+          results: data?.results || [],
+          allPassed: false,
+          executionTime: data?.executionTime || 0
+        };
+      }
+      return {
+        success: true,
+        results: data.results || [],
+        allPassed: data.allPassed,
+        executionTime: data.executionTime || 0
+      };
+    } catch (error) {
+      const msg = error?.message || '';
+      if (msg.includes('failed to load') || msg.includes('refresh the page')) {
+        return this.executeForTesting(code, testCases, functionName, solutionType);
+      }
+      return {
+        success: false,
+        error: normalizeExecutionError(msg),
+        results: [],
+        allPassed: false,
+        executionTime: 0
+      };
+    }
+  }
+
+  /**
    * Execute and validate code (frontend + backend validation)
    */
   async executeAndValidate(code, testCases, functionName, solutionType, topicId, assignmentIndex) {
@@ -227,11 +265,7 @@ class CodeExecutionService {
       clearTimeout(execution.timeoutId);
       this.pendingExecutions.delete(taskId);
 
-      if (data.success) {
-        execution.resolve(data);
-      } else {
-        execution.reject(new Error(normalizeExecutionError(data.error || 'Code execution failed')));
-      }
+      execution.resolve(data);
 
       this.cleanup(taskId);
     }
