@@ -24,9 +24,9 @@ export const welcomeCourseOffers = [
     forCourseIds: ['javascript'],
     title: 'JavaScript with Sara',
     subtitle: 'Structured JavaScript curriculum — AI tutor, playground, and assignments',
-    priceFormatted: '₹999',
+    priceFormatted: '₹1199',
     compareAtPriceFormatted: '₹1599',
-    priceAmount: 999,
+    priceAmount: 1199,
     compareAtAmount: 1599,
     promoLabel: 'Limited time offer',
     highlights: [
