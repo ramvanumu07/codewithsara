@@ -11,6 +11,10 @@ import { query, isDatabaseConfigured } from './db.js'
 const BCRYPT_ROUNDS = parseInt(process.env.BCRYPT_ROUNDS || '12', 10)
 const JWT_SECRET = process.env.JWT_SECRET
 
+if (!JWT_SECRET || JWT_SECRET.trim() === '') {
+  throw new Error('Server configuration error: JWT_SECRET is not set. Add it in your .env file.')
+}
+
 // ============ PROMOTER SIGNUP ============
 
 /**
@@ -27,6 +31,7 @@ export async function createPromoter (data) {
     email,
     name,
     password,
+    couponCode,
     payoutMethod, // 'bank' or 'upi'
     accountHolderName,
     accountNumber,
@@ -35,16 +40,22 @@ export async function createPromoter (data) {
   } = data
 
   // Validate required fields
-  if (!email || !name || !password || !payoutMethod) {
+  if (!email || !name || !password || !couponCode || !payoutMethod) {
     throw new Error('Missing required fields')
   }
 
   const emailLower = email.trim().toLowerCase()
   const nameTrimmed = name.trim()
   const passwordTrimmed = password.trim()
+  const couponCodeUpper = couponCode.trim().toUpperCase()
 
   if (passwordTrimmed.length < 6) {
     throw new Error('Password must be at least 6 characters')
+  }
+
+  // Validate coupon code format
+  if (!/^[A-Z0-9]{3,20}$/.test(couponCodeUpper)) {
+    throw new Error('Promotion code must be 3-20 alphanumeric characters')
   }
 
   // Validate payout method
@@ -59,6 +70,15 @@ export async function createPromoter (data) {
   )
   if (existing.rows?.length > 0) {
     throw new Error('Email already registered')
+  }
+
+  // Check if coupon code already exists
+  const couponExists = await query(
+    'SELECT id FROM public.coupons WHERE UPPER(TRIM(code)) = $1',
+    [couponCodeUpper]
+  )
+  if (couponExists.rows?.length > 0) {
+    throw new Error('This promotion code is already taken. Please choose another.')
   }
 
   // Validate payout method fields
@@ -83,9 +103,6 @@ export async function createPromoter (data) {
 
   // Hash password
   const passwordHash = await bcrypt.hash(passwordTrimmed, BCRYPT_ROUNDS)
-
-  // Generate unique coupon code
-  const couponCode = generatePromoterCouponCode(nameTrimmed)
 
   try {
     // Create promoter

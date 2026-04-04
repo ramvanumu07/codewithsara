@@ -25,6 +25,7 @@ export default function PromoterSignup() {
     name: '',
     password: '',
     confirmPassword: '',
+    couponCode: '',
     payoutMethod: 'bank', // 'bank' or 'upi'
     accountHolderName: '',
     accountNumber: '',
@@ -72,6 +73,12 @@ export default function PromoterSignup() {
 
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match'
+    }
+
+    if (!formData.couponCode?.trim()) {
+      newErrors.couponCode = 'Promotion code is required'
+    } else if (!/^[A-Z0-9]{3,20}$/.test(formData.couponCode.trim().toUpperCase())) {
+      newErrors.couponCode = 'Code must be 3-20 alphanumeric characters (A-Z, 0-9)'
     }
 
     setErrors(newErrors)
@@ -158,6 +165,7 @@ export default function PromoterSignup() {
         formData.name,
         formData.password,
         formData.confirmPassword,
+        formData.couponCode.toUpperCase(),
         formData.payoutMethod,
         bankDetails,
         formData.payoutMethod === 'upi' ? formData.upiId : null
@@ -246,6 +254,27 @@ export default function PromoterSignup() {
                 style={{...styles.input, ...(errors.confirmPassword ? styles.inputError : {})}}
               />
               {errors.confirmPassword && <p style={styles.errorText}>{errors.confirmPassword}</p>}
+            </div>
+
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Promotion Code (Your Coupon)</label>
+              <input
+                type="text"
+                name="couponCode"
+                value={formData.couponCode.toUpperCase()}
+                onChange={(e) => {
+                  const value = e.target.value.toUpperCase()
+                  setFormData(prev => ({ ...prev, couponCode: value }))
+                  if (errors.couponCode) {
+                    setErrors(prev => ({ ...prev, couponCode: '' }))
+                  }
+                }}
+                placeholder="e.g., PROMO123"
+                maxLength="20"
+                style={{...styles.input, ...(errors.couponCode ? styles.inputError : {})}}
+              />
+              {errors.couponCode && <p style={styles.errorText}>{errors.couponCode}</p>}
+              <p style={styles.hint}>3-20 characters (letters and numbers only, no spaces)</p>
             </div>
           </div>
         )}
@@ -530,6 +559,12 @@ const styles = {
   },
   errorText: {
     color: '#dc2626',
+    fontSize: 12,
+    marginTop: 4,
+    margin: '4px 0 0'
+  },
+  hint: {
+    color: '#9ca3af',
     fontSize: 12,
     marginTop: 4,
     margin: '4px 0 0'

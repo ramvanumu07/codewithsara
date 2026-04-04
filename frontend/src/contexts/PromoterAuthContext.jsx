@@ -51,7 +51,7 @@ export function PromoterAuthProvider({ children }) {
     }
   }
 
-  const signup = async (email, name, password, confirmPassword, payoutMethod, bankDetails, upiId) => {
+  const signup = async (email, name, password, confirmPassword, couponCode, payoutMethod, bankDetails, upiId) => {
     setError(null)
     try {
       const response = await api.post('/promoters/signup', {
@@ -59,6 +59,7 @@ export function PromoterAuthProvider({ children }) {
         name,
         password,
         confirmPassword,
+        couponCode,
         payoutMethod,
         accountHolderName: bankDetails?.accountHolderName,
         accountNumber: bankDetails?.accountNumber,
