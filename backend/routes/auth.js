@@ -359,13 +359,16 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
     // Update last login
     await updateLastLogin(user.id)
 
-    // Send welcome email (non-blocking)
-    try {
-      const { subject, html } = userSignupEmail(user.name || user.username)
-      await sendEmail(user.email, subject, html)
-    } catch (emailErr) {
-      console.error('User signup email failed (non-blocking):', emailErr)
-    }
+    // Send welcome email (non-blocking - fire and forget)
+    // Wrap in setImmediate so it doesn't block response
+    setImmediate(async () => {
+      try {
+        const { subject, html } = userSignupEmail(user.name || user.username)
+        await sendEmail(user.email, subject, html)
+      } catch (emailErr) {
+        console.error('[Auth] User signup email failed (non-blocking):', emailErr?.message || emailErr)
+      }
+    })
 
     res.status(201).json(createSuccessResponse({
       message: 'Account created successfully',

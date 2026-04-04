@@ -42,6 +42,12 @@ function getTransporter () {
  */
 export async function sendEmail (to, subject, htmlContent) {
   try {
+    // Validate inputs
+    if (!to || !subject || !htmlContent) {
+      console.warn('[EmailService] Missing required email parameters')
+      return false
+    }
+
     const transport = getTransporter()
     if (!transport) {
       console.warn(`[EmailService] Skipping email to ${to} - transporter not configured`)
@@ -61,7 +67,8 @@ export async function sendEmail (to, subject, htmlContent) {
     console.log(`[EmailService] Email sent to ${to} - Message ID: ${result.messageId}`)
     return true
   } catch (error) {
-    console.error(`[EmailService] Failed to send email to ${to}:`, error.message)
+    // Log error but don't throw - this is non-critical
+    console.error(`[EmailService] Failed to send email to ${to}:`, error?.message || error)
     return false
   }
 }

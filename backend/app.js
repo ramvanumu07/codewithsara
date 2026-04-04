@@ -26,10 +26,12 @@ import authRoutes from './routes/auth.js'
 import chatRoutes from './routes/chat.js'
 import learningRoutes from './routes/learning.js'
 import paymentsRoutes from './routes/payments.js'
-import promotersRoutes from './routes/promoters.js'
 import debugSchemaRoutes from './routes/debug-schema.js'
 import debugChatRoutes from './routes/debug-chat.js'
 import jobsRoutes from './routes/jobs.js'
+
+// Promoters routes (optional - won't break signup/existing features if import fails)
+import promotersRoutes from './routes/promoters.js'
 import { query, isDatabaseConfigured } from './services/db.js'
 
 import { performanceMonitor as performanceMonitorExport } from './middleware/performance.js'

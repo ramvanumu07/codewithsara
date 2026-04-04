@@ -5,7 +5,6 @@
 
 import express from 'express'
 import { createSuccessResponse, createErrorResponse, handleErrorResponse } from '../utils/responses.js'
-import { authenticateToken } from './auth.js'
 import {
   createPromoter,
   authenticatePromoter,
