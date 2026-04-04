@@ -6,7 +6,7 @@
  * Step 3: Bank/UPI Details
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { usePromoterAuth } from '../contexts/PromoterAuthContext'
 import { useToast } from '../hooks/useToast'
@@ -35,6 +35,11 @@ export default function PromoterSignup() {
   })
 
   const [errors, setErrors] = useState({})
+
+  // Clear errors when step changes
+  useEffect(() => {
+    setErrors({})
+  }, [step])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -119,10 +124,8 @@ export default function PromoterSignup() {
   const handleNextStep = () => {
     if (step === 1 && validateStep1()) {
       setStep(2)
-      setErrors({})
     } else if (step === 2 && validateStep2()) {
       setStep(3)
-      setErrors({})
     }
   }
 
