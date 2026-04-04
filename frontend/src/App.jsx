@@ -8,7 +8,6 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
-import { PromoterAuthProvider } from './contexts/PromoterAuthContext'
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -115,9 +114,6 @@ import Checkout from './pages/Checkout'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFailed from './pages/PaymentFailed'
 import Admin from './pages/Admin'
-import PromoterSignup from './pages/PromoterSignup'
-import PromoterLogin from './pages/PromoterLogin'
-import PromoterDashboard from './pages/PromoterDashboard'
 
 // Import Styles (legal page styles are inlined in index.css so they always load on Vercel)
 import './index.css'
@@ -126,24 +122,19 @@ function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <PromoterAuthProvider>
-          <Router>
-            <div className="app">
-              <AppRoutes />
-            </div>
-          </Router>
-        </PromoterAuthProvider>
+        <Router>
+          <div className="app">
+            <AppRoutes />
+          </div>
+        </Router>
       </AuthProvider>
     </ErrorBoundary>
   )
 }
 
 // Separate component to access auth context
-import { usePromoterAuth } from './contexts/PromoterAuthContext'
-
 const AppRoutes = () => {
   const { loading } = useAuth()
-  const { promoterToken: initialPromoterToken } = usePromoterAuth()
 
   // Show loading while checking authentication
   if (loading) {
@@ -194,11 +185,6 @@ const AppRoutes = () => {
       <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
       <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
       
-      {/* Promoter Routes */}
-      <Route path="/promoter/signup" element={<PublicPromoterRoute><PromoterSignup /></PublicPromoterRoute>} />
-      <Route path="/promoter/login" element={<PublicPromoterRoute><PromoterLogin /></PublicPromoterRoute>} />
-      <Route path="/promoter/dashboard" element={<ProtectedPromoterRoute><PromoterDashboard /></ProtectedPromoterRoute>} />
-      
       {/* Legal & Info Pages - Always accessible */}
       <Route path="/terms" element={<Terms />} />
       <Route path="/privacy" element={<Privacy />} />
@@ -240,27 +226,6 @@ const PublicRoute = ({ children }) => {
   return children
 }
 
-// Promoter Public Route - Redirects authenticated promoters to dashboard
-const PublicPromoterRoute = ({ children }) => {
-  const { promoterToken } = usePromoterAuth()
-  
-  if (promoterToken) {
-    return <Navigate to="/promoter/dashboard" replace />
-  }
-  
-  return children
-}
-
-// Promoter Protected Route - Redirects unauthenticated promoters to login
-const ProtectedPromoterRoute = ({ children }) => {
-  const { promoterToken } = usePromoterAuth()
-  
-  if (!promoterToken) {
-    return <Navigate to="/promoter/login" replace />
-  }
-  
-  return children
-}
 
 // Protected Route Guard - Redirects unauthenticated users to login
 const ProtectedRoute = ({ children }) => {

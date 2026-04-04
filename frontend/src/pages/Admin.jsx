@@ -6,13 +6,12 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import api from '../config/api'
-import AdminPromoters from './AdminPromoters'
 import { ToastContainer } from '../components/Toast'
 import { useToast } from '../hooks/useToast'
 
 const Admin = () => {
   const [authorized, setAuthorized] = useState(null)
-  const [activeTab, setActiveTab] = useState('promoters') // Can be 'promoters', 'users', 'payments'
+  const [activeTab, setActiveTab] = useState('users') // Can be 'users', 'payments'
   const { toasts } = useToast()
 
   useEffect(() => {
@@ -85,12 +84,6 @@ const Admin = () => {
 
       <div style={tabsStyle}>
         <button
-          onClick={() => setActiveTab('promoters')}
-          style={tabStyle(activeTab === 'promoters')}
-        >
-          Promoters
-        </button>
-        <button
           onClick={() => setActiveTab('users')}
           style={tabStyle(activeTab === 'users')}
         >
@@ -105,8 +98,6 @@ const Admin = () => {
       </div>
 
       <div style={contentStyle}>
-        {activeTab === 'promoters' && <AdminPromoters />}
-        
         {activeTab === 'users' && (
           <div style={{ padding: 24 }}>
             <p style={{ color: '#6b7280' }}>User management coming soon...</p>

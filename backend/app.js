@@ -30,8 +30,6 @@ import debugSchemaRoutes from './routes/debug-schema.js'
 import debugChatRoutes from './routes/debug-chat.js'
 import jobsRoutes from './routes/jobs.js'
 
-// Promoters routes (optional - won't break signup/existing features if import fails)
-import promotersRoutes from './routes/promoters.js'
 import { query, isDatabaseConfigured } from './services/db.js'
 
 import { performanceMonitor as performanceMonitorExport } from './middleware/performance.js'
@@ -105,7 +103,6 @@ app.use('/api/auth', asMiddleware(authRoutes))
 app.use('/api/chat', asMiddleware(chatRoutes))
 app.use('/api/learn', asMiddleware(learningRoutes))
 app.use('/api', asMiddleware(paymentsRoutes))
-app.use('/api/promoters', asMiddleware(promotersRoutes))
 app.use('/api/debug', asMiddleware(debugSchemaRoutes))
 app.use('/api/debug', asMiddleware(debugChatRoutes))
 
