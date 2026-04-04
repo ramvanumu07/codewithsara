@@ -119,8 +119,10 @@ export default function PromoterSignup() {
   const handleNextStep = () => {
     if (step === 1 && validateStep1()) {
       setStep(2)
+      setErrors({})
     } else if (step === 2 && validateStep2()) {
       setStep(3)
+      setErrors({})
     }
   }
 
@@ -173,7 +175,6 @@ export default function PromoterSignup() {
       
       <form onSubmit={handleSubmit} style={styles.formContainer}>
         <h1 style={styles.title}>Join Sara Promoter Program</h1>
-        <p style={styles.subtitle}>Earn ₹200 for each user who enrolls using your coupon</p>
 
         {/* Step Indicator */}
         <div style={styles.stepIndicator}>
@@ -340,7 +341,10 @@ export default function PromoterSignup() {
                     type="text"
                     name="ifscCode"
                     value={formData.ifscCode}
-                    onChange={(e) => handleInputChange({...e, target: {...e.target, value: e.target.value.toUpperCase()}})}
+                    onChange={(e) => {
+                      const upperValue = e.target.value.toUpperCase()
+                      handleInputChange({...e, target: {...e.target, name: 'ifscCode', value: upperValue}})
+                    }}
                     placeholder="e.g., SBIN0001234"
                     style={{...styles.input, ...(errors.ifscCode ? styles.inputError : {})}}
                   />
@@ -353,7 +357,10 @@ export default function PromoterSignup() {
                     type="text"
                     name="confirmIfscCode"
                     value={formData.confirmIfscCode}
-                    onChange={(e) => handleInputChange({...e, target: {...e.target, value: e.target.value.toUpperCase()}})}
+                    onChange={(e) => {
+                      const upperValue = e.target.value.toUpperCase()
+                      handleInputChange({...e, target: {...e.target, name: 'confirmIfscCode', value: upperValue}})
+                    }}
                     placeholder="Confirm IFSC code"
                     style={{...styles.input, ...(errors.confirmIfscCode ? styles.inputError : {})}}
                   />

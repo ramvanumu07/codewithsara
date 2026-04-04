@@ -994,8 +994,42 @@ const Dashboard = () => {
       )}
       <ToastContainer toasts={toasts} />
 
+      {/* Footer with Promoter Link */}
+      <footer style={styles.footer}>
+        <div style={styles.footerContent}>
+          <p style={styles.footerText}>
+            Want to earn money? <Link to="/promoter/signup" style={styles.promoterLink}>Become a Promoter</Link> and earn ₹200 for each student enrollment!
+          </p>
+        </div>
+      </footer>
+
     </div>
   )
 }
 
 export default Dashboard
+
+const styles = {
+  footer: {
+    background: '#f3f4f6',
+    borderTop: '1px solid #e5e7eb',
+    padding: '24px 20px',
+    marginTop: '40px',
+    textAlign: 'center'
+  },
+  footerContent: {
+    maxWidth: '1200px',
+    margin: '0 auto'
+  },
+  footerText: {
+    fontSize: '14px',
+    color: '#6b7280',
+    margin: 0
+  },
+  promoterLink: {
+    color: '#059669',
+    textDecoration: 'none',
+    fontWeight: '600',
+    cursor: 'pointer'
+  }
+}
