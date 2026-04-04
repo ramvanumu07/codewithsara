@@ -342,8 +342,11 @@ export default function PromoterSignup() {
                     name="ifscCode"
                     value={formData.ifscCode}
                     onChange={(e) => {
-                      const upperValue = e.target.value.toUpperCase()
-                      handleInputChange({...e, target: {...e.target, name: 'ifscCode', value: upperValue}})
+                      const value = e.target.value.toUpperCase()
+                      setFormData(prev => ({ ...prev, ifscCode: value }))
+                      if (errors.ifscCode) {
+                        setErrors(prev => ({ ...prev, ifscCode: '' }))
+                      }
                     }}
                     placeholder="e.g., SBIN0001234"
                     style={{...styles.input, ...(errors.ifscCode ? styles.inputError : {})}}
@@ -358,8 +361,11 @@ export default function PromoterSignup() {
                     name="confirmIfscCode"
                     value={formData.confirmIfscCode}
                     onChange={(e) => {
-                      const upperValue = e.target.value.toUpperCase()
-                      handleInputChange({...e, target: {...e.target, name: 'confirmIfscCode', value: upperValue}})
+                      const value = e.target.value.toUpperCase()
+                      setFormData(prev => ({ ...prev, confirmIfscCode: value }))
+                      if (errors.confirmIfscCode) {
+                        setErrors(prev => ({ ...prev, confirmIfscCode: '' }))
+                      }
                     }}
                     placeholder="Confirm IFSC code"
                     style={{...styles.input, ...(errors.confirmIfscCode ? styles.inputError : {})}}

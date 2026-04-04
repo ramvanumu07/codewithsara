@@ -37,6 +37,8 @@ export default function LegalPageFooter () {
           <span style={{ color: '#8e8e8e' }}>•</span>
           <Link to="/services" style={linkStyle}>Products &amp; Services</Link>
           <span style={{ color: '#8e8e8e' }}>•</span>
+          <Link to="/promoter/signup" style={{...linkStyle, color: '#059669', fontWeight: 600}}>Become a Promoter</Link>
+          <span style={{ color: '#8e8e8e' }}>•</span>
           <Link to="/terms" style={linkStyle}>Terms</Link>
           <span style={{ color: '#8e8e8e' }}>•</span>
           <Link to="/privacy" style={linkStyle}>Privacy</Link>

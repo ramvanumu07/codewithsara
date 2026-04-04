@@ -97,7 +97,6 @@ export function promoterSignupEmail (promoterName, couponCode) {
       <p><strong>Here's how it works:</strong></p>
       <ul>
         <li>Share your coupon code with friends and followers</li>
-        <li>Earn <strong>₹200</strong> for each user who enrolls using your code</li>
         <li>Request a payout when your earnings reach ₹1,000</li>
         <li>Money transferred to your bank or UPI account</li>
       </ul>

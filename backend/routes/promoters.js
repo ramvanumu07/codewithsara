@@ -91,7 +91,7 @@ router.post('/signup', async (req, res) => {
     }
 
     return res.status(201).json(createSuccessResponse({
-      message: 'Promoter account created successfully! You can now log in and start earning.',
+      message: 'Promoter account created! Awaiting admin approval.',
       promoter
     }))
   } catch (error) {
