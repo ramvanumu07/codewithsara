@@ -27,7 +27,6 @@ import { sendPromoterPayout } from '../services/razorpayPayouts.js'
 import { sendEmail } from '../services/emailService.js'
 import {
   promoterSignupEmail,
-  promoterApprovedEmail,
   payoutInitiatedEmail
 } from '../services/emailTemplates.js'
 import { query } from '../services/db.js'
@@ -407,17 +406,6 @@ router.post('/admin/:promoterId/approve', adminOnly, async (req, res) => {
     const { reason } = req.body || {}
 
     const updated = await approvePromoter(promoterId, req.user?.userId, reason)
-
-    // Send approval email
-    const promoter = await getPromoterById(promoterId)
-    if (promoter) {
-      try {
-        const { subject, html } = promoterApprovedEmail(promoter.name)
-        await sendEmail(promoter.email, subject, html)
-      } catch (emailErr) {
-        console.error('Approval email failed (non-blocking):', emailErr)
-      }
-    }
 
     return res.json(createSuccessResponse({
       message: 'Promoter approved',

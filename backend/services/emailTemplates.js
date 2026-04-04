@@ -45,7 +45,7 @@ export function userSignupEmail (userName) {
     </div>
     <div class="footer">
       <p>Sara Learning Platform | support@codewithsara.in</p>
-      <p>© 2024 Sara. All rights reserved.</p>
+      <p>© 2026 Sara. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -71,7 +71,7 @@ export function promoterSignupEmail (promoterName, couponCode) {
     .coupon-box { background: white; border: 2px solid #059669; padding: 20px; border-radius: 6px; text-align: center; margin: 20px 0; }
     .coupon-box .label { color: #6b7280; font-size: 14px; margin-bottom: 8px; }
     .coupon-box .code { font-size: 24px; font-weight: bold; color: #059669; letter-spacing: 2px; font-family: monospace; }
-    .status-badge { display: inline-block; background: #fef3c7; color: #92400e; padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-top: 20px; }
+    .highlight { display: inline-block; background: #dcfce7; color: #166534; padding: 8px 12px; border-radius: 4px; font-weight: 600; margin-top: 20px; }
     .button { display: inline-block; background: #059669; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin-top: 20px; font-weight: 600; }
     .button:hover { background: #047857; }
     .footer { background: #f3f4f6; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 8px 8px; }
@@ -87,7 +87,7 @@ export function promoterSignupEmail (promoterName, couponCode) {
     </div>
     <div class="body">
       <p>Hi ${promoterName},</p>
-      <p>Thank you for joining the Sara Promoter Program! We're excited to have you as part of our community.</p>
+      <p>Thank you for joining the Sara Promoter Program! We're excited to have you as part of our community. Your account is ready to go!</p>
       
       <div class="coupon-box">
         <div class="label">Your Unique Promotion Code</div>
@@ -97,85 +97,23 @@ export function promoterSignupEmail (promoterName, couponCode) {
       <p><strong>Here's how it works:</strong></p>
       <ul>
         <li>Share your coupon code with friends and followers</li>
-        <li>Earn <strong>₹200</strong> for each student who enrolls using your code</li>
+        <li>Earn <strong>₹200</strong> for each user who enrolls using your code</li>
         <li>Request a payout when your earnings reach ₹1,000</li>
         <li>Money transferred to your bank or UPI account</li>
       </ul>
       
-      <p><strong>Next Step:</strong> We'll review your account details and send you an approval email within 24 hours. Once approved, you can start earning!</p>
+      <p><strong>Get started now:</strong> Log in to your dashboard to see your coupon code and start sharing!</p>
       
-      <div class="status-badge">Status: Pending Approval</div>
+      <div class="highlight">Status: Active ✓</div>
+      
+      <a href="https://codewithsara.in/promoter/dashboard" class="button">Go to Promoter Dashboard</a>
       
       <p>Questions? Reply to this email or contact support@codewithsara.in</p>
       <p><strong>— Sara Team</strong></p>
     </div>
     <div class="footer">
       <p>Sara Learning Platform | support@codewithsara.in</p>
-      <p>© 2024 Sara. All rights reserved.</p>
-    </div>
-  </div>
-</body>
-</html>
-    `
-  }
-}
-
-export function promoterApprovedEmail (promoterName, dashboardUrl = 'https://codewithsara.in/promoter/dashboard') {
-  return {
-    subject: 'Your Sara Promoter Account is Approved! 🎉',
-    html: `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
-    .header h1 { margin: 0; font-size: 28px; }
-    .body { background: #f9fafb; padding: 30px 20px; }
-    .success-badge { display: inline-block; background: #dcfce7; color: #166534; padding: 12px 20px; border-radius: 6px; font-weight: 600; margin: 20px 0; }
-    .feature-list { background: white; border-left: 4px solid #059669; padding: 20px; margin: 20px 0; border-radius: 4px; }
-    .feature-list h3 { margin-top: 0; color: #059669; }
-    .feature-list li { margin: 10px 0; }
-    .button { display: inline-block; background: #059669; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin-top: 20px; font-weight: 600; }
-    .button:hover { background: #047857; }
-    .footer { background: #f3f4f6; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 8px 8px; }
-    p { margin: 16px 0; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>🎉 Account Approved!</h1>
-    </div>
-    <div class="body">
-      <p>Hi ${promoterName},</p>
-      <p>Great news! Your Sara Promoter account has been approved and you're ready to start earning.</p>
-      
-      <div class="success-badge">Status: Active</div>
-      
-      <div class="feature-list">
-        <h3>You can now:</h3>
-        <ul>
-          <li>✓ Share your unique coupon code with friends</li>
-          <li>✓ Track real-time earnings on your dashboard</li>
-          <li>✓ Request payouts when you reach ₹1,000</li>
-          <li>✓ View payment history and payout status</li>
-        </ul>
-      </div>
-      
-      <p><strong>Get started:</strong></p>
-      <p>Log in to your dashboard to see your coupon code and start sharing!</p>
-      
-      <a href="${dashboardUrl}" class="button">Go to Promoter Dashboard</a>
-      
-      <p>Questions? Email us at support@codewithsara.in</p>
-      <p><strong>— Sara Team</strong></p>
-    </div>
-    <div class="footer">
-      <p>Sara Learning Platform | support@codewithsara.in</p>
-      <p>© 2024 Sara. All rights reserved.</p>
+      <p>© 2026 Sara. All rights reserved.</p>
     </div>
   </div>
 </body>
@@ -236,7 +174,7 @@ export function payoutInitiatedEmail (promoterName, amount) {
     </div>
     <div class="footer">
       <p>Sara Learning Platform | support@codewithsara.in</p>
-      <p>© 2024 Sara. All rights reserved.</p>
+      <p>© 2026 Sara. All rights reserved.</p>
     </div>
   </div>
 </body>
