@@ -19,11 +19,16 @@ const api = axios.create({
   }
 })
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token (user or promoter)
 api.interceptors.request.use(
   (config) => {
     try {
-      const token = localStorage.getItem('sara_token')
+      // Check for promoter token first (for promoter routes)
+      let token = localStorage.getItem('promoter_token')
+      // Fall back to user token
+      if (!token) {
+        token = localStorage.getItem('sara_token')
+      }
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
       }
