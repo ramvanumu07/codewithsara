@@ -26,6 +26,7 @@ import authRoutes from './routes/auth.js'
 import chatRoutes from './routes/chat.js'
 import learningRoutes from './routes/learning.js'
 import paymentsRoutes from './routes/payments.js'
+import promotersRoutes from './routes/promoters.js'
 import debugSchemaRoutes from './routes/debug-schema.js'
 import debugChatRoutes from './routes/debug-chat.js'
 import jobsRoutes from './routes/jobs.js'
@@ -102,6 +103,7 @@ app.use('/api/auth', asMiddleware(authRoutes))
 app.use('/api/chat', asMiddleware(chatRoutes))
 app.use('/api/learn', asMiddleware(learningRoutes))
 app.use('/api', asMiddleware(paymentsRoutes))
+app.use('/api/promoters', asMiddleware(promotersRoutes))
 app.use('/api/debug', asMiddleware(debugSchemaRoutes))
 app.use('/api/debug', asMiddleware(debugChatRoutes))
 

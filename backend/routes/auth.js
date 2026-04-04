@@ -27,6 +27,8 @@ import { handleErrorResponse, createSuccessResponse, createErrorResponse } from 
 import { logError } from '../services/logger.js'
 import { rateLimitMiddleware } from '../middleware/rateLimiting.js'
 import { asyncHandler } from '../middleware/errorHandler.js'
+import { sendEmail } from '../services/emailService.js'
+import { userSignupEmail } from '../services/emailTemplates.js'
 
 const router = express.Router()
 
@@ -357,6 +359,13 @@ router.post('/signup', rateLimitMiddleware, async (req, res) => {
     // Update last login
     await updateLastLogin(user.id)
 
+    // Send welcome email (non-blocking)
+    try {
+      const { subject, html } = userSignupEmail(user.name || user.username)
+      await sendEmail(user.email, subject, html)
+    } catch (emailErr) {
+      console.error('User signup email failed (non-blocking):', emailErr)
+    }
 
     res.status(201).json(createSuccessResponse({
       message: 'Account created successfully',
