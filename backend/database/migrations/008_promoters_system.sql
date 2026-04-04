@@ -44,7 +44,7 @@ CREATE INDEX promoters_status_idx ON public.promoters (status);
 CREATE TABLE IF NOT EXISTS public.promoter_coupons (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   promoter_id UUID NOT NULL REFERENCES public.promoters(id) ON DELETE CASCADE,
-  coupon_code TEXT NOT NULL UNIQUE REFERENCES public.coupons(code) ON DELETE RESTRICT,
+  coupon_code TEXT NOT NULL UNIQUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
