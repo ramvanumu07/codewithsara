@@ -622,21 +622,6 @@ const Dashboard = () => {
                 )
               })}
             </div>
-
-            <div className="courses-nav" style={{ borderTop: '1px solid #e5e7eb', marginTop: 16, paddingTop: 16 }}>
-              <h3>Promoter</h3>
-              <Link
-                to="/promoter/dashboard"
-                className="course-item"
-                style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: 8 }}
-                onClick={() => setShowMobileMenu(false)}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="9,18 15,12 9,6" />
-                </svg>
-                Promoter Dashboard
-              </Link>
-            </div>
           </div>
 
           {/* Mobile Overlay - tap to close menu; content stays full width underneath */}

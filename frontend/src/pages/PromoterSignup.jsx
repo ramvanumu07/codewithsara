@@ -173,7 +173,7 @@ export default function PromoterSignup() {
       
       <form onSubmit={handleSubmit} style={styles.formContainer}>
         <h1 style={styles.title}>Join Sara Promoter Program</h1>
-        <p style={styles.subtitle}>Start earning by promoting Sara courses</p>
+        <p style={styles.subtitle}>Earn ₹200 for each user who enrolls using your coupon</p>
 
         {/* Step Indicator */}
         <div style={styles.stepIndicator}>
@@ -340,14 +340,7 @@ export default function PromoterSignup() {
                     type="text"
                     name="ifscCode"
                     value={formData.ifscCode}
-                    onChange={handleInputChange}
-                    onBlur={() => {
-                      // Auto-uppercase on blur
-                      setFormData(prev => ({
-                        ...prev,
-                        ifscCode: prev.ifscCode.toUpperCase()
-                      }))
-                    }}
+                    onChange={(e) => handleInputChange({...e, target: {...e.target, value: e.target.value.toUpperCase()}})}
                     placeholder="e.g., SBIN0001234"
                     style={{...styles.input, ...(errors.ifscCode ? styles.inputError : {})}}
                   />
@@ -360,14 +353,7 @@ export default function PromoterSignup() {
                     type="text"
                     name="confirmIfscCode"
                     value={formData.confirmIfscCode}
-                    onChange={handleInputChange}
-                    onBlur={() => {
-                      // Auto-uppercase on blur
-                      setFormData(prev => ({
-                        ...prev,
-                        confirmIfscCode: prev.confirmIfscCode.toUpperCase()
-                      }))
-                    }}
+                    onChange={(e) => handleInputChange({...e, target: {...e.target, value: e.target.value.toUpperCase()}})}
                     placeholder="Confirm IFSC code"
                     style={{...styles.input, ...(errors.confirmIfscCode ? styles.inputError : {})}}
                   />

@@ -112,14 +112,13 @@ export async function createPromoter (data) {
     const promoter = rows[0]
 
     // Create coupon and link to promoter
+    // PROMOTER_COMMISSION_RUPEES: Amount customer saves with promoter's coupon
+    const PROMOTER_COMMISSION_RUPEES = 200
     try {
-      // Note: ON CONFLICT requires an explicit index; we use the one on UPPER(TRIM(code))
-      // However, PostgreSQL treats this as a UNIQUE violation on the code column itself
-      // So we insert normally; if it fails with unique_violation, we catch it
       await query(
         `INSERT INTO public.coupons (code, discount_rupees)
         VALUES ($1, $2)`,
-        [couponCode, 200] // 200 rupees discount for promoter coupons
+        [couponCode, PROMOTER_COMMISSION_RUPEES]
       )
 
       await query(
