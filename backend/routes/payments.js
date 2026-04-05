@@ -22,7 +22,7 @@ import {
   applyCoupon,
   getExpectedAmountPaise
 } from '../services/checkoutPricing.js'
-import { incrementCouponSuccessfulEnrollments } from '../services/coupons.js'
+import { incrementCouponSuccessfulEnrollments, getCouponEnrollmentStats } from '../services/coupons.js'
 
 const router = express.Router()
 
@@ -235,6 +235,30 @@ router.post('/verify-payment', authenticateToken, async (req, res) => {
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'verify payment')
+  }
+})
+
+router.post('/promoter/coupon-stats', async (req, res) => {
+  try {
+    const { couponCode } = req.body || {}
+    if (!couponCode || typeof couponCode !== 'string' || !couponCode.trim()) {
+      return res.status(400).json(
+        createErrorResponse('Coupon code is required', 'COUPON_REQUIRED')
+      )
+    }
+    const stats = await getCouponEnrollmentStats(couponCode)
+    if (!stats) {
+      return res.status(404).json(
+        createErrorResponse('Coupon code not found', 'COUPON_NOT_FOUND')
+      )
+    }
+    return res.json(createSuccessResponse({
+      code: stats.code,
+      successfulEnrollments: stats.successful_enrollments,
+      commission: stats.successful_enrollments * 200
+    }))
+  } catch (error) {
+    handleErrorResponse(res, error, 'get coupon stats')
   }
 })
 

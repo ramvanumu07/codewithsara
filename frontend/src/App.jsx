@@ -114,6 +114,7 @@ import Checkout from './pages/Checkout'
 import PaymentSuccess from './pages/PaymentSuccess'
 import PaymentFailed from './pages/PaymentFailed'
 import Admin from './pages/Admin'
+import Promoter from './pages/Promoter'
 
 // Import Styles (legal page styles are inlined in index.css so they always load on Vercel)
 import './index.css'
@@ -204,6 +205,7 @@ const AppRoutes = () => {
       <Route path="/payment/success" element={<ProtectedRoute><RouteErrorBoundary><PaymentSuccess /></RouteErrorBoundary></ProtectedRoute>} />
       <Route path="/payment/failed" element={<ProtectedRoute><RouteErrorBoundary><PaymentFailed /></RouteErrorBoundary></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+      <Route path="/promoter" element={<RouteErrorBoundary><Promoter /></RouteErrorBoundary>} />
       <Route path="/learn/:topicId" element={<ProtectedRoute><RouteErrorBoundary><LearnRoute /></RouteErrorBoundary></ProtectedRoute>} />
       
       {/* Legacy Route Redirects */}

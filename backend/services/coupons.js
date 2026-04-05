@@ -56,3 +56,32 @@ export async function incrementCouponSuccessfulEnrollments (code) {
     throw e
   }
 }
+
+/**
+ * Get coupon enrollment stats for a promoter (coupon code, successful enrollments count).
+ * @param {string} code raw user input
+ * @returns {Promise<{code: string, successful_enrollments: number} | null>} coupon stats or null if not found
+ */
+export async function getCouponEnrollmentStats (code) {
+  if (!isDatabaseConfigured()) return null
+  if (!code || typeof code !== 'string') return null
+  const key = code.trim().toUpperCase()
+  if (!key) return null
+  try {
+    const { rows } = await query(
+      `SELECT code, successful_enrollments FROM public.coupons
+       WHERE UPPER(TRIM(code)) = $1
+       LIMIT 1`,
+      [key]
+    )
+    if (!rows?.length) return null
+    return {
+      code: rows[0].code,
+      successful_enrollments: Number(rows[0].successful_enrollments) || 0
+    }
+  } catch (e) {
+    const codePg = e && e.code
+    if (codePg === '42P01' || codePg === '42703') return null
+    throw e
+  }
+}

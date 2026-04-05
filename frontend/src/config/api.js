@@ -216,7 +216,10 @@ export const payments = {
     api.post('/create-order', payload),
 
   verifyPayment: (payload) =>
-    api.post('/verify-payment', payload)
+    api.post('/verify-payment', payload),
+
+  getCouponStats: (couponCode) =>
+    api.post('/promoter/coupon-stats', { couponCode })
 }
 
 // Progress API
