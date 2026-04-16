@@ -1,12 +1,12 @@
 /**
- * Checkout pricing for JavaScript full access — keep in sync with frontend welcomeCourseOffers (₹999 sale).
+ * Checkout pricing for JavaScript full access — keep in sync with frontend welcomeCourseOffers (JS_COURSE_PRICE_RUPEES).
  * Coupons: primary source is table `public.coupons` (code + discount_rupees).
  * Optional fallback: CHECKOUT_COUPONS_JSON env e.g. {"WELCOME100":100} when no DB row matches.
  */
 
 import { getCouponDiscountRupeesFromDb } from './coupons.js'
 
-export const JS_FULL_ACCESS_PRICE_RUPEES = 999
+export const JS_FULL_ACCESS_PRICE_RUPEES = 1999
 export const JS_FULL_ACCESS_PAISE = JS_FULL_ACCESS_PRICE_RUPEES * 100
 
 function parseCouponMapFromEnv () {

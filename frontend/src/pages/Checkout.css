@@ -272,18 +272,6 @@
   gap: 0.35rem 0.6rem;
 }
 
-.checkout-summary__list-price {
-  font-size: 1.0625rem;
-  font-weight: 600;
-  color: #64748b;
-  text-decoration-line: line-through;
-  text-decoration-style: solid;
-  text-decoration-color: #ef4444;
-  text-decoration-thickness: 1.5px;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-
 .checkout-summary__amount {
   font-size: clamp(1.35rem, 3.5vw, 1.65rem);
   font-weight: 800;

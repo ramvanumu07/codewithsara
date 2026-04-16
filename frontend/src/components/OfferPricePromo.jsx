@@ -1,39 +1,27 @@
 import React from 'react'
-import { getOfferDiscountPercent } from '../data/welcomeCourseOffers'
 import './OfferPricePromo.css'
 
 /**
- * Limited-time label + compare-at (gray text, red strike line) + sale price + inline % off.
+ * Optional promo label (e.g. limited time) + plain price — no list/strike or percent-off.
  */
 export default function OfferPricePromo ({ offer, variant = 'welcome' }) {
   if (!offer) return null
-  const pct = getOfferDiscountPercent(offer)
-  const hasCompare = Boolean(offer.compareAtPriceFormatted && pct != null && pct > 0)
-  const promoText = (offer.promoLabel || 'Limited time offer').trim()
-
-  const ariaLabel = hasCompare
-    ? `${promoText}. Sale price ${offer.priceFormatted}, was ${offer.compareAtPriceFormatted}, ${pct} percent off`
+  const promoText = (offer.promoLabel || '').trim()
+  const ariaLabel = promoText
+    ? `${promoText}. Price ${offer.priceFormatted}`
     : `Price ${offer.priceFormatted}`
 
   return (
     <div className={`offer-price offer-price--${variant}`} role="group" aria-label={ariaLabel}>
-      {hasCompare && (
+      {promoText ? (
         <span className="offer-price__limited">{promoText}</span>
-      )}
+      ) : null}
       <div className="offer-price__amounts">
-        {hasCompare && (
-          <span className="offer-price__compare-at" aria-hidden="true">
-            {offer.compareAtPriceFormatted}
-          </span>
-        )}
         <span className="offer-price__sale-group">
           <span className="offer-price__current">
             {offer.priceFormatted}
             {variant === 'dashboard' && <span className="offer-price__current-suffix">/-</span>}
           </span>
-          {hasCompare && (
-            <span className="offer-price__pct-inline">{pct}% off</span>
-          )}
         </span>
       </div>
     </div>

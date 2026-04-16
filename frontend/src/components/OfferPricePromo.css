@@ -1,4 +1,4 @@
-/* Limited label + ₹1599 struck (neutral text, red line) + ₹999 + % off */
+/* Plain price row (current amount only) */
 
 .offer-price {
   display: flex;
@@ -25,18 +25,6 @@
   line-height: 1.15;
 }
 
-/* List price: gray text, red strikethrough line (line thicker than hairline) */
-.offer-price__compare-at {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #64748b;
-  text-decoration-line: line-through;
-  text-decoration-style: solid;
-  text-decoration-color: #ef4444;
-  text-decoration-thickness: 1.5px;
-  letter-spacing: -0.02em;
-}
-
 .offer-price__sale-group {
   display: inline-flex;
   flex-wrap: wrap;
@@ -59,14 +47,6 @@
   margin-left: 0.05em;
 }
 
-.offer-price__pct-inline {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #059669;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-}
-
 .offer-price--welcome .offer-price__current {
   font-size: clamp(1.75rem, 4vw, 2.25rem);
 }
@@ -78,15 +58,6 @@
 
   .offer-price--welcome .offer-price__current {
     font-size: clamp(1.3rem, 6.5vw, 1.85rem);
-  }
-
-  .offer-price--welcome .offer-price__compare-at {
-    font-size: 1rem;
-  }
-
-  .offer-price--welcome .offer-price__pct-inline {
-    white-space: normal;
-    max-width: 100%;
   }
 }
 
@@ -112,14 +83,6 @@
   font-size: clamp(1.5rem, 3.8vw, 1.95rem);
 }
 
-.offer-price--checkout .offer-price__compare-at {
-  font-size: 1rem;
-}
-
-.offer-price--checkout .offer-price__pct-inline {
-  font-size: 0.75rem;
-}
-
 .offer-price--dashboard {
   gap: 0.75rem;
 }
@@ -138,28 +101,12 @@
   font-size: 1.85rem;
 }
 
-.offer-price--dashboard .offer-price__compare-at {
-  font-size: 1rem;
-}
-
-.offer-price--dashboard .offer-price__pct-inline {
-  font-size: 0.75rem;
-}
-
 .offer-price--modal {
   margin-bottom: 0.25rem;
 }
 
 .offer-price--modal .offer-price__current {
   font-size: 1.75rem;
-}
-
-.offer-price--modal .offer-price__compare-at {
-  font-size: 1.0625rem;
-}
-
-.offer-price--modal .offer-price__pct-inline {
-  font-size: 0.8125rem;
 }
 
 .offer-price--document {
@@ -173,12 +120,4 @@
 
 .offer-price--document .offer-price__current {
   font-size: 1.875rem;
-}
-
-.offer-price--document .offer-price__compare-at {
-  font-size: 1.125rem;
-}
-
-.offer-price--document .offer-price__pct-inline {
-  font-size: 0.875rem;
 }

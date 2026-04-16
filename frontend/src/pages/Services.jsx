@@ -59,7 +59,7 @@ export default function Services () {
           <section className="terms-section">
             <h2>Pricing</h2>
             <p>
-              <strong>List pricing starts at ₹1,599</strong> (Indian Rupees). Promotional prices, discounts, and <strong>coupon codes</strong> may reduce the amount you pay at checkout. The price shown at checkout before you pay is the price that applies to your order.
+              <strong>JavaScript with Sara — Full Access</strong> is <strong>₹1,999</strong> (Indian Rupees), before any <strong>coupon code</strong> you apply at checkout. The amount shown on the checkout screen before you pay is the price that applies to your order.
             </p>
             <p style={{ marginBottom: 4 }}><strong>Current offer (INR)</strong></p>
             {welcomeCourseOffers[0] && (

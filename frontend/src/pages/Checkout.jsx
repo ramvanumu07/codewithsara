@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { auth, payments, handleApiError } from '../config/api'
-import { getUnlockOfferForDashboardCourse } from '../data/welcomeCourseOffers'
+import { getUnlockOfferForDashboardCourse, JS_COURSE_PRICE_RUPEES } from '../data/welcomeCourseOffers'
 import { useToast } from '../hooks/useToast'
 import { ToastContainer } from '../components/Toast'
 import './Checkout.css'
@@ -49,8 +49,7 @@ export default function Checkout() {
 
   const courseId = (searchParams.get('course') || 'javascript').trim() || 'javascript'
   const offer = useMemo(() => getUnlockOfferForDashboardCourse(courseId), [courseId])
-  const baseRupees = offer?.priceAmount ?? 999
-  const listRupees = offer?.compareAtAmount ?? 1599
+  const baseRupees = offer?.priceAmount ?? JS_COURSE_PRICE_RUPEES
 
   const [payerName, setPayerName] = useState('')
   const [payerEmail, setPayerEmail] = useState('')
@@ -324,9 +323,6 @@ export default function Checkout() {
               <div className="checkout-summary__row checkout-summary__row--total">
                 <span className="checkout-summary__label">Amount to pay</span>
                 <div className="checkout-summary__amount-block">
-                  {listRupees > finalRupees ? (
-                    <span className="checkout-summary__list-price">{formatInr(listRupees)}</span>
-                  ) : null}
                   <strong className="checkout-summary__amount">{formatInr(finalRupees)}</strong>
                 </div>
               </div>
