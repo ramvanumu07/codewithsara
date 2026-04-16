@@ -120,4 +120,14 @@ CREATE TABLE IF NOT EXISTS public.coupons (
 
 CREATE UNIQUE INDEX IF NOT EXISTS coupons_code_upper_idx ON public.coupons (UPPER(TRIM(code)));
 
+-- Promoter stats: one row per successful checkout that used a coupon (for rolling-window counts).
+CREATE TABLE IF NOT EXISTS public.coupon_enrollment_events (
+  id BIGSERIAL PRIMARY KEY,
+  coupon_code_normalized TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS coupon_enrollment_events_norm_created_idx
+  ON public.coupon_enrollment_events (coupon_code_normalized, created_at DESC);
+
 -- Example: INSERT INTO public.coupons (code, discount_rupees) VALUES ('WELCOME100', 100);

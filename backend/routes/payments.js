@@ -22,7 +22,12 @@ import {
   applyCoupon,
   getExpectedAmountPaise
 } from '../services/checkoutPricing.js'
-import { incrementCouponSuccessfulEnrollments, getCouponEnrollmentStats } from '../services/coupons.js'
+import {
+  incrementCouponSuccessfulEnrollments,
+  getCouponEnrollmentStats,
+  computePromoterCommissionForDashboard,
+  getPromoterTierBandsPublic
+} from '../services/coupons.js'
 
 const router = express.Router()
 
@@ -252,10 +257,14 @@ router.post('/promoter/coupon-stats', async (req, res) => {
         createErrorResponse('Coupon code not found', 'COUPON_NOT_FOUND')
       )
     }
+    const payout = computePromoterCommissionForDashboard(stats.successful_enrollments)
     return res.json(createSuccessResponse({
       code: stats.code,
-      successfulEnrollments: stats.successful_enrollments,
-      commission: stats.successful_enrollments * 200
+      successfulEnrollments: payout.successfulEnrollments,
+      commission: payout.totalCommissionRupees,
+      commissionPerEnrollment: payout.ratePerEnrollment,
+      tierKey: payout.tierKey,
+      tierBands: getPromoterTierBandsPublic()
     }))
   } catch (error) {
     handleErrorResponse(res, error, 'get coupon stats')
