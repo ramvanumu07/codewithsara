@@ -6,7 +6,7 @@
 
 import { getCouponDiscountRupeesFromDb } from './coupons.js'
 
-export const JS_FULL_ACCESS_PRICE_RUPEES = 1999
+export const JS_FULL_ACCESS_PRICE_RUPEES = 2499
 export const JS_FULL_ACCESS_PAISE = JS_FULL_ACCESS_PRICE_RUPEES * 100
 
 function parseCouponMapFromEnv () {

@@ -8,7 +8,7 @@
  * @property {string} id — stable slug (e.g. for analytics or future checkout)
  * @property {string} title
  * @property {string} [subtitle] — one line under the title
- * @property {string} priceFormatted — display price, e.g. "₹1999"
+ * @property {string} priceFormatted — display price, e.g. "₹2499"
  * @property {number} priceAmount — numeric price in rupees (checkout / API validation)
  * @property {string} [promoLabel] — e.g. "Limited time offer" (shown above price; not a discount claim)
  * @property {string[]} highlights — short bullets (3–5 recommended)
@@ -18,7 +18,7 @@
  */
 
 /** JavaScript full-access catalog price (INR). Sync with backend/services/checkoutPricing.js */
-export const JS_COURSE_PRICE_RUPEES = 1999
+export const JS_COURSE_PRICE_RUPEES = 2499
 
 function formatInrDisplay (rupees) {
   return new Intl.NumberFormat('en-IN', {
