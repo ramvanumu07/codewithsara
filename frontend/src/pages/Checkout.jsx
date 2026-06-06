@@ -49,16 +49,11 @@ export default function Checkout() {
 
   const courseId = (searchParams.get('course') || 'javascript').trim() || 'javascript'
   const offer = useMemo(() => getUnlockOfferForDashboardCourse(courseId), [courseId])
-  const baseRupees = offer?.priceAmount ?? JS_COURSE_PRICE_RUPEES
+  const amountRupees = offer?.priceAmount ?? JS_COURSE_PRICE_RUPEES
 
   const [payerName, setPayerName] = useState('')
   const [payerEmail, setPayerEmail] = useState('')
   const [profileReady, setProfileReady] = useState(false)
-
-  const [couponInput, setCouponInput] = useState('')
-  const [appliedCoupon, setAppliedCoupon] = useState(null)
-  const [couponError, setCouponError] = useState('')
-  const [applyingCoupon, setApplyingCoupon] = useState(false)
   const [payBusy, setPayBusy] = useState(false)
   /** idle | open | verifying | settled — avoids treating modal dismiss as cancel after pay flow advances */
   const payPhaseRef = useRef('idle')
@@ -86,52 +81,9 @@ export default function Checkout() {
     return () => { cancelled = true }
   }, [])
 
-  const finalRupees = appliedCoupon != null ? appliedCoupon.finalRupees : baseRupees
-
   const emailOk = payerEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payerEmail)
   const nameOk = Boolean(payerName && payerName.trim().length > 0)
   const canPay = profileReady && nameOk && emailOk
-
-  const onCouponChange = (e) => {
-    setCouponInput(e.target.value)
-    setCouponError('')
-    if (appliedCoupon && e.target.value.trim().toUpperCase() !== (appliedCoupon.code || '').toUpperCase()) {
-      setAppliedCoupon(null)
-    }
-  }
-
-  const handleApplyCoupon = async () => {
-    const code = couponInput.trim()
-    setCouponError('')
-    setAppliedCoupon(null)
-    if (!code) {
-      setCouponError('Invalid or expired coupon')
-      return
-    }
-    setApplyingCoupon(true)
-    try {
-      const { data } = await payments.applyCoupon(code, baseRupees)
-      const d = data?.data
-      if (!data?.success || !d || d.valid === false) {
-        setCouponError('Invalid or expired coupon')
-        return
-      }
-      setAppliedCoupon({
-        code,
-        finalRupees: d.finalRupees ?? d.discountedAmount,
-        discountRupees: d.discountRupees
-      })
-    } catch (err) {
-      const msg = err.response?.data?.message || ''
-      if (msg.toLowerCase().includes('coupon') || err.response?.status === 400) {
-        setCouponError('Invalid or expired coupon')
-      } else {
-        setCouponError(handleApiError(err, 'Could not apply coupon. Try again.'))
-      }
-    } finally {
-      setApplyingCoupon(false)
-    }
-  }
 
   const openRazorpay = useCallback(async () => {
     if (!RAZORPAY_KEY) {
@@ -145,11 +97,10 @@ export default function Checkout() {
     try {
       /** Backend expects amount in rupees (converted to paise server-side) */
       const payload = {
-        amount: finalRupees,
+        amount: amountRupees,
         name: payerName.trim(),
         email: payerEmail.trim(),
-        courseId,
-        ...(appliedCoupon ? { couponCode: appliedCoupon.code } : {})
+        courseId
       }
       const { data } = await payments.createOrder(payload)
       if (!data?.success || !data.data?.orderId) {
@@ -226,9 +177,7 @@ export default function Checkout() {
       showPayErrorToast(handleApiError(e, 'Could not start payment. Try again.'))
       setPayBusy(false)
     }
-  }, [appliedCoupon, canPay, courseId, finalRupees, navigate, payerEmail, payerName, showPayErrorToast])
-
-  const busy = applyingCoupon || payBusy
+  }, [amountRupees, canPay, courseId, navigate, payerEmail, payerName, showPayErrorToast])
 
   return (
     <div className="checkout-page">
@@ -266,7 +215,7 @@ export default function Checkout() {
                 onChange={(e) => setPayerName(e.target.value)}
                 placeholder="Your name"
                 autoComplete="name"
-                disabled={busy}
+                disabled={payBusy}
               />
               <label htmlFor="checkout-payer-email">Email</label>
               <input
@@ -276,45 +225,8 @@ export default function Checkout() {
                 onChange={(e) => setPayerEmail(e.target.value)}
                 placeholder="you@example.com"
                 autoComplete="email"
-                disabled={busy}
+                disabled={payBusy}
               />
-            </div>
-
-            <div className="checkout-coupon">
-              <label htmlFor="checkout-coupon">Coupon code</label>
-              <div className="checkout-coupon__row">
-                <input
-                  id="checkout-coupon"
-                  type="text"
-                  value={couponInput}
-                  onChange={onCouponChange}
-                  placeholder="Paste code and apply"
-                  autoComplete="off"
-                  disabled={applyingCoupon}
-                />
-                <button
-                  type="button"
-                  className="checkout-coupon__apply"
-                  onClick={handleApplyCoupon}
-                  disabled={applyingCoupon || busy}
-                >
-                  {applyingCoupon ? (
-                    <span className="checkout-spinner checkout-spinner--apply" aria-hidden />
-                  ) : (
-                    'Apply'
-                  )}
-                </button>
-              </div>
-              {couponError && (
-                <p className="checkout-inline-error" role="alert">
-                  {couponError}
-                </p>
-              )}
-              {appliedCoupon && !couponError ? (
-                <p className="checkout-coupon-success" role="status">
-                  Coupon applied — you save {formatInr(appliedCoupon.discountRupees)}!
-                </p>
-              ) : null}
             </div>
           </div>
 
@@ -323,7 +235,7 @@ export default function Checkout() {
               <div className="checkout-summary__row checkout-summary__row--total">
                 <span className="checkout-summary__label">Amount to pay</span>
                 <div className="checkout-summary__amount-block">
-                  <strong className="checkout-summary__amount">{formatInr(finalRupees)}</strong>
+                  <strong className="checkout-summary__amount">{formatInr(amountRupees)}</strong>
                 </div>
               </div>
             </div>
@@ -331,7 +243,7 @@ export default function Checkout() {
             <button
               type="button"
               className="checkout-pay-btn"
-              disabled={!canPay || busy}
+              disabled={!canPay || payBusy}
               onClick={openRazorpay}
             >
               {payBusy ? (

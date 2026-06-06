@@ -1,4 +1,4 @@
-/* Plain price row (current amount only) */
+/* Price row — Welcome may show list strike + percent-off badge */
 
 .offer-price {
   display: flex;
@@ -23,6 +23,15 @@
   align-items: baseline;
   gap: 0.5rem 0.75rem;
   line-height: 1.15;
+}
+
+.offer-price__list {
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 500;
+  color: #9ca3af;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #d1d5db;
 }
 
 .offer-price__sale-group {

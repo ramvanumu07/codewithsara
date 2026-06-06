@@ -6,6 +6,12 @@ const courses = [
     title: 'JavaScript',
     description: 'Master JavaScript from fundamentals to advanced concepts',
     topics
+  },
+  {
+    id: 'dsa',
+    title: 'DSA',
+    description: 'Data Structures & Algorithms — unlocks after you complete JavaScript',
+    topics: []
   }
 ]
 

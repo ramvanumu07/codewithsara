@@ -8,8 +8,10 @@
  * @property {string} id — stable slug (e.g. for analytics or future checkout)
  * @property {string} title
  * @property {string} [subtitle] — one line under the title
- * @property {string} priceFormatted — display price, e.g. "₹2499"
+ * @property {string} priceFormatted — display price, e.g. "₹1,199"
  * @property {number} priceAmount — numeric price in rupees (checkout / API validation)
+ * @property {string} [listPriceFormatted] — original list price for promo display (Welcome only)
+ * @property {number} [listPriceAmount] — original list price in rupees
  * @property {string} [promoLabel] — e.g. "Limited time offer" (shown above price; not a discount claim)
  * @property {string[]} highlights — short bullets (3–5 recommended)
  * @property {boolean} [featured] — visual emphasis
@@ -17,8 +19,11 @@
  * @property {string[]} [forCourseIds] — API course ids (e.g. "javascript") for dashboard unlock card
  */
 
-/** JavaScript full-access catalog price (INR). Sync with backend/services/checkoutPricing.js */
-export const JS_COURSE_PRICE_RUPEES = 2499
+/** JavaScript full-access sale price (INR). Sync with backend/services/checkoutPricing.js */
+export const JS_COURSE_PRICE_RUPEES = 1199
+
+/** Original list price shown struck through on the Welcome pricing card */
+export const JS_COURSE_LIST_PRICE_RUPEES = 2499
 
 function formatInrDisplay (rupees) {
   return new Intl.NumberFormat('en-IN', {
@@ -36,6 +41,8 @@ export const welcomeCourseOffers = [
     subtitle: 'Structured JavaScript curriculum — AI tutor, playground, and assignments',
     priceFormatted: formatInrDisplay(JS_COURSE_PRICE_RUPEES),
     priceAmount: JS_COURSE_PRICE_RUPEES,
+    listPriceFormatted: formatInrDisplay(JS_COURSE_LIST_PRICE_RUPEES),
+    listPriceAmount: JS_COURSE_LIST_PRICE_RUPEES,
     promoLabel: 'Limited time offer',
     highlights: [
       'AI-powered tutoring tailored to each JavaScript topic',

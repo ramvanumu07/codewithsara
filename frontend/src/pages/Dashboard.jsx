@@ -14,6 +14,27 @@ import SessionPlayground from '../components/SessionPlayground'
 import './Auth.css'
 import './Dashboard.css'
 
+const JAVASCRIPT_COURSE_ID = 'javascript'
+const DSA_COURSE_ID = 'dsa'
+
+function isJavascriptCourseFullyComplete (courses, userProgress) {
+  const jsCourse = courses.find((c) => c.id === JAVASCRIPT_COURSE_ID)
+  const topics = jsCourse?.topics || []
+  if (topics.length === 0) return false
+  const courseProgress = userProgress.filter((p) =>
+    topics.some((topic) => String(topic.id) === String(p.topic_id))
+  )
+  const summary = computeCourseProgressSummary(topics, courseProgress)
+  return summary.completed_topics >= summary.total_topics
+}
+
+function isCourseAccessibleInSidebar (course, unlockedCourseIds, courses, userProgress) {
+  if (course.id === DSA_COURSE_ID) {
+    return isJavascriptCourseFullyComplete(courses, userProgress)
+  }
+  return unlockedCourseIds.includes(course.id)
+}
+
 const Dashboard = () => {
   const navigate = useNavigate()
   const location = useLocation()
@@ -512,12 +533,33 @@ const Dashboard = () => {
     return title.charAt(0).toUpperCase() + title.slice(1)
   }
 
-  /** Selected course is not purchased — show paywall only (no progress / topics / learn CTAs). */
-  const selectedCourseLocked = Boolean(
-    selectedCourseData && !unlockedCourseIds.includes(selectedCourseData.id)
+  const javascriptCourseFullyComplete = isJavascriptCourseFullyComplete(courses, userProgress)
+
+  /** JavaScript not purchased — show upgrade paywall. */
+  const selectedCoursePaymentLocked = Boolean(
+    selectedCourseData?.id === JAVASCRIPT_COURSE_ID &&
+    !unlockedCourseIds.includes(JAVASCRIPT_COURSE_ID)
   )
 
-  const unlockOffer = selectedCourseLocked
+  /** DSA stays locked until every JavaScript topic is complete. */
+  const selectedCourseDsaPrerequisiteLocked = Boolean(
+    selectedCourseData?.id === DSA_COURSE_ID &&
+    !javascriptCourseFullyComplete
+  )
+
+  const selectedCourseLocked = selectedCoursePaymentLocked
+
+  const showJavascriptLearnerDashboard = Boolean(
+    selectedCourseData?.id === JAVASCRIPT_COURSE_ID && !selectedCoursePaymentLocked
+  )
+
+  const showDsaComingSoon = Boolean(
+    selectedCourseData?.id === DSA_COURSE_ID && javascriptCourseFullyComplete
+  )
+
+  const mainContentFocused = selectedCoursePaymentLocked || selectedCourseDsaPrerequisiteLocked
+
+  const unlockOffer = selectedCoursePaymentLocked
     ? getUnlockOfferForDashboardCourse(selectedCourseData.id)
     : null
 
@@ -596,17 +638,22 @@ const Dashboard = () => {
             <div className="courses-nav">
               <h3>Courses</h3>
               {courses.map(course => {
-                const isUnlocked = unlockedCourseIds.includes(course.id)
+                const isAccessible = isCourseAccessibleInSidebar(
+                  course,
+                  unlockedCourseIds,
+                  courses,
+                  userProgress
+                )
                 return (
                   <button
                     key={course.id}
-                    className={`course-item ${selectedCourse === course.id ? 'active' : ''}`}
+                    className={`course-item ${selectedCourse === course.id ? 'active' : ''}${!isAccessible ? ' course-item--locked' : ''}`}
                     onClick={() => {
                       setSelectedCourse(course.id)
                       setShowMobileMenu(false)
                     }}
                   >
-                    {isUnlocked ? (
+                    {isAccessible ? (
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <polyline points="9,18 15,12 9,6" />
                       </svg>
@@ -631,14 +678,14 @@ const Dashboard = () => {
           />
 
           {/* Main Content - Single flowing page (paywall mode hides learner dashboard chrome) */}
-          <div className={`main-content${selectedCourseLocked ? ' main-content--paywall' : ''}`}>
+          <div className={`main-content${mainContentFocused ? ' main-content--paywall' : ''}`}>
             {/* Course Header */}
             <div className="course-header">
               <h2>{selectedCourseData?.title || 'Course'}</h2>
               <p>{selectedCourseData?.description || 'Master programming concepts step by step with Sara'}</p>
             </div>
 
-            {!selectedCourseLocked && (
+            {showJavascriptLearnerDashboard && (
             <>
             {/* How to run JS code - help link */}
             <div className="dashboard-howto-run">
@@ -760,7 +807,7 @@ const Dashboard = () => {
                 </div>
               </section>
             )}
-            {selectedCourseLocked && !unlockOffer && selectedCourseData && (
+            {selectedCoursePaymentLocked && !unlockOffer && selectedCourseData && (
               <div className="dashboard-paywall-fallback" role="status">
                 <p>Pricing for this course is not configured. You can still continue to payment or contact support.</p>
                 <Link
@@ -773,7 +820,48 @@ const Dashboard = () => {
               </div>
             )}
 
-            {!selectedCourseLocked && (
+            {selectedCourseDsaPrerequisiteLocked && (
+              <section
+                className="dashboard-dsa-lock"
+                aria-labelledby="dashboard-dsa-lock-title"
+              >
+                <div className="dashboard-dsa-lock__icon" aria-hidden>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                </div>
+                <h3 id="dashboard-dsa-lock-title" className="dashboard-dsa-lock__title">
+                  DSA is locked
+                </h3>
+                <p className="dashboard-dsa-lock__text">
+                  Complete the entire <strong>JavaScript</strong> course to unlock Data Structures &amp; Algorithms.
+                </p>
+                <button
+                  type="button"
+                  className="dashboard-dsa-lock__cta"
+                  onClick={() => setSelectedCourse(JAVASCRIPT_COURSE_ID)}
+                >
+                  Go to JavaScript
+                </button>
+              </section>
+            )}
+
+            {showDsaComingSoon && (
+              <section
+                className="dashboard-dsa-coming-soon"
+                aria-labelledby="dashboard-dsa-soon-title"
+              >
+                <h3 id="dashboard-dsa-soon-title" className="dashboard-dsa-coming-soon__title">
+                  Coming soon
+                </h3>
+                <p className="dashboard-dsa-coming-soon__text">
+                  You unlocked DSA by finishing JavaScript. Lessons will appear here soon.
+                </p>
+              </section>
+            )}
+
+            {showJavascriptLearnerDashboard && (
             <>
             {/* Progress Section */}
             <div className="progress-section">

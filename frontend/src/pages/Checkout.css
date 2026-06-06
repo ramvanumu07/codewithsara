@@ -115,7 +115,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  margin-bottom: 1.15rem;
+  margin-bottom: 0;
 }
 
 .checkout-payer label {
@@ -139,101 +139,6 @@
   outline: none;
   border-color: #10a37f;
   box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.15);
-}
-
-.checkout-coupon-success {
-  margin: 0.5rem 0 0;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #047857;
-}
-
-.checkout-coupon label {
-  display: block;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 8px;
-}
-
-.checkout-coupon input {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 10px 12px;
-  font-size: 0.9375rem;
-  font-family: inherit;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background: #fff;
-  color: #111827;
-}
-
-.checkout-coupon input:focus {
-  outline: none;
-  border-color: #10a37f;
-  box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.15);
-}
-
-.checkout-coupon {
-  margin-bottom: 0;
-}
-
-.checkout-coupon__row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.checkout-coupon__row input {
-  flex: 1;
-  min-width: 0;
-}
-
-.checkout-coupon__apply {
-  flex-shrink: 0;
-  padding: 10px 18px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  font-family: inherit;
-  color: #fff;
-  background: #10b981;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  min-width: 88px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s ease, box-shadow 0.15s ease;
-}
-
-.checkout-coupon__apply:hover:not(:disabled) {
-  background: #059669;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
-}
-
-.checkout-coupon__apply:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.checkout-spinner--apply {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: checkoutSpin 0.7s linear infinite;
-  display: inline-block;
-}
-
-.checkout-inline-error {
-  margin: 8px 0 0;
-  font-size: 0.8125rem;
-  color: #dc2626;
 }
 
 .checkout-summary {
@@ -366,15 +271,5 @@
   .checkout-card__panel {
     padding-left: 1.15rem;
     padding-right: 1.15rem;
-  }
-
-  /* Keep coupon field + Apply on one row (same as desktop); avoid full-width button under input */
-  .checkout-coupon__row {
-    gap: 6px;
-  }
-
-  .checkout-coupon__apply {
-    min-width: 80px;
-    padding: 10px 14px;
   }
 }

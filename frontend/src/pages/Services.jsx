@@ -59,7 +59,7 @@ export default function Services () {
           <section className="terms-section">
             <h2>Pricing</h2>
             <p>
-              <strong>JavaScript with Sara — Full Access</strong> is <strong>₹2,499</strong> (Indian Rupees), before any <strong>coupon code</strong> you apply at checkout. The amount shown on the checkout screen before you pay is the price that applies to your order.
+              <strong>JavaScript with Sara — Full Access</strong> is <strong>₹1,199</strong> (Indian Rupees). The amount shown on the checkout screen before you pay is the price that applies to your order.
             </p>
             <p style={{ marginBottom: 4 }}><strong>Current offer (INR)</strong></p>
             {welcomeCourseOffers[0] && (
