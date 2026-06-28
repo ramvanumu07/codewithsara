@@ -481,6 +481,13 @@ const Learn = () => {
         const topicData = topicResponse.data.data.topic
         setTopic(topicData)
 
+        const isDsaNotesOnly =
+          topicData?.courseId === 'dsa' || topicData?.notesOnly === true
+        if (isDsaNotesOnly && searchParams.get('view') !== 'notes') {
+          navigate(`/learn/${requestedTopicId}?view=notes&ref=1`, { replace: true })
+          return
+        }
+
         const progressPhase = topicData?.phase || phase
         if (phase === 'session') {
           setSessionComplete(false)

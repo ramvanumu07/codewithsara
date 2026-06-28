@@ -5,7 +5,7 @@
   "description": "Sara – AI-powered JavaScript learning platform",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev": "concurrently \"npm run dev:backend\" \"wait-on tcp:5000 && npm run dev:frontend\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && npm run dev",
     "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
@@ -14,7 +14,8 @@
     "test:curriculum": "node backend/scripts/verify-curriculum-reference-solutions.mjs"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "wait-on": "^9.0.0"
   },
   "dependencies": {
     "serverless-http": "^3.2.0"

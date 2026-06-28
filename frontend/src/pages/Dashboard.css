@@ -529,6 +529,18 @@
   background: #0d8a6c;
 }
 
+.continue-section--dsa {
+  margin-top: 0;
+}
+
+.continue-section--dsa .session-completed-section {
+  margin-top: 0;
+}
+
+.session-completed-list--dsa .session-completed-row {
+  align-items: center;
+}
+
 .dashboard-unlock-card__cta {
   width: 100%;
   box-sizing: border-box;

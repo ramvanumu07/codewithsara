@@ -23,6 +23,7 @@ import { DEFAULT_COURSE_ID } from '../config/defaultCourse.js'
 import { formatLearningObjectives, findTopicById, getAllTopics, getNextTopicId, getTopicIdsForCourse } from '../utils/curriculum.js'
 import { expandLinearProgressToTopicRows, resolveCanonicalCurrentTopicId } from '../utils/linearProgress.js'
 import { getTopicOrRespond } from '../utils/topicHelper.js'
+import { isCourseAccessibleForUser, isNotesOnlyCourseId } from '../utils/courseAccess.js'
 import { slimCoursesForList, slimTopicNavRef } from '../utils/courseListSerializer.js'
 import { getFirstOutcomeMessage } from '../utils/outcomeMessages.js'
 import { handleErrorResponse, createSuccessResponse, createErrorResponse } from '../utils/responses.js'
@@ -149,11 +150,23 @@ async function requireCourseUnlocked(req, res, next) {
     const topic = findTopicById(courses, topicId)
     if (!topic) { return next() }
     const courseId = topic.courseId
+    if (
+      req.method !== 'GET' &&
+      (isNotesOnlyCourseId(courseId) || topic.notesOnly === true)
+    ) {
+      return res.status(400).json(createErrorResponse(
+        'This topic is notes-only. Open it from the dashboard notes view.',
+        'NOTES_ONLY'
+      ))
+    }
     const userId = req.user?.userId
     if (!userId) { return next() }
-    const unlocked = await isCourseUnlockedForUser(userId, courseId)
-    if (!unlocked) {
-      return res.status(403).json(createErrorResponse('This course is locked. Unlock it to continue.', 'COURSE_LOCKED', { courseId }))
+    const accessible = await isCourseAccessibleForUser(userId, courseId)
+    if (!accessible) {
+      const message = courseId === 'dsa'
+        ? 'Complete the entire JavaScript course to unlock DSA.'
+        : 'This course is locked. Unlock it to continue.'
+      return res.status(403).json(createErrorResponse(message, 'COURSE_LOCKED', { courseId }))
     }
     next()
   } catch (error) {
@@ -1120,10 +1133,11 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
     if (!topic) { return }
 
     const courseId = topic.courseId
-    let progress = await getProgress(userId, topicId, courseId)
+    const notesOnlyCourse = isNotesOnlyCourseId(courseId) || topic.notesOnly === true
+    let progress = notesOnlyCourse ? null : await getProgress(userId, topicId, courseId)
     const totalTasks = (topic.tasks || []).length
 
-    if (!referenceOnly) {
+    if (!referenceOnly && !notesOnlyCourse) {
       // Ensure progress row exists and refresh updated_at and total_tasks when user opens this topic for real learning.
       const now = new Date().toISOString()
       if (!progress) {
@@ -1157,10 +1171,10 @@ router.get('/topic/:topicId', authenticateToken, requireCourseUnlocked, async (r
         progress = { ...progress, phase: 'assignment', status: 'in_progress' }
       }
     } else if (!progress) {
-      // Reference browse, no DB row yet: return in-memory defaults only (no INSERT, no updated_at change elsewhere)
+      // Reference browse or notes-only course: in-memory defaults only (no INSERT)
       progress = {
-        phase: phaseHint === 'assignment' ? 'assignment' : 'session',
-        status: 'in_progress',
+        phase: notesOnlyCourse ? 'session' : (phaseHint === 'assignment' ? 'assignment' : 'session'),
+        status: notesOnlyCourse ? 'not_started' : 'in_progress',
         current_task: totalTasks > 0 ? 1 : 0,
         total_tasks: totalTasks,
         assignments_completed: 0

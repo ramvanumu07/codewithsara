@@ -1,6 +1,6 @@
 /**
  * AI Service - Groq API (OpenAI-compatible)
- * Uses Llama models via Groq - primary: 3.3 70B Versatile; fallback: 3.1 8B Instant.
+ * Uses models via Groq - primary: GPT OSS 20B; fallback: 3.3 70B Versatile.
  * Model list is maintained in code (no env dependency). Falls back to next model if current is deprecated.
  */
 
@@ -8,7 +8,7 @@ const GROQ_BASE = 'https://api.groq.com/openai/v1'
 
 /** Ordered list of models to try. First available wins; fallback on 404/deprecated. */
 const GROQ_MODELS = [
-  'llama-3.1-8b-instant',
+  'openai/gpt-oss-20b',
   'llama-3.3-70b-versatile',
 ]
 

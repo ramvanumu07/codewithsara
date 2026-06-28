@@ -1,4 +1,5 @@
 import { topics } from './curriculum-parts/index.js'
+import { dsaTopics } from './dsa-curriculum-parts/index.js'
 
 const courses = [
   {
@@ -11,7 +12,7 @@ const courses = [
     id: 'dsa',
     title: 'DSA',
     description: 'Data Structures & Algorithms — unlocks after you complete JavaScript',
-    topics: []
+    topics: dsaTopics
   }
 ]
 

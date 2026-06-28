@@ -553,7 +553,7 @@ const Dashboard = () => {
     selectedCourseData?.id === JAVASCRIPT_COURSE_ID && !selectedCoursePaymentLocked
   )
 
-  const showDsaComingSoon = Boolean(
+  const showDsaTopicsDashboard = Boolean(
     selectedCourseData?.id === DSA_COURSE_ID && javascriptCourseFullyComplete
   )
 
@@ -847,18 +847,38 @@ const Dashboard = () => {
               </section>
             )}
 
-            {showDsaComingSoon && (
-              <section
-                className="dashboard-dsa-coming-soon"
-                aria-labelledby="dashboard-dsa-soon-title"
-              >
-                <h3 id="dashboard-dsa-soon-title" className="dashboard-dsa-coming-soon__title">
-                  Coming soon
-                </h3>
-                <p className="dashboard-dsa-coming-soon__text">
-                  You unlocked DSA by finishing JavaScript. Lessons will appear here soon.
-                </p>
-              </section>
+            {showDsaTopicsDashboard && allTopicsForCourse.length > 0 && (
+              <div className="continue-section continue-section--dsa">
+                <div className="session-completed-section">
+                  <h4 className="session-completed-heading">All topics</h4>
+                  <ul className="session-completed-list session-completed-list--dsa">
+                    {allTopicsForCourse.map((topic) => (
+                      <li key={topic.id} className="session-completed-row">
+                        <span className="session-completed-title">
+                          {formatTopicTitle(topic.title)}
+                        </span>
+                        <div className="session-completed-actions">
+                          <button
+                            type="button"
+                            className="session-completed-icon-btn"
+                            onClick={() => navigate(`/learn/${topic.id}?view=notes&ref=1`)}
+                            title="Topic notes"
+                            aria-label={`View notes for ${formatTopicTitle(topic.title)}`}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                              <polyline points="14,2 14,8 20,8" />
+                              <line x1="16" y1="13" x2="8" y2="13" />
+                              <line x1="16" y1="17" x2="8" y2="17" />
+                              <polyline points="10,9 9,9 8,9" />
+                            </svg>
+                          </button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             )}
 
             {showJavascriptLearnerDashboard && (
