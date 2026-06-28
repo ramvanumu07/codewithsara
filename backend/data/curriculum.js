@@ -11,7 +11,7 @@ const courses = [
   {
     id: 'dsa',
     title: 'DSA',
-    description: 'Data Structures & Algorithms — unlocks after you complete JavaScript',
+    description: 'Top 100 Data Structures & Algorithms interview questions — unlocks after you complete JavaScript',
     topics: dsaTopics
   }
 ]

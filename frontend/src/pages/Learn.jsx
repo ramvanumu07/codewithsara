@@ -53,6 +53,17 @@ function markdownCodeClassName(className) {
   return className
 }
 
+/**
+ * Slug for notes headings so the in-page index anchor links can jump to them.
+ * MUST match slugify() in backend/data/dsa-curriculum-parts/buildNotes.js.
+ */
+function slugifyNotesHeading(children) {
+  const text = React.Children.toArray(children)
+    .map((c) => (typeof c === 'string' ? c : ''))
+    .join('')
+  return text.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+}
+
 /** 5ms per character */
 const TYPEWRITER_MS = 5
 
@@ -60,7 +71,7 @@ const TYPEWRITER_MS = 5
  * Shared markdown component map for chat. When plainFencedCode is true, fenced blocks use plain pre/code
  * (used while typewriter is in progress); when false, SyntaxHighlightedCode runs after typing completes.
  */
-function buildMarkdownComponents ({ copiedId, setCopiedId, blockIdRef, onCopy, plainFencedCode }) {
+function buildMarkdownComponents({ copiedId, setCopiedId, blockIdRef, onCopy, plainFencedCode }) {
   return {
     p: ({ children }) => <p>{children}</p>,
     strong: ({ children }) => <strong>{children}</strong>,
@@ -126,7 +137,7 @@ function buildMarkdownComponents ({ copiedId, setCopiedId, blockIdRef, onCopy, p
 /**
  * Session assistant message: typewriter reveal + cursor; syntax highlight only after typing completes.
  */
-function AssistantMessageWithTypewriter ({ fullContent, onTypingChunk, onTypingComplete }) {
+function AssistantMessageWithTypewriter({ fullContent, onTypingChunk, onTypingComplete }) {
   const [displayed, setDisplayed] = useState('')
   const [typingDone, setTypingDone] = useState(false)
   const [copiedId, setCopiedId] = useState(null)
@@ -481,9 +492,8 @@ const Learn = () => {
         const topicData = topicResponse.data.data.topic
         setTopic(topicData)
 
-        const isDsaNotesOnly =
-          topicData?.courseId === 'dsa' || topicData?.notesOnly === true
-        if (isDsaNotesOnly && searchParams.get('view') !== 'notes') {
+        const isNotesOnly = topicData?.notesOnly === true
+        if (isNotesOnly && searchParams.get('view') !== 'notes') {
           navigate(`/learn/${requestedTopicId}?view=notes&ref=1`, { replace: true })
           return
         }
@@ -1476,8 +1486,8 @@ const Learn = () => {
         return children
       },
       p: ({ children }) => <p>{children}</p>,
-      h2: ({ children }) => <h2>{children}</h2>,
-      h3: ({ children }) => <h3>{children}</h3>,
+      h2: ({ children }) => <h2 id={slugifyNotesHeading(children)}>{children}</h2>,
+      h3: ({ children }) => <h3 id={slugifyNotesHeading(children)}>{children}</h3>,
       ul: ({ children }) => <ul>{children}</ul>,
       li: ({ children }) => <li>{children}</li>
     }
@@ -1497,7 +1507,19 @@ const Learn = () => {
             <span className="header-title">{topic.title}</span>
             <div className="phase-text">Topic notes</div>
           </div>
-          <div style={{ width: 80 }} />
+          <button
+            type="button"
+            className="back-btn topic-notes-back-btn"
+            onClick={() => navigate(`/dashboard${topic.courseId ? `?course=${encodeURIComponent(topic.courseId)}` : ''}`)}
+            title="Back to Dashboard"
+            aria-label="Back to Dashboard"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12,19 5,12 12,5" />
+            </svg>
+            Back
+          </button>
         </header>
         {hasOutcomeMessages ? (
           <div className="session-container" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>

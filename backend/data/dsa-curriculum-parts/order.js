@@ -1,18 +1,17 @@
 /**
- * Ordered DSA topic IDs (matches DSA-in-JavaScript-main curriculum).
+ * Ordered DSA topic IDs (linear progression in the dashboard notes list).
  */
 export const DSA_TOPIC_ORDER = [
-  'dsa-basics',
-  'time-complexity',
-  'array-dsa',
-  'array-polyfills',
-  'string-dsa',
-  'recursion-dsa',
-  'searching-algorithms',
-  'objects-dsa',
-  'sorting',
-  'set-and-map',
-  'linked-list',
-  'stack',
-  'queue'
+    'dsa-array',
+    'dsa-matrix',
+    'dsa-string',
+    'dsa-searching-sorting',
+    'dsa-hashing',
+    'dsa-linked-list',
+    'dsa-stack-queue',
+    'dsa-tree',
+    'dsa-heap',
+    'dsa-graph',
+    'dsa-dp-greedy',
+    'dsa-bit-manipulation'
 ]

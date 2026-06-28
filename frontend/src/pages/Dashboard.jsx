@@ -17,7 +17,7 @@ import './Dashboard.css'
 const JAVASCRIPT_COURSE_ID = 'javascript'
 const DSA_COURSE_ID = 'dsa'
 
-function isJavascriptCourseFullyComplete (courses, userProgress) {
+function isJavascriptCourseFullyComplete(courses, userProgress) {
   const jsCourse = courses.find((c) => c.id === JAVASCRIPT_COURSE_ID)
   const topics = jsCourse?.topics || []
   if (topics.length === 0) return false
@@ -28,7 +28,7 @@ function isJavascriptCourseFullyComplete (courses, userProgress) {
   return summary.completed_topics >= summary.total_topics
 }
 
-function isCourseAccessibleInSidebar (course, unlockedCourseIds, courses, userProgress) {
+function isCourseAccessibleInSidebar(course, unlockedCourseIds, courses, userProgress) {
   if (course.id === DSA_COURSE_ID) {
     return isJavascriptCourseFullyComplete(courses, userProgress)
   }
@@ -45,7 +45,10 @@ const Dashboard = () => {
   const [loggingOut, setLoggingOut] = useState(false)
   const [error, setError] = useState(null)
   const [courses, setCourses] = useState([])
-  const [selectedCourse, setSelectedCourse] = useState('javascript')
+  const [selectedCourse, setSelectedCourse] = useState(() => {
+    const courseParam = new URLSearchParams(window.location.search).get('course')
+    return courseParam || 'javascript'
+  })
   const [userProgress, setUserProgress] = useState([])
   const [progressSummary, setProgressSummary] = useState({})
   const [lastAccessed, setLastAccessed] = useState(null)
@@ -686,83 +689,83 @@ const Dashboard = () => {
             </div>
 
             {showJavascriptLearnerDashboard && (
-            <>
-            {/* How to run JS code - help link */}
-            <div className="dashboard-howto-run">
-              <span className="dashboard-howto-run__label">How to run JS code</span>
-              <button
-                type="button"
-                className="dashboard-howto-run__help"
-                onClick={() => setShowHowToRunSteps(true)}
-                aria-label="View steps to run JavaScript code"
-                title="View steps"
-              >
-                ?
-              </button>
-            </div>
-
-            {/* How to run JS code - steps modal */}
-            {showHowToRunSteps && (
-              <div
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="how-to-run-title"
-                style={{
-                  position: 'fixed',
-                  inset: 0,
-                  zIndex: 1000,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: 'rgba(0,0,0,0.4)',
-                  padding: 16
-                }}
-                onClick={() => setShowHowToRunSteps(false)}
-              >
-                <div
-                  style={{
-                    background: 'white',
-                    borderRadius: 12,
-                    padding: 24,
-                    maxWidth: 420,
-                    width: '100%',
-                    boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)'
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <h3 id="how-to-run-title" style={{ margin: '0 0 16px', fontSize: '1.125rem', fontFamily: 'var(--sara-font)' }}>How to run JS code</h3>
-                  <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>In Sara</p>
-                  <ol style={{ margin: '0 0 20px', paddingLeft: 20, color: '#374151', fontSize: '0.875rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
-                    <li style={{ marginBottom: 8 }}>Complete the <strong>Session</strong> for a topic (chat with Sara to learn).</li>
-                    <li style={{ marginBottom: 8 }}>On the <strong>Dashboard</strong> or <strong>Learn</strong> page, use the <strong>code editor</strong> toggle on the right edge to open the Playground (editor and terminal), or on Learn open <strong>Assignments</strong> for that topic.</li>
-                    <li style={{ marginBottom: 8 }}>Write or paste JavaScript in the editor and click <strong>Run</strong>. Output appears in the terminal panel.</li>
-                  </ol>
-                  <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>Without Sara (outside this app)</p>
-                  <ol style={{ margin: 0, paddingLeft: 20, color: '#374151', fontSize: '0.875rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
-                    <li style={{ marginBottom: 8 }}><strong>Browser:</strong> Open DevTools (F12 or right‑click → Inspect), go to the Console tab, type or paste JS, press Enter.</li>
-                    <li style={{ marginBottom: 8 }}><strong>Node.js:</strong> Save code in a <code style={{ background: '#f3f4f6', padding: '1px 4px', borderRadius: 4 }}>.js</code> file and run <code style={{ background: '#f3f4f6', padding: '1px 4px', borderRadius: 4 }}>node filename.js</code> in a terminal.</li>
-                  </ol>
+              <>
+                {/* How to run JS code - help link */}
+                <div className="dashboard-howto-run">
+                  <span className="dashboard-howto-run__label">How to run JS code</span>
                   <button
                     type="button"
-                    onClick={() => setShowHowToRunSteps(false)}
-                    style={{
-                      marginTop: 20,
-                      padding: '8px 16px',
-                      background: '#10a37f',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: 8,
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      cursor: 'pointer'
-                    }}
+                    className="dashboard-howto-run__help"
+                    onClick={() => setShowHowToRunSteps(true)}
+                    aria-label="View steps to run JavaScript code"
+                    title="View steps"
                   >
-                    Got it
+                    ?
                   </button>
                 </div>
-              </div>
-            )}
-            </>
+
+                {/* How to run JS code - steps modal */}
+                {showHowToRunSteps && (
+                  <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="how-to-run-title"
+                    style={{
+                      position: 'fixed',
+                      inset: 0,
+                      zIndex: 1000,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'rgba(0,0,0,0.4)',
+                      padding: 16
+                    }}
+                    onClick={() => setShowHowToRunSteps(false)}
+                  >
+                    <div
+                      style={{
+                        background: 'white',
+                        borderRadius: 12,
+                        padding: 24,
+                        maxWidth: 420,
+                        width: '100%',
+                        boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)'
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <h3 id="how-to-run-title" style={{ margin: '0 0 16px', fontSize: '1.125rem', fontFamily: 'var(--sara-font)' }}>How to run JS code</h3>
+                      <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>In Sara</p>
+                      <ol style={{ margin: '0 0 20px', paddingLeft: 20, color: '#374151', fontSize: '0.875rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
+                        <li style={{ marginBottom: 8 }}>Complete the <strong>Session</strong> for a topic (chat with Sara to learn).</li>
+                        <li style={{ marginBottom: 8 }}>On the <strong>Dashboard</strong> or <strong>Learn</strong> page, use the <strong>code editor</strong> toggle on the right edge to open the Playground (editor and terminal), or on Learn open <strong>Assignments</strong> for that topic.</li>
+                        <li style={{ marginBottom: 8 }}>Write or paste JavaScript in the editor and click <strong>Run</strong>. Output appears in the terminal panel.</li>
+                      </ol>
+                      <p style={{ margin: '0 0 12px', fontSize: '0.8125rem', fontWeight: 600, color: '#374151' }}>Without Sara (outside this app)</p>
+                      <ol style={{ margin: 0, paddingLeft: 20, color: '#374151', fontSize: '0.875rem', lineHeight: 1.7, fontFamily: 'var(--sara-font)' }}>
+                        <li style={{ marginBottom: 8 }}><strong>Browser:</strong> Open DevTools (F12 or right‑click → Inspect), go to the Console tab, type or paste JS, press Enter.</li>
+                        <li style={{ marginBottom: 8 }}><strong>Node.js:</strong> Save code in a <code style={{ background: '#f3f4f6', padding: '1px 4px', borderRadius: 4 }}>.js</code> file and run <code style={{ background: '#f3f4f6', padding: '1px 4px', borderRadius: 4 }}>node filename.js</code> in a terminal.</li>
+                      </ol>
+                      <button
+                        type="button"
+                        onClick={() => setShowHowToRunSteps(false)}
+                        style={{
+                          marginTop: 20,
+                          padding: '8px 16px',
+                          background: '#10a37f',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: 8,
+                          fontSize: '0.875rem',
+                          fontWeight: 500,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Got it
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
 
             {/* Course locked: focused upgrade card only (pricing from welcomeCourseOffers) */}
@@ -882,215 +885,215 @@ const Dashboard = () => {
             )}
 
             {showJavascriptLearnerDashboard && (
-            <>
-            {/* Progress Section */}
-            <div className="progress-section">
-              <h3>Your Progress</h3>
-              <div className="progress-stats">
-                <div className="stat">
-                  <span className="number">{currentProgressSummary.completed_topics || 0}</span>
-                  <span className="label">Completed</span>
-                </div>
-                <div className="stat">
-                  <span className="number">{currentProgressSummary.total_topics || 0}</span>
-                  <span className="label">Total Topics</span>
-                </div>
-                <div className="stat">
-                  <span className="number">{currentProgressSummary.completion_percentage || 0}%</span>
-                  <span className="label">Overall</span>
-                </div>
-              </div>
-              <div className="progress-bar">
-                <div
-                  className="progress-fill"
-                  style={{ width: `${currentProgressSummary.completion_percentage || 0}%` }}
-                />
-              </div>
-              {progressSummary.certificate_eligible && (
-                <div className="completion-celebration">
-                  <div className="completion-celebration__header">
-                    <span className="completion-celebration__badge" aria-hidden>
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M12 15l-4 4h12l-4-4" />
-                        <path d="M12 3v12" />
-                        <path d="M8 7l4-4 4 4" />
-                      </svg>
-                    </span>
-                    <div>
-                      <h4 className="completion-celebration__title">You finished the course</h4>
-                      <p className="completion-celebration__subtitle">
-                        All {currentProgressSummary.total_topics} topics complete — download your certificate and the Portfolio Kit.
-                      </p>
+              <>
+                {/* Progress Section */}
+                <div className="progress-section">
+                  <h3>Your Progress</h3>
+                  <div className="progress-stats">
+                    <div className="stat">
+                      <span className="number">{currentProgressSummary.completed_topics || 0}</span>
+                      <span className="label">Completed</span>
+                    </div>
+                    <div className="stat">
+                      <span className="number">{currentProgressSummary.total_topics || 0}</span>
+                      <span className="label">Total Topics</span>
+                    </div>
+                    <div className="stat">
+                      <span className="number">{currentProgressSummary.completion_percentage || 0}%</span>
+                      <span className="label">Overall</span>
                     </div>
                   </div>
-
-                  <div className="completion-celebration__grid">
-                    <div className="completion-card completion-card--certificate">
-                      <div className="completion-card__icon completion-card__icon--cert" aria-hidden>
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                          <circle cx="12" cy="8" r="7" />
-                          <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
-                        </svg>
-                      </div>
-                      <h5 className="completion-card__heading">Completion certificate</h5>
-                      <button
-                        type="button"
-                        className="completion-card__btn completion-card__btn--primary"
-                        onClick={async () => {
-                          setDownloadingCert(true)
-                          try {
-                            await learning.downloadCertificate()
-                          } catch (err) {
-                            alert(err?.message || 'Failed to download certificate')
-                          } finally {
-                            setDownloadingCert(false)
-                          }
-                        }}
-                        disabled={downloadingCert}
-                      >
-                        {downloadingCert ? 'Preparing…' : 'Download certificate'}
-                      </button>
-                    </div>
-
-                    <div className="completion-card completion-card--projects">
-                      <div className="completion-card__icon completion-card__icon--code" aria-hidden>
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polyline points="16 18 22 12 16 6" />
-                          <polyline points="8 6 2 12 8 18" />
-                        </svg>
-                      </div>
-                      <h5 className="completion-card__heading">Portfolio Kit</h5>
-                      <button
-                        type="button"
-                        className="completion-card__btn completion-card__btn--primary"
-                        onClick={async () => {
-                          setDownloadingProjectsZip(true)
-                          try {
-                            await downloadAllCourseProjectsZip()
-                          } catch (err) {
-                            alert(err?.message || 'Failed to build project download. Try again or contact support.')
-                          } finally {
-                            setDownloadingProjectsZip(false)
-                          }
-                        }}
-                        disabled={downloadingProjectsZip}
-                        aria-busy={downloadingProjectsZip}
-                      >
-                        {downloadingProjectsZip ? 'Preparing download…' : 'Download Portfolio Kit'}
-                      </button>
-                    </div>
+                  <div className="progress-bar">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${currentProgressSummary.completion_percentage || 0}%` }}
+                    />
                   </div>
-                </div>
-              )}
-            </div>
-
-            {/* Continue Learning Section */}
-            <div className="continue-section">
-              {!hideCurrentlyLearningAndContinue && (
-                <>
-                  {/* Current Learning Status Card - Above Button */}
-                  {(() => {
-                    const currentTopic = getCurrentActiveTopic()
-                    if (currentTopic) {
-                      return (
-                        <div className="current-learning-card">
-                          <div className="learning-header">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="learning-icon">
-                              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                            </svg>
-                            <span className="learning-label">Currently Learning</span>
-                          </div>
-                          <div className="topic-info">
-                            <h4 className="topic-title">{currentTopic.title}</h4>
-                            <div className="phase-info">
-                              {getPhaseIcon(currentTopic.phase)}
-                              <span className="phase-name">{getPhaseDisplayName(currentTopic.phase)}</span>
-                            </div>
-                          </div>
+                  {progressSummary.certificate_eligible && (
+                    <div className="completion-celebration">
+                      <div className="completion-celebration__header">
+                        <span className="completion-celebration__badge" aria-hidden>
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <path d="M12 15l-4 4h12l-4-4" />
+                            <path d="M12 3v12" />
+                            <path d="M8 7l4-4 4 4" />
+                          </svg>
+                        </span>
+                        <div>
+                          <h4 className="completion-celebration__title">You finished the course</h4>
+                          <p className="completion-celebration__subtitle">
+                            All {currentProgressSummary.total_topics} topics complete — download your certificate and the Portfolio Kit.
+                          </p>
                         </div>
-                      )
-                    }
-                    return null
-                  })()}
+                      </div>
 
-                  {/* Continue Learning Button - disabled when current topic's course is locked */}
-                  {(() => {
-                    const currentTopic = getCurrentActiveTopic()
-                    const currentTopicCourseId = currentTopic ? courses.find(c => c.topics?.some(t => t.id === currentTopic.id))?.id : null
-                    const isContinueDisabled = currentTopicCourseId && !unlockedCourseIds.includes(currentTopicCourseId)
-                    return (
-                      <button
-                        className="dashboard-continue-btn"
-                        onClick={handleContinueLearning}
-                        disabled={isContinueDisabled}
-                        title={isContinueDisabled ? 'Purchase this course to continue' : undefined}
-                        style={isContinueDisabled ? { opacity: 0.7, cursor: 'not-allowed' } : undefined}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <polygon points="5,3 19,12 5,21" />
-                        </svg>
-                        Continue Learning
-                      </button>
-                    )
-                  })()}
-                </>
-              )}
+                      <div className="completion-celebration__grid">
+                        <div className="completion-card completion-card--certificate">
+                          <div className="completion-card__icon completion-card__icon--cert" aria-hidden>
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                              <circle cx="12" cy="8" r="7" />
+                              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                            </svg>
+                          </div>
+                          <h5 className="completion-card__heading">Completion certificate</h5>
+                          <button
+                            type="button"
+                            className="completion-card__btn completion-card__btn--primary"
+                            onClick={async () => {
+                              setDownloadingCert(true)
+                              try {
+                                await learning.downloadCertificate()
+                              } catch (err) {
+                                alert(err?.message || 'Failed to download certificate')
+                              } finally {
+                                setDownloadingCert(false)
+                              }
+                            }}
+                            disabled={downloadingCert}
+                          >
+                            {downloadingCert ? 'Preparing…' : 'Download certificate'}
+                          </button>
+                        </div>
 
-              {/* All topics — notes & assignment shortcuts only after topic is fully complete */}
-              {allTopicsForCourse.length > 0 && (
-                <div className="session-completed-section">
-                  <h4 className="session-completed-heading">All topics</h4>
-                  <ul className="session-completed-list">
-                    {allTopicsForCourse.map((topic) => {
-                      const rowProgress = userProgress.find(
-                        (p) => String(p.topic_id) === String(topic.id)
-                      )
-                      const topicComplete = rowProgress && isTopicFullyComplete(rowProgress)
-                      return (
-                        <li key={topic.id} className="session-completed-row">
-                          <span className="session-completed-title">
-                            {formatTopicTitle(topic.title)}
-                          </span>
-                          {topicComplete ? (
-                            <div className="session-completed-actions">
-                              <button
-                                type="button"
-                                className="session-completed-icon-btn"
-                                onClick={() => navigate(`/learn/${topic.id}?view=notes&ref=1`)}
-                                title="Topic notes"
-                                aria-label={`View notes for ${formatTopicTitle(topic.title)}`}
-                              >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                  <polyline points="14,2 14,8 20,8" />
-                                  <line x1="16" y1="13" x2="8" y2="13" />
-                                  <line x1="16" y1="17" x2="8" y2="17" />
-                                  <polyline points="10,9 9,9 8,9" />
-                                </svg>
-                              </button>
-                              <button
-                                type="button"
-                                className="session-completed-icon-btn"
-                                onClick={() => navigate(`/learn/${topic.id}?phase=assignment&start=1&ref=1`)}
-                                title="Try assignments (from task 1)"
-                                aria-label={`Assignments for ${formatTopicTitle(topic.title)}`}
-                              >
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                  <polyline points="9,11 12,14 22,4" />
-                                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                                </svg>
-                              </button>
-                            </div>
-                          ) : null}
-                        </li>
-                      )
-                    })}
-                  </ul>
+                        <div className="completion-card completion-card--projects">
+                          <div className="completion-card__icon completion-card__icon--code" aria-hidden>
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="16 18 22 12 16 6" />
+                              <polyline points="8 6 2 12 8 18" />
+                            </svg>
+                          </div>
+                          <h5 className="completion-card__heading">Portfolio Kit</h5>
+                          <button
+                            type="button"
+                            className="completion-card__btn completion-card__btn--primary"
+                            onClick={async () => {
+                              setDownloadingProjectsZip(true)
+                              try {
+                                await downloadAllCourseProjectsZip()
+                              } catch (err) {
+                                alert(err?.message || 'Failed to build project download. Try again or contact support.')
+                              } finally {
+                                setDownloadingProjectsZip(false)
+                              }
+                            }}
+                            disabled={downloadingProjectsZip}
+                            aria-busy={downloadingProjectsZip}
+                          >
+                            {downloadingProjectsZip ? 'Preparing download…' : 'Download Portfolio Kit'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            </>
+
+                {/* Continue Learning Section */}
+                <div className="continue-section">
+                  {!hideCurrentlyLearningAndContinue && (
+                    <>
+                      {/* Current Learning Status Card - Above Button */}
+                      {(() => {
+                        const currentTopic = getCurrentActiveTopic()
+                        if (currentTopic) {
+                          return (
+                            <div className="current-learning-card">
+                              <div className="learning-header">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="learning-icon">
+                                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                                </svg>
+                                <span className="learning-label">Currently Learning</span>
+                              </div>
+                              <div className="topic-info">
+                                <h4 className="topic-title">{currentTopic.title}</h4>
+                                <div className="phase-info">
+                                  {getPhaseIcon(currentTopic.phase)}
+                                  <span className="phase-name">{getPhaseDisplayName(currentTopic.phase)}</span>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        }
+                        return null
+                      })()}
+
+                      {/* Continue Learning Button - disabled when current topic's course is locked */}
+                      {(() => {
+                        const currentTopic = getCurrentActiveTopic()
+                        const currentTopicCourseId = currentTopic ? courses.find(c => c.topics?.some(t => t.id === currentTopic.id))?.id : null
+                        const isContinueDisabled = currentTopicCourseId && !unlockedCourseIds.includes(currentTopicCourseId)
+                        return (
+                          <button
+                            className="dashboard-continue-btn"
+                            onClick={handleContinueLearning}
+                            disabled={isContinueDisabled}
+                            title={isContinueDisabled ? 'Purchase this course to continue' : undefined}
+                            style={isContinueDisabled ? { opacity: 0.7, cursor: 'not-allowed' } : undefined}
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polygon points="5,3 19,12 5,21" />
+                            </svg>
+                            Continue Learning
+                          </button>
+                        )
+                      })()}
+                    </>
+                  )}
+
+                  {/* All topics — notes & assignment shortcuts only after topic is fully complete */}
+                  {allTopicsForCourse.length > 0 && (
+                    <div className="session-completed-section">
+                      <h4 className="session-completed-heading">All topics</h4>
+                      <ul className="session-completed-list">
+                        {allTopicsForCourse.map((topic) => {
+                          const rowProgress = userProgress.find(
+                            (p) => String(p.topic_id) === String(topic.id)
+                          )
+                          const topicComplete = rowProgress && isTopicFullyComplete(rowProgress)
+                          return (
+                            <li key={topic.id} className="session-completed-row">
+                              <span className="session-completed-title">
+                                {formatTopicTitle(topic.title)}
+                              </span>
+                              {topicComplete ? (
+                                <div className="session-completed-actions">
+                                  <button
+                                    type="button"
+                                    className="session-completed-icon-btn"
+                                    onClick={() => navigate(`/learn/${topic.id}?view=notes&ref=1`)}
+                                    title="Topic notes"
+                                    aria-label={`View notes for ${formatTopicTitle(topic.title)}`}
+                                  >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                      <polyline points="14,2 14,8 20,8" />
+                                      <line x1="16" y1="13" x2="8" y2="13" />
+                                      <line x1="16" y1="17" x2="8" y2="17" />
+                                      <polyline points="10,9 9,9 8,9" />
+                                    </svg>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="session-completed-icon-btn"
+                                    onClick={() => navigate(`/learn/${topic.id}?phase=assignment&start=1&ref=1`)}
+                                    title="Try assignments (from task 1)"
+                                    aria-label={`Assignments for ${formatTopicTitle(topic.title)}`}
+                                  >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                      <polyline points="9,11 12,14 22,4" />
+                                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              ) : null}
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </>
             )}
 
           </div>
