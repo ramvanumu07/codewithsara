@@ -27,11 +27,11 @@
 
 .offer-price__list {
   font-size: clamp(1rem, 2.5vw, 1.25rem);
-  font-weight: 500;
-  color: #9ca3af;
+  font-weight: 300;
+  color: #111827;
   text-decoration: line-through;
   text-decoration-thickness: 2px;
-  text-decoration-color: #d1d5db;
+  text-decoration-color: #dc2626;
 }
 
 .offer-price__sale-group {

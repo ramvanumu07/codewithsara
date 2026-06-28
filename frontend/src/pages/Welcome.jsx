@@ -129,7 +129,7 @@ const Welcome = () => {
                 className={`welcome-pricing-card${course.featured ? ' welcome-pricing-card--featured' : ''}`}
               >
                 {course.featured && (
-                  <span className="welcome-pricing-card__badge">Popular</span>
+                  <span className="welcome-pricing-card__badge">₹1,500 OFF</span>
                 )}
                 <div className="welcome-pricing-card__head">
                   <h3 className="welcome-pricing-card__title">{course.title}</h3>

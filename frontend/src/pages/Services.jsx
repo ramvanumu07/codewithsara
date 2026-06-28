@@ -40,7 +40,7 @@ export default function Services () {
 
           <section className="terms-section">
             <h2>Product name</h2>
-            <p><strong>JavaScript with Sara</strong> — full digital access to our JavaScript learning track on the Sara platform.</p>
+            <p><strong>JavaScript with Sara</strong> — full digital access to our JavaScript learning track on the Sara platform, including the bonus <strong>DSA interview course</strong> (Top 100 questions) that unlocks free when you complete JavaScript.</p>
           </section>
 
           <section className="terms-section">
@@ -50,6 +50,7 @@ export default function Services () {
               <li><strong>Playground</strong> — run and experiment with JavaScript in the browser</li>
               <li><strong>Assignments</strong> — practice tasks with automated checks and feedback</li>
               <li><strong>Progress &amp; structure</strong> — organized topics so you learn step by step</li>
+              <li><strong>Bonus DSA course</strong> — the Top 100 DSA interview questions (notes &amp; solutions), unlocked free once you complete the JavaScript track</li>
               <li><strong>Certificate</strong> — eligibility for a course completion certificate when you meet the platform criteria</li>
               <li><strong>Portfolio projects</strong> — downloadable project starters / bundles where offered in the product</li>
             </ul>
@@ -59,7 +60,7 @@ export default function Services () {
           <section className="terms-section">
             <h2>Pricing</h2>
             <p>
-              <strong>JavaScript with Sara — Full Access</strong> is <strong>₹1,199</strong> (Indian Rupees). The amount shown on the checkout screen before you pay is the price that applies to your order.
+              <strong>JavaScript with Sara — Full Access</strong> is <strong>₹999</strong> (Indian Rupees). The amount shown on the checkout screen before you pay is the price that applies to your order.
             </p>
             <p style={{ marginBottom: 4 }}><strong>Current offer (INR)</strong></p>
             {welcomeCourseOffers[0] && (

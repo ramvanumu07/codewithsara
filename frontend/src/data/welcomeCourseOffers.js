@@ -8,7 +8,7 @@
  * @property {string} id — stable slug (e.g. for analytics or future checkout)
  * @property {string} title
  * @property {string} [subtitle] — one line under the title
- * @property {string} priceFormatted — display price, e.g. "₹1,199"
+ * @property {string} priceFormatted — display price, e.g. "₹999"
  * @property {number} priceAmount — numeric price in rupees (checkout / API validation)
  * @property {string} [listPriceFormatted] — original list price for promo display (Welcome only)
  * @property {number} [listPriceAmount] — original list price in rupees
@@ -20,7 +20,7 @@
  */
 
 /** JavaScript full-access sale price (INR). Sync with backend/services/checkoutPricing.js */
-export const JS_COURSE_PRICE_RUPEES = 1199
+export const JS_COURSE_PRICE_RUPEES = 999
 
 /** Original list price shown struck through on the Welcome pricing card */
 export const JS_COURSE_LIST_PRICE_RUPEES = 2499
@@ -37,8 +37,8 @@ export const welcomeCourseOffers = [
   {
     id: 'javascript-sara',
     forCourseIds: ['javascript'],
-    title: 'JavaScript with Sara',
-    subtitle: 'Structured JavaScript curriculum — AI tutor, playground, and assignments',
+    title: 'JavaScript + DSA with Sara',
+    subtitle: 'JavaScript + DSA — AI tutor, playground, assignments, and the Top 100 DSA interview questions',
     priceFormatted: formatInrDisplay(JS_COURSE_PRICE_RUPEES),
     priceAmount: JS_COURSE_PRICE_RUPEES,
     listPriceFormatted: formatInrDisplay(JS_COURSE_LIST_PRICE_RUPEES),
@@ -48,6 +48,7 @@ export const welcomeCourseOffers = [
       'AI-powered tutoring tailored to each JavaScript topic',
       'Interactive playground to run and experiment with JavaScript',
       'Assignments with automated tests and feedback',
+      'Bonus DSA course — Top 100 interview questions, unlocked free on completion',
       'Certificate + 3 portfolio projects on completion',
     ],
     featured: true,
